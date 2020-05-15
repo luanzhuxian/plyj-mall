@@ -204,11 +204,11 @@ export const confirmReceipt = orderId => axios.get(`/apis/v2/order/confirm/recei
 export const deleteOrder = orderId => axios.get(`/apis/v2/order/delete?orderId=${ orderId }`)
 
 /**
- * 删除订单
+ * 获取售后订单列表
  * @param {Object} params - 分页参数 + 页签
  * @return {*}
  */
-export const getRefundOrderList = params => axios.get(`/apis/v2/order/refunds/orderRefund/consumer/page`, params)
+export const getRefundOrderList = ({ current, size, auditStatus }) => axios.get(`/apis/v2/order/refunds/orderRefund/consumer/page?current=${ current }&size=${ size }&auditStatus=${ auditStatus }`)
 
 /**
  * 售后详情查询

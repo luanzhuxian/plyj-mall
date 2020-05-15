@@ -46,7 +46,7 @@
                 </pl-button>
                 <!-- 退款成功/失败 支持删除 -->
                 <pl-button
-                    v-if="[6, 7].indexOf(refundStatus)"
+                    v-if="[6, 7].includes(refundStatus)"
                     round
                     plain
                     @click="doOperation('deleteOrder')"
