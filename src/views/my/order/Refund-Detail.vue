@@ -62,8 +62,8 @@
                 <div :class="$style.item">
                     <span :class="[$style.itemLeft, $style.bold]"> 应退金额：</span>
                     <span :class="$style.itemRight">
-                        <div v-if="refundDetail.refundsAmount" :class="$style.price">
-                            ￥{{ refundDetail.refundsAmount | formatAmount }}
+                        <div v-if="refundDetail.refundableAmount" :class="$style.price">
+                            ￥{{ refundDetail.refundableAmount | formatAmount }}
                         </div>
                     </span>
                 </div>
@@ -81,7 +81,7 @@
                     {{ orderDetails.scholarship ? `红包(奖学金)${orderDetails.scholarship | formatAmount}元不可退，` : '' }}
                     如有疑问，请联系商家协商
                 </div>
-                <div v-if="[4, 5, 6].indexOf(refundStatus)" :class="$style.tips">
+                <div v-if="[4, 5, 6].includes(refundStatus)" :class="$style.tips">
                     <div>退款返还您的实际付款金额，优惠劵、红包(奖学金)将不予退回</div>
                     <div>退款到帐时间，请查看您的付款账户</div>
                 </div>
@@ -134,20 +134,20 @@
                 <pl-list title="申请件数：" :content="`${orderDetails.count}件`" />
                 <pl-list title="申请时间：" :content="refundDetail.createTime" />
             </div>
-            <div :class="[$style.infoList, $style.borderTop]" v-if="refundDetail.pictures.length || refundDetail.applyContent">
+            <div :class="[$style.infoList, $style.borderTop]" v-if="refundDetail.urls.length || refundDetail.content">
                 <pl-list
-                    v-if="refundDetail.applyContent"
+                    v-if="refundDetail.content"
                     title="问题描述："
-                    :content="refundDetail.applyContent"
+                    :content="refundDetail.content"
                 />
                 <pl-list
-                    v-if="refundDetail.pictures.length"
+                    v-if="refundDetail.urls.length"
                     :class="$style.imgListWrapper"
                     title="问题描述："
                 >
                     <div :class="$style.imgList">
                         <img v-imgError
-                             v-for="(img, i) of refundDetail.pictures"
+                             v-for="(img, i) of refundDetail.urls"
                              :key="i"
                              :src="img + '?x-oss-process=style/thum'"
                              v-img-error
