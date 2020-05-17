@@ -1,16 +1,20 @@
 {
   "name": "plyj-mall",
-  "version": "2.9.3",
+  "version": "2.9.7",
   "private": true,
   "scripts": {
     "start": "vue-cli-service serve --model local --s",
-    "build": "vue-cli-service build --model production",
-    "build:dev": "vue-cli-service build --model development",
+    "build": "vue-cli-service build --model production && npm run sentry",
+    "build:dev": "vue-cli-service build --model development && npm run sentry:dev",
+    "sentry": "node ./sentry.js --model production",
+    "sentry:dev": "node ./sentry.js --model development",
     "lint": "vue-cli-service lint",
     "test:e2e": "vue-cli-service test:e2e",
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
+    "@sentry/browser": "~5.15.5",
+    "@sentry/integrations": "~5.15.5",
     "ali-oss": "~6.2.1",
     "animate.css": "~3.7.2",
     "axios": "~0.19.0",
@@ -29,6 +33,7 @@
   "devDependencies": {
     "@commitlint/cli": "~7.6.1",
     "@commitlint/config-conventional": "~7.6.0",
+    "@sentry/cli": "~1.52.4",
     "@vue/cli-plugin-babel": "3.12.1",
     "@vue/cli-plugin-eslint": "3.12.1",
     "@vue/cli-service": "3.12.1",

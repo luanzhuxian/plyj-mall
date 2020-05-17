@@ -1,0 +1,6 @@
+[auth]
+token=dad65f2f661140868e571734dddebee11b9a13550bc44741babc6b1bb4a9d108
+[defaults]
+url=http://192.168.130.33:5000/
+org=penglai
+project=dev-mall

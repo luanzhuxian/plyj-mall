@@ -15,7 +15,10 @@ import filters from './filter'
 import './assets/css/quill.css'
 import './assets/css/fonts.css'
 import PlSvg from './components/common/Pl-Svg.vue'
-import { errorlog } from './apis/base-api'
+// import { errorlog } from './apis/base-api'
+
+import * as Sentry from '@sentry/browser'
+import * as Integrations from '@sentry/integrations'
 
 Vue.use(VueLazyload, {
     error: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/img_error.png',
@@ -38,13 +41,13 @@ Vue.use(PenglaiUI)
 Vue.config.productionTip = false
 /* eslint-disable */
 new Vue({
-  el: '#app',
-  router,
-  store,
-  render: h => h(App),
-  renderError: (h, err) => {
-    console.log(err)
-  }
+    el: '#app',
+    router,
+    store,
+    render: h => h(App),
+    renderError: (h, err) => {
+        console.log(err)
+    }
 })
 
 router.beforeResolve(beforeResolve)
@@ -61,28 +64,32 @@ Vue.config.errorHandler = async function (err, vm, info) {
       if (err.message === 'cancel' || err.message === '取消支付') {
         return
       }
-      errorlog({
-        info,
-        message: err.message,
-        url: location.href,
-        userId: vm.$store.getters.userId,
-        openId: vm.$store.getters.openId,
-        mallId: vm.$store.getters.mallId,
-        userAgent: navigator.userAgent,
-        project: 'mall',
-        vm: {
-          name: vm.$options.name || '',
-          class: Array.from(vm.$el.classList || []).join(';'),
-          id: vm.$el.id || '',
-          parent: {
-            class: Array.from(vm.$parent.$el.classList || []).join(';'),
-            id: vm.$parent.$el.id || '',
-          }
-        }
-      })
     }
     console.error(err)
   } catch (e) {
       if (e) console.error(err)
   }
+}
+const {
+    VUE_APP_VERSION,
+    NODE_ENV
+} = process.env
+console.log('version:', VUE_APP_VERSION)
+// 只有生产环境才启用日志
+if (NODE_ENV === 'production') {
+    Sentry.init({
+        dsn: 'http://9255fbe7671a4f5e8a5637ea4e48600b@192.168.130.33:5000/2',
+        // 对应发布的版本号，这个版本号取自package.json中配置的版本号
+        release: VUE_APP_VERSION,
+        // VUE 集成
+        integrations: [
+            new Integrations.Vue({
+                Vue,
+                // 是否把错误打印到控制台
+                logErrors: false,
+                // Passing in attachProps is optional and is true if it is not provided. If you set it to false, Sentry will suppress sending all Vue components’ props for logging.
+                attachProps: true
+            })
+        ]
+    })
 }
