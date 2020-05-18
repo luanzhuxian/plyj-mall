@@ -25,10 +25,10 @@
                 <pl-svg :class="$style.expressIcon" name="icon-express-receive" />
                 <div :class="$style.right">
                     <div :class="$style.main">
-                        <span :class="$style.name" v-text="`退货信息：${refundDetail.refundUserName}`" />
-                        <span :class="$style.phone" v-text="refundDetail.refundMobile" />
+                        <span :class="$style.name" v-text="`退货信息：${adressInfo.realName}`" />
+                        <span :class="$style.phone" v-text="adressInfo.mobile" />
                     </div>
-                    <div :class="$style.sub" v-text="refundDetail.refundAddress" />
+                    <div :class="$style.sub" v-text="adressInfo.addressPrefix" />
                 </div>
             </div>
         </section>
@@ -232,7 +232,14 @@ import Collapse from '../../../components/penglai-ui/collapse/Collapse.vue'
 import CollapseItem from '../../../components/penglai-ui/collapse/Collapse-Item.vue'
 import ContantPop from './components/Contant-Pop'
 import Contact from '../../../components/common/Contact'
-import { getRefundOrderDetail, getMap as getExpressMap, submitExpressInfo, cancelRefundApplication, deleteRefundOrder } from '../../../apis/order-manager'
+import {
+    getRefundOrderDetail,
+    getRefundAdress,
+    getMap as getExpressMap,
+    submitExpressInfo,
+    cancelRefundApplication,
+    deleteRefundOrder
+} from '../../../apis/order-manager'
 
 const expressMapCode = 'KYYQJKDGS'
 
@@ -282,6 +289,8 @@ export default {
             orderDetails: {},
             // 订单中商品详情
             goodsModel: {},
+            // 退货地址
+            adressInfo: {},
             form: {
                 expressName: '',
                 expressNo: ''
@@ -343,7 +352,16 @@ export default {
                     return item
                 })
                 this.refundDetail.pictures = []
+                this.getRefundAdress(this.orderDetails.goodId)
                 this.detailLoading = false
+            } catch (e) {
+                throw e
+            }
+        },
+        async getRefundAdress (goodId) {
+            try {
+                const { result } = await getRefundAdress(goodId)
+                this.adressInfo = result
             } catch (e) {
                 throw e
             }

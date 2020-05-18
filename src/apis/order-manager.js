@@ -31,7 +31,7 @@ export const physicalorderShipmentPublic = orderSn => axios.put(`/apis/v1/order/
 export const getOrderList = ({ current, size, orderStatus }) => axios.get(`/apis/v2/order/user/page?current=${ current }&size=${ size }&orderStatus=${ orderStatus }`)
 
 // 查看每种订单的数量
-export const orderPhysicalorderSummary = () => axios.get(`/apis/v1/order/current/user`)
+// export const orderPhysicalorderSummary = () => axios.get(`/apis/v1/order/current/user`)
 // 发票详情
 export const invoiceDetail = orderNo => axios.get(`/apis/v1/invoice/OrderInvoice/findByOrderSn?orderSn=${ orderNo }`)
 
@@ -230,3 +230,17 @@ export const cancelRefundApplication = id => axios.post(`/apis/v2/order/refunds/
  * @return {*}
  */
 export const deleteRefundOrder = id => axios.post(`/apis/v2/order/refunds/delete?orderId=${ id }`)
+
+/**
+ * 查看每种订单的数量
+ * @param {}
+ * @return {*}
+ */
+export const orderPhysicalorderSummary = () => axios.get(`/apis/v2/order/statistics/user`)
+
+/**
+ * 获取退货地址
+ * @param {}
+ * @return {*}
+ */
+export const getRefundAdress = goodId => axios.get(`/apis/v2/product/return/address?goodId=${ goodId }`)

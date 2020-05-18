@@ -56,8 +56,8 @@
                 <pl-svg :class="$style.myRight" name="icon-right" size="18" fill="#ccc" />
             </router-link>
 
-            <div :class="$style.waitPay" v-if="count.prePayOrder" @click="$router.push({ name: 'WaitPayBalance' })">
-                <pl-svg name="icon-dingdan" width="28" height="28" fill="#fff" /> 待付尾款订单 <i>{{ count.prePayOrder }}</i> <pl-svg name="icon-right" fill="#fff" width="24" />
+            <div :class="$style.waitPay" v-if="count.waitPayTailMoney" @click="$router.push({ name: 'WaitPayBalance' })">
+                <pl-svg name="icon-dingdan" width="28" height="28" fill="#fff" /> 待付尾款订单 <i>{{ count.waitPayTailMoney }}</i> <pl-svg name="icon-right" fill="#fff" width="24" />
             </div>
 
             <!-- 我的订单 -->
@@ -66,25 +66,25 @@
                     <router-link :to="{ name: 'Orders', params: { status: 'WAIT_PAY' } }">
                         <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/wait (2).png" :style="{ width: 72 / 7.5 + 'vw', height: 90 / 7.5 + 'vw' }" alt="">
                         <span
-                            :class="{ [$style.badge]: true, [$style.oval]: count.waitPayment > 99 }"
-                            v-if="count.waitPayment"
-                            v-text="count.waitPayment > 99 ? '99+' : count.waitPayment"
+                            :class="{ [$style.badge]: true, [$style.oval]: count.waitPay + count.waitPayTailMoney > 99 }"
+                            v-if="count.waitPay + count.waitPayTailMoney"
+                            v-text="count.waitPay + count.waitPayTailMoney > 99 ? '99+' : count.waitPay + count.waitPayTailMoney"
                         />
                     </router-link>
                     <router-link :to="{ name: 'Orders', params: { status: 'WAIT_SHIP' } }">
                         <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/wait.png" :style="{ width: 72 / 7.5 + 'vw', height: 90 / 7.5 + 'vw' }" alt="">
                         <span
-                            :class="{ [$style.badge]: true, [$style.oval]: count.waitDelivery > 99 }"
-                            v-if="count.waitDelivery"
-                            v-text="count.waitDelivery > 99 ? '99+' : count.waitDelivery"
+                            :class="{ [$style.badge]: true, [$style.oval]: count.waitShip > 99 }"
+                            v-if="count.waitShip"
+                            v-text="count.waitShip > 99 ? '99+' : count.waitShip"
                         />
                     </router-link>
                     <router-link :to="{ name: 'Orders', params: { status: 'WAIT_RECEIVE' } }">
                         <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/wait (1).png" :style="{ width: 72 / 7.5 + 'vw', height: 88 / 7.5 + 'vw' }" alt="">
                         <span
-                            :class="{ [$style.badge]: true, [$style.oval]: count.waitCollect > 99 }"
-                            v-if="count.waitCollect"
-                            v-text="count.waitCollect > 99 ? '99+' : count.waitCollect"
+                            :class="{ [$style.badge]: true, [$style.oval]: count.waitReceive > 99 }"
+                            v-if="count.waitReceive"
+                            v-text="count.waitReceive > 99 ? '99+' : count.waitReceive"
                         />
                     </router-link>
                     <router-link :to="{ name: 'RefundList', params: { status: 'ALL_ORDERS' } }">
@@ -343,8 +343,8 @@ export default {
             try {
                 const { result } = await orderPhysicalorderSummary(this.userId)
                 this.count = result
-                if (result.prePayOrder && result.prePayOrder > 99) {
-                    result.prePayOrder = '99+'
+                if (result.waitPayTailMoney && result.waitPayTailMoney > 99) {
+                    result.waitPayTailMoney = '99+'
                 }
             } catch (e) {
                 throw e
