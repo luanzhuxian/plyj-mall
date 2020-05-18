@@ -82,6 +82,16 @@
 
 <script>
 import { mapGetters } from 'vuex'
+const routeNameMap = {
+    PHYSICAL_GOODS: 'Product',
+    VIRTUAL_GOODS: 'Product',
+    FORMAL_CLASS: 'Product',
+    EXPERIENCE_CLASS: 'Product',
+    KNOWLEDGE_COURSE: 'Curriculum',
+    SERIES_OF_COURSE: 'Curriculum',
+    LIVE_GOODS: 'LiveLibrary',
+    VIDEO_GOODS: 'LiveLibrary'
+}
 export default {
     name: 'OrderItem',
     data () {
@@ -185,8 +195,9 @@ export default {
                     query.currentProductStatus = 7
                     query.activityId = this.activityId
                 }
+                const routeName = routeNameMap[this.orderType]
                 this.$router.push({
-                    name: this.routeName,
+                    name: this.routeName || routeName,
                     params: {
                         productId: this.productId,
                         brokerId: this.userId || null

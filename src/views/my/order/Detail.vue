@@ -11,7 +11,7 @@
         <!-- 核销码 -->
         <div
             :class="$style.qrcodeBox"
-            v-if="redeemCodeModels.length > 0 && detail.status !== orderStatuskeyMap.WAIT_PAY && detail.status !== orderStatuskeyMap.CLOSED"
+            v-if="redeemCodeModels.length > 0 && ([orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status) || (detail.isXianxia && orderStatuskeyMap.WAIT_PAY_TAIL_MONEY === detail.status))"
         >
             <img v-imgError :src="qrImg" alt="" v-imger:QR="qrImg" :style="{ opacity: isAllCodeUseless ? 0.4 : 1 }">
             <div :class="{[$style.codeListBox]: true, [$style.collapse]: collapseQrCode}">
@@ -45,10 +45,10 @@
 
         <!-- 物流信息 -->
         <div :class="[$style.panel, $style.express]"
-             v-if="detail.orderType === orderTypeKeyMap.PHYSICAL_GOODS && [orderStatuskeyMap.WAIT_SHIP, orderStatuskeyMap.WAIT_RECEIVE].includes(detail.orderStatus)&& !isClosedByCancle"
+             v-if="detail.orderType === orderTypeKeyMap.PHYSICAL_GOODS && [orderStatuskeyMap.WAIT_SHIP, orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.orderStatus) && !isClosedByCancle"
         >
             <pl-svg name="icon-express" :class="$style.icon" />
-            <span :class="$style.content">{{ orderStatusMap[detail.orderStatus] }}</span>
+            <span :class="$style.content">{{ detail.orderStatus === orderStatuskeyMap.WAIT_SHIP? '待发货' : '已发货' }}</span>
         </div>
 
         <div :class="$style.panel" v-if="hasExpressInfo && false">
@@ -77,7 +77,6 @@
                     :allow-invoice="detail.supportInvoice"
                     :active-product="detail.orderSource"
                     :pre-active="2"
-                    :route-name="detail.orderType === 'KNOWLEDGE_COURSE' ? 'Curriculum' : 'Product'"
                     :activity-status="activityDataStatus"
                     :activity-id="activityDataId"
                 />

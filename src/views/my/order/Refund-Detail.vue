@@ -114,7 +114,7 @@
                     :count="goodsModel.count"
                     :option="goodsModel.subSku ? `${goodsModel.sku},${goodsModel.subSku}` : goodsModel.sku"
                     :product-id="orderDetails.goodId"
-                    :route-name="orderDetails.orderType === 'KNOWLEDGE_COURSE' ? 'Curriculum' : 'Product'"
+                    :order-type="orderDetails.orderType"
                 />
             </div>
             <div :class="$style.infoList">
@@ -124,7 +124,7 @@
                 <pl-list
                     v-if="refundType === 1"
                     title="货物状态："
-                    :content="receiveStatusMap[refundDetail.receiveStatus]"
+                    :content="[3, 4, 5, 6].includes(refundStatus)? '已收到货' : '未收到货'"
                 />
                 <pl-list
                     v-if="refundDetail.reasonForReturn"
@@ -159,8 +159,8 @@
             </div>
         </div>
 
-        <!--实体订单 待退货1 填写物流信息 后确认按钮-->
-        <div v-if="refundType === 1" :class="$style.footerSubmit">
+        <!--退款退货1 + 待退货1 填写物流信息 后确认按钮-->
+        <div v-if="refundType === 1 && refundStatus === 1" :class="$style.footerSubmit">
             <pl-button size="larger" type="warning" :loading="loading" :disabled="loading" @click="submit">
                 提交申请
             </pl-button>
@@ -184,7 +184,7 @@
             </pl-button>
             <!--退款退货 订单 待退货之前 + 仅退款 订单 待退款之前 可 更改退单-->
             <pl-button
-                v-if="(refundType === 1 && refundStatus === 1) && (refundType === 2 && refundStatus === 4)"
+                v-if="(refundType === 1 && refundStatus === 1) && (refundType === 2 && [1, 2, 3, 4].includes(refundStatus))"
                 round
                 plain
                 @click="$router.push({ name: 'RefundApply', params: { orderId: orderDetails.id, orderProductRId: orderDetails.goodId, refundType: refundType, type: 'MODIFY', refundId: refundDetail.id } })"
@@ -307,7 +307,6 @@ export default {
                 // 退款失败
                 7: '退款已关闭,如有问题请尽快与商家协商'
             },
-            receiveStatusMap: { 1: '已收到货', 2: '未收到货' },
             expressMap: []
         }
     },
