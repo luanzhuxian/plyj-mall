@@ -1,19 +1,19 @@
 <template>
     <div :class="$style.home">
         <template v-if="allLoaded">
-            <TemplateB
+            <template-b
                 v-if="~[3, 4].indexOf(type)"
                 :type="type"
                 :skin-id="skinId"
                 :data="modules"
             />
-            <TemplateC
+            <template-c
                 v-if="type === -1"
                 :type="type"
                 :skin-id="skinId"
                 :data="modules"
             />
-            <TemplateD
+            <template-d
                 v-if="type === 9"
                 :type="type"
                 :skin-id="skinId"
@@ -81,9 +81,6 @@ export default {
             loaded: false,
             type: 0,
             modules: {},
-            // dataMoonLightBox: {},
-            // 820用户注册次数
-            // registerCountFor820: 0,
             isReportShow: false,
             isBookShow: false,
             reportId: '',
@@ -91,34 +88,35 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['mallId', 'serverTime', 'agentUser', 'userId', 'isActivityAuth', 'skinId', 'liveInfo', 'courseInfo', 'nwEvent', 'mallDomain']),
+        ...mapGetters(['mallId', 'serverTime', 'agentUser', 'userId', 'isActivityAuth', 'skinId', 'nwEvent', 'mallDomain']),
         allLoaded () {
             let result
             if (this.type === 3) {
                 result = this.loaded &&
-                this.skinId !== null &&
-                (this.liveInfo !== null && !!this.liveInfo) &&
-                (this.courseInfo !== null && !!this.courseInfo)
+                this.skinId !== null
+                // (this.liveInfo !== null && !!this.liveInfo) &&
+                // (this.courseInfo !== null && !!this.courseInfo)
             }
             if (this.type === 4) {
                 result = this.loaded &&
-                this.skinId !== null &&
-                (this.liveInfo !== null && !!this.liveInfo) &&
-                (this.courseInfo !== null && !!this.courseInfo)
+                this.skinId !== null
+                // (this.liveInfo !== null && !!this.liveInfo) &&
+                // (this.courseInfo !== null && !!this.courseInfo)
                 // (this.invitingEvent !== null && !!this.invitingEvent)
                 // (this.jxEvent !== null && !!this.jxEvent)
             }
             if (this.type === -1 || this.type === 9) {
                 result = this.loaded &&
                 this.skinId !== null &&
-                (this.liveInfo !== null && !!this.liveInfo) &&
-                (this.courseInfo !== null && !!this.courseInfo) &&
+                // (this.liveInfo !== null && !!this.liveInfo) &&
+                // (this.courseInfo !== null && !!this.courseInfo) &&
                 (this.nwEvent !== null && !!this.nwEvent)
             }
             return result
         }
     },
     watch: {
+        // 首次打开跳转主会场
         // isActivityAuth: {
         //     handler (val) {
         //         if (val === true && !this.$router.currentRoute.meta.from) {
@@ -179,34 +177,46 @@ export default {
                 const { type, moduleModels } = result
                 const modules = {}
                 if (type === 3) {
-                    modules.BANNER = moduleModels[0]
-                    modules.POPULAR = moduleModels[1]
-                    modules.APPOINTMENT = moduleModels[2]
-                    modules.PROPAGATE = moduleModels[3]
-                    modules.CLASS = moduleModels[4]
-                    modules.RECOMMEND = moduleModels[5]
+                    modules.BANNER = findModule.bind(moduleModels)(1)
+                    modules.LIVE = findModule.bind(moduleModels)(20)
+                    modules.COURSE = findModule.bind(moduleModels)(21)
+                    modules.SERIES = findModule.bind(moduleModels)(22)
+                    modules.POPULAR = findModule.bind(moduleModels)(2)
+                    modules.APPOINTMENT = findModule.bind(moduleModels)(5)
+                    modules.PROPAGATE = findModule.bind(moduleModels)(6)
+                    modules.CLASS = findModule.bind(moduleModels)(3)
+                    modules.RECOMMEND = findModule.bind(moduleModels)(4)
                 }
                 if (type === 4) {
                     modules.BANNER = moduleModels[0]
                     modules.ADV = moduleModels[1]
-                    modules.POPULAR = moduleModels[2]
-                    modules.APPOINTMENT = moduleModels[3]
-                    modules.PROPAGATE = moduleModels[4]
-                    modules.CLASS = moduleModels[5]
-                    modules.RECOMMEND = moduleModels[6]
+                    modules.LIVE = findModule.bind(moduleModels)(20)
+                    modules.COURSE = findModule.bind(moduleModels)(21)
+                    modules.SERIES = findModule.bind(moduleModels)(22)
+                    modules.POPULAR = findModule.bind(moduleModels)(2)
+                    modules.APPOINTMENT = findModule.bind(moduleModels)(5)
+                    modules.PROPAGATE = findModule.bind(moduleModels)(6)
+                    modules.CLASS = findModule.bind(moduleModels)(3)
+                    modules.RECOMMEND = findModule.bind(moduleModels)(4)
                 }
                 if (type === -1) {
-                    modules.PROPAGATE = moduleModels[0]
-                    modules.APPOINTMENT = moduleModels[1]
-                    modules.POPULAR = moduleModels[2]
-                    modules.TEACHERS = moduleModels[3]
-                    modules.CLASS = moduleModels[4]
-                    modules.RECOMMEND = moduleModels[5]
+                    modules.PROPAGATE = findModule.bind(moduleModels)(6)
+                    modules.LIVE = findModule.bind(moduleModels)(20)
+                    modules.COURSE = findModule.bind(moduleModels)(21)
+                    modules.SERIES = findModule.bind(moduleModels)(22)
+                    modules.APPOINTMENT = findModule.bind(moduleModels)(5)
+                    modules.POPULAR = findModule.bind(moduleModels)(2)
+                    modules.TEACHERS = findModule.bind(moduleModels)(12)
+                    modules.CLASS = findModule.bind(moduleModels)(3)
+                    modules.RECOMMEND = findModule.bind(moduleModels)(4)
                 }
                 if (type === 9) {
                     modules.BANNER = findModule.bind(moduleModels)(1)
                     modules.COUPON = findModule.bind(moduleModels)(9)
                     modules.ACTIVITY = findModule.bind(moduleModels)(15)
+                    modules.LIVE = findModule.bind(moduleModels)(20)
+                    modules.COURSE = findModule.bind(moduleModels)(21)
+                    modules.SERIES = findModule.bind(moduleModels)(22)
                     modules.APPOINTMENT = findModule.bind(moduleModels)(5)
                     modules.MIAO_SHA = findModule.bind(moduleModels)(10)
                     modules.PACKAGE = findModule.bind(moduleModels)(16)

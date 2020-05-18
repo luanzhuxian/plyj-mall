@@ -126,7 +126,7 @@ export default {
     // 直播
     liveInfo: null,
     // 线上课程
-    courseInfo: null,
+    // courseInfo: null,
     // 待领优惠卷
     couponToReceive: null,
     // // 邀新有礼

@@ -1,25 +1,24 @@
 <template>
     <div>
-        <div :class="$style.onlineCourseWrapper">
-            <div :class="$style.onlineCourseHead">
+        <div :class="$style.seriesCourseWrapper">
+            <div :class="$style.seriesCourseHead">
                 <pl-svg name="icon-tv-76530" width="36" height="45" />
                 <b>{{ data.moduleName }}</b>
                 <router-link
-                    :class="$style.onlineCourseHeadMore"
-                    :to="{ name: 'OnlineClassroom' }"
+                    :class="$style.seriesCourseHeadMore"
+                    :to="{ name: 'seriesOfCourses' }"
                 >
                     查看全部
                     <pl-svg name="icon-right" height="20" fill="#cccccc" />
                 </router-link>
             </div>
-            <div :class="$style.onlineCourseHeadSub">
+            <div :class="$style.seriesCourseHeadSub">
                 {{ `还有${data.otherValue}个知识课程，等你来学习` }}
             </div>
             <ul :class="$style.list" v-if="data.values.length">
                 <template v-for="(course, index) of data.values">
                     <router-link
                         v-if="course.goodsInfo"
-                        :class="{ [$style.long]: data.values.length % 2 && index === 0 }"
                         :key="index"
                         tag="li"
                         :to="{ name: 'Curriculum', params: { productId: course.id } }"
@@ -31,6 +30,9 @@
                             <div :class="$style.top" v-text="course.goodsInfo.courseName" />
                             <div :class="$style.middle" v-if="course.goodsInfo.lecturer">
                                 {{ `主讲人：${course.goodsInfo.lecturer}` }}
+                            </div>
+                            <div :class="$style.middle" v-if="course.goodsInfo.courseCount">
+                                {{ `包含${course.goodsInfo.courseCount}节课程` }}
                             </div>
                             <div :class="$style.bottom">
                                 <span
@@ -61,7 +63,7 @@
 
 <script>
 export default {
-    name: 'OnlineCourse',
+    name: 'SeriesCourse',
     props: {
         data: {
             type: Object,
@@ -77,13 +79,13 @@ export default {
 </script>
 
 <style module lang="scss">
-.online-course-wrapper {
+.series-course-wrapper {
     padding: 20px;
     background-color: #fff;
     border-radius: 20px;
     overflow: hidden;
 }
-.online-course-head {
+.series-course-head {
     display: flex;
     align-items: end;
     margin-bottom: 12px;
@@ -116,16 +118,18 @@ export default {
     justify-content: space-between;
     > li {
         display: flex;
-        flex-direction: column;
-        margin-top: 16px;
-        width: 320px;
-        height: 370px;
+        margin-top: 20px;
+        width: 100%;
+        height: 188px;
         overflow: hidden;
+        &:nth-of-type(1) {
+          margin-top: 0;
+        }
         .img-wrapper {
             position: relative;
-            width: 100%;
-            height: 214px;
-            border-radius: 20px 20px 0 0;
+            width: 280px;
+            height: 188px;
+            border-radius: 20px;
             overflow: hidden;
         }
         img {
@@ -135,11 +139,11 @@ export default {
         }
         .info {
             flex: 1;
-            // width: 0;
+            width: 0;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 14px 0 10px;
+            padding: 8px 0 8px 20px;
         }
         .top {
             font-size: 28px;
@@ -151,10 +155,13 @@ export default {
             @include elps();
         }
         .middle {
-            margin-top: 2px;
-            font-size: 20px;
+            margin-top: 6px;
+            font-size: 24px;
             color: #666;
             @include elps();
+            &:nth-of-type(1) {
+              margin-top: 10px;
+            }
         }
         .bottom {
             margin-top: auto;
@@ -183,7 +190,7 @@ export default {
             &-btn {
                 flex-shrink: 0;
                 margin-left: auto;
-                width: 134px;
+                width: 124px;
                 height: 48px;
                 line-height: 48px;
                 text-align: center;
@@ -195,25 +202,6 @@ export default {
             &-study {
                 background-color: #f2b036;
             }
-        }
-        &.long {
-          display: flex;
-          flex-direction: row;
-          margin-top: 0;
-          width: 100%;
-          height: 188px;
-          .img-wrapper {
-              width: 280px;
-              height: 188px;
-              border-radius: 20px;
-          }
-          .info {
-              padding: 8px 0 8px 20px;
-          }
-          .middle {
-              margin-top: 12px;
-              font-size: 24px;
-          }
         }
     }
 }

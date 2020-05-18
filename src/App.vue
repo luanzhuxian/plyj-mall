@@ -21,7 +21,7 @@ import {
     GET_ACTIVITY_DATA,
     GET_SKIN_ID,
     SET_LIVE_INFO,
-    SET_COURSE_INFO,
+    // SET_COURSE_INFO,
     SET_COUPON_INFO,
     SET_NW_EVENT,
     SET_DRAGON_GATE_CHARITY,
@@ -41,7 +41,7 @@ import {
     getDragonGatePlayInfo
 } from './apis/home'
 import { setFirstVisit } from './apis/longmen-festival/lottery'
-import { getCourse as getCourseInfo } from './apis/online-classroom'
+// import { getCourse as getCourseInfo } from './apis/online-classroom'
 // import { getCurrentActivity as getInvitingEvent } from './apis/invitenewcomers'
 
 export default {
@@ -109,7 +109,7 @@ export default {
         ...mapMutations({
             setTheme: SET_THEME,
             setLiveInfo: SET_LIVE_INFO,
-            setCourseInfo: SET_COURSE_INFO,
+            // setCourseInfo: SET_COURSE_INFO,
             setCouponInfo: SET_COUPON_INFO,
             setNwEvent: SET_NW_EVENT,
             setDragonGateCharity: SET_DRAGON_GATE_CHARITY,
@@ -130,7 +130,7 @@ export default {
             try {
                 const activityList = [
                     getLiveInfo(),
-                    getCourseInfo(),
+                    // getCourseInfo(),
                     getNianweiInfo(),
                     getMyCouponInfo(),
                     getDragonGateCharityInfo(),
@@ -142,7 +142,7 @@ export default {
 
                 const [
                     { result: live },
-                    { result: course },
+                    // { result: course },
                     { result: nianwei },
                     { result: coupon },
                     { result: charity },
@@ -153,7 +153,7 @@ export default {
                     return { result: {} }
                 })))
                 this.setLiveInfo(live)
-                this.setCourseInfo(course)
+                // this.setCourseInfo(course)
                 this.setNwEvent(nianwei)
                 this.setCouponInfo(coupon)
                 this.setDragonGateCharity(charity)

@@ -87,9 +87,9 @@ export default {
     [type.SET_LIVE_INFO] (state, payload = {}) {
         state.liveInfo = payload
     },
-    [type.SET_COURSE_INFO] (state, payload = {}) {
-        state.courseInfo = payload
-    },
+    // [type.SET_COURSE_INFO] (state, payload = {}) {
+    //     state.courseInfo = payload
+    // },
     [type.SET_COUPON_INFO] (state, payload = 0) {
         state.couponToReceive = payload
     },
