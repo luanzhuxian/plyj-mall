@@ -22,7 +22,7 @@
             :option="subSkuName ? `${skuName},${subSkuName}` : skuName"
             :count="count"
             :price="unitPrice"
-            :status="refundStatusMap[businessStatus] || ''"
+            :status="aftersaleStatusMap[aftersaleStatus]"
             :active-product="skuSource"
             :pre-active="skuSource !== 1 ? 2 : ''"
             border
@@ -40,10 +40,10 @@
                     type="warning"
                     round
                     :loading="isPayloading"
-                    :disabled="isPayloading"
+                    :disabled="isPayloading || pastDue"
                     @click="doOperation('pay')"
                 >
-                    去付款
+                    {{ pastDue ? '已过期' : '去付款' }}
                 </pl-button>
                 <!--预购 待付尾款-->
                 <pl-button
@@ -240,7 +240,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['skuSourceKeyMap', 'orderTypeMap', 'orderTypeKeyMap', 'orderStatusMap', 'orderStatuskeyMap', 'refundStatusMap', 'aftersaleStatusKeyMap'])
+        ...mapGetters(['skuSourceKeyMap', 'orderTypeMap', 'orderTypeKeyMap', 'orderStatusMap', 'orderStatuskeyMap', 'refundStatusMap', 'aftersaleStatusMap', 'aftersaleStatusKeyMap'])
     },
     methods: {
         // 取消订单

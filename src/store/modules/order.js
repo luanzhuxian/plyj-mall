@@ -105,6 +105,14 @@ export default {
             // 处理完成
             PROCESSING_COMPLETED: 'PROCESSING_COMPLETED'
         },
+        aftersaleStatusMap: {
+            // 无售后
+            NO_AFTER_SALES: '',
+            // 处理中
+            PROCESSING: '退款中',
+            // 处理完成
+            PROCESSING_COMPLETED: '退款成功'
+        },
         // 要申请售后的商品信息
         refundGoodsInfo,
         // 订单操作方式
@@ -167,6 +175,7 @@ export default {
         refundStatusMap: state => state.refundStatusMap,
         refundTypeMap: state => state.refundTypeMap,
         aftersaleStatusKeyMap: state => state.aftersaleStatusKeyMap,
+        aftersaleStatusMap: state => state.aftersaleStatusMap,
         refundGoodsInfo: state => state.refundGoodsInfo,
         orderActionMap: state => state.orderActionMap,
         orderOperatedList: state => state.orderOperatedList,

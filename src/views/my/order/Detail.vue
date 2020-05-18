@@ -9,9 +9,10 @@
             />
         </div>
         <!-- 核销码 -->
+        <!--paymentMethod 0-线上 1-线下 -->
         <div
             :class="$style.qrcodeBox"
-            v-if="redeemCodeModels.length > 0 && ([orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status) || (detail.isXianxia && orderStatuskeyMap.WAIT_PAY_TAIL_MONEY === detail.status))"
+            v-if="redeemCodeModels.length > 0 && ([orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status) || (detail.paymentMethod === 1 && orderStatuskeyMap.WAIT_PAY_TAIL_MONEY === detail.status))"
         >
             <img v-imgError :src="qrImg" alt="" v-imger:QR="qrImg" :style="{ opacity: isAllCodeUseless ? 0.4 : 1 }">
             <div :class="{[$style.codeListBox]: true, [$style.collapse]: collapseQrCode}">
@@ -401,9 +402,10 @@
                 type="warning"
                 round
                 :loading="payloading"
+                :disabled="payloading || finalPaymentIsEnded"
                 @click="pay"
             >
-                去付款
+                {{ finalPaymentIsEnded ? '已过期' : '去付款' }}
             </pl-button>
             <!--知识课程 + 订单完成 支持 去学习-->
             <pl-button
@@ -629,6 +631,7 @@ export default {
             try {
                 const { result } = await getOrderDetail(this.orderId)
                 const { goodsModel, orderPayTransInfos, redeemCodeModels, productCustomInfo, invoiceInfoModel } = result
+                result.refundId = (result.orderRefundsModel && result.orderRefundsModel.id) || ''
                 this.detail = result
                 goodsModel.sellingPrice = filter.formatAmount(goodsModel.sellingPrice)
                 // 商品详情
