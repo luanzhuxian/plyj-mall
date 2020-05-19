@@ -592,7 +592,6 @@ export default {
         // 是否显示评价按钮
         isCommentBtnShow () {
             // TODO.&& this.goodsModel.assessmentStatus === 0
-            console.log(this.detail.aftersaleStatus === this.aftersaleStatusKeyMap.NO_AFTER_SALES)
             return this.detail.status === this.orderStatuskeyMap.FINISHED &&
           (
               (this.detail.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS && this.detail.aftersaleStatus === this.aftersaleStatusKeyMap.NO_AFTER_SALES) ||
