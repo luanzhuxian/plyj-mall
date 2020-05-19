@@ -103,11 +103,11 @@
                     <!--售后完成 支持 退款完成显示-->
                     <pl-button
                         class="refund-finish"
-                        v-if="detail.afterSalesStatus === aftersaleStatusKeyMap.PROCESSING_COMPLETED"
+                        v-if="detail.aftersaleStatus === aftersaleStatusKeyMap.PROCESSING_COMPLETED"
                         plain
                         round
-                        :style="{ opacity: goodsModel.afterSalesStatusExtend === aftersaleStatusKeyMap.PROCESSING ? 0.3 : 1 }"
-                        @click="goodsModel.afterSalesStatusExtend === aftersaleStatusKeyMap.PROCESSING ? '' : $router.push({ name: 'RefundDetail', params: { id: detail.refundId } })"
+                        :style="{ opacity: goodsModel.aftersaleStatusExtend === aftersaleStatusKeyMap.PROCESSING ? 0.3 : 1 }"
+                        @click="goodsModel.aftersaleStatusExtend === aftersaleStatusKeyMap.PROCESSING ? '' : $router.push({ name: 'RefundDetail', params: { id: detail.refundId } })"
                     >
                         退款完成
                     </pl-button>
@@ -128,7 +128,7 @@
                         type="warning"
                         plain
                         round
-                        @click="$router.push({ name: 'CommentOrder', params: { orderId: orderId, productId: goodsModel.id }, query: { productImg: goodsModel.img, skuCode1: goodsModel.sku, skuCode2: goodsModel.subSku } })"
+                        @click="$router.push({ name: 'CommentOrder', params: { orderId: orderId, productImg: goodsModel.img } })"
                     >
                         晒单评价
                     </pl-button>
@@ -591,9 +591,13 @@ export default {
         },
         // 是否显示评价按钮
         isCommentBtnShow () {
-            return this.detail.status === this.orderStatuskeyMap.FINISHED && this.goodsModel.assessmentStatus === 0 &&
-          (((this.detail.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS) && (this.detail.afterSalesStatus === this.aftersaleStatusKeyMap.NO_AFTER_SALES)) ||
-            ([this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS].includes(this.detail.orderType) && this.redeemCodeModels.some(item => item.status === 1)))
+            // TODO.&& this.goodsModel.assessmentStatus === 0
+            console.log(this.detail.aftersaleStatus === this.aftersaleStatusKeyMap.NO_AFTER_SALES)
+            return this.detail.status === this.orderStatuskeyMap.FINISHED &&
+          (
+              (this.detail.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS && this.detail.aftersaleStatus === this.aftersaleStatusKeyMap.NO_AFTER_SALES) ||
+            ([this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS].includes(this.detail.orderType) && this.redeemCodeModels.some(item => item.status === 1))
+          )
         }
     },
     async activated () {
@@ -667,7 +671,9 @@ export default {
                     let tip = ''
                     const { validityPeriodStart, validityPeriodEnd, validity } = goodsModel
                     tip = suggestionMap[result.status]
-                    tip = this.detail.aftersaleStatus === this.aftersaleStatusKeyMap.PROCESSING_COMPLETED ? '退款完成' : '订单取消'
+                    if (this.detail.aftersaleStatus === this.aftersaleStatusKeyMap.PROCESSING_COMPLETED) {
+                        tip = '退款完成'
+                    }
                     if (result.status === this.orderStatuskeyMap.WAIT_RECEIVE) {
                         // 知识课程/系列课程 观看有效期
                         if ([this.orderTypeKeyMap.KNOWLEDGE_COURSE, this.orderTypeKeyMap.SERIES_OF_COURSE].includes(result.orderType)) {
