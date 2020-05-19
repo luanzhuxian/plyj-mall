@@ -174,7 +174,7 @@ export default {
                         .finally(() => {
                             this.$router.replace({ name: 'Classify' })
                         })
-                    return
+                    throw new Error('商城未装修，但是访问了页面')
                 }
                 const { type, moduleModels } = result
                 const modules = {}

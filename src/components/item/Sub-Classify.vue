@@ -35,6 +35,11 @@ export default {
             }
         }
     },
+    watch: {
+        children () {
+            this.id = ''
+        }
+    },
     methods: {
         itemClick (item) {
             this.id = item.id

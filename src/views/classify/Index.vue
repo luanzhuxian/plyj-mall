@@ -116,7 +116,7 @@
 import GoodsItem from '../../components/item/Goods-Item.vue'
 import SubClassify from '../../components/item/Sub-Classify.vue'
 import LoadMore from '../../components/common/Load-More.vue'
-import { getCategoryTree, getProduct } from '../../apis/classify'
+import { getCategoryTree, getProduct, getCourseCategoryTree } from '../../apis/classify'
 import { getActivityProduct } from '../../apis/broker'
 import { getCourse } from '../../apis/online-classroom'
 import { mapGetters } from 'vuex'
@@ -207,13 +207,14 @@ export default {
         },
         // 切换主分类
         classifyClick (classify) {
-            if (this.loading || classify === this.currentClassify) return
-            if (classify && (classify.id === '2')) {
+            if (this.loading) return
+            if (classify && classify.categoryType) {
                 // 点击知识课程
                 this.currentClassify = classify
-                this.$router.push({ name: 'Classify', params: { optionId: '2' } })
-                this.getCourse()
-                return
+                this.requestMethods = getCourse
+            } else {
+                // 点击正常商品分类
+                this.requestMethods = getProduct
             }
             if (classify && (classify.id === '1')) {
                 // 点击的是helper专区
@@ -230,49 +231,62 @@ export default {
                 this.agentShow = false
                 this.currentClassify = classify
                 this.currentClassify.subCategoryName = ''
-
-                // if (!this.form.hasOwnProperty('categoryName')) {
                 this.form = JSON.parse(JSON.stringify(this.classifyFormTemplate))
-                this.requestMethods = getProduct
-
-                // }
                 this.form.categoryId = classify.id
                 this.form.subCategoryId = ''
                 this.$router.push({ name: 'Classify', params: { optionId: classify.id || null } })
                 this.$refresh()
+
+                // 将子分类刷到不选中的装态
+                const childs = this.currentClassify.childs
+                this.currentClassify.childs = []
+                this.$nextTick(() => {
+                    this.currentClassify.childs = childs
+                })
             }
         },
         subClassifyClick ({ cid, name }) {
             if (this.loading) return
             this.currentClassify.subCategoryName = name
-            this.form.categoryId = this.currentClassify.id
-            this.form.subCategoryId = cid
+            if (this.currentClassify.categoryType) {
+                // 点击线上课子分类
+                this.form.categoryId = cid
+                delete this.form.subCategoryId
+            } else {
+                // 点击商品子分类
+                this.form.categoryId = this.currentClassify.id
+                this.form.subCategoryId = cid
+            }
             this.form.current = 1
             this.$refresh()
         },
         async getCategoryTree () {
             try {
-                const { result } = await getCategoryTree()
-                this.classifyList = this.classifyList.concat(result)
+                const { result: productCategory } = await getCategoryTree()
+                const { result: courseCategory } = await getCourseCategoryTree()
+                for (const item of courseCategory) {
+                    item.categoryType = item.type
+                }
+                this.classifyList = this.classifyList.concat(courseCategory)
+                this.classifyList = this.classifyList.concat(productCategory)
                 if (this.agentUser) {
                     this.classifyList.push({
                         categoryName: 'Helper专区',
                         id: '1'
                     })
                 }
-                this.classifyList.push({
-                    id: '2',
-                    categoryName: '知识课程',
-                    subCategoryName: '',
-                    childs: null
-                })
+                // this.classifyList.push({
+                //     id: '2',
+                //     categoryName: '知识课程',
+                //     subCategoryName: '',
+                //     childs: null
+                // })
             } catch (e) {
                 throw e
             }
         },
         refreshHandler (list) {
             if (this.requestMethods === getCourse) {
-                // TODO: 谁也没想到要在分类页面请求知识课程，所以有如下骚操作
                 // 知识课程的请求
                 /*
                 * :img="item.productMainImage + '?x-oss-process=style/thum-middle'"
@@ -317,9 +331,6 @@ export default {
                 item.price = Math.min(...priceList) || 0
             }
             this.prodList = list
-        },
-        async getCourse () {
-            this.requestMethods = getCourse
         },
         share () {
             const {
