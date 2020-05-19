@@ -12,7 +12,7 @@
                     <pl-svg name="icon-right" height="20" fill="#cccccc" />
                 </router-link>
             </div>
-            <div :class="$style.onlineCourseHeadSub">
+            <div :class="$style.onlineCourseHeadSub" v-if="data.otherValue > 0">
                 {{ `还有${data.otherValue}个知识课程，等你来学习` }}
             </div>
             <ul :class="$style.list" v-if="data.values.length">
@@ -102,7 +102,6 @@ export default {
         color: #333;
     }
     &-sub {
-        margin-bottom: 32px;
         font-size: 22px;
         line-height: 32px;
         color: #1592e6;
@@ -122,6 +121,7 @@ export default {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    margin-top: 32px;
     > li {
         display: flex;
         flex-direction: column;
