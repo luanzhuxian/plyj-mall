@@ -19,10 +19,13 @@
                 <template v-for="(course, index) of data.values">
                     <router-link
                         v-if="course.goodsInfo"
-                        :class="{ [$style.long]: data.values.length % 2 && index === 0 }"
+                        :class="{
+                            [$style.long]: isOdd && index === 0,
+                            [$style.marginT0]: (index === 0) || (!isOdd && index === 1)
+                        }"
                         :key="index"
                         tag="li"
-                        :to="{ name: 'Curriculum', params: { productId: course.id } }"
+                        :to="{ name: 'Curriculum', params: { productId: course.goodsInfo.id } }"
                     >
                         <div :class="$style.imgWrapper">
                             <img v-imgError :src="course.goodsInfo.courseImg + '?x-oss-process=style/thum-small'">
@@ -72,6 +75,11 @@ export default {
     },
     data () {
         return {}
+    },
+    computed: {
+        isOdd () {
+            return !!(this.data.values.length % 2)
+        }
     }
 }
 </script>
@@ -85,7 +93,7 @@ export default {
 }
 .online-course-head {
     display: flex;
-    align-items: end;
+    align-items: center;
     margin-bottom: 12px;
     line-height: 46px;
     > b {
@@ -117,7 +125,7 @@ export default {
     > li {
         display: flex;
         flex-direction: column;
-        margin-top: 16px;
+        margin-top: 20px;
         width: 320px;
         height: 370px;
         overflow: hidden;
@@ -199,7 +207,6 @@ export default {
         &.long {
           display: flex;
           flex-direction: row;
-          margin-top: 0;
           width: 100%;
           height: 188px;
           .img-wrapper {
@@ -214,6 +221,9 @@ export default {
               margin-top: 12px;
               font-size: 24px;
           }
+        }
+        &.margin-t-0 {
+            margin-top: 0;
         }
     }
 }

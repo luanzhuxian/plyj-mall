@@ -2,7 +2,7 @@
     <div>
         <div :class="$style.seriesCourseWrapper">
             <div :class="$style.seriesCourseHead">
-                <pl-svg name="icon-tv-76530" width="36" height="45" />
+                <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.10.0/vol-orange.png">
                 <b>{{ data.moduleName }}</b>
                 <router-link
                     :class="$style.seriesCourseHeadMore"
@@ -21,7 +21,7 @@
                         v-if="course.goodsInfo"
                         :key="index"
                         tag="li"
-                        :to="{ name: 'Curriculum', params: { productId: course.id } }"
+                        :to="{ name: 'Curriculum', params: { productId: course.goodsInfo.id } }"
                     >
                         <div :class="$style.imgWrapper">
                             <img v-imgError :src="course.goodsInfo.courseImg + '?x-oss-process=style/thum-small'">
@@ -87,9 +87,14 @@ export default {
 }
 .series-course-head {
     display: flex;
-    align-items: end;
+    align-items: center;
     margin-bottom: 12px;
     line-height: 46px;
+    > img {
+      width: 36px;
+      height: 36px;
+      object-fit: cover;
+    }
     > b {
         margin-left: 16px;
         font-size: 32px;

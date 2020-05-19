@@ -225,7 +225,7 @@ export default {
     justify-content: space-between;
     > li {
         position: relative;
-        margin-top: 16px;
+        margin-top: 20px;
         border-radius: 20px;
         overflow: hidden;
         > label {
