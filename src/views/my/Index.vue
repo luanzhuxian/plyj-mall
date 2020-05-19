@@ -161,6 +161,12 @@
                             <!-- <span>到店核销领礼品</span> -->
                         </div>
                     </router-link>
+                    <router-link :to="{ name: 'MyRedemption', params: {status: 'ALL'}}" :class="$style.welfareItem">
+                        <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.10.0/redemption-code.png" alt="">
+                        <div>
+                            <h5>我的兑换码</h5>
+                        </div>
+                    </router-link>
                 </div>
             </div>
             <router-link
@@ -724,6 +730,8 @@ export default {
 /* 我的优惠券 + 我的礼品 start */
 .welfare {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
     position: relative;
     .segmentation {
         width: 2px;
@@ -743,7 +751,9 @@ export default {
         flex-direction: column;
         align-items: center;
         flex: 1;
-        margin: 28px 20px;
+        min-width: 33%;
+        max-width: 33%;
+        margin: 28px 0;
         > img {
             height: 72px;
         }
