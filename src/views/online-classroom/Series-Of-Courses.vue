@@ -1,6 +1,7 @@
 <template>
     <div :class="$style.onlineClassroom">
         <div
+            v-if="category.length"
             :class="{
                 [$style.classifyMain]: true,
                 [$style.showAll]: isShowAll
