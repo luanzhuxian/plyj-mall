@@ -15,11 +15,6 @@
                     v-show="showBox"
                 >
                     <div class="message">
-                        <!--<pl-svg
-              :class="$style.icon"
-              v-if="icon"
-              :name="icon"
-            />-->
                         <template v-if="useDangersHtml">
                             <p
                                 class="main-message"
@@ -50,6 +45,9 @@
                             :placeholder="placeholder"
                             type="text"
                         >
+                    </div>
+                    <div class="message-box-vnode">
+                        <slot />
                     </div>
                     <div class="buttons">
                         <button
