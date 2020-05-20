@@ -88,29 +88,20 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['mallId', 'serverTime', 'agentUser', 'userId', 'isActivityAuth', 'skinId', 'nwEvent', 'mallDomain']),
+        ...mapGetters(['mallId', 'serverTime', 'agentUser', 'userId', 'isActivityAuth', 'skinId', 'mallDomain']),
         allLoaded () {
             let result
             if (this.type === 3) {
                 result = this.loaded &&
                 this.skinId !== null
-                // (this.liveInfo !== null && !!this.liveInfo) &&
-                // (this.courseInfo !== null && !!this.courseInfo)
             }
             if (this.type === 4) {
                 result = this.loaded &&
                 this.skinId !== null
-                // (this.liveInfo !== null && !!this.liveInfo) &&
-                // (this.courseInfo !== null && !!this.courseInfo)
-                // (this.invitingEvent !== null && !!this.invitingEvent)
-                // (this.jxEvent !== null && !!this.jxEvent)
             }
             if (this.type === -1 || this.type === 9) {
                 result = this.loaded &&
-                this.skinId !== null &&
-                // (this.liveInfo !== null && !!this.liveInfo) &&
-                // (this.courseInfo !== null && !!this.courseInfo) &&
-                (this.nwEvent !== null && !!this.nwEvent)
+                this.skinId !== null
             }
             return result
         }

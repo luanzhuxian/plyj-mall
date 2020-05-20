@@ -8,7 +8,7 @@
             <online-course :class="$style.onlineCourse" :data="COURSE" v-if="COURSE.values && COURSE.values.length" />
             <series-course :class="$style.seriesCourse" :data="SERIES" v-if="SERIES.values && SERIES.values.length" />
             <campaign v-if="isCampaignShow" />
-            <activity :class="$style.activity" v-if="type === 4 && isNwEventShow" />
+            <!-- <activity :class="$style.activity" v-if="type === 4 && isNwEventShow" /> -->
             <!-- <d12-activity :class="$style.activity" v-if="type === 4" /> -->
             <div :class="$style.hotItem" v-if="POPULAR.showStatue === 1">
                 <div v-if="skinId === 0" :class="$style.title" v-text="POPULAR.moduleName" />
@@ -65,7 +65,7 @@ import Search from './components/Search.vue'
 import Live from './components/Live.vue'
 import OnlineCourse from './components/Online-Course.vue'
 import SeriesCourse from './components/Series-Course.vue'
-import Activity from '../activity/spring/Activity.vue'
+// import Activity from '../activity/spring/Activity.vue'
 // import D12Activity from './components/Activity.vue'
 import Banner from './components/Banner.vue'
 import Adv from './components/Adv.vue'
@@ -86,7 +86,7 @@ export default {
         Live,
         OnlineCourse,
         SeriesCourse,
-        Activity,
+        // Activity,
         // D12Activity,
         Banner,
         Adv,
@@ -150,9 +150,9 @@ export default {
         PROPAGATE () {
             return this.data.PROPAGATE || {}
         },
-        isNwEventShow () {
-            return this.parent.nwEvent && this.parent.nwEvent.permissionStatus
-        },
+        // isNwEventShow () {
+        //     return this.parent.nwEvent && this.parent.nwEvent.permissionStatus
+        // },
         isCampaignShow () {
             return this.parent.isReportShow || this.parent.isBookShow
         }
@@ -268,8 +268,7 @@ export default {
     padding: 24px 24px 0;
 }
 
-.adv,
-.activity {
+.adv {
     padding: 20px 24px 0;
     background-color: #f4f5f9;
 }

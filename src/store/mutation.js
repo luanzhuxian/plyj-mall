@@ -87,18 +87,9 @@ export default {
     [type.SET_LIVE_INFO] (state, payload = {}) {
         state.liveInfo = payload
     },
-    // [type.SET_COURSE_INFO] (state, payload = {}) {
-    //     state.courseInfo = payload
-    // },
     [type.SET_COUPON_INFO] (state, payload = 0) {
         state.couponToReceive = payload
     },
-    // [type.SET_INVITING_EVENT] (state, payload = {}) {
-    //     state.invitingEvent = payload
-    // },
-    // [type.SET_JX_EVENT] (state, payload = {}) {
-    //     state.jxEvent = payload
-    // },
     [type.SET_NW_EVENT] (state, payload) {
         state.nwEvent = payload && payload.length ? payload[0] : {}
     },

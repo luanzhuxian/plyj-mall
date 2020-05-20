@@ -17,12 +17,12 @@
                     <live :data="parent.liveInfo" />
                 </div>
                 <!-- 活动-->
-                <activity
+                <!-- <activity
                     v-if="isNwEventShow"
                     :class="[$style.activity, $style.module]"
                     background="#FFFAE6"
                     box-shadow="0px 8px 12px rgba(121, 30, 5, 0.2)"
-                />
+                /> -->
                 <!-- 品宣 -->
                 <div :class="[$style.propagate, $style.module]" v-if="PIN_XUAN && PIN_XUAN.showStatue === 1">
                     <propagate :data="PIN_XUAN" />
@@ -67,7 +67,7 @@
 
 <script>
 import Live from '../spring/Live.vue'
-import Activity from '../spring/Activity.vue'
+// import Activity from '../spring/Activity.vue'
 import Propagate from '../spring/Propagate.vue'
 import Coupon from '../spring/Coupon.vue'
 import Chunyun from '../spring/Chunyun.vue'
@@ -80,7 +80,7 @@ export default {
     inject: ['parent'],
     components: {
         Live,
-        Activity,
+        // Activity,
         Propagate,
         Coupon,
         Chunyun,
@@ -130,9 +130,9 @@ export default {
             const list = liveInfo.liveModel.filter(item => item.statue === 0 || item.statue === 4 || (item.statue === 2 && item.hasNotice))
             return !!list.length
         },
-        isNwEventShow () {
-            return this.parent.nwEvent && this.parent.nwEvent.permissionStatus
-        },
+        // isNwEventShow () {
+        //     return this.parent.nwEvent && this.parent.nwEvent.permissionStatus
+        // },
         allLoaded () {
             return this.parent.allLoaded
         }
@@ -195,7 +195,6 @@ export default {
     padding: 54px 24px 0;
 }
 
-.activity,
 .propagate,
 .coupon {
     padding: 32px 24px 0;

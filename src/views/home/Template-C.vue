@@ -7,7 +7,7 @@
             <online-course :class="$style.onlineCourse" :data="COURSE" v-if="COURSE.values && COURSE.values.length" />
             <series-course :class="$style.seriesCourse" :data="SERIES" v-if="SERIES.values && SERIES.values.length" />
             <campaign v-if="isCampaignShow" />
-            <activity :class="$style.activity" v-if="isNwEventShow" />
+            <!-- <activity :class="$style.activity" v-if="isNwEventShow" /> -->
             <!-- <d12-activity :class="$style.activity" /> -->
             <appointment :class="$style.appointment" :data="APPOINTMENT" :style-type="2" />
             <div :class="$style.hotItem" v-if="POPULAR.showStatue === 1">
@@ -62,7 +62,7 @@ import Search from './components/Search.vue'
 import Live from './components/Live.vue'
 import OnlineCourse from './components/Online-Course.vue'
 import SeriesCourse from './components/Series-Course.vue'
-import Activity from '../activity/spring/Activity.vue'
+// import Activity from '../activity/spring/Activity.vue'
 // import D12Activity from './components/Activity.vue'
 import HotItem from './components/Hot-Item.vue'
 import Best from './components/Best.vue'
@@ -82,7 +82,7 @@ export default {
         Live,
         OnlineCourse,
         SeriesCourse,
-        Activity,
+        // Activity,
         // D12Activity,
         HotItem,
         Best,
@@ -142,9 +142,9 @@ export default {
         RECOMMEND () {
             return this.data.RECOMMEND || {}
         },
-        isNwEventShow () {
-            return this.parent.nwEvent && this.parent.nwEvent.permissionStatus
-        },
+        // isNwEventShow () {
+        //     return this.parent.nwEvent && this.parent.nwEvent.permissionStatus
+        // },
         isCampaignShow () {
             return this.parent.isReportShow || this.parent.isBookShow
         }
@@ -169,7 +169,6 @@ export default {
     font-weight: bold;
     &::before {
         position: relative;
-        //   top: 2px;
         display: inline-block;
         content: '';
         width: 6px;
@@ -225,7 +224,6 @@ export default {
     padding: 24px 24px 0;
 }
 
-.activity,
 .appointment {
     padding: 24px 20px 0;
 }

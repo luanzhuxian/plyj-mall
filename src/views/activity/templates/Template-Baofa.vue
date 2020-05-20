@@ -17,7 +17,7 @@
             :data="MIAO_SHA"
         />
         <!-- 活动 -->
-        <div :class="$style.moduleActivity" v-if="hasInvitingEvent || hasJxEvent">
+        <!-- <div :class="$style.moduleActivity" v-if="hasInvitingEvent || hasJxEvent">
             <router-link
                 v-if="hasInvitingEvent && hasJxEvent"
                 :class="[$style.road, $style.small]"
@@ -42,7 +42,7 @@
                 tag="div"
                 :to="{ name: 'InviteNewcomers', params: { activityId: invitingEvent.id } }"
             />
-        </div>
+        </div> -->
         <pintuan
             v-if="PIN_TUAN.values && PIN_TUAN.values.length"
             :data="PIN_TUAN"
@@ -105,18 +105,18 @@ export default {
         FENG_QIANG () {
             return this.data.FENG_QIANG || {}
         },
-        invitingEvent () {
-            return (this.parent && this.parent.invitingEvent) || {}
-        },
-        jxEvent () {
-            return (this.parent && this.parent.jxEvent) || {}
-        },
-        hasInvitingEvent () {
-            return ~[1, 2].indexOf(this.invitingEvent.status)
-        },
-        hasJxEvent () {
-            return ~[1, 2].indexOf(this.jxEvent.status)
-        },
+        // invitingEvent () {
+        //     return (this.parent && this.parent.invitingEvent) || {}
+        // },
+        // jxEvent () {
+        //     return (this.parent && this.parent.jxEvent) || {}
+        // },
+        // hasInvitingEvent () {
+        //     return ~[1, 2].indexOf(this.invitingEvent.status)
+        // },
+        // hasJxEvent () {
+        //     return ~[1, 2].indexOf(this.jxEvent.status)
+        // },
         isLiveShow () {
             const { liveInfo } = this.parent
             if (!liveInfo.liveModel || !liveInfo.liveModel.length) {
@@ -135,34 +135,34 @@ export default {
 }
 
 // 活动
-.module-activity {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 32px;
-    .small {
-        width: 340px;
-        height: 176px;
-        &.road {
-            background: url('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/road-small.png') no-repeat center center;
-            background-size: 100% auto;
-        }
-        &.invitation {
-            background: url('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/invitation-small-v2.png') no-repeat center center;
-            background-size: 100% auto;
-        }
-    }
-    .large {
-        width: 100%;
-        height: 176px;
-        &.road {
-            background: url('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/road-large.png') no-repeat center center;
-            background-size: 100% auto;
-        }
-        &.invitation {
-            background: url('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/invitation-large-v2.png') no-repeat center center;
-            background-size: 100% auto;
-        }
-    }
-}
+// .module-activity {
+//     display: flex;
+//     justify-content: space-between;
+//     margin-top: 32px;
+//     .small {
+//         width: 340px;
+//         height: 176px;
+//         &.road {
+//             background: url('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/road-small.png') no-repeat center center;
+//             background-size: 100% auto;
+//         }
+//         &.invitation {
+//             background: url('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/invitation-small-v2.png') no-repeat center center;
+//             background-size: 100% auto;
+//         }
+//     }
+//     .large {
+//         width: 100%;
+//         height: 176px;
+//         &.road {
+//             background: url('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/road-large.png') no-repeat center center;
+//             background-size: 100% auto;
+//         }
+//         &.invitation {
+//             background: url('http://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/activity/invitation-large-v2.png') no-repeat center center;
+//             background-size: 100% auto;
+//         }
+//     }
+// }
 
 </style>
