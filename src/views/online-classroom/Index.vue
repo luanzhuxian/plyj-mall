@@ -36,11 +36,17 @@
 </template>
 <script>
 import { getSendLiveList } from '../../apis/online-classroom.js'
+import { getCourseCategoryTree } from '../../apis/classify'
 import SendLive from '../../components/common/Send-Live.vue'
 export default {
     name: 'OnlineClassroomIndex',
     components: {
         SendLive
+    },
+    provide () {
+        return {
+            onlineClassCoursesCatrgory: this.onlineClassCoursesCatrgory
+        }
     },
     data () {
         return {
@@ -51,14 +57,32 @@ export default {
                 { name: '系列精品课', routerName: 'seriesOfCourses', id: 2 }
             ],
             unaccalimedSendCount: 0,
-            isShowSendLiveDialog: false
+            isShowSendLiveDialog: false,
+            onlineClassCoursesCatrgory: {
+                seriesCoursesCatrgory: [],
+                coursesCatrgory: []
+            }
         }
     },
     async activated () {
-        this.activeTabId = this.tabs.find(item => item.routerName === this.$route.name).id
-        this.getSendLiveCount()
+        try {
+            this.activeTabId = this.tabs.find(item => item.routerName === this.$route.name).id
+            await this.getSendLiveCount()
+            await this.getCourseCategoryTree()
+        } catch (e) {
+            throw e
+        }
     },
     methods: {
+        async getCourseCategoryTree () {
+            try {
+                const { result } = await getCourseCategoryTree()
+                this.onlineClassCoursesCatrgory.seriesCoursesCatrgory = result.find(item => Number(item.type) === 2)
+                this.onlineClassCoursesCatrgory.coursesCatrgory = result.find(item => Number(item.type) === 1)
+            } catch (e) {
+                throw e
+            }
+        },
         async tabChange (item) {
             await this.$nextTick()
             await this.$router.replace({ name: item.routerName })

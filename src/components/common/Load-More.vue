@@ -31,7 +31,7 @@
             <slot
                 :list="list"
                 :total="total"
-                :loading="loading"
+                :loading="pending"
             />
             <svg
                 :class="{ [$style.bottomLoadingIcon]: true, [$style.btoRotate]: pending }"
@@ -91,7 +91,7 @@ export default {
             top: -90,
             // 正在向下拉动
             pulling: false,
-            // loading
+            // 组件内部的loading
             pending: false,
             bottomLoading: false,
             // 已全部加载完毕
@@ -114,8 +114,8 @@ export default {
             type: Boolean,
             default: false
         },
+        // 如果为true，组件将显示loading状态，起到从外部控制组件加载状态的作用
         loading: Boolean,
-
         // 请求方法
         requestMethods: {
             type: Function,
@@ -262,6 +262,9 @@ export default {
 
         // 刷新
         async refresh () {
+            if (this.pending || this.loading) {
+                return
+            }
             try {
                 await this.$nextTick()
                 this.resetState()

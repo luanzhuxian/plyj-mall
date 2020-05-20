@@ -1,18 +1,19 @@
 <template>
     <div :class="$style.onlineClassroom">
-        <!--TODO.暂时不显示分类-->
         <div
-            v-if="false"
             :class="{
                 [$style.classifyMain]: true,
                 [$style.showAll]: isShowAll
             }"
         >
             <ul :class="$style.classifyList">
+                <li :class="{ [$style.active]: form.categoryId === '' }" @click="classifyClick({ id: '' })">
+                    全部
+                </li>
                 <li
-                    v-for="(item, index) in classifyList"
+                    v-for="(item, index) in category"
                     :class="{
-                        [$style.active]: form.category1 === item.category1 && form.category2===item.category2
+                        [$style.active]: form.categoryId===item.id
                     }"
                     :key="index"
                     @click="classifyClick(item)"
@@ -29,7 +30,7 @@
                 </li>
             </ul>
             <transition name="fade">
-                <div :class="$style.controlWrap" v-if="classifyList.length">
+                <div :class="$style.controlWrap" v-if="category.length">
                     <div :class="$style.control">
                         <pl-svg
                             v-show="!isShowAll"
@@ -105,7 +106,6 @@
 <script>
 import { getServerTime } from '../../apis/base-api'
 import { getCourse } from '../../apis/online-classroom.js'
-import { getCategoryTree } from '../../apis/classify'
 import LoadMore from '../../components/common/Load-More.vue'
 import CountDown from '../../components/product/Courses-Count-Down.vue'
 import moment from 'moment'
@@ -115,17 +115,21 @@ export default {
         LoadMore,
         CountDown
     },
+    inject: {
+        onlineClassCoursesCatrgory: {
+            from: 'onlineClassCoursesCatrgory',
+            default: () => {}
+        }
+    },
     data () {
         return {
             form: {
-                category1: '',
-                category2: '',
+                categoryId: '',
                 courseType: 1,
                 current: 1,
                 size: 10
             },
             isShowAll: false,
-            classifyList: [],
             requestMethods: getCourse,
             loading: false,
             $refresh: null,
@@ -136,18 +140,21 @@ export default {
     },
     async activated () {
         try {
-            // TODO.暂时没有分类
-            /* if (!this.classifyList.length) { // 有分类且有默认值才设置默认分类
-                await this.getCategoryTree()
-              } */
             this.$refresh = this.$refs.loadMore.refresh
-
             // 解决因刷新浏览器后，在beforeRouteEnter无法获取到dom信息，导致无法正常调用refresh问题
             if (!this.courseList.length) {
                 this.$refresh()
             }
         } catch (e) {
             throw e
+        }
+    },
+    computed: {
+        category () {
+            return this.onlineClassCoursesCatrgory.coursesCatrgory.childs || []
+        },
+        rootCategory () {
+            return this.onlineClassCoursesCatrgory.coursesCatrgory.id || ''
         }
     },
     deactivated () {
@@ -162,46 +169,10 @@ export default {
         })
     },
     methods: {
-        async getCategoryTree () {
-            try {
-                const { result } = await getCategoryTree()
-                const classifyList = [{
-                    category1: '',
-                    category2: '',
-                    categoryName: '全部'
-                }]
-                if (result.length) {
-                    for (const i in result) {
-                        const item = result[i]
-
-                        if (item.childs) {
-                            for (const j in item.childs) {
-                                const classifyItem = {}
-                                classifyItem.category1 = item.id
-                                const subItem = item.childs[j]
-                                classifyItem.category2 = subItem.id
-                                classifyItem.categoryName = subItem.categoryName
-                                classifyList.push(classifyItem)
-                            }
-                        } else {
-                            const classifyItem = {}
-                            classifyItem.category1 = item.id
-                            classifyItem.category2 = ''
-                            classifyItem.categoryName = item.categoryName
-                            classifyList.push(classifyItem)
-                        }
-                    }
-                }
-                this.classifyList = classifyList
-            } catch (e) {
-                throw e
-            }
-        },
         async classifyClick (item) {
             try {
                 this.form.current = 1
-                this.form.category1 = item.category1
-                this.form.category2 = item.category2
+                this.form.categoryId = item.id
                 this.isShowAll = false
                 this.$refresh()
             } catch (e) {
@@ -315,8 +286,7 @@ export default {
     .classify-list {
         width: 100%;
         flex-wrap: wrap;
-        padding-right: 28px;
-        padding-left: 28px;
+        padding: 26px 28px 20px 28px;
     }
     .control {
         display: none;
