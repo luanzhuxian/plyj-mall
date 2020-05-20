@@ -39,7 +39,7 @@ for (const k of Object.keys(filters)) {
 // UI组件库
 Vue.use(PenglaiUI)
 Vue.config.productionTip = false
-/* eslint-disable */
+/* eslint-disable no-new */
 new Vue({
     el: '#app',
     router,
@@ -52,23 +52,17 @@ new Vue({
 
 router.beforeResolve(beforeResolve)
 router.onError(onError)
+
 /* 处理所有组件抛出的错误 */
 Vue.config.errorHandler = async function (err, vm, info) {
-    if (!err) return
-    try {
-    if (err.name === 'ResponseError') {
-      // 响应出错
-      let error = JSON.parse(err.message)
-      vm.$error(error.message)
-    } else {
-      if (err.message === 'cancel' || err.message === '取消支付') {
-        return
-      }
+    if (err) {
+        if (err.name === 'ResponseError') {
+            // 响应出错
+            const error = JSON.parse(err.message)
+            vm.$error(error.message)
+        }
+        console.error(err)
     }
-    console.error(err)
-  } catch (e) {
-      if (e) console.error(err)
-  }
 }
 const {
     VUE_APP_VERSION,

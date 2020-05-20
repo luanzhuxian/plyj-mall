@@ -1,3 +1,4 @@
+// 标记线上环境还是测试环境 development为开发或测试环境打包，production是生产环境打包
 const MODEL = process.argv[process.argv.indexOf('--model') + 1]
 const { NODE_ENV } = process.env
 const VERSION = process.env.npm_package_version
