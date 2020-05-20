@@ -153,7 +153,7 @@ export default {
                     activituRule: '骄傲打开大苏打撒旦',
                     // 已使用次数
                     useTotal: 12,
-                    // 可使用次数
+                    // 剩余可使用次数
                     stock: 23
                 },
                 {
