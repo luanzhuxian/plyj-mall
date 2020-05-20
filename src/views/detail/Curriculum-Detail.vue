@@ -72,7 +72,7 @@
                             <div v-else :class="$style.free">免费</div>
                         </template>
                         <div :class="$style.original">
-                            <div v-if="detail.priceType === 1" class="mr-30">
+                            <div v-if="detail.priceType === 1 && (isPresent || detail.originalPrice && detail.originalPrice !== detail.sellingPrice)" class="mr-30">
                                 <template v-if="isPresent">
                                     售价：<del v-text="detail.sellingPrice" />
                                 </template>
