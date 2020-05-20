@@ -1,16 +1,18 @@
 <template>
     <div class="dragon-panel" :class="[customClass]">
-        <div class="dragon-panel-title" v-if="!$slots.title">
-            <img v-if="isSvg" :src="title.name" alt="" :style="{ width: title.width / 7.5 + 'vw' }">
-            <title v-text="title" v-else />
-        </div>
-        <slot name="title" v-else />
+        <slot name="title">
+            <div class="dragon-panel-title">
+                <img v-if="isSvg" :src="title.name" alt="" :style="{ width: title.width / 7.5 + 'vw' }">
+                <title v-text="title" v-else />
+            </div>
+        </slot>
 
         <slot />
 
         <template v-if="!hideButton">
-            <button class="dragon-panel-button" v-text="button" v-if="!$slots.button" @click="handleClick" />
-            <slot name="button" v-else />
+            <slot name="button">
+                <button class="dragon-panel-button" v-text="button" @click="handleClick" />
+            </slot>
         </template>
     </div>
 </template>
