@@ -12,3 +12,21 @@ export const getRedemptionList = ({ current, size, status }) => axios.get(`/apis
  * @returns {Promise<AxiosResponse<T>>}
  */
 export const deleteRedemptionByIds = ids => axios.post(`/apis/v1/coupon/center/list`, { ids })
+
+/**
+ * 获取兑换码详情
+ * @returns {Promise<AxiosResponse<T>>}
+ */
+export const getRedemptiontDetail = ({ current, size, status }) => axios.get(`/apis/v1/coupon/center/list?current=${ current }&size=${ size }&status=${ status }`)
+
+/**
+ * 获取兑换码详情
+ * @returns {Promise<AxiosResponse<T>>}
+ */
+export const getProductByCodeId = ({ codeId, status, current, size }) => axios.get(`/apis/v1/coupon/center/list?&codeId=${ codeId }&status=${ status }current=${ current }&size=${ size }`)
+
+/**
+ * 兑换商品
+ * @returns {Promise<AxiosResponse<T>>}
+ */
+export const exchangeProduct = ({ codeId, productId }) => axios.get(`/apis/v1/coupon/center/list?codeId=${ codeId }&productId=${ productId }`)

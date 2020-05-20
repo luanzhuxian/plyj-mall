@@ -175,12 +175,13 @@ export default [
         component: () => import('../views/my/welfare/redemption/Activative.vue'),
         meta: {
             // 激活兑换码
-            title: '我的兑换码'
+            title: '确认激活'
         }
     },
     {
         path: '/my/welfare/redemption-center/:codeId',
         name: 'RedemptionCenter',
+        props: true,
         component: () => import('../views/my/welfare/redemption/Center.vue'),
         meta: {
             // 兑换中心
@@ -189,7 +190,7 @@ export default [
     },
     {
         path: '/my/welfare/redeemed/:codeId',
-        name: 'RedemptionActivative',
+        name: 'RedeemedProductList',
         component: () => import('../views/my/welfare/redemption/Redeemed.vue'),
         meta: {
             // 已兑换

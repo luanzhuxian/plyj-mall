@@ -16,7 +16,7 @@
                     <div :class="[$style.textWhite, $style.mtMb20]">
                         已使用{{ useTotal }}/{{ total }}个
                     </div>
-                    <div :class="[$style.textWhite, $style.instruction]" @click.stop="showInstruction = !showInstruction">
+                    <div v-if="showInstructionControl" :class="[$style.textWhite, $style.instruction]" @click.stop="showInstruction = !showInstruction">
                         使用说明
                         <pl-svg
                             :class="{ [$style.instructionControl]: showInstruction }"
@@ -170,7 +170,9 @@ export default {
         }
       }
       .right {
-        width: 214px;
+        display: flex;
+        flex-direction: column;
+        min-width: 214px;
         padding: 38px 0 38px 42px;
         > div {
           text-align: center;
@@ -179,6 +181,7 @@ export default {
           border-radius:40px;
           padding: 0 24px;
           line-height:42px;
+          flex-wrap: nowrap;
           font-size:28px;
           background-color: #FFF;;
           color: #F8BB4B;

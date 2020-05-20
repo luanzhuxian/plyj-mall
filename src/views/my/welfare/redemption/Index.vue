@@ -198,7 +198,7 @@ export default {
                 item.buttonText = item.isUsed ? '已使用' : item.isExpired ? '已过期' : '去使用'
                 item.checked = false
             })
-            this.codeList = []
+            this.codeList = list
         },
         findIndexById (id) {
             return this.codeList.findIndex(item => item.id === id)
