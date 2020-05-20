@@ -172,6 +172,7 @@ export default [
     {
         path: '/my/welfare/redemption-activative/:codeId',
         name: 'RedemptionActivative',
+        props: true,
         component: () => import('../views/my/welfare/redemption/Activative.vue'),
         meta: {
             // 激活兑换码

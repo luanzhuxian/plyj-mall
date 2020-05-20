@@ -30,3 +30,15 @@ export const getProductByCodeId = ({ codeId, status, current, size }) => axios.g
  * @returns {Promise<AxiosResponse<T>>}
  */
 export const exchangeProduct = ({ codeId, productId }) => axios.get(`/apis/v1/coupon/center/list?codeId=${ codeId }&productId=${ productId }`)
+
+/**
+ * 获取兑换码详情
+ * @returns {Promise<AxiosResponse<T>>}
+ */
+export const getRedemptiontInfo = codeId => axios.get(`/apis/v1/coupon/center/list/codeId`)
+
+/**
+ * 激活兑换码
+ * @returns {Promise<AxiosResponse<T>>}
+ */
+export const receiveRedemption = codeId => axios.get(`/apis/v1/coupon/center/list/codeId`)
