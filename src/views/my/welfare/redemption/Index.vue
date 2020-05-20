@@ -99,6 +99,7 @@
 <script>
 import LoadMore from '../../../../components/common/Load-More.vue'
 import CodeItem from './components/Code-Item'
+import ReceiveCode from './components/Receive-Code'
 import moment from 'moment'
 import {
     getRedemptionList,
@@ -226,7 +227,16 @@ export default {
             if (detail.isUsed || detail.isExpired) return
             this.$router.push({ name: 'RedemptionCenter', params: { codeId } })
         },
-        activateCode () {},
+        async activateCode () {
+            const h = this.$createElement
+            try {
+                await this.$confirm({
+                    slot: h(ReceiveCode)
+                })
+            } catch (e) {
+                throw e
+            }
+        },
         async deleteCode () {
             try {
                 await deleteRedemptionByIds(this.deleteIdList)
