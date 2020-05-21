@@ -141,7 +141,7 @@ export default {
                 this.$router.push({
                     name: 'LiveRoom',
                     params: {
-                        id: this.live.id
+                        id: this.live.roomValue
                     }
                 })
             }
