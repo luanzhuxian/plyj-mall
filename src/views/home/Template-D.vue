@@ -9,7 +9,7 @@
             <online-course :class="$style.onlineCourse" :data="COURSE" v-if="isOnlineCourseShow" />
             <series-course :class="$style.seriesCourse" :data="SERIES" v-if="isSeriesCourseShow" />
             <campaign v-if="isCampaignShow" />
-            <appointment :class="$style.appointment" :data="APPOINTMENT" :slides-per-view="2" />
+            <appointment :class="$style.appointment" :data="APPOINTMENT" :slides-per-view="2" v-if="APPOINTMENT.showStatue === 1" />
             <div :class="$style.miaosha" v-if="isMiaoshaShow">
                 <div v-if="skinId === 0" :class="$style.title" v-text="MIAO_SHA.moduleName" />
                 <skin-title
@@ -50,7 +50,7 @@
                 />
                 <yugou :data="YU_GOU" />
             </div>
-            <propagate :class="$style.propagate" :data="PROPAGATE" />
+            <propagate :class="$style.propagate" :data="PROPAGATE" v-if="PROPAGATE.showStatue === 1" />
             <div :class="$style.hotItem" v-if="POPULAR.showStatue === 1">
                 <div v-if="skinId === 0" :class="$style.title" v-text="POPULAR.moduleName" />
                 <skin-title

@@ -20,15 +20,8 @@
                 />
                 <hot-item :data="POPULAR" />
             </div>
-            <appointment
-                :class="$style.appointment"
-                :data="APPOINTMENT"
-                :slides-per-view="2"
-            />
-            <propagate
-                :class="$style.propagate"
-                :data="PROPAGATE"
-            />
+            <appointment :class="$style.appointment" :data="APPOINTMENT" :slides-per-view="2" v-if="APPOINTMENT.showStatue === 1" />
+            <propagate :class="$style.propagate" :data="PROPAGATE" v-if="PROPAGATE.showStatue === 1" />
             <div :class="$style.best" v-if="CLASS.showStatue === 1">
                 <div v-if="skinId === 0" :class="$style.title" v-text="CLASS.moduleName" />
                 <skin-title

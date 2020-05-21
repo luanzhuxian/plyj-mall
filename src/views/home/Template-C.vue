@@ -9,7 +9,7 @@
             <campaign v-if="isCampaignShow" />
             <!-- <activity :class="$style.activity" v-if="isNwEventShow" /> -->
             <!-- <d12-activity :class="$style.activity" /> -->
-            <appointment :class="$style.appointment" :data="APPOINTMENT" :style-type="2" />
+            <appointment :class="$style.appointment" :data="APPOINTMENT" :style-type="2" v-if="APPOINTMENT.showStatue === 1" />
             <div :class="$style.hotItem" v-if="POPULAR.showStatue === 1">
                 <div v-if="skinId === 0" :class="$style.title" v-text="POPULAR.moduleName" />
                 <skin-title
