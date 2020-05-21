@@ -20,7 +20,7 @@ export const deleteRedemptionByIds = ids => axios.post(`/apis/v1/coupon/center/l
 export const getRedemptiontDetail = ({ current, size, status }) => axios.get(`/apis/v1/coupon/center/list?current=${ current }&size=${ size }&status=${ status }`)
 
 /**
- * 获取兑换码详情
+ * 获取当前兑换码可兑换的商品列表
  * @returns {Promise<AxiosResponse<T>>}
  */
 export const getProductByCodeId = ({ codeId, status, current, size }) => axios.get(`/apis/v1/coupon/center/list?&codeId=${ codeId }&status=${ status }current=${ current }&size=${ size }`)
