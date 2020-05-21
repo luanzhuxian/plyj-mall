@@ -51,7 +51,7 @@
                     <recommend :data="FENG_QIANG">
                         <template v-slot:price="{ price }">
                             <div :class="$style.priceWrapper">
-                                <pl-svg name="icon-fengqiangjia" width="80" height="44" fill="#FE3C5E" />
+                                <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/fengqiangjia.png">
                                 <span :class="$style.price" v-text="price" />
                             </div>
                         </template>
@@ -224,9 +224,12 @@ export default {
     .price-wrapper {
         flex: 1;
         width: 0;
-        display: flex;
-        align-items: flex-end;
         @include elps();
+        > img {
+            width: 80px;
+            height: 27px;
+            vertical-align: text-bottom;
+        }
     }
     .price {
         margin-left: 10px;
