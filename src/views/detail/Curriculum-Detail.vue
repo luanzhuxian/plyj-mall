@@ -390,7 +390,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['appId', 'userName', 'avatar', 'mobile', 'mallUrl', 'userId', 'agentUser']),
+        ...mapGetters(['appId', 'userName', 'avatar', 'mobile', 'mallUrl', 'userId', 'agentUser', 'courseTypeMap']),
 
         // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去 5 从春耘活动进入 6 从组合课活动进入 7 公益棕活动进入
         productActive () {
@@ -404,7 +404,7 @@ export default {
             return this.detail.isBuy || this.isPresent
         },
         activityId () {
-            return this.$route.query.activityId
+            return this.$route.query.activityId || '1'
         }
     },
     watch: {
@@ -594,17 +594,23 @@ export default {
                     .catch(() => {})
                 return
             }
-            this.$router.push({
-                name: 'SubmitCurriculum',
+            this.$store.commit('submitOrder/setOrderProducts', {
                 params: {
-                    productId: this.productId,
-                    count: 1
-                },
-                query: {
                     productActive: this.productActive,
                     activityId: this.activityId
-                }
+                },
+                products: [
+                    {
+                        productId: this.productId,
+                        count: 1,
+                        skuCode1: '',
+                        skuCode2: '',
+                        price: this.detail.sellingPrice,
+                        productType: this.courseTypeMap[this.courseType]
+                    }
+                ]
             })
+            this.$router.push({ name: 'SubmitOrder' })
         },
         // 生成分享
         async createShare () {

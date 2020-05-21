@@ -112,21 +112,31 @@ export const submitOrder = {
             state.invoiceProducts = []
             state.invoiceFromRoute = {}
         },
-
+        // isCart: 'NO',
+        // activeProduct: this.activeProduct || 1,
+        // preActivity: this.preActivity || '',
+        // activityId: this.activityProductModel ? this.activityProductModel.activityId || '' : ''
         /**
          * 设置提交订单使用的商品
          * @param state
-         * @param {Array} products - 商品数据
+         * @param {Object} params - 商品数据
+         * @param {String} params.activeProduct - 商品参与的活动类型 * 1 正常商品 2 团购 3 秒杀 4 预购 5 春耘 6 组合课
+         * @param {String} params.preActivity - 活动状态
+         * @param {String} params.activityId - 活动id
+         * @param {Array} products - 活动id
          * @param {string} products[].productId - 商品id
          * @param {number} products[].count - 商品数量
          * @param {string} products[].skuCode1 - 规格1
          * @param {string} products[].skuCode2 - 规格2
          * @param {number} products[].price - 价格
-         * @param {string} products[].agentUser - helper id, store.getters.shareId
+         * @param {string} products[].agentUser - helper id, store.getters.shareId, 如果不传，会自动填充
          * @param {string} products[].productType - 商品类型  store.getters.orderTypeKeyMap 种的值
          */
-        setOrderProducts: (state, products) => {
-            const orderProducts = JSON.stringify(products) || []
+        setOrderProducts (state, { params, products }) {
+            for (const item of products) {
+                item.agentUser = this.state.SHARE_ID
+            }
+            const orderProducts = JSON.stringify({ params, products }) || []
             sessionStorage.setItem('CONFIRM_LIST', orderProducts)
             state.orderProducts = JSON.parse(orderProducts)
         },

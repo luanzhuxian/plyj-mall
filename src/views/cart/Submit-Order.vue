@@ -209,19 +209,18 @@ export default {
          * 6 组合课
          */
         activeProduct () {
-            return this.preActivity === 2 ? Number(this.$route.query.activeProduct) || 1 : 1
+            return this.preActivity === 2 ? Number(this.params.activeProduct) || 1 : 1
         },
         // 传入的活动状态 2 为进行中
         preActivity () {
-            return Number(this.$route.query.preActivity) || 1
+            return Number(this.params.preActivity) || 1
         },
         // 活动id
         activityId () {
-            return this.$route.query.activityId || ''
+            return this.params.activityId
         },
-        // 是否为购物车页面购买，有些活动页面的购买逻辑类似于购物车购买逻辑，因此也需要传YES, 如：组合课活动下单
-        isCart () {
-            return this.$route.query.isCart === 'YES'
+        params () {
+            return this['submitOrder/orderProducts'].params || { activityId: '', preActivity: '', activeProduct: '1' }
         }
     },
     watch: {
@@ -333,7 +332,7 @@ export default {
                 ]
             */
             try {
-                const CONFIRM_LIST = this['submitOrder/orderProducts']
+                const { products: CONFIRM_LIST } = this['submitOrder/orderProducts']
                 if (!CONFIRM_LIST || !CONFIRM_LIST.length) {
                     return this.$router.replace({ name: 'Home' })
                 }

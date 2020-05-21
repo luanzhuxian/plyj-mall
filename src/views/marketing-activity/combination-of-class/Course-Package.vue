@@ -304,15 +304,16 @@ export default {
                     productType: pro.productType
                 })
             }
-            this.$store.commit('submitOrder/setOrderProducts', confirmList)
-            await this.$router.push({
-                name: 'SubmitOrder',
-                query: {
-                    isCart: 'YES',
+            this.$store.commit('submitOrder/setOrderProducts', {
+                params: {
                     activeProduct: 6,
                     preActivity: 2,
                     activityId: data.activityId
-                }
+                },
+                products: confirmList
+            })
+            await this.$router.push({
+                name: 'SubmitOrder'
             })
         },
         // 判断绑定手机

@@ -82,6 +82,11 @@ export default {
             LIVE_GOODS: 'LIVE_GOODS',
             VIDEO_GOODS: 'VIDEO_GOODS'
         },
+        // 课程类
+        courseTypeMap: {
+            1: 'KNOWLEDGE_COURSE',
+            2: 'SERIES_OF_COURSE'
+        },
         // 售后状态 退款退货时，可能有以下所有状态；仅退款时，无1，2，3状态
         refundStatusMap: {
             1: '待退货',
@@ -179,6 +184,7 @@ export default {
         refundGoodsInfo: state => state.refundGoodsInfo,
         orderActionMap: state => state.orderActionMap,
         orderOperatedList: state => state.orderOperatedList,
-        refundOperatedList: state => state.refundOperatedList
+        refundOperatedList: state => state.refundOperatedList,
+        courseTypeMap: state => state.courseTypeMap
     }
 }

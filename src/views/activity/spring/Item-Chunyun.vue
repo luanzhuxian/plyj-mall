@@ -103,15 +103,13 @@ export default {
                         productType: prod.productType
                     })
                 }
-                this.$store.commit('submitOrder/setOrderProducts', confirmList)
-                await this.$router.push({
-                    name: 'SubmitOrder',
-                    query: {
-                        isCart: 'YES',
+                this.$store.commit('submitOrder/setOrderProducts', {
+                    params: {
                         activeProduct: 5,
                         preActivity: 2,
                         activityId: item.id
-                    }
+                    },
+                    products: confirmList
                 })
             }
         }

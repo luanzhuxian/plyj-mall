@@ -870,25 +870,26 @@ export default {
             const { skuCode1, count, skuCode2, price } = selected
 
             // 分享时携带的id
-            this.$store.commit('submitOrder/setOrderProducts', [{
-                productId: this.productId,
-                count,
-                skuCode1,
-                skuCode2,
-                price,
-                // 如果当前用户是经纪人，则覆盖其他经纪人的id
-                agentUser: this.shareId,
-                productType: this.productType
-            }])
-            this.showSpecifica = false
-            this.$router.push({
-                name: 'SubmitOrder',
-                query: {
-                    isCart: 'NO',
+            this.$store.commit('submitOrder/setOrderProducts', {
+                params: {
                     activeProduct: buyWay === 1 ? 1 : this.activeProduct,
                     preActivity: (buyWay === 1 || this.activeProduct === 1) ? null : this.preActivity,
                     activityId: (this.activeProduct === 1 || buyWay === 1) ? null : this.detail.activityProductModel.activityId
-                }
+                },
+                products: [{
+                    productId: this.productId,
+                    count,
+                    skuCode1,
+                    skuCode2,
+                    price,
+                    // 如果当前用户是经纪人，则覆盖其他经纪人的id
+                    agentUser: this.shareId,
+                    productType: this.productType
+                }]
+            })
+            this.showSpecifica = false
+            this.$router.push({
+                name: 'SubmitOrder'
             })
         },
 

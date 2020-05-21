@@ -500,13 +500,14 @@ export default {
                     productType: pro.goodsType
                 })
             }
-            this.$store.commit('submitOrder/setOrderProducts', confirmList)
-            this.$router.push({
-                name: 'SubmitOrder',
-                query: {
-                    isCart: 'YES',
+            this.$store.commit('submitOrder/setOrderProducts', {
+                params: {
                     activeProduct: 1
-                }
+                },
+                products: confirmList
+            })
+            this.$router.push({
+                name: 'SubmitOrder'
             })
         },
 
