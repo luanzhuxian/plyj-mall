@@ -302,12 +302,12 @@
                     :content="orderLastPayInfo.callbackTime"
                 />
                 <pl-list
-                    v-if="detail.status === orderStatuskeyMap.WAIT_RECEIVE && !isClosedByCancle"
+                    v-if="detail.orderType === orderTypeKeyMap.PHYSICAL_GOODS && detail.status === orderStatuskeyMap.WAIT_RECEIVE && !isClosedByCancle"
                     title="配送方式："
                     :content="detail.courierCompany"
                 />
                 <pl-list
-                    v-if="detail.status === orderStatuskeyMap.WAIT_RECEIVE && !isClosedByCancle"
+                    v-if="detail.orderType === orderTypeKeyMap.PHYSICAL_GOODS && detail.status === orderStatuskeyMap.WAIT_RECEIVE && !isClosedByCancle"
                     title="发货时间："
                     :content="detail.shipTime"
                 />
@@ -380,7 +380,7 @@
             </pl-button>
             <!-- 支持 订单创建后未取消 + 可申请发票 + 未申请过发票 + 无售后 支持 申请发票-->
             <pl-button
-                v-if="[orderStatuskeyMap.WAIT_PAY, orderStatuskeyMap.WAIT_PAY_TAIL_MONEY, orderStatuskeyMap.WAIT_SHIP, orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status) && detail.aftersaleStatus === aftersaleStatusKeyMap.NO_AFTER_SALES && detail.supportInvoice && !detail.invoiceId"
+                v-if="detail.amount && [orderStatuskeyMap.WAIT_PAY, orderStatuskeyMap.WAIT_PAY_TAIL_MONEY, orderStatuskeyMap.WAIT_SHIP, orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status) && detail.aftersaleStatus === aftersaleStatusKeyMap.NO_AFTER_SALES && detail.supportInvoice && !detail.invoiceId"
                 round
                 plain
                 @click="applyInvoice"
