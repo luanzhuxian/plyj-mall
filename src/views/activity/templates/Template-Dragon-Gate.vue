@@ -15,7 +15,7 @@
                     <charity :data="CHARITY" />
                 </div>
                 <!-- 活动-->
-                <div :class="[$style.activity, $style.module]" v-if="ACTIVITY.showStatue === 1 && ACTIVITY.values.length">
+                <div :class="[$style.activity, $style.module]" v-if="ACTIVITY.showStatue === 1 && ACTIVITY.values.length && (ACTIVITY.values[0].haveSigninActivity || ACTIVITY.values[0].haveLuckDrawActivity)">
                     <activity :data="ACTIVITY" />
                 </div>
                 <!-- 秒杀 -->

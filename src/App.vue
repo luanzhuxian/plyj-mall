@@ -21,28 +21,23 @@ import {
     GET_ACTIVITY_DATA,
     GET_SKIN_ID,
     SET_LIVE_INFO,
-    SET_COURSE_INFO,
     SET_COUPON_INFO,
     SET_NW_EVENT,
     SET_DRAGON_GATE_CHARITY,
     SET_DRAGON_GATE_SIGN,
     SET_DRAGON_GATE_PLAY
-    // SET_INVITING_EVENT,
-    // SET_JX_EVENT,
 } from './store/mutation-type'
 
 import Cookie from './assets/js/storage-cookie'
 import {
     getLiveInfo,
-    getNianweiInfo,
     getMyCouponInfo,
+    getNianweiInfo,
     getDragonGateCharityInfo,
     getDragonGateSignInfo,
     getDragonGatePlayInfo
 } from './apis/home'
 import { setFirstVisit } from './apis/longmen-festival/lottery'
-import { getCourse as getCourseInfo } from './apis/online-classroom'
-// import { getCurrentActivity as getInvitingEvent } from './apis/invitenewcomers'
 
 export default {
     components: {
@@ -109,14 +104,11 @@ export default {
         ...mapMutations({
             setTheme: SET_THEME,
             setLiveInfo: SET_LIVE_INFO,
-            setCourseInfo: SET_COURSE_INFO,
             setCouponInfo: SET_COUPON_INFO,
             setNwEvent: SET_NW_EVENT,
             setDragonGateCharity: SET_DRAGON_GATE_CHARITY,
             setDragonGateSign: SET_DRAGON_GATE_SIGN,
             setDragonGatePlay: SET_DRAGON_GATE_PLAY
-            // setInvitingEvent: SET_INVITING_EVENT,
-            // setJxEvent: SET_JX_EVENT,
         }),
         ...mapActions({
             getUserInfo: USER_INFO,
@@ -130,9 +122,8 @@ export default {
             try {
                 const activityList = [
                     getLiveInfo(),
-                    getCourseInfo(),
-                    getNianweiInfo(),
                     getMyCouponInfo(),
+                    getNianweiInfo(),
                     getDragonGateCharityInfo(),
                     getDragonGateSignInfo(),
                     getDragonGatePlayInfo(),
@@ -142,9 +133,8 @@ export default {
 
                 const [
                     { result: live },
-                    { result: course },
-                    { result: nianwei },
                     { result: coupon },
+                    { result: nianwei },
                     { result: charity },
                     { result: sign },
                     { result: play }
@@ -153,9 +143,8 @@ export default {
                     return { result: {} }
                 })))
                 this.setLiveInfo(live)
-                this.setCourseInfo(course)
-                this.setNwEvent(nianwei)
                 this.setCouponInfo(coupon)
+                this.setNwEvent(nianwei)
                 this.setDragonGateCharity(charity)
                 this.setDragonGateSign(sign)
                 this.setDragonGatePlay(play)

@@ -125,14 +125,8 @@ export default {
     skinId: null,
     // 直播
     liveInfo: null,
-    // 线上课程
-    courseInfo: null,
     // 待领优惠卷
     couponToReceive: null,
-    // // 邀新有礼
-    // invitingEvent: null,
-    // // 见学之路
-    // jxEvent: null,
     // 新春年味
     nwEvent: null,
     // 龙门节公益
