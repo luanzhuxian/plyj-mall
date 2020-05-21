@@ -437,7 +437,9 @@ export default {
                 await this.getProductDetail()
                 // 修改成功后需要更新缓存中的数据
                 cache.count = count
-                this.$store.commit('submitOrder/setOrderProducts', this.CONFIRM_LIST)
+                this.$store.commit('submitOrder/setOrderProducts', {
+                    products: this.CONFIRM_LIST
+                })
                 next()
             } catch (e) {
                 next(e)

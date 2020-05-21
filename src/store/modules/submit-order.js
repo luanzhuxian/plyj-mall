@@ -136,6 +136,7 @@ export const submitOrder = {
             for (const item of products) {
                 item.agentUser = this.state.SHARE_ID
             }
+            params = params || state.orderProducts.params
             const orderProducts = JSON.stringify({ params, products }) || []
             sessionStorage.setItem('CONFIRM_LIST', orderProducts)
             state.orderProducts = JSON.parse(orderProducts)
