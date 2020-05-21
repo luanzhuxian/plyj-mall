@@ -263,25 +263,20 @@ import LiveSignUp from './components/Live-Sign-Up'
 import {
     getRoomStatus,
     getActiveCompleteInfo,
-    pay,
     hasPied,
-    cancelOrder,
     setComeInConut,
     getVideoMesById,
     // 查询直播是否开始
     isLiveStart,
     sign,
-    // setcCverImg,
     // 是否有权限观看
     hasPermission
-    // setWarmup
 } from '../../apis/live'
 import {
     receiveCouponForLive
 } from '../../apis/my-coupon'
 import io from 'socket.io-client'
 import moment from 'moment'
-import wechatPay from '../../assets/js/wechat/wechat-pay'
 import {
     generateQrcode,
     cutArcImage,
@@ -983,12 +978,17 @@ export default {
          * 提交订单
          */
         async submitOrder () {
-            try {
-                const res = await pay(this.detail.id)
-                await this.pay(res)
-            } catch (e) {
-                throw e
-            }
+            this.$store.commit('submitOrder/setOrderProducts', {
+                products: [{
+                    count: 1,
+                    productId: this.detail.id,
+                    price: this.detail.paidAmount,
+                    productType: this.detail.liveType === 'live' ? 'LIVE_GOODS' : 'VIDEO_GOODS'
+                }]
+            })
+            this.$router.push({
+                name: 'SubmitOrder'
+            })
         },
         //  取消播放
         cancelPay () {
@@ -1061,45 +1061,6 @@ export default {
             } catch (e) {
                 this.$error(e.message)
             }
-        },
-
-        /**
-         * 调起微信支付接口
-         * @param CREDENTIAL {Object} 支付数据
-         * @returns {Promise<*>}
-         */
-        async pay (CREDENTIAL) {
-            return new Promise(async (resolve, reject) => {
-                try {
-                    await wechatPay(CREDENTIAL)
-                    await this.handleByLiveType()
-                    this.init()
-                    this.$success('付款成功立即观看')
-                    this.needPay = false
-                    await this.setComeInConut(1)
-                } catch (e) {
-                    this.needPay = false
-                    this.$confirm({
-                        message: '支付失败',
-                        viceMessage: '<p>若要正常观看</p><p>请重新发起支付</p>',
-                        confirmText: '重新支付',
-                        useDangersHtml: true
-                    })
-                        .then(() => {
-                            this.needPay = true
-                        })
-                        .catch(() => {
-                            this.cancelPay()
-                        })
-                    await cancelOrder(this.detail.id)
-                        .then(res => {
-                            reject(e)
-                        })
-                        .catch(err => {
-                            reject(err)
-                        })
-                }
-            })
         },
         // 判断元素是否在可视区域内
         isElementInViewport (el) {

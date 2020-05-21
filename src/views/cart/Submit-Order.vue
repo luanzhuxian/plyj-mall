@@ -351,8 +351,8 @@ export default {
                     goodsId: item.productId,
                     goodsType: item.productType,
                     productCustomInfo: '',
-                    sku1: item.skuCode1,
-                    sku2: item.skuCode2
+                    sku1: item.skuCode1 || '',
+                    sku2: item.skuCode2 || ''
                 }))
                 this.CONFIRM_LIST = CONFIRM_LIST
                 return CONFIRM_LIST
