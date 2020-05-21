@@ -699,7 +699,7 @@ export default {
                     */
                     const newStudentInfo = productCustomInfo ? JSON.parse(productCustomInfo) : []
                     if (!newStudentInfo.length && this.needCodeOrderTypeList.includes(result.orderType)) {
-                        redeemCodeModels.forEach(item => {
+                        this.redeemCodeModels.forEach(item => {
                             if (item.userName || item.userMobile) {
                                 newStudentInfo.push([
                                     { fieldName: '姓名', fieldValue: item.userName },

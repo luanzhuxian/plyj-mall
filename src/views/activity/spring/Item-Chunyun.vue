@@ -111,6 +111,7 @@ export default {
                     },
                     products: confirmList
                 })
+                await this.$router.push({ name: 'SubmitOrder' })
             }
         }
     }
