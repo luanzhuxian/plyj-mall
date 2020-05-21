@@ -1,6 +1,6 @@
 /* 处理提交订单页面再多个页面都需要使用的数据 */
 const CHECKED_STUDENT = JSON.parse(localStorage.getItem('CHECKED_STUDENT')) || {}
-const ORDER_PRODUCTS = JSON.parse(sessionStorage.getItem('CONFIRM_LIST')) || []
+const ORDER_PRODUCTS = JSON.parse(sessionStorage.getItem('CONFIRM_LIST')) || { params: {}, products: [] }
 const INVOICE_PRODUCTS = JSON.parse(sessionStorage.getItem('APPLY_INVOICE')) || []
 const INVOICE_FROM_ROUTE = JSON.parse(sessionStorage.getItem('APPLY_INVOICE_FROM')) || {}
 const INVOICE_INFO = JSON.parse(sessionStorage.getItem('INVOICE_MODEL')) || []
@@ -137,13 +137,14 @@ export const submitOrder = {
                 item.agentUser = this.state.SHARE_ID
             }
             params = params || state.orderProducts.params
+            products = products || state.orderProducts.products
             const orderProducts = JSON.stringify({ params, products }) || []
             sessionStorage.setItem('CONFIRM_LIST', orderProducts)
             state.orderProducts = JSON.parse(orderProducts)
         },
         removeOrderProducts: state => {
             sessionStorage.removeItem('CONFIRM_LIST')
-            state.orderProducts = []
+            state.orderProducts = ORDER_PRODUCTS
         }
     },
     getters: {
