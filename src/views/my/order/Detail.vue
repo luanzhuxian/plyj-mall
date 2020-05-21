@@ -163,12 +163,12 @@
                 <!-- 其他商品价格 -->
                 <p v-else>
                     <span v-text="activeProductStatus[detail.orderSource] || '商品金额'" />
-                    <span class="rmb">{{ detail.amount | formatAmount }}</span>
+                    <span class="rmb">{{ detail.goodsPrice | formatAmount }}</span>
                 </p>
                 <!--优惠券-->
-                <p v-if="detail.couponeAmount">
+                <p v-if="detail.couponAmount">
                     <span>优惠券</span>
-                    <span>-¥{{ detail.couponeAmount | formatAmount }}</span>
+                    <span>-¥{{ detail.couponAmount | formatAmount }}</span>
                 </p>
                 <!--奖学金-->
                 <p v-if="detail.scholarship">
@@ -176,19 +176,19 @@
                     <span>-¥{{ detail.scholarship | formatAmount }}</span>
                 </p>
                 <!--春耘减免-->
-                <p v-if="detail.orderSource === skuSourceKeyMap.SPRINGPLOUGHING">
+                <p v-if="detail.orderSource === skuSourceKeyMap.SPRINGPLOUGHING && detail.combinationSpecialPrice">
                     <span>春耘减免</span>
                     <span>-¥{{ detail.combinationSpecialPrice | formatAmount }}</span>
                 </p>
                 <!--组合折扣-->
-                <p v-if="detail.orderSource === skuSourceKeyMap.COURSEPACKAGE">
+                <p v-if="detail.orderSource === skuSourceKeyMap.COURSEPACKAGE && detail.combinationSpecialPrice">
                     <span>组合折扣</span>
                     <span>-¥{{ detail.combinationSpecialPrice | formatAmount }}</span>
                 </p>
                 <!--运费-->
                 <p v-if="detail.freight">
                     <span>运费</span>
-                    <span class="rmb">-¥{{ detail.freight | formatAmount }}</span>
+                    <span class="rmb">{{ detail.freight | formatAmount }}</span>
                 </p>
             </div>
 
@@ -635,6 +635,8 @@ export default {
                 const { result } = await getOrderDetail(this.orderId)
                 const { goodsModel, orderPayTransInfos, redeemCodeModels, productCustomInfo, invoiceInfoModel } = result
                 result.refundId = (result.orderRefundsModel && result.orderRefundsModel.id) || ''
+                // 组合折扣 扣除的金额 = 商品价格 * 折扣
+                result.combinationSpecialPrice = (result.goodsPrice || 0) * (100 - (result.discount || 0)) / 100
                 this.detail = result
                 goodsModel.sellingPrice = filter.formatAmount(goodsModel.sellingPrice)
                 // 商品详情
