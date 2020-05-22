@@ -124,6 +124,7 @@
 <script>
 import { getLiveList } from '../../apis/online-classroom.js'
 import LoadMore from '../../components/common/Load-More.vue'
+import { promise } from '../../assets/js/util'
 export default {
     name: 'InteractiveLive',
     components: {
@@ -182,6 +183,7 @@ export default {
         async getData () {
             try {
                 await this.$nextTick()
+                await promise.timeout(650)
                 await this.$refs.LiveLoadMore.refresh()
             } catch (e) {
                 throw e

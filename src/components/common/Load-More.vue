@@ -247,6 +247,7 @@ export default {
                         this.pullLoading.style.transition = null
                         this.rotate = 0
                         this.pending = false
+                        this.$emit('update:loading', false)
                     }, 600)
                 })
             })
