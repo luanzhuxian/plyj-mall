@@ -111,8 +111,8 @@ export default {
     }
     @keyframes pl-toast-animation-backof {
         0% { transform: translate(-50%, -50%) scale(1); }
-        30% { transform: translate(-50%, -50%) scale(0.9); }
-        60% { transform: translate(-50%, -50%) scale(1.2); }
+        30% { transform: translate(-50%, -50%) scale(0.8); }
+        80% { transform: translate(-50%, -50%) scale(1.1); }
         100% { transform: translate(-50%, -50%) scale(0); }
     }
     .show-pl-toast-enter-active {
