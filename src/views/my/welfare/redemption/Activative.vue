@@ -5,7 +5,7 @@
         </div>
         <div :class="$style.content">
             <div :class="$style.code">
-                {{ codeId | separator(' ', 4) }}
+                {{ info.exchangeCode | separator(' ', 4) }}
             </div>
             <div :class="$style.timeDesc">
                 {{ info.startTime | dateFormat('YYYY.MM.DD') }}-{{ info.endTime | dateFormat('YYYY.MM.DD') }}
@@ -19,26 +19,27 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import {
-    getRedemptiontInfo
-    // receiveRedemption
+    getRedemptiontInfo,
+    receiveRedemption
 } from '../../../../apis/my-redemption'
 import ReceiveResult from './components/Receive-Result'
 export default {
     name: 'RedemptionActivative',
     props: {
-        codeId: {
+        code: {
             type: String,
             default: ''
         }
     },
     data () {
         return {
-            info: {
-                startTime: '2020.12.18 12:30:00',
-                endTime: '2020.12.20 12:30:00'
-            }
+            info: {}
         }
+    },
+    computed: {
+        ...mapGetters(['userId'])
     },
     async activated () {
         try {
@@ -50,33 +51,53 @@ export default {
     methods: {
         async getInfo () {
             try {
-                const { result } = await getRedemptiontInfo()
-                console.log(result)
-                console.log(this.info)
+                const { result } = await getRedemptiontInfo(this.code)
+                if (!result) {
+                    this.$warning('当前兑换码不存在，请确认后重试')
+                    this.backHomePage()
+                    return
+                }
+                this.info = result
             } catch (e) {
                 throw e
             }
         },
+        async backHomePage () {
+            await setTimeout(() => {
+                this.$router.replace({ name: 'Home' })
+            }, 3000)
+        },
+        async makeSureRole () {
+            if (this.userId) return true
+            await this.$alert({
+                message: '为了您的账号安全，请绑定手机号',
+                confirmText: '去绑定手机号码'
+            })
+            sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
+                name: this.$route.name,
+                params: { codeId: this.codeId }
+            }))
+            this.$router.push({ name: 'BindMobile' })
+        },
         async receiveRedemption () {
+            if (!this.makeSureRole) return
             const h = this.$createElement
             try {
-                const { codeId } = this
-                // const { result: { status } } = await receiveRedemption(codeId)
-                const status = -1
+                const { result: { code, id } } = await receiveRedemption(this.code)
                 await this.$alert({
-                    slot: h(ReceiveResult, { props: { status } }),
+                    slot: h(ReceiveResult, { props: { code } }),
                     confirmText: '朕知道了'
                 })
                 // 核销成功去查看当前核销码页面
-                if (status === 0) {
-                    this.$router.replace({ name: 'RedemptionCenter', params: { codeId } })
+                if (code === 200) {
+                    this.$router.replace({ name: 'RedemptionCenter', params: { codeId: id } })
                 } else {
-                    // 当前兑换码不可用，去 我的兑换码 列表
+                    // 当前兑换码不可用，去 我的兑换码 列表查看其它
                     this.$router.replace({ name: 'MyRedemption', params: { status: 'ALL' } })
                 }
             } catch (e) {
                 this.$alert({
-                    slot: h(ReceiveResult, { props: { status: -1 } }),
+                    slot: h(ReceiveResult, { props: { code: 500 } }),
                     confirmText: '朕知道了'
                 })
             }

@@ -18,12 +18,15 @@
 </template>
 
 <script>
-// import { receiveRedemption } from '../../../../apis/my-redemption'
-const statusDesc = {
-    1: '该兑换码未到使用时间，不可激活哦~',
-    2: '该激活码已过期！',
-    3: '该激活码已使用，如有问题请联系商家',
-    4: '您已激活该兑换码，不可重复激活哦~'
+import { receiveRedemption } from '../../../../../apis/my-redemption'
+const codeDesc = {
+    201: '该兑换码为无效码',
+    202: '该兑换码为失效码',
+    203: '该兑换码未到使用时间，不可激活',
+    204: '该兑换码已过期!',
+    205: '您已激活兑换码，不可重复激活',
+    206: '该兑换码已使用，如有问题请联系商家',
+    500: '激活失败'
 }
 export default {
     name: 'ReceiveCode',
@@ -37,7 +40,6 @@ export default {
     },
     methods: {
         scan () {
-            console.log(1)
             if (window.wx) {
                 window.wx.scanQRCode({
                     needResult: 1,
@@ -57,18 +59,34 @@ export default {
             const code = arr[arr.length - 1] || ''
             return code
         },
+        async makeSureRole () {
+            if (this.userId) return true
+            await this.$alert({
+                message: '为了您的账号安全，请绑定手机号',
+                confirmText: '去绑定手机号码'
+            })
+            sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
+                name: this.$route.name,
+                params: { codeId: this.codeId }
+            }))
+            this.$router.push({ name: 'BindMobile' })
+        },
         async receiveRedemption () {
+            if (!this.makeSureRole) return
             try {
                 if (!this.codeId) {
                     await this.$warning('未输入核销码')
                     return
                 }
-                // const { result: { status } } = await receiveRedemption(this.codeId)
-                const status = 0
-                const errorText = statusDesc[status]
-                await this.$warning(errorText)
+                const { result: { code } } = await receiveRedemption(this.codeId)
+                if (code === 200) {
+                    this.$success('兑换成功')
+                } else {
+                    const errorText = codeDesc[code]
+                    await this.$warning(errorText)
+                }
             } catch (e) {
-                throw e
+                await this.$warning(codeDesc[500])
             }
         }
     }

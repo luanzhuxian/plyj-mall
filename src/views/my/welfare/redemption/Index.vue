@@ -6,7 +6,7 @@
                 :class="$style.tabBar"
                 size="small"
                 :tabs="tabs"
-                :active-id.sync="form.status"
+                :active-id.sync="currentStatus"
                 @change="onTabChange"
             >
                 <div
@@ -28,6 +28,7 @@
                 :request-methods="getRedemptionList"
                 @refresh="onRefresh"
                 @more="onRefresh"
+                no-content-tip=""
             >
                 <template>
                     <div name="icon" :class="$style.noIcon" v-if="!codeList.length">
@@ -48,19 +49,21 @@
                              @click="selectedChange(item.id)"
                         >
                             <span v-if="isManagementState">
-                                <pl-svg v-if="!item.checked" name="icon-weixuanzhong1" width="40" />
-                                <pl-svg v-if="item.checked" name="icon-xuanzhong" width="40" />
+                                <template v-if="item.isCanDelete">
+                                    <pl-svg v-if="!item.checked" name="icon-weixuanzhong1" width="40" />
+                                    <pl-svg v-if="item.checked" name="icon-xuanzhong" width="40" />
+                                </template>
+                                <span v-else :class="$style.disabledIcon" />
                             </span>
                             <CodeItem
                                 :id="item.id"
                                 :name="item.name"
-                                :product-total="item.productTotal"
+                                :product-total="item.exchangeTotal"
                                 :use-total="item.useTotal"
                                 :total="item.useTotal + item.stock"
                                 :start-time="item.startTime"
                                 :end-time="item.endTime"
-                                :current-time="item.currentTime"
-                                :instruction="item.activituRule"
+                                :instruction="item.activityRule"
                                 :is-used="item.isUsed"
                                 :is-expired="item.isExpired"
                                 :button-text="item.buttonText"
@@ -100,7 +103,6 @@
 import LoadMore from '../../../../components/common/Load-More.vue'
 import CodeItem from './components/Code-Item'
 import ReceiveCode from './components/Receive-Code'
-import moment from 'moment'
 import {
     getRedemptionList,
     deleteRedemptionByIds
@@ -122,11 +124,12 @@ export default {
     },
     data () {
         return {
+            currentStatus: '',
             tabs: [
                 { name: '全部', id: 'ALL' },
-                { name: '待使用', id: 'WAIT_USE' },
-                { name: '已过期', id: 'EXIRED' },
-                { name: '已使用', id: 'USED' }
+                { name: '待使用', id: '1' },
+                { name: '已过期', id: '0' },
+                { name: '已使用', id: '2' }
             ],
             form: {
                 current: 1,
@@ -136,38 +139,34 @@ export default {
             loading: false,
             $refresh: null,
             getRedemptionList,
-            codeList: [
-                {
-                    id: '1213',
-                    // 活动名称
-                    name: '龙门节兑换码',
-                    // 可兑换商品个数
-                    productTotal: 12,
-                    // 有效期开始时间
-                    startTime: '2020.12.13 12:30:00',
-                    // 有效期结束时间
-                    endTime: '2020.12.24 12:30:00',
-                    // 服务器当前时间
-                    currentTime: '2020.12.23 12:30:00',
-                    // 使用说明
-                    activituRule: '骄傲打开大苏打撒旦',
-                    // 已使用次数
-                    useTotal: 12,
-                    // 剩余可使用次数
-                    stock: 23
-                },
-                {
-                    id: '122313',
-                    name: '龙门节兑换码',
-                    productTotal: 12,
-                    startTime: '2020.12.18 12:30:00',
-                    endTime: '2020.12.20 12:30:00',
-                    currentTime: '2020.12.23 12:30:00',
-                    activituRule: '骄傲打开大苏打撒旦',
-                    useTotal: 12,
-                    stock: 23
-                }
-            ],
+
+            /**
+              * 兑换码id
+              * id: '1213',
+              * 兑换码
+              * exchangeCode: '112',
+              * 活动名称
+              * name: '龙门节兑换码',
+              * 活动开始时间
+              * startTime: '2020.12.13 12:30:00',
+              * 活动结束时间
+              * endTime: '2020.12.24 12:30:00',
+              * 可兑换商品总个数 int
+              * exchangeTotal: 123,
+              * 使用说明
+              * activityRule: '',
+              * 使用次数 int
+              * useTotal: '',
+              * 可用次数 int
+              * stock: 12,
+              * 活动使能 int 1:正常 0:禁用 3:删除
+              * activityEnable: 1,
+              * 兑换码数据状态 int 1:正常  2:冻结  3:删除
+              * statue: 1,
+              * C端兑换码展示状态 0：已过期  1-待使用  2-已使用
+              * codeStatus: 1
+            */
+            codeList: [],
             isManagementState: false
         }
     },
@@ -176,11 +175,16 @@ export default {
             return this.codeList.filter(item => item.checked).map(item => item.id)
         }
     },
+    watch: {
+        currentStatus (val) {
+            this.form.status = val === 'ALL' ? '' : val
+        }
+    },
     mounted () {
         this.$refresh = this.$refs.loadMore.refresh
     },
     activated () {
-        this.form.status = this.status
+        this.currentStatus = this.status
         this.$refresh()
     },
     methods: {
@@ -191,11 +195,11 @@ export default {
             })
         },
         onRefresh (list, total) {
-            // TODO.数据
-            list = this.codeList
             list.forEach(item => {
-                item.isUsed = !item.stock
-                item.isExpired = moment(item.currentTime).valueOf() >= moment(item.endTime).valueOf()
+                item.isUsed = item.codeStatus === 2
+                item.isExpired = item.codeStatus === 0
+                // 已过期 / 已使用 支持删除
+                item.isCanDelete = item.isUsed || item.isExpired
                 item.buttonText = item.isUsed ? '已使用' : item.isExpired ? '已过期' : '去使用'
                 item.checked = false
             })
@@ -217,14 +221,13 @@ export default {
             const index = this.findIndexById(codeId)
             if (index < 0) return
             const currentCoupon = this.codeList.splice(index, 1)[0]
+            if (!currentCoupon.isCanDelete) return
             currentCoupon.checked = !currentCoupon.checked
             this.codeList.splice(index, 0, currentCoupon)
         },
         codeItemClick (codeId) {
             const index = this.findIndexById(codeId)
             if (index < 0) return
-            const detail = this.codeList[index]
-            if (detail.isUsed || detail.isExpired) return
             this.$router.push({ name: 'RedemptionCenter', params: { codeId } })
         },
         async activateCode () {
@@ -233,8 +236,8 @@ export default {
                 await this.$confirm({
                     slot: h(ReceiveCode)
                 })
+                this.$refresh()
             } catch (e) {
-                throw e
             }
         },
         async deleteCode () {
@@ -328,6 +331,15 @@ export default {
     > div {
       margin-left: 100px;
     }
+  }
+
+  .disabledIcon {
+    display: inline-block;
+    width: 38px;
+    height: 38px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    background-color: #ddd;
   }
 
   /*底部按钮*/

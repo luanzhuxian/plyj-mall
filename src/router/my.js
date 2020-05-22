@@ -170,12 +170,12 @@ export default [
         }
     },
     {
-        path: '/my/welfare/redemption-activative/:codeId',
+        path: '/my/welfare/redemption-activative/:code',
         name: 'RedemptionActivative',
         props: true,
         component: () => import('../views/my/welfare/redemption/Activative.vue'),
         meta: {
-            // 激活兑换码
+            // 激活兑换码 使用code激活
             title: '确认激活'
         }
     },
@@ -192,6 +192,7 @@ export default [
     {
         path: '/my/welfare/redeemed/:codeId',
         name: 'RedeemedProductList',
+        props: true,
         component: () => import('../views/my/welfare/redemption/Redeemed.vue'),
         meta: {
             // 已兑换

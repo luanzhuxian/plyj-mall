@@ -3,8 +3,8 @@
         :class="{
             [$style.item]: true,
             [$style.icon]: true,
-            [$style.isSingleCourse]: productType === 1,
-            [$style.isSeriesCourse]: productType === 2
+            [$style.isSingleCourse]: productType === 2,
+            [$style.isSeriesCourse]: productType === 3
         }"
         @click="goDetail"
     >
@@ -20,8 +20,10 @@
                     <span v-else>免费</span>
                     <del v-if="originPrice" v-text="originPrice" />
                 </span>
-                <button v-if="isRedeemed" :class="[$style.btn, $style.usedBtn]">已兑换</button>
-                <button v-else-if="isNoStock" :class="[$style.btn, $style.disabledBtn]">无库存</button>
+                <button v-if="status === 1" :class="[$style.btn, $style.usedBtn]">已兑换</button>
+                <button v-else-if="status === 2" :class="[$style.btn, $style.usedBtn]">已购买</button>
+                <button v-else-if="status === 3" :class="[$style.btn, $style.disabledBtn]">无库存</button>
+                <button v-else-if="isMaxLimit" :class="[$style.btn, $style.disabledBtn]">不可兑换</button>
                 <button v-else :class="$style.btn" @click.stop.prevent="clickHandler">立即兑换</button>
             </div>
         </div>
@@ -37,7 +39,7 @@ export default {
             type: String,
             default: ''
         },
-        // 商品类型 1-单课 2-系列课
+        // 商品类型 1商品  2 单课 3 系列课
         productType: {
             type: Number,
             default: 1
@@ -67,13 +69,13 @@ export default {
             type: [Number, String],
             default: 0
         },
-        // 是否已兑换
-        isRedeemed: {
-            type: Boolean,
-            default: false
+        // 状态 1已购买 2已兑换 3无库存 + 立即兑换
+        status: {
+            type: Number,
+            default: 1
         },
-        // 是否无内存
-        isNoStock: {
+        // 已达到最大兑换次数
+        isMaxLimit: {
             type: Boolean,
             default: false
         }

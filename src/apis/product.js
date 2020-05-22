@@ -52,6 +52,13 @@ export const getSpringCombination = params => axios.get(`/apis/v1/combination/ho
 export const getCourseDetail = (mallCourseId, params) => axios.get(`/apis/v1/mall/cource/courseInfo/${ mallCourseId }`, { params })
 
 /**
+ * 获取当前商品可使用的兑换码列表
+ * @param mallCourseId {string} 课程id
+ * @returns {Promise<AxiosResponse<Object>>}
+ */
+export const getRedeemCodeList = productId => axios.get(`/apis/v1/exchange/me/list/${ productId }`)
+
+/**
  * 视频课提交订单（获取订单号）
  * @param data {Object}
  * @return {*}

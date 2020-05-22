@@ -16,8 +16,23 @@
                     </div>
                 </div>
             </div>
+            <div
+                v-if="redeemCodeList.length"
+                :class="$style.itemSelector"
+                @click.capture="showselectRedeemCode = true"
+            >
+                <pl-fields
+                    size="middle"
+                    text="兑换码"
+                    icon="icon-coupon"
+                    :icon-gap="12"
+                    :show-right-icon="!hasDefaultRedeemCode"
+                    :right-text="redeemCodeInfo.id ? redeemCodeInfo.name : '有可用'"
+                    left-text-weight="bold"
+                />
+            </div>
             <div :class="$style.total">
-                总计：<i>{{ courseDetail.sellingPrice }}</i>
+                总计：<i>{{ redeemCodeInfo.id ? 0 : courseDetail.sellingPrice }}</i>
             </div>
         </div>
 
@@ -40,7 +55,7 @@
         <div :class="$style.bottom">
             <div :class="$style.left">
                 <div class="fz-20 gray-2">合计</div>
-                <div class="fz-32">{{ courseDetail.sellingPrice }}</div>
+                <div class="fz-32">{{ redeemCodeInfo.id ? 0 : courseDetail.sellingPrice }}</div>
             </div>
             <pl-button
                 :class="$style.button"
@@ -53,6 +68,35 @@
             </pl-button>
         </div>
 
+        <!--选择兑换码-->
+        <pl-popup
+            :show.sync="showselectRedeemCode"
+            title="选择兑换码"
+            title-align="left"
+        >
+            <div :class="$style.redeemCode">
+                <p class="fz-28 gray-3">使用兑换码，免费学习</p>
+                <div :class="$style.redeemCodeList">
+                    <template v-for="(item, i) of redeemCodeList">
+                        <div :key="i" :class="$style.redeemCodeItem" @click="redeemCodeClick(item, false)">
+                            <span :class="$style.content">{{ item.name }}</span>
+                            <span :class="$style.choices">
+                                <pl-svg v-if="item.id === redeemCodeInfo.id" name="icon-xuanzhong" width="40" />
+                                <pl-svg v-else name="icon-weixuanzhong1" width="40" />
+                            </span>
+                        </div>
+                    </template>
+                    <div :class="$style.redeemCodeItem" @click="redeemCodeClick({}, true)">
+                        <div :class="$style.notChoose">不使用兑换码</div>
+                        <span :class="$style.choices">
+                            <pl-svg v-if="isNotChooseRedeemCode" name="icon-xuanzhong" width="40" />
+                            <pl-svg v-else name="icon-weixuanzhong1" width="40" />
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </pl-popup>
+        <!--显示联系人-->
         <pl-popup
             :show.sync="showContactPopup"
             :close-on-click-modal="false"
@@ -80,8 +124,9 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { getCourseDetail, submitOrderAndPay } from '../../apis/product'
+import { getCourseDetail, submitOrderAndPay, getRedeemCodeList } from '../../apis/product'
 import { setTimeoutSync } from '../../assets/js/util'
+import filter from '../../filter/index'
 import { checkLength, isPhone } from '../../assets/js/validate'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
 
@@ -95,6 +140,20 @@ export default {
     },
     data () {
         return {
+            // 有无默认选中的兑换码
+            hasDefaultRedeemCode: false,
+            // 当前选择的兑换码
+            redeemCodeInfo: {},
+            // 兑换码列表
+            redeemCodeList: [
+                { name: 'sdjadia', id: '555655', exchangeCode: '423232344254' },
+                { name: 'sdjadia', id: '321323', exchangeCode: '442423434254' }
+            ],
+            // 是否显示选择兑换码选择框
+            showselectRedeemCode: false,
+            // 是否选择'不参与兑换码'
+            isNotChooseRedeemCode: false,
+            localSeparator: filter.separator,
             requestPayDataCount: 0,
             showContactPopup: false,
             submiting: false,
@@ -127,6 +186,13 @@ export default {
         }
     },
     async activated () {
+        // 兑换码信息
+        this.redeemCodeInfo = JSON.parse(localStorage.getItem('currentRedeemCode') || '{}')
+        this.hasDefaultRedeemCode = !!this.redeemCodeInfo.id
+        if (!this.hasDefaultRedeemCode) {
+            await this.getRedeemCodeList()
+            this.isNotChooseRedeemCode = true
+        }
         // 联系人信息
         const contactModel = JSON.parse(localStorage.getItem('CONTACT_INFO_MODEL'))
         this.contactInfoModel = contactModel || { name: this.realName || this.userName, mobile: this.mobile }
@@ -152,6 +218,14 @@ export default {
                 throw e
             }
         },
+        async getRedeemCodeList () {
+            try {
+                const { result } = await getRedeemCodeList(this.productId)
+                this.redeemCodeList = result
+            } catch (e) {
+                throw e
+            }
+        },
         chooseContact () {
             this.contactInfoForm = Object.assign({}, this.contactInfoForm, this.contactInfoModel)
             this.showContactPopup = true
@@ -168,6 +242,10 @@ export default {
                 name: '',
                 mobile: ''
             }
+        },
+        redeemCodeClick (item, isNotChooseRedeemCode) {
+            this.redeemCodeInfo = item
+            this.isNotChooseRedeemCode = isNotChooseRedeemCode
         },
         async submitOrder () {
             if (!this.contactInfoModel.name || !this.contactInfoModel.mobile) {
@@ -193,6 +271,13 @@ export default {
                     ...this.contactInfoModel
                 }
                 const { activityId, productActive } = this.$route.query
+                // 只有普通商品支持兑换码兑换
+                if (Number(productActive) === 1 && this.redeemCodeInfo.id) {
+                    params = {
+                        exchangeCodeId: this.redeemCodeInfo.id,
+                        ...this.contactInfoModel
+                    }
+                }
                 // 公益活动
                 if (Number(productActive) === 7) {
                     params = {
@@ -246,6 +331,12 @@ export default {
                 }
             })
         }
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to && to.name !== 'SubmitCurriculum') {
+            localStorage.removeItem('currentRedeemCode')
+        }
+        next()
     }
 }
 </script>
@@ -369,6 +460,44 @@ export default {
         margin-right: 24px;
         font-weight: 500;
     }
+}
+.item-selector {
+  margin-bottom: 20px;
+  padding-left: 24px;
+  background-color: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+}
+.redeemCode {
+  padding: 0 24px;
+  > .redeemCodeList {
+    margin-top: 48px;
+    padding-bottom: 40px;
+
+    .redeemCodeItem {
+      height: 72px;
+      line-height: 72px;
+      position: relative;
+      overflow: hidden;
+      font-size: 32px;
+      color:#373737;
+      .code{}
+      .notChoose{
+        font-size:28px;
+        line-height: 72px;
+        color:#C1C1C1;
+      }
+      .choices {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        >svg {
+          vertical-align: middle;
+        }
+      }
+    }
+  }
 }
 
 </style>

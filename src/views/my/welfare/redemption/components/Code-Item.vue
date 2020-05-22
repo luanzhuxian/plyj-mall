@@ -82,11 +82,6 @@ export default {
             type: String,
             default: ''
         },
-        // 服务器当前时间
-        currentTime: {
-            type: String,
-            default: ''
-        },
         // 使用说明
         instruction: {
             type: String,

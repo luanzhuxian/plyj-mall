@@ -1,8 +1,8 @@
 <template>
     <div :class="$style.receiveResult">
-        <img :class="$style.icon" :src="statusImg[status] || statusImg[1]" alt="">
-        <div :class="$style.result" v-text="statusDesc[status] || statusDesc[1]" />
-        <div :class="$style.error" v-if="statusErrorDesc[status]" v-text="statusErrorDesc[status]" />
+        <img :class="$style.icon" :src="codeImg[code] || codeImg['default']" alt="">
+        <div :class="$style.result" v-text="codeDesc[code] || codeDesc['default']" />
+        <div :class="$style.error" v-if="codeErrorDesc[code]" v-text="codeErrorDesc[code]" />
     </div>
 </template>
 
@@ -10,29 +10,31 @@
 export default {
     name: 'ReceiveResult',
     props: {
-        // 0-核销成功 1，2，3，4-核销失败 -1核销出错
-        status: {
+        // 200激活成功 500激活失败 201无效码 202失效码 203未开始 204已过期 205自己激活 206别人激活
+        code: {
             type: Number,
             default: 0
         }
     },
     data () {
         return {
-            statusImg: {
-                0: 'https://mallcdn.youpenglai.com/static/mall/icons/2.10.0/success.png',
-                '-1': 'https://mallcdn.youpenglai.com/static/mall/icons/2.10.0/error.png',
-                1: 'https://mallcdn.youpenglai.com/static/mall/icons/2.10.0/warning.png'
+            codeImg: {
+                200: 'https://mallcdn.youpenglai.com/static/mall/icons/2.10.0/success.png',
+                500: 'https://mallcdn.youpenglai.com/static/mall/icons/2.10.0/error.png',
+                default: 'https://mallcdn.youpenglai.com/static/mall/icons/2.10.0/warning.png'
             },
-            statusDesc: {
-                0: '核销成功',
-                '-1': '核销失败，请重试',
-                1: '无效码'
+            codeDesc: {
+                200: '核销成功',
+                500: '核销失败，请重试',
+                default: '无效码'
             },
-            statusErrorDesc: {
-                1: '该激活码已过期!',
-                2: '该激活码已使用，如有问题请联系商家',
-                3: '您已激活兑换码，不可重复激活',
-                4: '该兑换码未到使用时间，不可激活'
+            codeErrorDesc: {
+                201: '该兑换码为无效码',
+                202: '该兑换码为失效码',
+                203: '该兑换码未到使用时间，不可激活',
+                204: '该兑换码已过期!',
+                205: '您已激活兑换码，不可重复激活',
+                206: '该兑换码已使用，如有问题请联系商家'
             }
         }
     }
