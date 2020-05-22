@@ -572,7 +572,7 @@ export default {
                         this.couponList = data.couponList.filter(item => item.show)
                     }, 2000)
                 }
-                this.productList = data.productList || []
+                this.productList = data.productList && data.courseList && data.productList.concat(data.courseList)
                 this.activityId = data.id
                 if (data.videoLibId && data.videoLibId !== '0' && data.liveType === 'live') {
                     this.chatRecords.push({ name: '该视频支持回放', message: '（“个人中心”→“我的视频库”）', custom: true, success: true })

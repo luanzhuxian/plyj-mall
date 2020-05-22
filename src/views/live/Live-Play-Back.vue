@@ -259,7 +259,7 @@ export default {
                     // eslint-disable-next-line no-throw-literal
                     throw false
                 }
-                this.productList = result.productList || []
+                this.productList = result.productList && result.courseList && result.productList.concat(result.courseList)
             } catch (e) { throw e }
         },
         async getVideoMes () {
