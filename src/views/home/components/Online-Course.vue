@@ -51,7 +51,7 @@
                                     v-text="course.goodsInfo.originalPrice"
                                     v-if="course.goodsInfo.originalPrice"
                                 />
-                                <div v-if="!course.orderId" :class="$style.bottomBtn">立即学习</div>
+                                <div v-if="!course.orderId" :class="$style.bottomBtn">{{ getBtnText(course) }}</div>
                                 <div v-else :class="[$style.bottomBtn, $style.bottomStudy]">观看学习</div>
                             </div>
                         </div>
@@ -63,6 +63,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
     name: 'OnlineCourse',
     props: {
@@ -79,6 +81,18 @@ export default {
     computed: {
         isOdd () {
             return !!(this.data.values.length % 2)
+        }
+    },
+    methods: {
+        getBtnText ({ isOpenSale, regularSaleTime = '' }) {
+            let text = '立即订购'
+            if (isOpenSale === 1) {
+                const saleTime = moment(regularSaleTime).values()
+                if (saleTime > Date.now()) {
+                    text = '即将开售'
+                }
+            }
+            return text
         }
     }
 }
@@ -205,22 +219,22 @@ export default {
             }
         }
         &.long {
-          display: flex;
-          flex-direction: row;
-          width: 100%;
-          height: 188px;
-          .img-wrapper {
-              width: 280px;
-              height: 188px;
-              border-radius: 20px;
-          }
-          .info {
-              padding: 8px 0 8px 20px;
-          }
-          .middle {
-              margin-top: 12px;
-              font-size: 24px;
-          }
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            height: 188px;
+            .img-wrapper {
+                width: 280px;
+                height: 188px;
+                border-radius: 20px;
+            }
+            .info {
+                padding: 8px 0 8px 20px;
+            }
+            .middle {
+                margin-top: 12px;
+                font-size: 24px;
+            }
         }
         &.margin-t-0 {
             margin-top: 0;

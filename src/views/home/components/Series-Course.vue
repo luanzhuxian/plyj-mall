@@ -50,7 +50,7 @@
                                     v-text="course.goodsInfo.originalPrice"
                                     v-if="course.goodsInfo.originalPrice"
                                 />
-                                <div v-if="!course.orderId" :class="$style.bottomBtn">立即学习</div>
+                                <div v-if="!course.orderId" :class="$style.bottomBtn">{{ getBtnText(course) }}</div>
                                 <div v-else :class="[$style.bottomBtn, $style.bottomStudy]">观看学习</div>
                             </div>
                         </div>
@@ -62,6 +62,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
     name: 'SeriesCourse',
     props: {
@@ -74,6 +76,18 @@ export default {
     },
     data () {
         return {}
+    },
+    methods: {
+        getBtnText ({ isOpenSale, regularSaleTime = '' }) {
+            let text = '立即订购'
+            if (isOpenSale === 1) {
+                const saleTime = moment(regularSaleTime).values()
+                if (saleTime > Date.now()) {
+                    text = '即将开售'
+                }
+            }
+            return text
+        }
     }
 }
 </script>
@@ -91,9 +105,9 @@ export default {
     margin-bottom: 12px;
     line-height: 46px;
     > img {
-      width: 36px;
-      height: 36px;
-      object-fit: cover;
+        width: 36px;
+        height: 36px;
+        object-fit: cover;
     }
     > b {
         margin-left: 16px;
@@ -128,7 +142,7 @@ export default {
         height: 188px;
         overflow: hidden;
         &:nth-of-type(1) {
-          margin-top: 0;
+            margin-top: 0;
         }
         .img-wrapper {
             position: relative;
@@ -165,7 +179,7 @@ export default {
             color: #666;
             @include elps();
             &:nth-of-type(1) {
-              margin-top: 10px;
+                margin-top: 10px;
             }
         }
         .bottom {
