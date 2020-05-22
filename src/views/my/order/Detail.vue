@@ -84,7 +84,7 @@
                 <div :class="$style.buttons">
                     <!--实际支付大于0 + 支持售后 + 无售后 + 订单状态为待发货/待收货 支持 申请退款-->
                     <pl-button
-                        v-if="detail.amount && detail.supportAfterSales && detail.aftersaleStatus === aftersaleStatusKeyMap.NO_AFTER_SALES && [orderStatuskeyMap.WAIT_SHIP, orderStatuskeyMap.WAIT_RECEIVE].includes(detail.status)"
+                        v-if="detail.amount && detail.supportAfterSales && detail.aftersaleStatus === aftersaleStatusKeyMap.NO_AFTER_SALES && [orderStatuskeyMap.WAIT_SHIP, orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status)"
                         plain
                         round
                         @click="applyRefund"
@@ -380,7 +380,7 @@
             </pl-button>
             <!-- 支持 订单创建后未取消 + 可申请发票 + 未申请过发票 + 无售后 支持 申请发票-->
             <pl-button
-                v-if="detail.amount && [orderStatuskeyMap.WAIT_PAY, orderStatuskeyMap.WAIT_PAY_TAIL_MONEY, orderStatuskeyMap.WAIT_SHIP, orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status) && detail.aftersaleStatus === aftersaleStatusKeyMap.NO_AFTER_SALES && detail.supportInvoice && !detail.invoiceId"
+                v-if="detail.amount && [orderStatuskeyMap.WAIT_PAY_TAIL_MONEY, orderStatuskeyMap.WAIT_SHIP, orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status) && detail.aftersaleStatus === aftersaleStatusKeyMap.NO_AFTER_SALES && detail.supportInvoice && !detail.invoiceId"
                 round
                 plain
                 @click="applyInvoice"
