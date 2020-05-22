@@ -21,14 +21,6 @@
                 >
                     {{ item.categoryName }}
                 </li>
-                <li :class="$style.close" v-if="isShowAll">
-                    <pl-svg
-                        name="icon-close"
-                        fill="#fff"
-                        width="36"
-                        @click="isShowAll = false"
-                    />
-                </li>
             </ul>
             <transition name="fade">
                 <div :class="$style.controlWrap" v-if="category.length">
@@ -51,6 +43,7 @@
             :loading.sync="loading"
             @refresh="refreshHandler"
             no-content-tip="此分类下还没有课程"
+            :class="$style.content"
         >
             <template>
                 <ul :class="$style.courseList">
@@ -211,39 +204,41 @@ export default {
 <style lang="scss" module>
 .online-classroom {
     /*padding: 14vw 20px 20px;*/
-    padding: 20px;
     min-height: 50vh;
     background-color: #fff;
+    > .content {
+        padding: 0 20px 20px 20px;
+    }
 }
 .classify-main {
-    position: fixed;
-    top: 91px;
-    left: 0;
-    min-height: 105px;
+    position: relative;
+    display: flex;
+    align-items: center;
     width: 100vw;
+    height: 80px;
     padding: 0 74px 0 28px;
     box-sizing: border-box;
     overflow-x: scroll;
     overflow-y: hidden;
     background-color: #fff;
-    z-index: 10;
-}
-.control-wrap {
-    position: fixed;
-    top: 117px;
-    right: 0;
-    padding-left: 20px;
-    overflow-y: hidden;
-}
-.control {
-    width: 70px;
-    height: 46px;
-    display: inline-flex;
-    align-items: center;
-    background-color: #fff;
-    box-shadow: -3px 0 6px rgba(0, 0, 0, .2);
-    > svg {
-        margin-left: 18px;
+    .control-wrap {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 0;
+        padding-left: 20px;
+        overflow-y: hidden;
+    }
+    .control {
+        width: 70px;
+        height: 46px;
+        display: inline-flex;
+        align-items: center;
+        background-color: #fff;
+        box-shadow: -3px 0 6px rgba(0, 0, 0, .2);
+        > svg {
+            margin-left: 18px;
+        }
     }
 }
 .classify-list {
@@ -251,18 +246,20 @@ export default {
     display: flex;
     align-items: center;
     flex-wrap: nowrap;
-    width: max-content;
+    height: 46px;
+    width: 100vw;
     padding-right: 90px;
-    padding-top: 26px;
+    line-height: 50px;
     background-color: #fff;
     box-sizing: border-box;
+    overflow: auto;
     > li {
         display: inline-block;
         padding: 0 15px;
-        line-height: 42px;
         text-align: center;
         font-size: 22px;
         color: #666;
+        line-height: 40px;
         word-break: keep-all;
         white-space: nowrap;
         &.active {
@@ -273,21 +270,20 @@ export default {
         }
     }
     .close {
-        position: absolute;
         bottom: -70px;
         left: 50%;
         transform: translateX(-50%);
     }
 }
 .show-all {
-    padding: 0;
-    height: calc(100vh - 178px);
     box-shadow: 0 5px 5px rgba(0, 0, 0, .1);
-    background-color: rgba(0, 0, 0, .3);
+    height: max-content;
+    margin-bottom: 28px;
+    padding: 28px;
     .classify-list {
-        width: 100%;
+        height: max-content;
         flex-wrap: wrap;
-        padding: 26px 28px 20px 28px;
+        overflow-y: hidden;
     }
     .control {
         display: none;

@@ -77,8 +77,10 @@ export default {
         async getCourseCategoryTree () {
             try {
                 const { result } = await getCourseCategoryTree()
-                this.onlineClassCoursesCatrgory.seriesCoursesCatrgory = result.find(item => Number(item.type) === 2)
-                this.onlineClassCoursesCatrgory.coursesCatrgory = result.find(item => Number(item.type) === 1)
+                if (result.length) {
+                    this.onlineClassCoursesCatrgory.seriesCoursesCatrgory = result.find(item => Number(item.type) === 2) || { childs: [] }
+                    this.onlineClassCoursesCatrgory.coursesCatrgory = result.find(item => Number(item.type) === 1) || { childs: [] }
+                }
             } catch (e) {
                 throw e
             }
