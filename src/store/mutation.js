@@ -27,6 +27,7 @@ export default {
     },
     [type.USER_INFO] (state, payload) {
         copyFields(state.userInfo, payload)
+
         if (VUE_APP_MODEL === 'production') {
             // 向sentry设置用户信息，以便在日志中展示
             setUser({

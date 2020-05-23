@@ -66,11 +66,12 @@ Vue.config.errorHandler = async function (err, vm, info) {
 }
 const {
     VUE_APP_VERSION,
-    NODE_ENV
+    NODE_ENV,
+    VUE_APP_MODEL
 } = process.env
 console.log('version:', VUE_APP_VERSION)
 // 只有生产环境才启用日志
-if (NODE_ENV === 'production') {
+if (NODE_ENV === VUE_APP_MODEL) {
     Sentry.init({
         dsn: 'http://e6c426498fe9427d870136c32b797567@frontlog.xijun.youpenglai.com/2',
         // 对应发布的版本号，这个版本号取自package.json中配置的版本号

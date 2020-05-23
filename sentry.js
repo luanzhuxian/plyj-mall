@@ -11,7 +11,7 @@ const assetsDir = MODEL === 'development' ? 'static/js' : `${VERSION}/static/js`
 // 资源跟目录
 const dir = 'mall'
 // 项目名称
-const project = 'dev-mall'
+const project = 'mall'
 // 组织
 const ORG = 'penglai'
 console.log('version: ', VERSION)
