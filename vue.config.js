@@ -1,7 +1,11 @@
+// 标记线上环境还是测试环境 development为开发或测试环境打包，production是生产环境打包
 const MODEL = process.argv[process.argv.indexOf('--model') + 1]
 const { NODE_ENV } = process.env
 const VERSION = process.env.npm_package_version
 const SERVER = process.argv[process.argv.indexOf('--s') + 1]
+const assetsDir = MODEL === 'development' ? 'static' : `${ VERSION }/static`
+process.env.VUE_APP_VERSION = VERSION
+process.env.VUE_APP_MODEL = MODEL
 
 /* ********************************************* 环境 *************************************** */
 console.log(`------------------------- ${ NODE_ENV } -------------------------`)
@@ -11,6 +15,10 @@ console.log(`------------------------- model: ${ MODEL } -----------------------
 
 /* ********************************************* 服务 *************************************** */
 console.log(`------------------------- server: ${ SERVER } -------------------------`)
+
+console.log(`------------------------- assetsDir: ${ assetsDir } -------------------------`)
+console.log(`------------------------- version: ${ VERSION } -------------------------`)
+
 const externals =
   // 生产环境或者开发模式，使用CDN库依赖
   process.env.NODE_ENV === 'production'
@@ -38,7 +46,7 @@ module.exports = {
         }
     },
 
-    assetsDir: MODEL === 'development' ? 'static' : `${ VERSION }/static`,
+    assetsDir,
     outputDir: `mall`,
 
     devServer: {
@@ -99,7 +107,12 @@ module.exports = {
     configureWebpack: {
         externals
     },
-    productionSourceMap: false,
+    pluginOptions: {
+        SourceMapDevToolPlugin: {
+            noSources: false
+        }
+    },
+    productionSourceMap: true,
 
     lintOnSave: true
 }
