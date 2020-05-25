@@ -2,7 +2,7 @@ import * as type from './mutation-type'
 import Cookie from '../assets/js/storage-cookie'
 import { copyFields } from '../assets/js/util'
 import { setUser } from '@sentry/browser'
-const { VUE_APP_MODEL } = process.env
+const { VUE_APP_MODEL, NODE_ENV } = process.env
 // 本地cookie较服务器提前一小时过期
 const CalcCookieTime = expire => new Date(Date.now() + expire * 1000 - 3600000)
 export default {
@@ -28,8 +28,9 @@ export default {
     [type.USER_INFO] (state, payload) {
         copyFields(state.userInfo, payload)
 
-        if (VUE_APP_MODEL === 'production') {
-            // 向sentry设置用户信息，以便在日志中展示
+        // 向sentry设置用户信息，以便在日志中展示
+        // 只有生产环境
+        if (VUE_APP_MODEL === NODE_ENV) {
             setUser({
                 id: payload.userId,
                 username: payload.userName,
