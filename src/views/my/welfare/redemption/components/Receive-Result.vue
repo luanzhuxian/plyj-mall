@@ -24,8 +24,8 @@ export default {
                 default: 'https://mallcdn.youpenglai.com/static/mall/icons/2.10.0/warning.png'
             },
             codeDesc: {
-                200: '核销成功',
-                500: '核销失败，请重试',
+                200: '激活成功',
+                500: '激活失败，请重试',
                 default: '无效码'
             },
             codeErrorDesc: {

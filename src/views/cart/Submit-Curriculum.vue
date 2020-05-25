@@ -17,9 +17,9 @@
                 </div>
             </div>
             <div
-                v-if="redeemCodeList.length"
+                v-if="hasDefaultRedeemCode || redeemCodeList.length"
                 :class="$style.itemSelector"
-                @click.capture="showselectRedeemCode = true"
+                @click.capture="hasDefaultRedeemCode ? '' : showselectRedeemCode = true "
             >
                 <pl-fields
                     size="middle"
@@ -27,7 +27,7 @@
                     icon="icon-coupon"
                     :icon-gap="12"
                     :show-right-icon="!hasDefaultRedeemCode"
-                    :right-text="redeemCodeInfo.id ? redeemCodeInfo.name : '有可用'"
+                    :right-text="redeemCodeInfo.id ? `${redeemCodeInfo.name} ${localSeparator(redeemCodeInfo.exchangeCode, ' ', 4)}` : isNotChooseRedeemCode ? '不使用兑换码' : '添加兑换码'"
                     left-text-weight="bold"
                 />
             </div>
@@ -79,7 +79,17 @@
                 <div :class="$style.redeemCodeList">
                     <template v-for="(item, i) of redeemCodeList">
                         <div :key="i" :class="$style.redeemCodeItem" @click="redeemCodeClick(item, false)">
-                            <span :class="$style.content">{{ item.name }}</span>
+                            <CodeItem
+                                :id="item.id"
+                                :name="item.name"
+                                :code="item.exchangeCode"
+                                :product-total="item.exchangeTotal"
+                                :use-total="item.useTotal"
+                                :total="item.useTotal + item.stock"
+                                :start-time="item.startTime"
+                                :end-time="item.endTime"
+                                :instruction="item.activityRule"
+                            />
                             <span :class="$style.choices">
                                 <pl-svg v-if="item.id === redeemCodeInfo.id" name="icon-xuanzhong" width="40" />
                                 <pl-svg v-else name="icon-weixuanzhong1" width="40" />
@@ -129,6 +139,7 @@ import { setTimeoutSync } from '../../assets/js/util'
 import filter from '../../filter/index'
 import { checkLength, isPhone } from '../../assets/js/validate'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
+import CodeItem from '../my/welfare/redemption/components/Code-Item'
 
 export default {
     name: 'SubmitCurriculum',
@@ -138,6 +149,9 @@ export default {
             default: ''
         }
     },
+    components: {
+        CodeItem
+    },
     data () {
         return {
             // 有无默认选中的兑换码
@@ -145,10 +159,7 @@ export default {
             // 当前选择的兑换码
             redeemCodeInfo: {},
             // 兑换码列表
-            redeemCodeList: [
-                { name: 'sdjadia', id: '555655', exchangeCode: '423232344254' },
-                { name: 'sdjadia', id: '321323', exchangeCode: '442423434254' }
-            ],
+            redeemCodeList: [],
             // 是否显示选择兑换码选择框
             showselectRedeemCode: false,
             // 是否选择'不参与兑换码'
@@ -333,7 +344,7 @@ export default {
         }
     },
     beforeRouteLeave (to, from, next) {
-        if (to && to.name !== 'SubmitCurriculum') {
+        if (to && to.name !== 'Curriculum') {
             localStorage.removeItem('currentRedeemCode')
         }
         next()
@@ -471,17 +482,15 @@ export default {
 .redeemCode {
   padding: 0 24px;
   > .redeemCodeList {
-    margin-top: 48px;
     padding-bottom: 40px;
 
     .redeemCodeItem {
-      height: 72px;
-      line-height: 72px;
+      max-height: 300px;
+      padding-right: 80px;
       position: relative;
       overflow: hidden;
       font-size: 32px;
       color:#373737;
-      .code{}
       .notChoose{
         font-size:28px;
         line-height: 72px;

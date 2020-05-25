@@ -6,7 +6,7 @@
             [$style.isSingleCourse]: productType === 2,
             [$style.isSeriesCourse]: productType === 3
         }"
-        @click="goDetail"
+        @click.capture="goDetail"
     >
         <img :class="$style.coverImg" v-imgError :src="coverImg" alt="">
         <div :class="$style.desc">
@@ -16,15 +16,15 @@
             </div>
             <div :class="$style.bottom">
                 <span :class="$style.price">
-                    <b v-if="sellingPrice" v-text="sellingPrice" />
+                    <b v-if="sellingPrice">{{ Number((sellingPrice / 100).toFixed(2)) }}</b>
                     <span v-else>免费</span>
-                    <del v-if="originPrice" v-text="originPrice" />
+                    <del v-if="originPrice">{{ Number((originPrice / 100).toFixed(2)) }}</del>
                 </span>
-                <button v-if="status === 1" :class="[$style.btn, $style.usedBtn]">已兑换</button>
-                <button v-else-if="status === 2" :class="[$style.btn, $style.usedBtn]">已购买</button>
-                <button v-else-if="status === 3" :class="[$style.btn, $style.disabledBtn]">无库存</button>
+                <button v-if="exhcangeStatus === 1" :class="[$style.btn, $style.usedBtn]">已购买</button>
+                <button v-else-if="exhcangeStatus === 2" :class="[$style.btn, $style.usedBtn]">已兑换</button>
+                <button v-else-if="exhcangeStatus === 3" :class="[$style.btn, $style.disabledBtn]">无库存</button>
                 <button v-else-if="isMaxLimit" :class="[$style.btn, $style.disabledBtn]">不可兑换</button>
-                <button v-else :class="$style.btn" @click.stop.prevent="clickHandler">立即兑换</button>
+                <button v-else :class="$style.btn">立即兑换</button>
             </div>
         </div>
     </div>
@@ -69,8 +69,8 @@ export default {
             type: [Number, String],
             default: 0
         },
-        // 状态 1已购买 2已兑换 3无库存 + 立即兑换
-        status: {
+        // 兑换状态 : 1-已购买 2-已兑换 3-未开售 4-立即兑换
+        exhcangeStatus: {
             type: Number,
             default: 1
         },
@@ -82,15 +82,9 @@ export default {
     },
     methods: {
         goDetail () {
+            this.$emit('receive', this.id)
             // 单课+系列课
             this.$router.push({ name: 'Curriculum', params: { productId: this.id } })
-        },
-        async clickHandler () {
-            try {
-                await this.$emit('receive', this.id)
-            } catch (e) {
-                throw e
-            }
         }
     }
 }

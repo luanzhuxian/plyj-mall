@@ -58,6 +58,7 @@
                             <CodeItem
                                 :id="item.id"
                                 :name="item.name"
+                                :code="item.exchangeCode"
                                 :product-total="item.exchangeTotal"
                                 :use-total="item.useTotal"
                                 :total="item.useTotal + item.stock"
@@ -67,6 +68,8 @@
                                 :is-used="item.isUsed"
                                 :is-expired="item.isExpired"
                                 :button-text="item.buttonText"
+                                is-show-button
+                                show-instruction-control
                                 @codeItemClick="codeItemClick"
                             />
                         </div>
@@ -75,7 +78,7 @@
             </LoadMore>
         </div>
         <!--底部按钮-->
-        <template>
+        <div :class="$style.bottom">
             <pl-button
                 v-if="!isManagementState"
                 type="warning"
@@ -95,7 +98,7 @@
             >
                 删除
             </pl-button>
-        </template>
+        </div>
     </div>
 </template>
 
@@ -220,8 +223,9 @@ export default {
         selectedChange (codeId) {
             const index = this.findIndexById(codeId)
             if (index < 0) return
+            const item = this.codeList[index]
+            if (!item.isCanDelete) return
             const currentCoupon = this.codeList.splice(index, 1)[0]
-            if (!currentCoupon.isCanDelete) return
             currentCoupon.checked = !currentCoupon.checked
             this.codeList.splice(index, 0, currentCoupon)
         },
@@ -343,10 +347,18 @@ export default {
   }
 
   /*底部按钮*/
+  .bottom {
+    position: fixed;
+    width: 100vw;
+    height: 154px;
+    bottom: 0;
+    z-index: 2;
+    background-color: #F1F4F5;
+  }
   .button {
     position: fixed;
-    bottom: 40px;
+    bottom: 0;
     width: calc(100% - 24px - 24px);
-    margin: 0 24px;
+    margin: 0 24px 40px;
   }
 </style>

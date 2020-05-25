@@ -160,10 +160,14 @@ export default {
             this.show = false
             this.$emit('cancel')
         },
-        handleConfirm () {
-            if (this.type === 'propmt' && !this.validate()) return
-            this.$emit('confirm', this.propmtValue)
-            this.show = false
+        async handleConfirm () {
+            try {
+                if (this.type === 'propmt' && !this.validate()) return
+                await this.$emit('confirm', this.propmtValue)
+                this.show = false
+            } catch (e) {
+                throw e
+            }
         },
         validate () {
             const val = this.propmtValue

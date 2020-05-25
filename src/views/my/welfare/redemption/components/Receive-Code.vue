@@ -32,11 +32,12 @@ export default {
     name: 'ReceiveCode',
     data () {
         return {
-            codeId: ''
+            codeId: '',
+            isLoading: false
         }
     },
     created () {
-        this.$parent.$on('confirm', this.receiveRedemption)
+        this.$parent.$once('confirm', this.receiveRedemption)
     },
     methods: {
         scan () {
@@ -72,6 +73,8 @@ export default {
             this.$router.push({ name: 'BindMobile' })
         },
         async receiveRedemption () {
+            if (this.isLoading) return
+            this.isLoading = true
             if (!this.makeSureRole) return
             try {
                 if (!this.codeId) {
@@ -80,13 +83,16 @@ export default {
                 }
                 const { result: { code } } = await receiveRedemption(this.codeId)
                 if (code === 200) {
-                    this.$success('兑换成功')
+                    this.$success('激活成功')
                 } else {
                     const errorText = codeDesc[code]
                     await this.$warning(errorText)
                 }
             } catch (e) {
                 await this.$warning(codeDesc[500])
+            } finally {
+                this.codeId = ''
+                this.isLoading = false
             }
         }
     }

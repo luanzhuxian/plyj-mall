@@ -761,7 +761,7 @@ export default {
         }
     },
     beforeRouteLeave (to, from, next) {
-        if (to && to.name !== 'Curriculum') {
+        if (to && to.name !== 'SubmitCurriculum') {
             localStorage.removeItem('currentRedeemCode')
         }
         next()

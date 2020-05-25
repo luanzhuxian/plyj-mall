@@ -9,12 +9,12 @@
                 :key="item.productId"
                 :id="item.productId"
                 :product-type="item.productType"
-                :cover-img="item.productMainImg"
+                :cover-img="item.productImg"
                 :product-name="item.productName"
                 :lecturer-name="item.lecturer"
                 :selling-price="item.sellingPrice"
                 :origin-price="item.originalPrice"
-                :status="item.status"
+                :exhcange-status="2"
             />
         </template>
     </div>

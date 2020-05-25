@@ -5,6 +5,9 @@
                 <div :class="$style.left">
                     <div :class="$style.title" v-text="name" />
                     <div :class="[$style.textWhite, $style.mtMb20]">
+                        兑换码：{{ code | separator(' ', 4) }}
+                    </div>
+                    <div :class="[$style.textWhite, $style.mtMb20]">
                         支持兑换{{ productTotal }}款商品
                     </div>
                     <div :class="$style.textWhite">
@@ -12,7 +15,7 @@
                     </div>
                 </div>
                 <div :class="$style.right">
-                    <div :class="$style.button" @click.stop="clickHandler" v-text="buttonText" />
+                    <div v-if="isShowButton" :class="$style.button" @click.stop="clickHandler" v-text="buttonText" />
                     <div :class="[$style.textWhite, $style.mtMb20]">
                         已使用{{ useTotal }}/{{ total }}个
                     </div>
@@ -57,6 +60,11 @@ export default {
             type: String,
             default: ''
         },
+        // 兑换码
+        code: {
+            type: String,
+            default: ''
+        },
         // 可兑换的商品总数
         productTotal: {
             type: Number,
@@ -97,15 +105,20 @@ export default {
             type: Boolean,
             default: false
         },
+        // 是否显示按钮
+        isShowButton: {
+            type: Boolean,
+            default: false
+        },
         // 按钮文案
         buttonText: {
             type: String,
             default: '去使用'
         },
-        // 是否显示 使用说明 控制按钮，默认显示
+        // 是否显示 使用说明 控制按钮，默认不显示
         showInstructionControl: {
             type: Boolean,
-            default: true
+            default: false
         },
         // 是否默认展开使用说明
         isShowInstruction: {

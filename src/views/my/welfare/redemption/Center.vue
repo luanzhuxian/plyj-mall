@@ -3,6 +3,7 @@
         <CodeItem
             :id="codeId"
             :name="detail.name"
+            :code="detail.exchangeCode"
             :product-total="detail.exchangeTotal"
             :use-total="detail.useTotal"
             :total="detail.useTotal + detail.stock"
@@ -11,8 +12,8 @@
             :instruction="detail.activityRule"
             :is-used="detail.isUsed"
             :is-expired="detail.isExpired"
-            :show-instruction-control="false"
-            :is-show-instruction="true"
+            is-show-instruction
+            is-show-button
             button-text="查看兑换商品"
             @codeItemClick="codeItemClick"
         />
@@ -26,12 +27,12 @@
                     :key="item.productId"
                     :id="item.productId"
                     :product-type="item.productType"
-                    :cover-img="item.productMainImg"
+                    :cover-img="item.productImg"
                     :product-name="item.productName"
                     :lecturer-name="item.lecturer"
                     :selling-price="item.sellingPrice"
                     :origin-price="item.originalPrice"
-                    :status="item.status"
+                    :exhcange-status="item.exhcangeStatus"
                     :is-max-limit="isMaxLimit"
                     @receive="receive"
                 />
@@ -96,6 +97,7 @@ export default {
                 const { result } = await getProductByCodeId(this.codeId)
                 const {
                     name,
+                    exchangeCode,
                     startTime,
                     endTime,
                     activityRule,
@@ -109,6 +111,7 @@ export default {
                 const isExpired = codeStatus === 0
                 this.detail = {
                     name,
+                    exchangeCode,
                     exchangeTotal,
                     startTime,
                     endTime,
@@ -127,14 +130,22 @@ export default {
             this.$router.push({ name: 'RedeemedProductList', params: { codeId: this.codeId } })
         },
         findIndexById (id) {
-            return this.productList.findIndex(item => item.id === id)
+            return this.productList.findIndex(item => item.productId === id)
         },
         // 兑换商品
         receive (productId) {
             if (!this.detail.stock) return
+            const index = this.findIndexById(productId)
+            if (index < 0) return
+            const detail = this.productList[index]
+            // 兑换状态 : 1-已购买 2-已兑换 3-未开售 4-立即兑换
+            if (detail.exhcangeStatus !== 4 || this.isMaxLimit) return
             // 设置当前兑换码id信息
-            localStorage.setItem('currentRedeemCode', JSON.stringify({ id: this.codeId, name: this.detail.name }))
-            this.$router.push({ name: 'Curriculum', params: { productId } })
+            localStorage.setItem('currentRedeemCode', JSON.stringify({
+                id: this.codeId,
+                name: this.detail.name,
+                exchangeCode: this.detail.exchangeCode
+            }))
         }
     }
 }
