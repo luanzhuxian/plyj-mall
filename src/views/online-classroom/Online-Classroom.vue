@@ -1,41 +1,13 @@
 <template>
-    <div :class="$style.onlineClassroom">
-        <div
-            v-if="category.length"
-            :class="{
-                [$style.classifyMain]: true,
-                [$style.showAll]: isShowAll
-            }"
-        >
-            <ul :class="$style.classifyList">
-                <li :class="{ [$style.active]: form.categoryId === '' }" @click="classifyClick({ id: '' })">
-                    全部
-                </li>
-                <li
-                    v-for="(item, index) in category"
-                    :class="{
-                        [$style.active]: form.categoryId===item.id
-                    }"
-                    :key="index"
-                    @click="classifyClick(item)"
-                >
-                    {{ item.categoryName }}
-                </li>
-            </ul>
-            <transition name="fade">
-                <div :class="$style.controlWrap" v-if="category.length">
-                    <div :class="$style.control">
-                        <pl-svg
-                            v-show="!isShowAll"
-                            name="icon-group"
-                            width="24"
-                            fill="#484848"
-                            @click="isShowAll = true"
-                        />
-                    </div>
-                </div>
-            </transition>
-        </div>
+    <div
+        :class="{
+            [$style.onlineClassroom]: true
+        }"
+    >
+        <CategorySelector
+            :category="category"
+            @change="classifyChanged"
+        />
         <load-more
             ref="loadMore"
             :form="form"
@@ -103,11 +75,13 @@ import { getCourse } from '../../apis/online-classroom.js'
 import LoadMore from '../../components/common/Load-More.vue'
 import CountDown from '../../components/product/Courses-Count-Down.vue'
 import moment from 'moment'
+import CategorySelector from './components/Category-Selector.vue'
 export default {
     name: 'OnlineClassroom',
     components: {
         LoadMore,
-        CountDown
+        CountDown,
+        CategorySelector
     },
     inject: {
         onlineClassCoursesCatrgory: {
@@ -123,13 +97,13 @@ export default {
                 current: 1,
                 size: 10
             },
-            isShowAll: false,
             requestMethods: getCourse,
             loading: false,
             $refresh: null,
             courseList: [],
             // 当前本地时间与服务器时间的差值
-            duration: 0
+            duration: 0,
+            offsetTop: 0
         }
     },
     async activated () {
@@ -151,9 +125,6 @@ export default {
             return this.onlineClassCoursesCatrgory.coursesCatrgory.id || ''
         }
     },
-    deactivated () {
-        this.isShowAll = false
-    },
     beforeRouteEnter (to, from, next) {
         next(async vm => {
             await vm.getServerTime()
@@ -163,11 +134,10 @@ export default {
         })
     },
     methods: {
-        async classifyClick (item) {
+        async classifyChanged (item) {
             try {
                 this.form.current = 1
                 this.form.categoryId = item.id
-                this.isShowAll = false
                 this.$refresh()
             } catch (e) {
                 throw e
@@ -204,89 +174,11 @@ export default {
 <style lang="scss" module>
 .online-classroom {
     /*padding: 14vw 20px 20px;*/
+    position: relative;
     min-height: 50vh;
     background-color: #fff;
     > .content {
         padding: 0 20px 20px 20px;
-    }
-}
-.classify-main {
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: 100vw;
-    height: 80px;
-    padding: 0 74px 0 28px;
-    box-sizing: border-box;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    background-color: #fff;
-    .control-wrap {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        right: 0;
-        padding-left: 20px;
-        overflow-y: hidden;
-    }
-    .control {
-        width: 70px;
-        height: 46px;
-        display: inline-flex;
-        align-items: center;
-        background-color: #fff;
-        box-shadow: -3px 0 6px rgba(0, 0, 0, .2);
-        > svg {
-            margin-left: 18px;
-        }
-    }
-}
-.classify-list {
-    position: relative;
-    display: flex;
-    align-items: center;
-    flex-wrap: nowrap;
-    height: 46px;
-    width: 100vw;
-    padding-right: 90px;
-    line-height: 50px;
-    background-color: #fff;
-    box-sizing: border-box;
-    overflow: auto;
-    > li {
-        display: inline-block;
-        padding: 0 15px;
-        text-align: center;
-        font-size: 22px;
-        color: #666;
-        line-height: 40px;
-        word-break: keep-all;
-        white-space: nowrap;
-        &.active {
-            background: #fdf5e7;
-            border: 1px solid #f3ad3c;
-            border-radius: 22px;
-            color: #f3ad3c;
-        }
-    }
-    .close {
-        bottom: -70px;
-        left: 50%;
-        transform: translateX(-50%);
-    }
-}
-.show-all {
-    box-shadow: 0 5px 5px rgba(0, 0, 0, .1);
-    height: max-content;
-    margin-bottom: 28px;
-    padding: 28px;
-    .classify-list {
-        height: max-content;
-        flex-wrap: wrap;
-        overflow-y: hidden;
-    }
-    .control {
-        display: none;
     }
 }
 .course-list {

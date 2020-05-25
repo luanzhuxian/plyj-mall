@@ -1,49 +1,9 @@
 <template>
     <div :class="$style.onlineClassroom">
-        <div
-            v-if="category.length"
-            :class="{
-                [$style.classifyMain]: true,
-                [$style.showAll]: isShowAll
-            }"
-        >
-            <ul :class="$style.classifyList">
-                <li :class="{ [$style.active]: form.categoryId === '' }" @click="classifyClick({ id: '' })">
-                    全部
-                </li>
-                <li
-                    v-for="(item, index) in category"
-                    :class="{
-                        [$style.active]: form.categoryId === item.id
-                    }"
-                    :key="index"
-                    @click="classifyClick(item)"
-                >
-                    {{ item.categoryName }}
-                </li>
-                <li :class="$style.close" v-if="isShowAll">
-                    <pl-svg
-                        name="icon-close"
-                        fill="#fff"
-                        width="36"
-                        @click="isShowAll = false"
-                    />
-                </li>
-            </ul>
-            <transition name="fade">
-                <div :class="$style.controlWrap" v-if="category.length">
-                    <div :class="$style.control">
-                        <pl-svg
-                            v-show="!isShowAll"
-                            name="icon-group"
-                            width="24"
-                            fill="#484848"
-                            @click="isShowAll = true"
-                        />
-                    </div>
-                </div>
-            </transition>
-        </div>
+        <CategorySelector
+            :category="category"
+            @change="classifyChanged"
+        />
         <load-more
             ref="loadMore"
             :form="form"
@@ -122,12 +82,14 @@ import { getCourse } from '../../apis/online-classroom.js'
 import LoadMore from '../../components/common/Load-More.vue'
 import CountDown from '../../components/product/Courses-Count-Down.vue'
 import moment from 'moment'
+import CategorySelector from './components/Category-Selector.vue'
 
 export default {
     name: 'SeriesOfCourses',
     components: {
         LoadMore,
-        CountDown
+        CountDown,
+        CategorySelector
     },
     inject: {
         onlineClassCoursesCatrgory: {
@@ -184,11 +146,10 @@ export default {
         })
     },
     methods: {
-        async classifyClick (item) {
+        async classifyChanged (item) {
             try {
                 this.form.current = 1
                 this.form.categoryId = item.id
-                this.isShowAll = false
                 this.$refresh()
             } catch (e) {
                 throw e
@@ -229,95 +190,6 @@ export default {
         padding: 20px;
         min-height: 50vh;
         background-color: #fff;
-    }
-
-    .classify-main {
-        position: fixed;
-        top: 90px;
-        left: 0;
-        min-height: 105px;
-        width: 100vw;
-        padding: 0 74px 0 28px;
-        box-sizing: border-box;
-        overflow-x: scroll;
-        overflow-y: hidden;
-        background-color: #fff;
-        z-index: 10;
-    }
-
-    .control-wrap {
-        position: fixed;
-        top: 117px;
-        right: 0;
-        padding-left: 20px;
-        overflow-y: hidden;
-    }
-
-    .control {
-        width: 70px;
-        height: 46px;
-        display: inline-flex;
-        align-items: center;
-        background-color: #FFF;
-        box-shadow: -3px 0 6px rgba(0, 0, 0, .2);
-
-        > svg {
-            margin-left: 18px;
-        }
-    }
-
-    .classify-list {
-        position: relative;
-        display: flex;
-        align-items: center;
-        flex-wrap: nowrap;
-        width: max-content;
-        padding-right: 90px;
-        padding-top: 26px;
-        background-color: #fff;
-        box-sizing: border-box;
-
-        > li {
-            display: inline-block;
-            padding: 0 15px;
-            line-height: 42px;
-            text-align: center;
-            font-size: 22px;
-            color: #666666;
-            word-break: keep-all;
-            white-space: nowrap;
-
-            &.active {
-                background: #FDF5E7;
-                border: 1px solid #F3AD3C;
-                border-radius: 22px;
-                color: #F3AD3C;
-            }
-        }
-
-        .close {
-            position: absolute;
-            bottom: -70px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-    }
-
-    .show-all {
-        padding: 0;
-        height: calc(100vh - 178px);
-        box-shadow: 0 5px 5px rgba(0, 0, 0, .1);
-        background-color: rgba(0, 0, 0, .3);
-
-        .classify-list {
-            width: 100%;
-            flex-wrap: wrap;
-            padding: 26px 28px 20px 28px;
-        }
-
-        .control {
-            display: none;
-        }
     }
 
     .course-item {
