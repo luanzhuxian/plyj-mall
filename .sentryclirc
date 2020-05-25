@@ -1,6 +1,7 @@
 [auth]
-token=dad65f2f661140868e571734dddebee11b9a13550bc44741babc6b1bb4a9d108
+token=82fe55b4c1694d23bc4acd889fb3c55abad8e3fb02324932ae5a59ef0603a694
+
 [defaults]
-url=http://192.168.130.33:5000/
+url=http://frontlog.xijun.youpenglai.com/
 org=penglai
-project=dev-mall
+project=mall
