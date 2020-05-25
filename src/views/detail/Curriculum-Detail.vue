@@ -508,8 +508,6 @@ export default {
          */
         async getDetail () {
             try {
-                // 重置一些状态
-                this.banners.splice(0, 1000000)
                 // 此步是为了兼容处理，当当前产品的活动结束，重新刷新产品详情页面，当作普通商品
                 const { result } = await getCourseDetail(this.productId, { productStatus: this.productActive })
                 if (!result) {
@@ -521,13 +519,14 @@ export default {
                 const {
                     courseType,
                     courseImg,
+                    courseMainImg,
                     relatedCoursesModels,
                     videoLibEntities
                 } = result
 
                 this.tab = courseType
                 this.courseType = courseType
-                this.banners = [courseImg]
+                this.banners = courseImg ? (courseMainImg.splice(0, 1, courseImg) && courseMainImg) : courseMainImg
                 this.relatedCourses = relatedCoursesModels || []
                 this.videoList = videoLibEntities || []
                 this.detail = result
