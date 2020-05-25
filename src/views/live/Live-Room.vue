@@ -457,7 +457,7 @@ export default {
             /* eslint-disable no-throw-literal */
             try {
                 // isGive 是否被送 isRange 是否有权限观看
-                const { isGive, isRange } = await hasPermission(this.id)
+                const { isGive, isRange } = await hasPermission(this.detail.id)
                 this.isGive = isGive
                 if (!isRange) {
                     await this.$warning('您没有权限观看该场直播')
