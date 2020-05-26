@@ -156,29 +156,7 @@
                     <div :class="$style.tabTitle">
                         商品和课程（{{ productList.length }}）
                     </div>
-                    <div
-                        v-for="(item, i) of productList"
-                        :key="i"
-                        :class="$style.product"
-                        @click="$router.push({ name: item.productType === 1 ? 'Product' : 'Curriculum', params: { productId: item.id } })"
-                    >
-                        <div :class="$style.img">
-                            <div :class="$style.tag">
-                                {{ item.productType === 1 ? '商品' : (item.productType === 2 ? '单课' : '系列课') }}
-                            </div>
-                            <img v-imgError :src="item.productMainImage" alt="">
-                        </div>
-                        <div :class="$style.left">
-                            <div :class="$style.name" v-text="item.productName" />
-                            <div :class="$style.price">
-                                ￥{{ item.price }}元
-                            </div>
-                            <!--<div :class="$style.count">3</div>-->
-                        </div>
-                        <div :class="$style.vieFor">
-                            <pl-svg name="icon-vie-for" fill="#fff" width="40" height="70" />
-                        </div>
-                    </div>
+                    <LiveGoods v-for="(item,index) in productList" :key="index" :item="item" />
                 </div>
             </div>
 
@@ -265,6 +243,7 @@ import share from '../../assets/js/wechat/wechat-share'
 import LivePassword from './components/Live-Password'
 import LiveMask from './components/Live-Mask'
 import LiveSignUp from './components/Live-Sign-Up'
+import LiveGoods from './components/Live-goods'
 import {
     getRoomStatus,
     getActiveCompleteInfo,
@@ -304,7 +283,8 @@ export default {
         LiveMask,
         LivePassword,
         CouponItem,
-        PaidPlayer
+        PaidPlayer,
+        LiveGoods
     },
     props: {
         id: {
@@ -1375,76 +1355,6 @@ export default {
     margin-bottom: 32px;
     font-size: 32px;
     line-height: 44px;
-}
-.product {
-    position: relative;
-    display: flex;
-    height: 262px;
-    margin-bottom: 20px;
-    padding: 16px;
-    background-color: #fff;
-    border-radius: 20px;
-    box-sizing: border-box;
-    > .vie-for {
-        position: absolute;
-        bottom: 20px;
-        right: 16px;
-        width: 72px;
-        height: 72px;
-        line-height: 72px;
-        text-align: center;
-        background-color: #fe7700;
-        border-radius: 36px;
-    }
-    > .img {
-        position: relative;
-        width: 314px;
-        height: 208px;
-        margin-right: 20px;
-        border-radius: 16px;
-        overflow: hidden;
-        > .tag {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100px;
-            line-height: 42px;
-            border-radius: 16px 0px 16px 0px;
-            text-align: center;
-            font-size: 24px;
-            color: #FFFFFF;
-            background-color: #F2B036;
-        }
-        > img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-    }
-    > .left {
-        display: flex;
-        flex-direction: column;
-        margin-top: 10px;
-        flex: 1;
-        > .name {
-            line-height: 38px;
-            font-size: 28px;
-            @include elps-wrap(2);
-        }
-        > .price {
-            margin-top: 28px;
-            font-size: 36px;
-            line-height: 50px;
-            color: #fe7700;
-            font-weight: bold;
-        }
-        > .count {
-            margin-top: 4px;
-            font-size: 24px;
-            color: #999;
-            line-height: 34px;
-        }
-    }
 }
 
 .pay-wrap {
