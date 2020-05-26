@@ -154,13 +154,13 @@
                 </div>
                 <div v-show="tab === 3" :class="$style.productList">
                     <div :class="$style.tabTitle">
-                        商品和课程（{{ productList.length }}件）
+                        商品和课程（{{ productList.length }}）
                     </div>
                     <div
                         v-for="(item, i) of productList"
                         :key="i"
                         :class="$style.product"
-                        @click="$router.push({ name: 'Product', params: { productId: item.id } })"
+                        @click="$router.push({ name: item.productType === 1 ? 'Product' : 'Curriculum', params: { productId: item.id } })"
                     >
                         <div :class="$style.img">
                             <div :class="$style.tag">
