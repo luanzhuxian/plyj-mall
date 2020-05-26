@@ -167,4 +167,16 @@ export default {
             }
         }
     }
+    @supports(display: grid) {
+        .show-all {
+            .classify-list {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                justify-content: space-between;
+                > li {
+                    text-align: left;
+                }
+            }
+        }
+    }
 </style>
