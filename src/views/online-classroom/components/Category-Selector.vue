@@ -8,7 +8,7 @@
         :style="{ '--offsetTop': $parent.$el && $parent.$el.offsetTop + 'px' }"
     >
         <ul :class="$style.classifyList">
-            <li :class="{ [$style.active]: categoryId === '' }" @click="classifyClick({ id: '' })">
+            <li :class="{ [$style.active]: categoryId === 'ALL' }" id="ALL" @click="classifyClick({ id: 'ALL' })">
                 全部
             </li>
             <li
@@ -46,7 +46,7 @@ export default {
     data () {
         return {
             isShowAll: false,
-            categoryId: ''
+            categoryId: 'ALL'
         }
     },
     watch: {
@@ -80,14 +80,15 @@ export default {
         async classifyClick (item) {
             this.categoryId = item.id
             this.isShowAll = false
-            this.$emit('change', item)
             setTimeout(() => {
-                document.getElementById(item.id).scrollIntoView({
+                document.getElementById(this.categoryId).scrollIntoView({
                     behavior: 'smooth',
                     block: 'center',
                     inline: 'nearest'
                 })
             }, 500)
+            item.id = item.id === 'ALL' ? '' : item.id
+            this.$emit('change', item)
         }
     }
 }
@@ -173,9 +174,6 @@ export default {
                 display: grid;
                 grid-template-columns: repeat(4, 1fr);
                 justify-content: space-between;
-                > li {
-                    text-align: left;
-                }
             }
         }
     }
