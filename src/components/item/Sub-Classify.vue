@@ -63,7 +63,7 @@ export default {
     display: inline-flex;
     flex-direction: column;
     align-items: center;
-    width: 33.333%;
+    width: 25%;
     margin-bottom: 32px;
     filter: grayscale(80%) blur(2px);
     transition: filter .2s ease-in-out, color .2s ease-in-out;
