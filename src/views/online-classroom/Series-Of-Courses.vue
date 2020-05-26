@@ -107,7 +107,6 @@ export default {
                 current: 1,
                 size: 10
             },
-            isShowAll: false,
             requestMethods: getCourse,
             loading: false,
             $refresh: null,
@@ -116,9 +115,10 @@ export default {
             duration: ''
         }
     },
-    async activated () {
+    async mounted () {
         try {
             this.$refresh = this.$refs.loadMore.refresh
+            await this.getServerTime()
             if (!this.courseList.length) {
                 this.$refresh()
             }
@@ -133,17 +133,6 @@ export default {
         rootCategory () {
             return this.onlineClassCoursesCatrgory.seriesCoursesCatrgory.id || ''
         }
-    },
-    deactivated () {
-        this.isShowAll = false
-    },
-    beforeRouteEnter (to, from, next) {
-        next(async vm => {
-            await vm.getServerTime()
-            if (from.name !== 'Curriculum') {
-                vm.$refs.loadMore.refresh()
-            }
-        })
     },
     methods: {
         async classifyChanged (item) {

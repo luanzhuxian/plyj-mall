@@ -70,7 +70,7 @@ export default {
             }
         }
     },
-    async activated () {
+    async created () {
         try {
             this.activeTabId = this.tabs.find(item => item.routerName === this.$route.name).id
             await this.getSendLiveCount()

@@ -106,9 +106,10 @@ export default {
             offsetTop: 0
         }
     },
-    async activated () {
+    async mounted () {
         try {
             this.$refresh = this.$refs.loadMore.refresh
+            await this.getServerTime()
             // 解决因刷新浏览器后，在beforeRouteEnter无法获取到dom信息，导致无法正常调用refresh问题
             if (!this.courseList.length) {
                 this.$refresh()
@@ -124,14 +125,6 @@ export default {
         rootCategory () {
             return this.onlineClassCoursesCatrgory.coursesCatrgory.id || ''
         }
-    },
-    beforeRouteEnter (to, from, next) {
-        next(async vm => {
-            await vm.getServerTime()
-            if (from.name !== 'Curriculum') {
-                vm.$refs.loadMore.refresh()
-            }
-        })
     },
     methods: {
         async classifyChanged (item) {

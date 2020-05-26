@@ -157,9 +157,13 @@ export default {
             requestMethods: getLiveList
         }
     },
-    async activated () {
-        this.init()
-        this.getData()
+    async mounted () {
+        try {
+            this.init()
+            await this.getData()
+        } catch (e) {
+            throw e
+        }
     },
     computed: {
         // 正在直播
