@@ -52,7 +52,7 @@
                         }"
                         @click="tab = 3"
                     >
-                        商品<i>({{ productList.length }})</i>
+                        商品和课程<i>({{ productList.length }})</i>
                     </div>
                 </div>
                 <pl-button v-if="detail.coverImg && detail.liveMode === 'public'" style="padding:0 24px" @click="share" type="warning" size="small">分享海报</pl-button>
@@ -154,7 +154,7 @@
                 </div>
                 <div v-show="tab === 3" :class="$style.productList">
                     <div :class="$style.tabTitle">
-                        精选商品（{{ productList.length }}件）
+                        商品和课程（{{ productList.length }}件）
                     </div>
                     <div
                         v-for="(item, i) of productList"
@@ -162,7 +162,12 @@
                         :class="$style.product"
                         @click="$router.push({ name: 'Product', params: { productId: item.id } })"
                     >
-                        <img v-imgError :src="item.productMainImage" alt="">
+                        <div :class="$style.img">
+                            <div :class="$style.tag">
+                                {{ item.productType === 1 ? '商品' : (item.productType === 2 ? '单课' : '系列课') }}
+                            </div>
+                            <img v-imgError :src="item.productMainImage" alt="">
+                        </div>
                         <div :class="$style.left">
                             <div :class="$style.name" v-text="item.productName" />
                             <div :class="$style.price">
@@ -1391,12 +1396,30 @@ export default {
         background-color: #fe7700;
         border-radius: 36px;
     }
-    > img {
+    > .img {
+        position: relative;
         width: 314px;
         height: 208px;
         margin-right: 20px;
-        object-fit: cover;
         border-radius: 16px;
+        overflow: hidden;
+        > .tag {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100px;
+            line-height: 42px;
+            border-radius: 16px 0px 16px 0px;
+            text-align: center;
+            font-size: 24px;
+            color: #FFFFFF;
+            background-color: #F2B036;
+        }
+        > img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     }
     > .left {
         display: flex;
