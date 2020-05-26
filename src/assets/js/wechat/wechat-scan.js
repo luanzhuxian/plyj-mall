@@ -1,17 +1,18 @@
 import JsSHE from '../../../../static/lib/crypto'
 import { getJSApi } from '../../../apis/base-api'
-export default async function scan () {
+const WX = window.wx
+export default async function scan ({ appId }) {
     try {
         const { result: jsapi } = await getJSApi()
-        const nonceStr = randomString()
+        const nonceStr = randomString(appId)
         const timestamp = Number.parseInt(new Date().getTime() / 1000)
         const sign = `jsapi_ticket=${ jsapi }&noncestr=${ nonceStr }&timestamp=${ timestamp }&url=${ location.href }`
         const signature = new JsSHE(sign, 'TEXT').getHash('SHA-1', 'HEX')
         const config = {
             // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
             debug: false,
-            // 必填，公众号的唯一标识(这里使用demo校的appid，因为域名是一样的)
-            appId: 'wx1e1748c68e794b4a',
+            // 必填，公众号的唯一标识
+            appId,
             // 必填，生成签名的时间戳
             timestamp,
             // 必填，生成签名的随机串
@@ -23,11 +24,12 @@ export default async function scan () {
                 'scanQRCode'
             ]
         }
-        window.wx.config(config)
-        window.wx.ready(() => {
-            console.warn('wechat config: ok!')
+        WX.config(config)
+        WX.ready(() => {
+            console.warn('扫描配置成功')
         })
-        window.wx.error(err => {
+        WX.error(err => {
+            console.warn('扫描配置失败')
             console.error(err)
         })
     } catch (e) {

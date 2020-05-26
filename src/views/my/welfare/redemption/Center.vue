@@ -133,7 +133,7 @@ export default {
         findIndexById (id) {
             return this.productList.findIndex(item => item.productId === id)
         },
-        // 兑换商品
+        // 兑换商品时，设置参数
         receive (productId) {
             if (!this.detail.stock) return
             const index = this.findIndexById(productId)

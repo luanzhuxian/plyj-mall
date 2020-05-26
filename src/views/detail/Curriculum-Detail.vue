@@ -233,7 +233,7 @@
                                 :disabled="Number(detail.status) === 2 || loading"
                                 @click="submit"
                             >
-                                {{ hasDefaultRedeemCode? '立即兑换':'立即订购' }}
+                                立即订购
                             </button>
                         </template>
                     </div>
@@ -350,8 +350,6 @@ export default {
     },
     data () {
         return {
-            // 兑换码id, 用来判断是从普通入口进入的，还是从兑换中心过来的
-            hasDefaultRedeemCode: '',
             // 1 单课 2 系列课
             courseType: 1,
             banners: [],
@@ -422,7 +420,6 @@ export default {
     },
     async activated () {
         try {
-            this.hasDefaultRedeemCode = !!localStorage.getItem('currentRedeemCode')
             await this.refresh()
         } catch (error) {
             throw error
@@ -750,12 +747,6 @@ export default {
                 this.creating = false
             }
         }
-    },
-    beforeRouteLeave (to, from, next) {
-        if (to && to.name !== 'SubmitCurriculum') {
-            localStorage.removeItem('currentRedeemCode')
-        }
-        next()
     }
 }
 </script>

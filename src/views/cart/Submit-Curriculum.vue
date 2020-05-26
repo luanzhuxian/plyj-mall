@@ -311,7 +311,11 @@ export default {
                         // 0元商品无需支付
                         this.$success('支付成功')
                         this.submiting = false
-                        this.goVideoLibrary()
+                        if (this.hasDefaultRedeemCode) {
+                            this.$router.push({ name: 'RedemptionCenter', params: { codeId: this.redeemCodeInfo.id } })
+                        } else {
+                            this.goVideoLibrary()
+                        }
                     }
                 }
             } catch (e) {
@@ -344,9 +348,7 @@ export default {
         }
     },
     beforeRouteLeave (to, from, next) {
-        if (to && to.name !== 'Curriculum') {
-            localStorage.removeItem('currentRedeemCode')
-        }
+        localStorage.removeItem('currentRedeemCode')
         next()
     }
 }

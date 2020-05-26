@@ -108,6 +108,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import scan from '../../../../assets/js/wechat/wechat-scan'
 import LoadMore from '../../../../components/common/Load-More.vue'
 import CodeItem from './components/Code-Item'
 import ReceiveCode from './components/Receive-Code'
@@ -179,6 +181,7 @@ export default {
         }
     },
     computed: {
+        ...mapGetters(['appId']),
         deleteIdList () {
             return this.codeList.filter(item => item.checked).map(item => item.id)
         }
@@ -188,8 +191,10 @@ export default {
             this.form.status = val === 'ALL' ? '' : val
         }
     },
-    mounted () {
+    async mounted () {
         this.$refresh = this.$refs.loadMore.refresh
+        // 配置微信扫描功能
+        await scan(this.appId)
     },
     activated () {
         this.currentStatus = this.status
@@ -248,7 +253,9 @@ export default {
                 await this.$confirm({
                     slot: h(ReceiveCode)
                 })
-                this.$refresh()
+                setTimeout(async () => {
+                    await this.$refresh()
+                }, 1000)
             } catch (e) {
             }
         },

@@ -6,7 +6,7 @@
             [$style.isSingleCourse]: productType === 2,
             [$style.isSeriesCourse]: productType === 3
         }"
-        @click.capture="goDetail"
+        @click="goDetail"
     >
         <img :class="$style.coverImg" v-imgError :src="coverImg" alt="">
         <div :class="$style.desc">
@@ -25,7 +25,7 @@
                 <button v-else-if="exhcangeStatus === 5" :class="[$style.btn, $style.usedBtn]">已赠课</button>
                 <button v-else-if="exhcangeStatus === 3" :class="[$style.btn, $style.disabledBtn]">未开售</button>
                 <button v-else-if="isMaxLimit || isExpired" :class="[$style.btn, $style.disabledBtn]">不可兑换</button>
-                <button v-else :class="$style.btn">立即兑换</button>
+                <button v-else :class="$style.btn" @click.stop="receive">立即兑换</button>
             </div>
         </div>
     </div>
@@ -88,9 +88,22 @@ export default {
     },
     methods: {
         goDetail () {
-            this.$emit('receive', this.id)
             // 单课+系列课
             this.$router.push({ name: 'Curriculum', params: { productId: this.id } })
+        },
+        receive () {
+            this.$emit('receive', this.id)
+            this.$router.push({
+                name: 'SubmitCurriculum',
+                params: {
+                    productId: this.id,
+                    count: 1
+                },
+                query: {
+                    productActive: 1,
+                    activityId: ''
+                }
+            })
         }
     }
 }

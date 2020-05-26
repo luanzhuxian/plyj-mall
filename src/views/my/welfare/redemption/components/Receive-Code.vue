@@ -7,6 +7,7 @@
                 v-model.trim="codeId"
                 type="Number"
                 placeholder="请输入11位兑换码"
+                @input="input"
             >
             <img
                 src="https://mallcdn.youpenglai.com/static/mall/icons/2.10.0/scan.png"
@@ -40,6 +41,11 @@ export default {
         this.$parent.$once('confirm', this.receiveRedemption)
     },
     methods: {
+        input () {
+            if (this.codeId.length >= 11) {
+                this.codeId = this.codeId.substring(0, 11)
+            }
+        },
         scan () {
             if (window.wx) {
                 window.wx.scanQRCode({
@@ -83,7 +89,7 @@ export default {
                 }
                 const { result: { code } } = await receiveRedemption(this.codeId)
                 if (code === 200) {
-                    this.$success('激活成功')
+                    await this.$success('激活成功')
                 } else {
                     const errorText = codeDesc[code]
                     await this.$warning(errorText)
