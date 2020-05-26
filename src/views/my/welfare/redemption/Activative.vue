@@ -88,7 +88,7 @@ export default {
                     slot: h(ReceiveResult, { props: { code } }),
                     confirmText: '朕知道了'
                 })
-                // 核销成功去查看当前核销码页面
+                // 核销成功去查看当前兑换码页面
                 if (code === 200) {
                     this.$router.replace({ name: 'RedemptionCenter', params: { codeId: id } })
                 } else {

@@ -78,7 +78,7 @@ export default {
             if (!this.makeSureRole) return
             try {
                 if (!this.codeId) {
-                    await this.$warning('未输入核销码')
+                    await this.$warning('未输入兑换码')
                     return
                 }
                 const { result: { code } } = await receiveRedemption(this.codeId)
