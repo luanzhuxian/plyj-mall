@@ -39,7 +39,7 @@
                                 <div :class="$style.title">
                                     {{ item.courseName }}
                                 </div>
-                                <div :class="$style.saleInfo">
+                                <div :class="$style.saleInfo" v-if="Number(item.showSales) === 1">
                                     <span v-if="item.orderCount">已有{{ item.orderCount }}人订阅</span>
                                     <span v-else>正在热销中</span>
                                 </div>
