@@ -3,10 +3,10 @@ import { getJSApi } from '../../../apis/base-api'
 const WX = window.wx
 export default async function scan ({ appId }) {
     try {
-        const { result: jsapi } = await getJSApi()
+        const { result: jsApi } = await getJSApi()
         const nonceStr = randomString(appId)
         const timestamp = Number.parseInt(new Date().getTime() / 1000)
-        const sign = `jsapi_ticket=${ jsapi }&noncestr=${ nonceStr }&timestamp=${ timestamp }&url=${ location.href }`
+        const sign = `jsapi_ticket=${ jsApi }&noncestr=${ nonceStr }&timestamp=${ timestamp }&url=${ location.href }`
         const signature = new JsSHE(sign, 'TEXT').getHash('SHA-1', 'HEX')
         const config = {
             // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
