@@ -80,7 +80,7 @@ export default {
             this.$router.push({ name: 'BindMobile' })
         },
         async receiveRedemption () {
-            if (!this.makeSureRole) return
+            if (!this.makeSureRole()) return
             const h = this.$createElement
             try {
                 const { result: { code, id } } = await receiveRedemption(this.code)

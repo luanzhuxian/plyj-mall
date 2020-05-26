@@ -310,7 +310,7 @@ import Skeleton from './components/Skeleton.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import Barrage from '../marketing-activity/longmen-festival/action/components/Barrage'
 import VideoPlayer from './components/Video-Player'
-import { getCourseDetail, checkIsPresentCourse } from '../../apis/product'
+import { getCourseDetail } from '../../apis/product'
 import {
     generateQrcode,
     cutImageCenter,
@@ -447,7 +447,6 @@ export default {
                 this.loading = true
                 const list = [
                     this.getDetail(),
-                    this.checkIsPresentCourse(),
                     ...(this.productActive === 7 ? [
                         this.getPublicBenefitStatistics(),
                         this.getPublicBenefitList()
@@ -521,7 +520,8 @@ export default {
                     courseImg,
                     courseMainImg,
                     relatedCoursesModels,
-                    videoLibEntities
+                    videoLibEntities,
+                    isGive
                 } = result
 
                 this.tab = courseType
@@ -529,21 +529,12 @@ export default {
                 this.banners = courseImg ? (courseMainImg.splice(0, 1, courseImg) && courseMainImg) : courseMainImg
                 this.relatedCourses = relatedCoursesModels || []
                 this.videoList = videoLibEntities || []
+                this.isPresent = !!isGive
                 this.detail = result
 
                 return result
             } catch (e) {
                 throw e
-            }
-        },
-        // 是否是赠课
-        async checkIsPresentCourse () {
-            try {
-                const { result } = await checkIsPresentCourse(this.productId)
-                this.isPresent = result
-                return result
-            } catch (error) {
-                throw error
             }
         },
         // 查询公益棕活动统计数据

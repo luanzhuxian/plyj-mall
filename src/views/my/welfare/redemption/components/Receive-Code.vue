@@ -1,12 +1,12 @@
 <template>
     <div :class="$style.receiveCode">
-        <div :class="$style.title">添加激活码</div>
+        <div :class="$style.title">添加兑换码</div>
         <div :class="$style.searchBox">
             <input
                 ref="input"
                 v-model.trim="codeId"
                 type="Number"
-                placeholder="请输入11位激活码"
+                placeholder="请输入11位兑换码"
             >
             <img
                 src="https://mallcdn.youpenglai.com/static/mall/icons/2.10.0/scan.png"

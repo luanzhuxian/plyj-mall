@@ -34,6 +34,7 @@
                     :origin-price="item.originalPrice"
                     :exhcange-status="item.exhcangeStatus"
                     :is-max-limit="isMaxLimit"
+                    :is-expired="detail.isExpired"
                     @receive="receive"
                 />
             </template>

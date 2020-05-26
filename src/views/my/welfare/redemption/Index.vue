@@ -37,9 +37,14 @@
                             name="https://mallcdn.youpenglai.com/static/mall/icons/olds/newCouponIcon.png"
                             width="400" />
                         <div>
-                            您还没有添加激活码哦~
-                            <br>
-                            添加激活码，快速兑换商品
+                            <template v-if="currentStatus === 'ALL'">
+                                您还没有添加兑换码哦~
+                                <br>
+                                添加兑换码，快速兑换商品
+                            </template>
+                            <template v-else>
+                                暂无兑换码
+                            </template>
                         </div>
                     </div>
                     <template v-else>
@@ -232,6 +237,9 @@ export default {
         codeItemClick (codeId) {
             const index = this.findIndexById(codeId)
             if (index < 0) return
+            const detail = this.codeList[index]
+            // 没有任何兑换，并过期后，不支持查看详情
+            if (!detail.useTotal && detail.isExpired) return
             this.$router.push({ name: 'RedemptionCenter', params: { codeId } })
         },
         async activateCode () {
@@ -247,6 +255,8 @@ export default {
         async deleteCode () {
             try {
                 await deleteRedemptionByIds(this.deleteIdList)
+                this.$refresh()
+                this.management()
             } catch (e) {
                 throw e
             }

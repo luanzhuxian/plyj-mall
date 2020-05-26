@@ -12,7 +12,7 @@ export const getRedemptionList = ({ current, size, status }) => axios.get(`/apis
  * @param ids {Array} 需要删除的兑换码ids
  * @returns {Promise<AxiosResponse<T>>}
  */
-export const deleteRedemptionByIds = ids => axios.post(`/apis/v1/exchange/delCode`, { ids })
+export const deleteRedemptionByIds = params => axios.post(`/apis/v1/exchange/delCode`, params)
 
 /**
  * 获取当前兑换码 详情 + 可兑换的商品列表 + 已兑换列表

@@ -242,7 +242,7 @@ export default {
       }
     }
     .instructionInfo {
-      padding-top: 22px;
+      padding: 22px 0;
       line-height:32px;
       font-size:20px;
       color: #727272;

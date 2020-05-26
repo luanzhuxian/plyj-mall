@@ -22,8 +22,9 @@
                 </span>
                 <button v-if="exhcangeStatus === 1" :class="[$style.btn, $style.usedBtn]">已购买</button>
                 <button v-else-if="exhcangeStatus === 2" :class="[$style.btn, $style.usedBtn]">已兑换</button>
-                <button v-else-if="exhcangeStatus === 3" :class="[$style.btn, $style.disabledBtn]">无库存</button>
-                <button v-else-if="isMaxLimit" :class="[$style.btn, $style.disabledBtn]">不可兑换</button>
+                <button v-else-if="exhcangeStatus === 5" :class="[$style.btn, $style.usedBtn]">已赠课</button>
+                <button v-else-if="exhcangeStatus === 3" :class="[$style.btn, $style.disabledBtn]">未开售</button>
+                <button v-else-if="isMaxLimit || isExpired" :class="[$style.btn, $style.disabledBtn]">不可兑换</button>
                 <button v-else :class="$style.btn">立即兑换</button>
             </div>
         </div>
@@ -69,13 +70,18 @@ export default {
             type: [Number, String],
             default: 0
         },
-        // 兑换状态 : 1-已购买 2-已兑换 3-未开售 4-立即兑换
+        // 兑换状态 : 1-已购买 2-已兑换 3-未开售 4-立即兑换 5-已赠课
         exhcangeStatus: {
             type: Number,
             default: 1
         },
-        // 已达到最大兑换次数
+        // 兑换码已达到最大兑换次数
         isMaxLimit: {
+            type: Boolean,
+            default: false
+        },
+        // 兑换码是否已过期
+        isExpired: {
             type: Boolean,
             default: false
         }

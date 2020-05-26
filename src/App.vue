@@ -13,6 +13,7 @@
 import Navbar from './components/common/Navbar.vue'
 import QuickNavbar from './components/common/Quick-Navbar.vue'
 import { mapMutations, mapActions } from 'vuex'
+import scan from './assets/js/wechat/wechat-scan'
 import {
     SET_THEME,
     USER_INFO,
@@ -94,6 +95,8 @@ export default {
                 await this.getUserInfo()
             }
             this.logined = true
+            // 配置微信扫描功能
+            await scan()
             await this.getEntryData()
             // 标记一天中首次访问
             setFirstVisit()
