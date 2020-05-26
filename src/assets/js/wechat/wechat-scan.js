@@ -1,10 +1,11 @@
 import JsSHE from '../../../../static/lib/crypto'
 import { getJSApi } from '../../../apis/base-api'
 const WX = window.wx
+/* eslint-disable */
 export default async function scan ({ appId }) {
     try {
-        const { result: jsApi } = await getJSApi()
-        const nonceStr = randomString(appId)
+        const { result: jsApi } = await getJSApi(appId)
+        const nonceStr = randomString()
         const timestamp = Number.parseInt(new Date().getTime() / 1000)
         const sign = `jsapi_ticket=${ jsApi }&noncestr=${ nonceStr }&timestamp=${ timestamp }&url=${ location.href }`
         const signature = new JsSHE(sign, 'TEXT').getHash('SHA-1', 'HEX')
