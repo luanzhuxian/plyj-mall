@@ -54,7 +54,7 @@ export default {
                 const { result } = await getRedemptiontInfo(this.code)
                 if (!result) {
                     this.$warning('当前兑换码不存在，请确认后重试')
-                    this.backHomePage()
+                    this.backMyRedemptionPage()
                     return
                 }
                 this.info = result
@@ -62,9 +62,10 @@ export default {
                 throw e
             }
         },
-        async backHomePage () {
+        async backMyRedemptionPage () {
             await setTimeout(() => {
-                this.$router.replace({ name: 'Home' })
+                // 当前兑换码不可用，去 我的兑换码 列表查看其它，或者用code激活
+                this.$router.replace({ name: 'MyRedemption', params: { status: 'ALL' } })
             }, 3000)
         },
         async makeSureRole () {
@@ -88,12 +89,11 @@ export default {
                     slot: h(ReceiveResult, { props: { code } }),
                     confirmText: '朕知道了'
                 })
-                // 核销成功去查看当前兑换码页面
                 if (code === 200) {
+                    // 核销成功去查看当前兑换码中心
                     this.$router.replace({ name: 'RedemptionCenter', params: { codeId: id } })
                 } else {
-                    // 当前兑换码不可用，去 我的兑换码 列表查看其它
-                    this.$router.replace({ name: 'MyRedemption', params: { status: 'ALL' } })
+                    this.backMyRedemptionPage()
                 }
             } catch (e) {
                 this.$alert({
