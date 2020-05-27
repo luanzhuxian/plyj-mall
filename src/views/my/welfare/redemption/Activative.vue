@@ -92,7 +92,8 @@ export default {
         },
         async receiveRedemption () {
             if (!this.info.exchangeCode) return
-            if (!this.makeSureRole()) return
+            const isVisiter = await this.makeSureRole()
+            if (!isVisiter) return
             const h = this.$createElement
             try {
                 const { result: { code, id } } = await receiveRedemption(this.code)
