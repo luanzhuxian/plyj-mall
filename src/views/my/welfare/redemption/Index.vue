@@ -206,6 +206,14 @@ export default {
                 this.$router.replace({ name: 'MyRedemption', params: { status: item.id || null } })
                 this.$refresh()
             })
+            // 切换tab栏，管理状态改为false
+            if (this.isManagementState) {
+                this.isManagementState = false
+                this.codeList = this.codeList.map(item => {
+                    item.checked = false
+                    return item
+                })
+            }
         },
         onRefresh (list, total) {
             list.forEach(item => {
