@@ -220,10 +220,11 @@ export default {
     }
 }
 .bottom {
+    min-height: 82px;
+    margin-top: 18px;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-top: 18px;
     .price-zoom {
         max-width: 200px;
     }
