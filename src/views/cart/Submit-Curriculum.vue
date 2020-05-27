@@ -27,7 +27,7 @@
                     icon="icon-coupon"
                     :icon-gap="12"
                     :show-right-icon="!hasDefaultRedeemCode"
-                    :right-text="redeemCodeInfo.id ? `${redeemCodeInfo.name} ${localSeparator(redeemCodeInfo.exchangeCode, ' ', 4)}` : isNotChooseRedeemCode ? '不使用兑换码' : '添加兑换码'"
+                    :right-text="redeemCodeInfo.id ? `${localSeparator(redeemCodeInfo.exchangeCode, ' ', 4)}` : isNotChooseRedeemCode ? '不使用兑换码' : '添加兑换码'"
                     left-text-weight="bold"
                 />
             </div>
