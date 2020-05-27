@@ -178,7 +178,7 @@
                     <template slot="label">商品金额</template>
                     <span slot="content" class="gray-1">¥ {{ item.amount }}</span>
                 </InfoItem>
-                <InfoItem v-if="(coupon.amount || isNotChooseCoupon) && !isCart && activeProduct === 1">
+                <InfoItem v-if="(coupon.amount || isNotChooseCoupon) && !isCart && activeProduct === 1" @click="showCoupon = true">
                     <template slot="label">优惠券</template>
                     <div slot="content">
                         <span v-if="!isNotChooseCoupon">-¥{{ coupon.amount }}</span>

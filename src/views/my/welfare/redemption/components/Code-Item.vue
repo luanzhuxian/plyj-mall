@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div :class="$style.item">
+        <div :class="$style.item" @click.stop="clickHandler">
             <div :class="[$style.content, showInstruction? $style.noBottomBorder:'', isUsed || isExpired ? $style.unavailable: '']">
                 <div :class="$style.left">
                     <div :class="$style.title" v-text="name" />
@@ -15,7 +15,7 @@
                     </div>
                 </div>
                 <div :class="$style.right">
-                    <div v-if="isShowButton" :class="$style.button" @click.stop="clickHandler" v-text="buttonText" />
+                    <div v-if="isShowButton" :class="$style.button" v-text="buttonText" />
                     <div :class="[$style.textWhite, $style.mtMb20]">
                         已使用{{ useTotal }}/{{ total }}个
                     </div>
@@ -137,6 +137,7 @@ export default {
     },
     methods: {
         clickHandler () {
+            if (!this.isShowButton) return
             this.$emit('codeItemClick', this.id)
         }
     }
