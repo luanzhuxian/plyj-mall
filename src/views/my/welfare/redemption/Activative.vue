@@ -23,7 +23,7 @@
                     [$style.disabled]: !info.exchangeCode
                 }"
             >激活并使用</button>
-            <button :class="$style.plain">去商城看看</button>
+            <button :class="$style.plain" @click="$router.push({ name: 'Home' })">去商城看看</button>
         </div>
     </div>
 </template>
