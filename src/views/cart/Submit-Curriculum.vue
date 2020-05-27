@@ -89,6 +89,7 @@
                                 :start-time="item.startTime"
                                 :end-time="item.endTime"
                                 :instruction="item.activityRule"
+                                :show-instruction-control="true"
                             />
                             <span :class="$style.choices">
                                 <pl-svg v-if="item.id === redeemCodeInfo.id" name="icon-xuanzhong" width="40" />
@@ -488,7 +489,7 @@ export default {
     padding-bottom: 40px;
 
     .redeemCodeItem {
-      max-height: 300px;
+      min-height: 300px;
       padding-right: 80px;
       position: relative;
       overflow: hidden;
