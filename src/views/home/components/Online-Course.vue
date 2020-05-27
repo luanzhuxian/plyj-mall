@@ -13,7 +13,7 @@
                 </router-link>
             </div>
             <div :class="$style.onlineCourseHeadSub" v-if="data.otherValue > 0">
-                {{ `还有${data.otherValue}个知识课程，等你来学习` }}
+                {{ `${data.otherValue}个精选单课，等你来学习` }}
             </div>
             <ul :class="$style.list" v-if="data.values.length">
                 <template v-for="(course, index) of data.values">
