@@ -308,14 +308,15 @@ export default {
                     if (payData && payData.appId) {
                         await this.pay(payData)
                     } else {
-                        // 0元商品无需支付
-                        this.$success('支付成功')
-                        this.submiting = false
                         if (this.hasDefaultRedeemCode) {
+                            this.$success('兑换成功')
                             this.$router.replace({ name: 'RedemptionCenter', params: { codeId: this.redeemCodeInfo.id } })
                         } else {
+                            // 0元商品无需支付
+                            this.$success('支付成功')
                             this.goVideoLibrary()
                         }
+                        this.submiting = false
                     }
                 }
             } catch (e) {

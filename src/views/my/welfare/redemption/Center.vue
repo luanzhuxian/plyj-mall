@@ -148,6 +148,10 @@ export default {
                 exchangeCode: this.detail.exchangeCode
             }))
         }
+    },
+    deactivated () {
+        this.detail = {}
+        this.productList = []
     }
 }
 </script>

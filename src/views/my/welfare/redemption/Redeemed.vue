@@ -55,6 +55,9 @@ export default {
                 throw e
             }
         }
+    },
+    deactivated () {
+        this.productList = []
     }
 }
 </script>
