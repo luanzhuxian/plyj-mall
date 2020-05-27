@@ -70,7 +70,7 @@ export default {
     > div {
       margin-top: 8px;
       color: #666;
-      font-size: 22px;
+      font-size: 20px;
     }
     &.active {
       filter: grayscale(0);
@@ -79,8 +79,8 @@ export default {
       }
     }
     > img {
-      width: 96px;
-      height: 96px;
+      width: 84px;
+      height: 84px;
       object-fit: contain;
     }
   }
