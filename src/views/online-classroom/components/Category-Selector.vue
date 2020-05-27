@@ -26,17 +26,15 @@
                 <pl-svg name="icon-shibai" width="36" fill="#fff" @click="isShowAll = false" />
             </li>
         </ul>
-        <transition name="fade">
-            <div :class="$style.control" v-if="category.length && !isShowAll">
-                <pl-svg
-                    v-show="!isShowAll"
-                    name="icon-group"
-                    width="24"
-                    fill="#484848"
-                    @click="isShowAll = true"
-                />
-            </div>
-        </transition>
+        <div :class="$style.control" v-if="category.length && !isShowAll && totalWidth > maxWidth">
+            <pl-svg
+                v-show="!isShowAll"
+                name="icon-group"
+                width="24"
+                fill="#484848"
+                @click="isShowAll = true"
+            />
+        </div>
     </div>
 </template>
 
@@ -46,7 +44,9 @@ export default {
     data () {
         return {
             isShowAll: false,
-            categoryId: 'ALL'
+            categoryId: 'ALL',
+            totalWidth: 0,
+            maxWidth: 0
         }
     },
     watch: {
@@ -63,6 +63,7 @@ export default {
             handler () {
                 this.$nextTick(() => {
                     this.$parent.$el.style.paddingTop = `${ this.$el.offsetHeight }px`
+                    this.getTotalWidth()
                 })
             },
             immediate: true
@@ -77,6 +78,19 @@ export default {
         }
     },
     methods: {
+        getTotalWidth () {
+            this.$nextTick(() => {
+                const UL = document.querySelector(`.${ this.$style.classifyList }`)
+                if (!UL) return
+                const LIS = UL.querySelectorAll(`li`)
+                let totalWidth = 0
+                for (const li of LIS) {
+                    totalWidth += li.offsetWidth
+                }
+                this.totalWidth = totalWidth
+                this.maxWidth = UL.offsetWidth
+            })
+        },
         async classifyClick (item) {
             this.categoryId = item.id
             this.isShowAll = false
@@ -107,6 +121,7 @@ export default {
         overflow-x: scroll;
         background-color: #fff;
         z-index: 10;
+        transition: background-color .3s;
         .control {
             display: inline-flex;
             align-items: center;
