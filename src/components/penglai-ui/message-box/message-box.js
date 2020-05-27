@@ -8,6 +8,8 @@ const Instance = new MessageBoxClass({
 const confirm = (config = {}) => new Promise((resolve, reject) => {
     document.body.appendChild(Instance.$el)
     const { slot = null, cancelText = '取消', confirmText = '确定', message = '', html = '', viceMessage = '', icon, closeOnClickMask = true, confirmStyle, cancelStyle, useDangersHtml = false } = config
+    // 初始化插槽数据
+    Instance.$slots.default = []
     if (slot) {
         Instance.$slots.default = [slot]
     }
@@ -38,6 +40,8 @@ const confirm = (config = {}) => new Promise((resolve, reject) => {
 const alert = (config = {}) => new Promise((resolve, reject) => {
     document.body.appendChild(Instance.$el)
     const { slot = null, cancelText = '取消', confirmText = '确定', message = '', viceMessage = '', icon, confirmStyle, cancelStyle, useDangersHtml = false } = config
+    // 初始化插槽数据
+    Instance.$slots.default = []
     if (slot) {
         Instance.$slots.default = [slot]
     }
@@ -66,6 +70,8 @@ const alert = (config = {}) => new Promise((resolve, reject) => {
 const propmt = (config = {}) => new Promise((resolve, reject) => {
     document.body.appendChild(Instance.$el)
     const { slot = null, cancelText = '取消', confirmText = '确定', message = '', viceMessage = '', icon, placeholder = '请输入', rules = [], value = '', useDangersHtml = false } = config
+    // 初始化插槽数据
+    Instance.$slots.default = []
     if (slot) {
         Instance.$slots.default = [slot]
     }
