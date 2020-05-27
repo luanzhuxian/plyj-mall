@@ -147,7 +147,9 @@ export default {
                         })
                     }
                 }, 200)
+                window.addEventListener('popstate', this.popstateHandler)
             } else {
+                window.removeEventListener('popstate', this.popstateHandler)
                 this.showBox = false
                 setTimeout(() => {
                     this.showMask = false
@@ -156,6 +158,9 @@ export default {
         }
     },
     methods: {
+        popstateHandler (e) {
+            this.handleCancel()
+        },
         handleCancel () {
             this.show = false
             this.$emit('cancel')
