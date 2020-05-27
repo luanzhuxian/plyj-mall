@@ -181,6 +181,7 @@ export default {
       .right {
         display: flex;
         flex-direction: column;
+        align-items: center;
         min-width: 214px;
         padding: 38px 0 38px 42px;
         > div {
@@ -189,7 +190,7 @@ export default {
         .button {
           border-radius:40px;
           padding: 0 24px;
-          line-height:42px;
+          line-height:44px;
           flex-wrap: nowrap;
           font-size:28px;
           background-color: #FFF;;
