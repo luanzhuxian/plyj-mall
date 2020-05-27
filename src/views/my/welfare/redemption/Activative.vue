@@ -5,14 +5,24 @@
         </div>
         <div :class="$style.content">
             <div :class="$style.code">
-                {{ info.exchangeCode | separator(' ', 4) }}
+                <template v-if="info.exchangeCode">
+                    {{ info.exchangeCode | separator(' ', 4) }}
+                </template>
             </div>
             <div :class="$style.timeDesc">
-                {{ info.startTime | dateFormat('YYYY.MM.DD') }}-{{ info.endTime | dateFormat('YYYY.MM.DD') }}
+                <template v-if="info.startTime && info.endTime">
+                    {{ info.startTime | dateFormat('YYYY.MM.DD') }}-{{ info.endTime | dateFormat('YYYY.MM.DD') }}
+                </template>
             </div>
         </div>
         <div :class="$style.bottom">
-            <button @click="receiveRedemption" :class="$style.primary">激活并使用</button>
+            <button
+                @click="receiveRedemption"
+                :class="{
+                    [$style.primary]: true,
+                    [$style.disabled]: !info.exchangeCode
+                }"
+            >激活并使用</button>
             <button :class="$style.plain">去商城看看</button>
         </div>
     </div>
@@ -81,6 +91,7 @@ export default {
             this.$router.push({ name: 'BindMobile' })
         },
         async receiveRedemption () {
+            if (!this.info.exchangeCode) return
             if (!this.makeSureRole()) return
             const h = this.$createElement
             try {
@@ -124,6 +135,7 @@ export default {
     > div {
       position: relative;
       width: 510px;
+      min-height: 90px;
       margin: 0 auto;
       border:2px solid #CCC;
       line-height: 90px;
@@ -165,6 +177,9 @@ export default {
         height:100px;
         border-radius:20px;
         background-color:#1890FF;
+        &.disabled {
+          opacity: 0.6;
+        }
       }
       &.plain{
         color:#43A0F5;
