@@ -312,7 +312,7 @@ export default {
                         this.$success('支付成功')
                         this.submiting = false
                         if (this.hasDefaultRedeemCode) {
-                            this.$router.push({ name: 'RedemptionCenter', params: { codeId: this.redeemCodeInfo.id } })
+                            this.$router.replace({ name: 'RedemptionCenter', params: { codeId: this.redeemCodeInfo.id } })
                         } else {
                             this.goVideoLibrary()
                         }
