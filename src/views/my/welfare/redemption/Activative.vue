@@ -45,6 +45,7 @@ export default {
     },
     data () {
         return {
+            isLoading: false,
             info: {}
         }
     },
@@ -91,9 +92,14 @@ export default {
             this.$router.push({ name: 'BindMobile' })
         },
         async receiveRedemption () {
+            // 校验是否加载到兑换码信息
             if (!this.info.exchangeCode) return
+            // 校验当前用户是否游客 游客-到绑定会员页
             const isVisiter = await this.makeSureRole()
             if (!isVisiter) return
+            // 是否加载中
+            if (this.isLoading) return
+            this.isLoading = true
             const h = this.$createElement
             try {
                 const { result: { code, id } } = await receiveRedemption(this.code)
@@ -112,6 +118,8 @@ export default {
                     slot: h(ReceiveResult, { props: { code: 500 } }),
                     confirmText: '朕知道了'
                 })
+            } finally {
+                this.isLoading = false
             }
         }
     }
