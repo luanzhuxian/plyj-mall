@@ -6,7 +6,7 @@
                 ref="input"
                 v-model.trim="codeId"
                 type="Number"
-                placeholder="请输入11位兑换码"
+                :placeholder="`请输入${codeMaxLength}位兑换码`"
                 @input="input"
             >
             <img
@@ -29,10 +29,18 @@ const codeDesc = {
     206: '该兑换码已使用，如有问题请联系商家',
     500: '激活失败'
 }
+/* eslint-disable func-style */
+function getMaxLengthStr (str, length) {
+    if (str >= length) {
+        return str.substring(0, length)
+    }
+    return str
+}
 export default {
     name: 'ReceiveCode',
     data () {
         return {
+            codeMaxLength: 14,
             codeId: '',
             isLoading: false
         }
@@ -42,9 +50,7 @@ export default {
     },
     methods: {
         input () {
-            if (this.codeId.length >= 11) {
-                this.codeId = this.codeId.substring(0, 11)
-            }
+            this.codeId = getMaxLengthStr(this.codeId, this.codeMaxLength)
         },
         scan () {
             if (window.wx) {
@@ -64,7 +70,7 @@ export default {
         getCodeId (result) {
             const arr = result.split('?')[0].split('/')
             const code = arr[arr.length - 1] || ''
-            return code
+            return getMaxLengthStr(code, this.codeMaxLength)
         },
         async makeSureRole () {
             if (this.userId) return true

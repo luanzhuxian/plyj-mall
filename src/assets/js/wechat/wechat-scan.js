@@ -38,12 +38,7 @@ export default async function scan (appId) {
     }
 }
 
-/**
- * 生成随机字符串
- * @param null
- * @return {string}
- * */
-// eslint-disable-next-line func-style
+// 生成随机字符串
 function randomString () {
     // 48~57 数字， 65~90 大写，  97~122 小写
     const LIB = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM'

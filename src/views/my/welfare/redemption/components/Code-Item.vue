@@ -245,6 +245,8 @@ export default {
       padding: 22px 0;
       line-height:32px;
       font-size:20px;
+      word-break: break-all;
+      white-space: pre-line;
       color: #727272;
     }
   }
