@@ -87,7 +87,7 @@ export default {
             })
             sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
                 name: this.$route.name,
-                params: { codeId: this.codeId }
+                params: { code: this.code }
             }))
             this.$router.push({ name: 'BindMobile' })
         },

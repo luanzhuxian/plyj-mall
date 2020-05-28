@@ -4,7 +4,7 @@
         <div :class="$style.searchBox">
             <input
                 ref="input"
-                v-model.trim="codeId"
+                v-model.trim="code"
                 type="Number"
                 :placeholder="`请输入${codeMaxLength}位兑换码`"
                 @input="input"
@@ -41,7 +41,7 @@ export default {
     data () {
         return {
             codeMaxLength: 14,
-            codeId: '',
+            code: '',
             isLoading: false
         }
     },
@@ -50,7 +50,7 @@ export default {
     },
     methods: {
         input () {
-            this.codeId = getMaxLengthStr(this.codeId, this.codeMaxLength)
+            this.code = getMaxLengthStr(this.code, this.codeMaxLength)
         },
         scan () {
             if (window.wx) {
@@ -60,14 +60,14 @@ export default {
                     success: res => {
                         // 当needResult 为 1 时，扫码返回的结果
                         const result = res.resultStr
-                        this.codeId = this.getCodeId(result)
+                        this.code = this.getCode(result)
                     }
                 })
             } else {
                 console.error('微信配置错误')
             }
         },
-        getCodeId (result) {
+        getCode (result) {
             const arr = result.split('?')[0].split('/')
             const code = arr[arr.length - 1] || ''
             return getMaxLengthStr(code, this.codeMaxLength)
@@ -80,20 +80,23 @@ export default {
             })
             sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
                 name: this.$route.name,
-                params: { codeId: this.codeId }
+                params: { code: this.code }
             }))
             this.$router.push({ name: 'BindMobile' })
         },
         async receiveRedemption () {
-            if (this.isLoading) return
-            this.isLoading = true
-            if (!this.makeSureRole) return
             try {
-                if (!this.codeId) {
+                if (!this.code) {
                     await this.$warning('未输入兑换码')
                     return
                 }
-                const { result: { code } } = await receiveRedemption(this.codeId)
+                // 是否加载中
+                if (this.isLoading) return
+                this.isLoading = true
+                // 校验当前用户是否游客 游客-到绑定会员页
+                const isVisiter = await this.makeSureRole()
+                if (!isVisiter) return
+                const { result: { code } } = await receiveRedemption(this.code)
                 if (code === 200) {
                     await this.$success('激活成功')
                 } else {
@@ -103,7 +106,7 @@ export default {
             } catch (e) {
                 await this.$warning(codeDesc[500])
             } finally {
-                this.codeId = ''
+                this.code = ''
                 this.isLoading = false
             }
         }
