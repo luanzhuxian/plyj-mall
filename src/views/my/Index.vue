@@ -176,7 +176,7 @@
                     <router-link :to="{ name: 'MyRedemption', params: {status: 'ALL'}}" :class="$style.welfareItem">
                         <div
                             :class="$style.icon"
-                            style="background-image: url(https://mallcdn.youpenglai.com/static/mall/icons/2.10.0/redemption-code.png)"
+                            style="background-image: url(https://mallcdn.youpenglai.com/static/mall/my/兑换码-1.png)"
                         />
                         <div>
                             <h5>我的兑换码</h5>
