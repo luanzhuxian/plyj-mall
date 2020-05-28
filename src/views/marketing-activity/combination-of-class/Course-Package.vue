@@ -68,12 +68,26 @@
                     <div :class="$style.title">
                         更享更多伴手礼
                     </div>
-                    <SpringPloughingGiftItem
-                        v-for="(gift, k) of item.gifts"
-                        :key="index + '-' + i + '-' + k"
-                        :data="gift"
-                        color="yellow"
-                    />
+                    <template v-for="(gift, k) of item.gifts">
+                        <SpringPloughingGiftItem
+                            v-show="k < 3 || item.isShowGiftMore"
+                            :key="index + '-' + i + '-' + k"
+                            :data="gift"
+                            color="yellow"
+                        />
+                    </template>
+                    <template v-if="item.gifts.length > 3">
+                        <div :class="$style.closeMore" v-show="item.isShowGiftMore">
+                            <pl-svg @click="item.isShowGiftMore = false" name="icon-close3" fill="#663a15" width="40" />
+                        </div>
+                        <div
+                            v-show="!item.isShowGiftMore"
+                            :class="$style.more"
+                            @click="item.isShowGiftMore = true"
+                        >
+                            查看更多
+                        </div>
+                    </template>
                 </div>
                 <button v-if="!item.stock" :class="$style.button">
                     太火爆了，都被抢空了
@@ -224,6 +238,8 @@ export default {
                 for (const activity of result.records) {
                     activity.models.sort((a, b) => moment(a.activityStartTime).valueOf() - moment(b.activityStartTime).valueOf())
                     for (const group of activity.models) {
+                        // 隐藏3个以上的礼品，按钮控制是否显示更多
+                        group.isShowGiftMore = false
                         // 添加倒计时相关字段
                         group.d = ''
                         group.h = ''
@@ -588,6 +604,20 @@ export default {
     > svg {
         margin-top: 20px;
     }
+}
+
+.closeMore{
+  text-align: center;
+}
+.more {
+  width: 200px;
+  margin: 0 auto;
+  border-radius: 20px;
+  text-align: center;
+  line-height: 40px;
+  font-size: 26px;
+  background-color: #f5c36c;
+  color: #663a15;
 }
 
 </style>
