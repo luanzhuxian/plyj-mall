@@ -43,7 +43,7 @@
 
 <script>
 import {
-    getActiveCompleteInfo,
+    getPlayBackActiveCompleteInfo as getActiveCompleteInfo,
     getVideoMesById,
     pay,
     cancelOrder,
