@@ -46,7 +46,7 @@ export default {
         }
     },
     created () {
-        this.$parent.$once('confirm', this.receiveRedemption)
+        this.$parent.$on('confirm', this.receiveRedemption)
     },
     methods: {
         input () {
@@ -72,30 +72,16 @@ export default {
             const code = arr[arr.length - 1] || ''
             return getMaxLengthStr(code, this.codeMaxLength)
         },
-        async makeSureRole () {
-            if (this.userId) return true
-            await this.$alert({
-                message: '为了您的账号安全，请绑定手机号',
-                confirmText: '去绑定手机号码'
-            })
-            sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
-                name: this.$route.name,
-                params: { code: this.code }
-            }))
-            this.$router.push({ name: 'BindMobile' })
-        },
         async receiveRedemption () {
+            // 校验兑换码code
+            if (!this.code) {
+                await this.$warning('未输入兑换码')
+                return
+            }
+            // 是否加载中
+            if (this.isLoading) return
+            this.isLoading = true
             try {
-                if (!this.code) {
-                    await this.$warning('未输入兑换码')
-                    return
-                }
-                // 是否加载中
-                if (this.isLoading) return
-                this.isLoading = true
-                // 校验当前用户是否游客 游客-到绑定会员页
-                const isVisiter = await this.makeSureRole()
-                if (!isVisiter) return
                 const { result: { code } } = await receiveRedemption(this.code)
                 if (code === 200) {
                     await this.$success('激活成功')
@@ -110,6 +96,9 @@ export default {
                 this.isLoading = false
             }
         }
+    },
+    destroyed () {
+        this.$parent.$off('confirm', this.receiveRedemption)
     }
 }
 </script>

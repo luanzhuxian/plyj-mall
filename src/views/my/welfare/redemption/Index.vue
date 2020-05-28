@@ -181,7 +181,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['appId']),
+        ...mapGetters(['appId', 'userId']),
         deleteIdList () {
             return this.codeList.filter(item => item.checked).map(item => item.id)
         }
@@ -255,7 +255,19 @@ export default {
             if (!detail.useTotal && detail.isExpired) return
             this.$router.push({ name: 'RedemptionCenter', params: { codeId } })
         },
+        async makeSureRole () {
+            if (this.userId) return true
+            await this.$alert({
+                message: '为了您的账号安全，请绑定手机号',
+                confirmText: '去绑定手机号码'
+            })
+            sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({ name: this.$route.name, params: { status: this.currentStatus } }))
+            this.$router.push({ name: 'BindMobile' })
+        },
         async activateCode () {
+            // 校验当前用户是否游客 游客-到绑定会员页
+            const isVisiter = await this.makeSureRole()
+            if (!isVisiter) return
             const h = this.$createElement
             try {
                 await this.$confirm({

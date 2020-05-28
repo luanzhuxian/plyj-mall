@@ -97,7 +97,7 @@
                             </span>
                         </div>
                     </template>
-                    <div :class="$style.redeemCodeItem" @click="redeemCodeClick({}, true)">
+                    <div :class="[$style.redeemCodeItem, $style.lastRedeemCodeItem]" @click="redeemCodeClick({}, true)">
                         <div :class="$style.notChoose">不使用兑换码</div>
                         <span :class="$style.choices">
                             <pl-svg v-if="isNotChooseRedeemCode" name="icon-xuanzhong" width="40" />
@@ -489,12 +489,15 @@ export default {
     padding-bottom: 40px;
 
     .redeemCodeItem {
-      min-height: 300px;
+      min-height: 200px;
       padding-right: 80px;
       position: relative;
       overflow: hidden;
       font-size: 32px;
       color:#373737;
+      &.lastRedeemCodeItem {
+        min-height: 72px;
+      }
       .notChoose{
         font-size:28px;
         line-height: 72px;
