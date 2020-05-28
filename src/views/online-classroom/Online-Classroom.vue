@@ -55,11 +55,11 @@
                                 </template>
                                 <template>
                                     <!--实际购买的人 & 赠课并观看的人 显示 学习中-->
-                                    <pl-button v-if="(!item.isGive && item.orderId) || (item.isGive && item.isWatch)" type="warning">学习中</pl-button>
+                                    <pl-button v-if="(!item.isGive && item.orderId) || (item.isGive && item.isWatch)" type="warning">去学习</pl-button>
                                     <!--赠课的人优先显示 已赠课 -->
                                     <pl-button v-else-if="item.isGive" type="warning">已赠课</pl-button>
-                                    <pl-button v-else-if="item.isNotStart" type="primary" :class="$style.notStart">暂未开始</pl-button>
-                                    <pl-button v-else type="primary">订购中</pl-button>
+                                    <pl-button v-else-if="item.isNotStart" type="primary" :class="$style.notStart">即将开售</pl-button>
+                                    <pl-button v-else type="primary">立即订购</pl-button>
                                 </template>
                             </div>
                         </div>

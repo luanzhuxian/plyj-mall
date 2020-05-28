@@ -58,8 +58,8 @@
                                 </div>
                                 <div :class="$style.btns">
                                     <!--实际购买的人 & 赠课并观看的人 显示 学习中-->
-                                    <pl-button v-if="(!item.isGive && item.orderId) || (item.isGive && item.isWatch)"
-                                               type="warning">学习中
+                                    <pl-button v-if="(!item.isGive && item.orderId) || (item.isGive && item.isWatch)" type="warning">
+                                        去学习
                                     </pl-button>
                                     <!--赠课的人优先显示 已赠课 -->
                                     <pl-button v-else-if="item.isGive" type="warning">已赠课</pl-button>

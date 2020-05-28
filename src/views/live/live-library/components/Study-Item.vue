@@ -21,7 +21,7 @@
                     <span v-else>已学习{{ item.learnedNumber || 0 }}节/{{ item.totalLiveNumber || 1 }}节课</span>
                 </div>
                 <div v-if="$route.params.learnStatus !== '3'">
-                    学习课程
+                    去学习
                 </div>
             </div>
         </div>
@@ -199,7 +199,7 @@ export default {
                 text-align: center;
                 background-color: #fe7700;
                 color: #fff;
-                width: 140px;
+                width: 120px;
                 line-height: 48px;
                 border-radius: 8px;
             }
