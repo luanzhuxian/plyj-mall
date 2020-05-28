@@ -10,6 +10,7 @@ export const skinClassNameMap = {
     8: 'skinEarthDay',
     9: 'skinLabourDay',
     10: 'skinMothersDay',
+    11: 'skinChildrenDay',
     99: 'skinCampaign'
 }
 
@@ -113,6 +114,16 @@ export const skinNavMap = {
         shoppingChartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/mothers-day/cart.png',
         my: 'https://mallcdn.youpenglai.com/static/admall/skin/mothers-day/my.png',
         myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/mothers-day/my.png'
+    },
+    11: {
+        home: 'https://mallcdn.youpenglai.com/static/admall/skin/children-day/home.png',
+        homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/children-day/home.png',
+        classify: 'https://mallcdn.youpenglai.com/static/admall/skin/children-day/classify.png',
+        classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/children-day/classify.png',
+        shoppingChart: 'https://mallcdn.youpenglai.com/static/admall/skin/children-day/cart.png',
+        shoppingChartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/children-day/cart.png',
+        my: 'https://mallcdn.youpenglai.com/static/admall/skin/children-day/my.png',
+        myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/children-day/my.png'
     },
     99: {
         home: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/98e32f2b-679b-485d-8a9a-6e62659f91b1.png',

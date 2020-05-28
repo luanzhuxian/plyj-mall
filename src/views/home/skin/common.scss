@@ -274,6 +274,28 @@
     }
 }
 
+// 儿童节
+.skin-children-day {
+    @extend .skin-common;
+    background-color: #99dcfc !important;
+    .container {
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/children-day/bg.jpg';
+        @include container(130px, $background-image);
+        .search {
+            margin-bottom: 25px;
+            padding: 0 92px !important;
+            height: 55px !important;
+        }
+        .footer {
+            @include footer(90px, #fd7803);
+            padding-top: 10px;
+        }
+        .skin-title {
+            margin: 17px -24px 18px;
+        }
+    }
+}
+
 // 共战疫
 .skin-campaign {
     @extend .skin-common;

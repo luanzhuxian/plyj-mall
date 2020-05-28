@@ -14,7 +14,7 @@
                 <img :src="homeActive ? skinNavMap[skinId].homeActive : skinNavMap[skinId].home">
                 <div :class="$style.tabName">首页</div>
             </template>
-            <template v-else>
+            <template v-else-if="skinId !== null">
                 <img
                     :class="$style.icon"
                     src="https://mallcdn.youpenglai.com/static/mall/icons/olds/find.png"
@@ -42,7 +42,7 @@
                 <img :src="classifyActive ? skinNavMap[skinId].classifyActive : skinNavMap[skinId].classify">
                 <div :class="$style.tabName">分类</div>
             </template>
-            <template v-else>
+            <template v-else-if="skinId !== null">
                 <img
                     :class="$style.icon"
                     src="https://mallcdn.youpenglai.com/static/mall/icons/olds/classify (1).png"
@@ -93,7 +93,7 @@
                 <img v-imgError :src="shoppingChartActive ? skinNavMap[skinId].shoppingChartActive : skinNavMap[skinId].shoppingChart">
                 <div :class="$style.tabName">购物车</div>
             </template>
-            <template v-else>
+            <template v-else-if="skinId !== null">
                 <img
                     :class="$style.icon"
                     src="https://mallcdn.youpenglai.com/static/mall/icons/olds/cart (1).png"
@@ -122,7 +122,7 @@
                 <img v-imgError :src="myActive ? skinNavMap[skinId].myActive : skinNavMap[skinId].my">
                 <div :class="$style.tabName">我的</div>
             </template>
-            <template v-else>
+            <template v-else-if="skinId !== null">
                 <img
                     :class="$style.icon"
                     src="https://mallcdn.youpenglai.com/static/mall/icons/olds/my.png"
@@ -204,6 +204,8 @@ export default {
 </script>
 
 <style module lang="scss">
+@import '../../views/home/skin/navbar.scss';
+
 .navbar {
     position: fixed;
     left: 0;
@@ -266,108 +268,6 @@ export default {
     width: 125px !important;
     height: 104px !important;
 }
-
-/****************** 皮肤 start ******************/
-.skin-xmas,
-.skin-yuan-dan,
-.skin-new-year,
-.skin-xiao-nian,
-.skin-yuan-xiao,
-.skin-women-day,
-.skin-nian-nian-fan,
-.skin-earth-day,
-.skin-labour-day,
-.skin-mothers-day,
-.skin-campaign {
-    .route {
-        box-sizing: border-box;
-        &.active > .tab-name {
-            color: #c81819;
-        }
-        img {
-            width: 71px;
-            height: 62px;
-        }
-    }
-    .tab-name {
-        margin-top: 1px;
-        padding-bottom: 4px;
-        line-height: 18px;
-        font-size: 18px;
-        font-family: Adobe Heiti Std;
-        color: #242424;
-        text-align: center;
-    }
-    .icon {
-        margin-bottom: 0 !important;
-    }
-}
-
-.skin-xmas {
-    background: url('https://mallcdn.youpenglai.com/static/admall/skin/xmas/83295b48-251d-40a0-9e07-e3fb9eb95138.png') no-repeat center;
-    background-size: 100%;
-}
-.skin-new-year {
-    background: url('https://mallcdn.youpenglai.com/static/admall/skin/new-year/00b470fc-1ba0-4c3a-a039-177d6564eb0e.png') no-repeat center;
-    background-size: 100%;
-}
-.skin-yuan-xiao {
-    background: url('https://mallcdn.youpenglai.com/static/admall/skin/yuan-xiao/0172699a-7d24-45ae-8e27-46d0a88dfb39.png') no-repeat center;
-    background-size: 101%;
-    .route {
-        .tab-name {
-            color: #fff;
-        }
-        &.active > .tab-name {
-            color: #fff;
-        }
-    }
-}
-.skin-women-day {
-    .route {
-        .tab-name {
-            margin-top: 0;
-            color: #999;
-        }
-        &.active > .tab-name {
-            color: #fb908f;
-        }
-    }
-}
-.skin-earth-day {
-    .route {
-        &.active > .tab-name {
-            color: #19b47b;
-        }
-    }
-}
-.skin-labour-day {
-    .route {
-        &.active > .tab-name {
-            color: #ce4c32;
-        }
-    }
-}
-.skin-mothers-day {
-    .route {
-        &.active > .tab-name {
-            color: #fb908f;
-        }
-    }
-}
-.skin-campaign {
-    background: url('https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/0ab57391-3717-43c2-bc47-549f7b1a94a3.png') no-repeat center;
-    background-size: 100%;
-    .route {
-        .tab-name {
-            color: #fff;
-        }
-        &.active > .tab-name {
-            color: #ad0f02;
-        }
-    }
-}
-/****************** 皮肤 end ******************/
 
 </style>
 <style lang="scss">
