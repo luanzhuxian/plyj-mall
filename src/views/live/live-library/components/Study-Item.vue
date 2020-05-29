@@ -197,7 +197,7 @@ export default {
             > div:nth-of-type(3) {
                 font-size: 26px;
                 text-align: center;
-                background-color: #fe7700;
+                background-color: #f2b036;
                 color: #fff;
                 width: 120px;
                 line-height: 48px;
