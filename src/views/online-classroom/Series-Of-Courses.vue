@@ -62,7 +62,7 @@
                                         去学习
                                     </pl-button>
                                     <!--赠课的人优先显示 已赠课 -->
-                                    <pl-button v-else-if="item.isGive" type="warning">已赠课</pl-button>
+                                    <pl-button v-else-if="item.isGive" type="warning">赠课</pl-button>
                                     <pl-button v-else-if="item.isNotStart" type="primary" :class="$style.notStart">
                                         即将开售
                                     </pl-button>
