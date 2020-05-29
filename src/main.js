@@ -73,7 +73,7 @@ console.log('version:', VUE_APP_VERSION)
 // 只有生产环境才启用日志
 if (NODE_ENV === VUE_APP_MODEL) {
     Sentry.init({
-        dsn: 'http://e6c426498fe9427d870136c32b797567@frontlog.xijun.youpenglai.com/2',
+        dsn: 'https://e6c426498fe9427d870136c32b797567@frontlog.youpenglai.com/2',
         // 对应发布的版本号，这个版本号取自package.json中配置的版本号
         release: VUE_APP_VERSION,
         // VUE 集成
