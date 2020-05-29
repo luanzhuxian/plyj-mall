@@ -274,11 +274,15 @@ export default {
             const h = this.$createElement
             try {
                 await this.$confirm({
-                    slot: h(ReceiveCode)
+                    slot: h(
+                        ReceiveCode,
+                        {
+                            on: {
+                                refresh: this.$refresh
+                            }
+                        }
+                    )
                 })
-                setTimeout(async () => {
-                    await this.$refresh()
-                }, 1000)
             } catch (e) {
             }
         },

@@ -85,6 +85,7 @@ export default {
                 const { result: { code } } = await receiveRedemption(this.code)
                 if (code === 200) {
                     await this.$success('激活成功')
+                    this.$emit('refresh')
                 } else {
                     await this.$warning(codeDesc[code])
                 }
