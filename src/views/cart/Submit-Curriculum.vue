@@ -17,7 +17,7 @@
                 </div>
             </div>
             <div
-                v-if="productActive !== 1 || hasDefaultRedeemCode || redeemCodeList.length"
+                v-if="productActive === 1 && (hasDefaultRedeemCode || redeemCodeList.length)"
                 :class="$style.itemSelector"
                 @click.capture="hasDefaultRedeemCode ? '' : showselectRedeemCode = true "
             >
