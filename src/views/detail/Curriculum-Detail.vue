@@ -205,7 +205,7 @@
                                 })"
                             >
                                 <span v-if="isPresent">获得赠课 去学习</span>
-                                <span v-else>立即学习</span>
+                                <span v-else>去学习</span>
                             </button>
                             <span v-if="courseType === 2" :class="$style.progress">
                                 {{ `已学习 ${detail.learnedNumber}/${detail.totalLiveNumber} 节` }}
@@ -225,7 +225,7 @@
                                 :class="$style.button + ' ' + $style.orange"
                                 disabled
                             >
-                                暂未开售 敬请期待
+                                即将开售
                             </button>
                             <button
                                 v-if="detail.isOpenSale === 0 || (detail.isOpenSale === 1 && detail.courseStatus === 1)"
