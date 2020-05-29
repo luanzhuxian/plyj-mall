@@ -86,8 +86,7 @@ export default {
                 if (code === 200) {
                     await this.$success('激活成功')
                 } else {
-                    const errorText = codeDesc[code]
-                    await this.$warning(errorText)
+                    await this.$warning(codeDesc[code])
                 }
             } catch (e) {
                 await this.$warning(codeDesc[500])

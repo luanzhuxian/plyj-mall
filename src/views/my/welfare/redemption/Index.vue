@@ -201,29 +201,32 @@ export default {
         this.$refresh()
     },
     methods: {
-        onTabChange (item) {
-            this.$nextTick(() => {
-                this.$router.replace({ name: 'MyRedemption', params: { status: item.id || null } })
-                this.$refresh()
-            })
-            // 切换tab栏，管理状态改为false
-            if (this.isManagementState) {
-                this.isManagementState = false
-                this.codeList = this.codeList.map(item => {
-                    item.checked = false
-                    return item
-                })
+        async onTabChange (item) {
+            try {
+                await this.$nextTick()
+                await this.$router.replace({ name: 'MyRedemption', params: { status: item.id || null } })
+                await this.$refresh()
+                // 切换tab栏，管理状态改为false
+                if (this.isManagementState) {
+                    this.isManagementState = false
+                    this.codeList = this.codeList.map(item => {
+                        item.checked = false
+                        return item
+                    })
+                }
+            } catch (e) {
+                throw e
             }
         },
         onRefresh (list, total) {
-            list.forEach(item => {
+            for (const item of list) {
                 item.isUsed = item.codeStatus === 2
                 item.isExpired = item.codeStatus === 0
                 // 已过期 / 已使用 支持删除
                 item.isCanDelete = item.isUsed || item.isExpired
                 item.buttonText = item.isUsed ? '已使用' : item.isExpired ? '已过期' : '去使用'
                 item.checked = false
-            })
+            }
             this.codeList = list
         },
         findIndexById (id) {
@@ -249,8 +252,8 @@ export default {
         },
         codeItemClick (codeId) {
             const index = this.findIndexById(codeId)
-            if (index < 0) return
             const detail = this.codeList[index]
+            if (index < 0) return
             // 没有任何兑换，并过期后，不支持查看详情
             if (!detail.useTotal && detail.isExpired) return
             this.$router.push({ name: 'RedemptionCenter', params: { codeId } })
@@ -282,7 +285,7 @@ export default {
         async deleteCode () {
             try {
                 await deleteRedemptionByIds(this.deleteIdList)
-                this.$refresh()
+                await this.$refresh()
                 this.management()
             } catch (e) {
                 throw e
