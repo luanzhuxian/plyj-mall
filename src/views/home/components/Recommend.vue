@@ -21,7 +21,7 @@
                                 :fields="{ end: 'shoppingTimeLong' }"
                             />
                         </div>
-                        <div :class="$style.howManyBuy">
+                        <div :class="$style.howManyBuy" v-if="item.goodsInfo.showSales">
                             <pl-svg name="icon-hot" height="40" fill="#FFF" />
                             <span v-if="item.goodsInfo.salesVolume === 0">正在热销中</span>
                             <template v-else-if="item.goodsInfo.salesVolume > 0 && item.goodsInfo.salesVolume < 10">
