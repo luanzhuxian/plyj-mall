@@ -76,6 +76,8 @@ if (NODE_ENV === VUE_APP_MODEL) {
         dsn: 'https://e6c426498fe9427d870136c32b797567@frontlog.youpenglai.com/2',
         // 对应发布的版本号，这个版本号取自package.json中配置的版本号
         release: VUE_APP_VERSION,
+        // 面包屑最大数量
+        maxBreadcrumbs: 30,
         // VUE 集成
         integrations: [
             new Integrations.Vue({
