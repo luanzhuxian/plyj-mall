@@ -365,7 +365,7 @@ export function loadImage (src) {
             resolve(img)
         }
         img.onerror = e => {
-            reject(new Error('图片加载错误'))
+            reject(new Error(`图片加载错误: ${ src }`))
         }
     })
 }
