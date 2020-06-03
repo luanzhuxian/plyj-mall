@@ -134,31 +134,52 @@
             <div :class="$style.panel">
                 <div :class="$style.welfare">
                     <router-link :to="{ name: 'MyCoupon'}" :class="$style.welfareItem">
-                        <pl-svg name="icon-coupon" width="72" height="72" />
+                        <div
+                            :class="$style.icon"
+                            style="background-image: url(https://mallcdn.youpenglai.com/static/mall/icons/2.10.0/coupon.png)"
+                        />
                         <div>
                             <h5>我的卡券</h5>
                             <!-- <span>福利多多帮你省钱</span> -->
                         </div>
                     </router-link>
                     <router-link :to="{ name: 'MyPresent'}" :class="$style.welfareItem">
-                        <pl-svg name="icon-present" width="72" height="72" type="svg" />
+                        <div
+                            :class="$style.icon"
+                            style="background-image: url(https://mallcdn.youpenglai.com/static/mall/icons/2.10.0/gift.png)"
+                        />
                         <div>
                             <h5>我的礼品</h5>
                             <!-- <span>到店核销领礼品</span> -->
                         </div>
                     </router-link>
                     <router-link :to="{ name: 'MyBurse'}" :class="$style.welfareItem">
-                        <img src="https://mallcdn.youpenglai.com/static/mall/my/a3fb1993-79ef-4533-bd1a-de1cd98226e9.png" alt="">
+                        <div
+                            :class="$style.icon"
+                            style="background-image: url(https://mallcdn.youpenglai.com/static/mall/my/a3fb1993-79ef-4533-bd1a-de1cd98226e9.png)"
+                        />
                         <div>
                             <h5>我的奖学金</h5>
                             <!-- <span>和优惠券叠加使用</span> -->
                         </div>
                     </router-link>
                     <router-link :to="{ name: 'LiveLibrary'}" :class="$style.welfareItem">
-                        <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/live.png" alt="">
+                        <div
+                            :class="$style.icon"
+                            style="background-image: url(https://mallcdn.youpenglai.com/static/mall/icons/olds/live.png)"
+                        />
                         <div>
                             <h5>我的视频</h5>
                             <!-- <span>到店核销领礼品</span> -->
+                        </div>
+                    </router-link>
+                    <router-link :to="{ name: 'MyRedemption', params: {status: 'ALL'}}" :class="$style.welfareItem">
+                        <div
+                            :class="$style.icon"
+                            style="background-image: url(https://mallcdn.youpenglai.com/static/mall/my/兑换码-1.png)"
+                        />
+                        <div>
+                            <h5>我的兑换码</h5>
                         </div>
                     </router-link>
                 </div>
@@ -724,7 +745,10 @@ export default {
 /* 我的优惠券 + 我的礼品 start */
 .welfare {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
     position: relative;
+    padding-bottom: 20px;
     .segmentation {
         width: 2px;
         height: 86px;
@@ -743,9 +767,24 @@ export default {
         flex-direction: column;
         align-items: center;
         flex: 1;
-        margin: 28px 20px;
-        > img {
+        min-width: 33%;
+        max-width: 33%;
+        margin-top: 20px;
+        > .icon {
+            width: 72px;
             height: 72px;
+            border-radius: 50%;
+            background: #fefadb no-repeat center center;
+            background-size: 60px;
+        }
+        &:nth-of-type(3) {
+            > .icon {
+                width: 129px;
+                height: 72px;
+                border-radius: 0;
+                background-size: auto 72px;
+                background-color: transparent;
+            }
         }
         > div {
             margin-top: 20px;

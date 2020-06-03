@@ -2,13 +2,16 @@ import Vue from 'vue'
 import MessageBpx from './Message-Box.vue'
 /* eslint-disable */
 const MessageBoxClass = Vue.extend(MessageBpx)
-const Instance = new MessageBoxClass({
-    el: document.createElement('div')
-})
 const confirm = (config = {}) => new Promise((resolve, reject) => {
+    const Instance = new MessageBoxClass({
+        el: document.createElement('div')
+    })
     document.body.appendChild(Instance.$el)
+    const { slot = null, cancelText = '取消', confirmText = '确定', message = '', html = '', viceMessage = '', icon, closeOnClickMask = true, confirmStyle, cancelStyle, useDangersHtml = false } = config
+    if (slot) {
+        Instance.$slots.default = [slot]
+    }
     Instance.$nextTick(() => {
-        const { cancelText = '取消', confirmText = '确定', message = '', html = '', viceMessage = '', icon, closeOnClickMask = true, confirmStyle, cancelStyle, useDangersHtml = false } = config
         Instance.html = html
         Instance.message = message
         Instance.useDangersHtml = useDangersHtml
@@ -33,9 +36,15 @@ const confirm = (config = {}) => new Promise((resolve, reject) => {
     })
 })
 const alert = (config = {}) => new Promise((resolve, reject) => {
+    const Instance = new MessageBoxClass({
+        el: document.createElement('div')
+    })
     document.body.appendChild(Instance.$el)
+    const { slot = null, cancelText = '取消', confirmText = '确定', message = '', viceMessage = '', icon, confirmStyle, cancelStyle, useDangersHtml = false } = config
+    if (slot) {
+        Instance.$slots.default = [slot]
+    }
     Instance.$nextTick(() => {
-        const { cancelText = '取消', confirmText = '确定', message = '', viceMessage = '', icon, confirmStyle, cancelStyle, useDangersHtml = false } = config
         Instance.message = message
         Instance.useDangersHtml = useDangersHtml
         Instance.viceMessage = viceMessage
@@ -58,9 +67,15 @@ const alert = (config = {}) => new Promise((resolve, reject) => {
     })
 })
 const propmt = (config = {}) => new Promise((resolve, reject) => {
+    const Instance = new MessageBoxClass({
+        el: document.createElement('div')
+    })
     document.body.appendChild(Instance.$el)
+    const { slot = null, cancelText = '取消', confirmText = '确定', message = '', viceMessage = '', icon, placeholder = '请输入', rules = [], value = '', useDangersHtml = false } = config
+    if (slot) {
+        Instance.$slots.default = [slot]
+    }
     Instance.$nextTick(() => {
-        const { cancelText = '取消', confirmText = '确定', message = '', viceMessage = '', icon, placeholder = '请输入', rules = [], value = '', useDangersHtml = false } = config
         Instance.message = message
         Instance.useDangersHtml = useDangersHtml
         Instance.viceMessage = viceMessage

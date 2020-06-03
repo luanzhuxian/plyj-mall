@@ -1,5 +1,10 @@
 <template>
-    <div :class="$style.onlineClassroom">
+    <div
+        :class="{
+            [$style.onlineClassroom]: true,
+            [$style.unaccalimedSendCount]: unaccalimedSendCount,
+        }"
+    >
         <div :class="$style.tabBox">
             <pl-tab
                 size="middle"
@@ -36,11 +41,18 @@
 </template>
 <script>
 import { getSendLiveList } from '../../apis/online-classroom.js'
+import { getCourseCategoryTree } from '../../apis/classify'
 import SendLive from '../../components/common/Send-Live.vue'
+
 export default {
     name: 'OnlineClassroomIndex',
     components: {
         SendLive
+    },
+    provide () {
+        return {
+            onlineClassCoursesCatrgory: this.onlineClassCoursesCatrgory
+        }
     },
     data () {
         return {
@@ -51,14 +63,34 @@ export default {
                 { name: '系列精品课', routerName: 'seriesOfCourses', id: 2 }
             ],
             unaccalimedSendCount: 0,
-            isShowSendLiveDialog: false
+            isShowSendLiveDialog: false,
+            onlineClassCoursesCatrgory: {
+                seriesCoursesCatrgory: [],
+                coursesCatrgory: []
+            }
         }
     },
-    async activated () {
-        this.activeTabId = this.tabs.find(item => item.routerName === this.$route.name).id
-        this.getSendLiveCount()
+    async created () {
+        try {
+            this.activeTabId = this.tabs.find(item => item.routerName === this.$route.name).id
+            await this.getSendLiveCount()
+            await this.getCourseCategoryTree()
+        } catch (e) {
+            throw e
+        }
     },
     methods: {
+        async getCourseCategoryTree () {
+            try {
+                const { result } = await getCourseCategoryTree()
+                if (result.length) {
+                    this.onlineClassCoursesCatrgory.seriesCoursesCatrgory = result.find(item => Number(item.type) === 2) || { childs: [] }
+                    this.onlineClassCoursesCatrgory.coursesCatrgory = result.find(item => Number(item.type) === 1) || { childs: [] }
+                }
+            } catch (e) {
+                throw e
+            }
+        },
         async tabChange (item) {
             await this.$nextTick()
             await this.$router.replace({ name: item.routerName })
@@ -77,40 +109,53 @@ export default {
 }
 </script>
 <style lang="scss" module>
-  .online-classroom {
-    min-height: calc(100vh - 92px - 120px);
-    padding-top: 92px;
-    padding-bottom: 120px;
-    background-color: #FFF;
-  }
-  .tab-box {
-    position: fixed;
-    width: 100%;
-    left: 0;
-    top: 0;
-    border-bottom: 1px solid #e7e7e7;
-    z-index: 10;
-    :global {
-      .pl-tab {
-        justify-content: center;
-      }
-      .pl-tab__pane.active:after {
-        left: 50%;
-        transform: translateX(-50%);
-        width: 40px;
-        height: 8px;
-        border-radius: 4px;
-        background-image: linear-gradient(90deg, #F3AD3C, #F7CF54);
-      }
+    .online-classroom {
+        min-height: calc(100vh - 92px - 120px);
+        padding-top: 92px;
+        padding-bottom: 120px;
+        background-color: #FFF;
+        &.unaccalimedSendCount {
+            padding-top: 172px;
+        }
     }
-  }
-  .send-live {
-    display: flex;
-    padding: 0 32px 0 24px;
-    justify-content: space-between;
-    line-height: 80px;
-    font-size:28px;
-    background-color: #448AE1;
-    color: #FFF;
-  }
+
+    .tab-box {
+        position: fixed;
+        width: 100%;
+        left: 0;
+        top: 0;
+        border-bottom: 1px solid #e7e7e7;
+        z-index: 10;
+
+        :global {
+            .pl-tab {
+                justify-content: center;
+            }
+
+            .pl-tab__pane.active:after {
+                left: 50%;
+                transform: translateX(-50%);
+                width: 40px;
+                height: 8px;
+                border-radius: 4px;
+                background-image: linear-gradient(90deg, #F3AD3C, #F7CF54);
+            }
+        }
+    }
+
+    .send-live {
+        position: fixed;
+        left: 0;
+        top: 92px;
+        width: 100%;
+        display: flex;
+        padding: 0 32px 0 24px;
+        box-sizing: border-box;
+        justify-content: space-between;
+        line-height: 80px;
+        font-size: 28px;
+        background-color: #448AE1;
+        color: #FFF;
+        z-index: 10;
+    }
 </style>

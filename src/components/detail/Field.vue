@@ -5,7 +5,7 @@
         @click="clickHandler"
     >
         <!-- prefix -->
-        <template v-if="!$slots.prefix">
+        <slot name="prefix">
             <pl-svg
                 :class="$style.prefix"
                 v-if="icon"
@@ -14,8 +14,7 @@
                 :width="map[size].iconWidth"
                 :height="map[size].iconHeight"
             />
-        </template>
-        <slot v-else name="prefix" />
+        </slot>
 
         <!-- label -->
         <div
@@ -34,15 +33,16 @@
         </div>
 
         <!-- suffix -->
-        <div v-if="!$slots.suffix" :class="$style.suffix">
-            <pl-svg
-                v-if="clickable"
-                name="icon-right"
-                fill="#ccc"
-                width="20"
-            />
-        </div>
-        <slot v-else name="suffix" />
+        <slot name="suffix">
+            <div :class="$style.suffix">
+                <pl-svg
+                    v-if="clickable"
+                    name="icon-right"
+                    fill="#ccc"
+                    width="20"
+                />
+            </div>
+        </slot>
     </div>
 </template>
 

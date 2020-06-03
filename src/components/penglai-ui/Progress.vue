@@ -29,8 +29,9 @@
             v-if="showContent"
             :style="{ fontSize: contentTextSize / 7.5 + 'vw' }"
         >
-            <template v-if="!$slots.content">{{ content }}</template>
-            <slot name="content" v-else />
+            <slot name="content">
+                {{ content }}
+            </slot>
         </div>
     </div>
 </template>

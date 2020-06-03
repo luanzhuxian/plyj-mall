@@ -52,7 +52,7 @@
                         }"
                         @click="tab = 3"
                     >
-                        商品<i>({{ productList.length }})</i>
+                        商品和课程<i>({{ productList.length }})</i>
                     </div>
                 </div>
                 <pl-button v-if="detail.coverImg && detail.liveMode === 'public'" style="padding:0 24px" @click="share" type="warning" size="small">分享海报</pl-button>
@@ -154,26 +154,9 @@
                 </div>
                 <div v-show="tab === 3" :class="$style.productList">
                     <div :class="$style.tabTitle">
-                        精选商品（{{ productList.length }}件）
+                        商品和课程（{{ productList.length }}）
                     </div>
-                    <div
-                        v-for="(item, i) of productList"
-                        :key="i"
-                        :class="$style.product"
-                        @click="$router.push({ name: 'Product', params: { productId: item.id } })"
-                    >
-                        <img v-imgError :src="item.productMainImage" alt="">
-                        <div :class="$style.left">
-                            <div :class="$style.name" v-text="item.productName" />
-                            <div :class="$style.price">
-                                ￥{{ item.price }}元
-                            </div>
-                            <!--<div :class="$style.count">3</div>-->
-                        </div>
-                        <div :class="$style.vieFor">
-                            <pl-svg name="icon-vie-for" fill="#fff" width="40" height="70" />
-                        </div>
-                    </div>
+                    <LiveGoods v-for="(item,index) in productList" :key="index" :item="item" />
                 </div>
             </div>
 
@@ -260,6 +243,7 @@ import share from '../../assets/js/wechat/wechat-share'
 import LivePassword from './components/Live-Password'
 import LiveMask from './components/Live-Mask'
 import LiveSignUp from './components/Live-Sign-Up'
+import LiveGoods from './components/Live-goods'
 import {
     getRoomStatus,
     getActiveCompleteInfo,
@@ -294,7 +278,8 @@ export default {
         LiveMask,
         LivePassword,
         CouponItem,
-        PaidPlayer
+        PaidPlayer,
+        LiveGoods
     },
     props: {
         id: {
@@ -452,7 +437,7 @@ export default {
             /* eslint-disable no-throw-literal */
             try {
                 // isGive 是否被送 isRange 是否有权限观看
-                const { isGive, isRange } = await hasPermission(this.id)
+                const { isGive, isRange } = await hasPermission(this.detail.id)
                 this.isGive = isGive
                 if (!isRange) {
                     await this.$warning('您没有权限观看该场直播')
@@ -567,7 +552,7 @@ export default {
                         this.couponList = data.couponList.filter(item => item.show)
                     }, 2000)
                 }
-                this.productList = data.productList || []
+                this.productList = data.productList && data.courseList && data.productList.concat(data.courseList)
                 this.activityId = data.id
                 if (data.videoLibId && data.videoLibId !== '0' && data.liveType === 'live') {
                     this.chatRecords.push({ name: '该视频支持回放', message: '（“个人中心”→“我的视频库”）', custom: true, success: true })
@@ -1331,58 +1316,6 @@ export default {
     margin-bottom: 32px;
     font-size: 32px;
     line-height: 44px;
-}
-.product {
-    position: relative;
-    display: flex;
-    height: 262px;
-    margin-bottom: 20px;
-    padding: 16px;
-    background-color: #fff;
-    border-radius: 20px;
-    box-sizing: border-box;
-    > .vie-for {
-        position: absolute;
-        bottom: 20px;
-        right: 16px;
-        width: 72px;
-        height: 72px;
-        line-height: 72px;
-        text-align: center;
-        background-color: #fe7700;
-        border-radius: 36px;
-    }
-    > img {
-        width: 314px;
-        height: 208px;
-        margin-right: 20px;
-        object-fit: cover;
-        border-radius: 16px;
-    }
-    > .left {
-        display: flex;
-        flex-direction: column;
-        margin-top: 10px;
-        flex: 1;
-        > .name {
-            line-height: 38px;
-            font-size: 28px;
-            @include elps-wrap(2);
-        }
-        > .price {
-            margin-top: 28px;
-            font-size: 36px;
-            line-height: 50px;
-            color: #fe7700;
-            font-weight: bold;
-        }
-        > .count {
-            margin-top: 4px;
-            font-size: 24px;
-            color: #999;
-            line-height: 34px;
-        }
-    }
 }
 
 .pay-wrap {

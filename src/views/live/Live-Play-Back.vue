@@ -9,30 +9,13 @@
                 :resource-name="activityName"
                 @playing.once="livePlaying"
             />
-            <div>商品</div>
+            <div>商品和课程</div>
         </div>
         <div :class="$style.productList" v-if="productList.length">
             <div :class="$style.tabTitle">
-                精选商品（{{ productList.length }}件）
+                商品和课程（{{ productList.length }}）
             </div>
-            <div
-                v-for="(item, i) of productList"
-                :key="i"
-                :class="$style.product"
-                @click="$router.push({ name: 'Product', params: { productId: item.id } })"
-            >
-                <img v-imgError :src="item.productMainImage" alt="">
-                <div :class="$style.left">
-                    <div :class="$style.name" v-text="item.productName" />
-                    <div :class="$style.price">
-                        ￥{{ item.price }}元
-                    </div>
-                    <!--<div :class="$style.count">3</div>-->
-                </div>
-                <div :class="$style.vieFor">
-                    <pl-svg name="icon-vie-for" fill="#fff" width="40" height="70" />
-                </div>
-            </div>
+            <LiveGoods v-for="(item,index) in productList" :key="index" :item="item" />
         </div>
         <!-- 支付弹框 -->
         <transition name="fade">
@@ -60,7 +43,7 @@
 
 <script>
 import {
-    getActiveCompleteInfo,
+    getPlayBackActiveCompleteInfo as getActiveCompleteInfo,
     getVideoMesById,
     pay,
     cancelOrder,
@@ -73,13 +56,15 @@ import wechatPay from '../../assets/js/wechat/wechat-pay'
 import PaidPlayer from '../../components/common/Paid-Player.vue'
 import LivePassword from './components/Live-Password'
 import LiveSignUp from './components/Live-Sign-Up'
+import LiveGoods from './components/Live-goods'
 import { mapGetters } from 'vuex'
 export default {
     name: 'LivePlayBack',
     components: {
         PaidPlayer,
         LivePassword,
-        LiveSignUp
+        LiveSignUp,
+        LiveGoods
     },
     props: {
         activityId: {
@@ -259,7 +244,7 @@ export default {
                     // eslint-disable-next-line no-throw-literal
                     throw false
                 }
-                this.productList = result.productList || []
+                this.productList = result.productList && result.courseList && result.productList.concat(result.courseList)
             } catch (e) { throw e }
         },
         async getVideoMes () {
@@ -341,57 +326,6 @@ export default {
         font-size: 32px;
         line-height: 44px;
         margin-bottom: 12px;
-      }
-      > .product {
-        position: relative;
-        display: flex;
-        height: 262px;
-        margin-bottom: 20px;
-        padding: 16px;
-        background-color: #fff;
-        border-radius: 20px;
-        box-sizing: border-box;
-        > .vie-for {
-          position: absolute;
-          bottom: 20px;
-          right: 16px;
-          width: 72px;
-          height: 72px;
-          line-height: 72px;
-          text-align: center;
-          background-color: #fe7700;
-          border-radius: 36px;
-        }
-        > img {
-          width: 314px;
-          height: 208px;
-          margin-right: 20px;
-          object-fit: cover;
-          border-radius: 16px;
-        }
-        > .left {
-          display: flex;
-          flex-direction: column;
-          margin-top: 10px;
-          > .name {
-            line-height: 38px;
-            font-size: 28px;
-            @include elps-wrap(2);
-          }
-          > .price {
-            margin-top: 28px;
-            font-size: 36px;
-            line-height: 50px;
-            color: #fe7700;
-            font-weight: bold;
-          }
-          > .count {
-            margin-top: 4px;
-            font-size: 24px;
-            color: #999;
-            line-height: 34px;
-          }
-        }
       }
     }
   }

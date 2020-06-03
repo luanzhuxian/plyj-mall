@@ -3,7 +3,7 @@
         <div :class="$style.onlineCourseWrapper">
             <div :class="$style.onlineCourseHead">
                 <pl-svg name="icon-tv-76530" width="36" height="45" />
-                <b>知识课程</b>
+                <b>{{ data.moduleName }}</b>
                 <router-link
                     :class="$style.onlineCourseHeadMore"
                     :to="{ name: 'OnlineClassroom' }"
@@ -12,57 +12,66 @@
                     <pl-svg name="icon-right" height="20" fill="#cccccc" />
                 </router-link>
             </div>
-            <div :class="$style.onlineCourseHeadSub">
-                {{ `还有${rest}个知识课程，等你来学习` }}
+            <div :class="$style.onlineCourseHeadSub" v-if="data.otherValue > 0">
+                {{ `${data.otherValue}个精选单课，等你来学习` }}
             </div>
-            <router-link
-                v-if="list.length"
-                :class="$style.onlineCourse"
-                :to="{ name: 'Curriculum', params: { productId: course.id } }"
-            >
-                <div :class="$style.imgWrapper">
-                    <img v-imgError :src="course.courseImg + '?x-oss-process=style/thum-small'">
-                </div>
-                <div :class="$style.info">
-                    <div :class="$style.top" v-text="course.courseName" />
-                    <div :class="$style.middle">
-                        <span v-if="course.lecturer">
-                            {{ `主讲人：${course.lecturer}` }}
-                        </span>
-                    </div>
-                    <div :class="$style.bottom">
-                        <span
-                            :class="{
-                                [$style.bottomPrice]: true,
-                                [$style.money]: course.sellingPrice
-                            }"
-                            v-text="course.sellingPrice || '免费'"
-                        />
-                        <span
-                            :class="{
-                                [$style.bottomOrigin]: true,
-                                [$style.money]: course.originalPrice
-                            }"
-                            v-text="course.originalPrice"
-                            v-if="course.originalPrice"
-                        />
-                        <div v-if="!course.orderId" :class="$style.bottomBtn">立即学习</div>
-                        <div v-else :class="[$style.bottomBtn, $style.bottomStudy]">观看学习</div>
-                    </div>
-                </div>
-            </router-link>
+            <ul :class="$style.list" v-if="data.values.length">
+                <template v-for="(course, index) of data.values">
+                    <router-link
+                        v-if="course.goodsInfo"
+                        :class="{
+                            [$style.long]: isOdd && index === 0,
+                            [$style.marginT0]: (index === 0) || (!isOdd && index === 1)
+                        }"
+                        :key="index"
+                        tag="li"
+                        :to="{ name: 'Curriculum', params: { productId: course.goodsInfo.id } }"
+                    >
+                        <div :class="$style.imgWrapper">
+                            <img v-imgError :src="course.goodsInfo.courseImg + '?x-oss-process=style/thum-small'">
+                        </div>
+                        <div :class="$style.info">
+                            <div :class="$style.top" v-text="course.goodsInfo.courseName" />
+                            <div :class="$style.middle" v-if="course.goodsInfo.lecturer">
+                                {{ `主讲人：${course.goodsInfo.lecturer}` }}
+                            </div>
+                            <div :class="$style.bottom">
+                                <span
+                                    :class="{
+                                        [$style.bottomPrice]: true,
+                                        [$style.money]: !!course.goodsInfo.sellingPrice
+                                    }"
+                                    v-text="course.goodsInfo.sellingPrice || '免费'"
+                                />
+                                <del
+                                    :class="{
+                                        [$style.bottomOrigin]: true,
+                                        [$style.money]: !!course.goodsInfo.originalPrice
+                                    }"
+                                    v-text="course.goodsInfo.originalPrice"
+                                    v-if="course.goodsInfo.originalPrice"
+                                />
+                                <div v-if="!course.orderId" :class="$style.bottomBtn">{{ getBtnText(course) }}</div>
+                                <div v-else :class="[$style.bottomBtn, $style.bottomStudy]">观看学习</div>
+                            </div>
+                        </div>
+                    </router-link>
+                </template>
+            </ul>
         </div>
     </div>
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
     name: 'OnlineCourse',
     props: {
         data: {
             type: Object,
             default () {
-                return {}
+                return { values: [] }
             }
         }
     },
@@ -70,30 +79,35 @@ export default {
         return {}
     },
     computed: {
-        list () {
-            return this.data.records ? this.data.records : []
-        },
-        course () {
-            return this.list.length ? this.list[0] : {}
-        },
-        rest () {
-            return this.list.length ? this.data.total - 1 : 0
+        isOdd () {
+            return !!(this.data.values.length % 2)
         }
     },
-    created () {}
+    methods: {
+        getBtnText ({ isOpenSale, regularSaleTime = '' }) {
+            let text = '立即订购'
+            if (isOpenSale === 1) {
+                const saleTime = moment(regularSaleTime).values()
+                if (saleTime > Date.now()) {
+                    text = '即将开售'
+                }
+            }
+            return text
+        }
+    }
 }
 </script>
 
 <style module lang="scss">
 .online-course-wrapper {
-    padding: 20px 16px 20px;
+    padding: 20px;
     background-color: #fff;
     border-radius: 20px;
     overflow: hidden;
 }
 .online-course-head {
     display: flex;
-    align-items: end;
+    align-items: center;
     margin-bottom: 12px;
     line-height: 46px;
     > b {
@@ -102,7 +116,6 @@ export default {
         color: #333;
     }
     &-sub {
-        margin-bottom: 32px;
         font-size: 22px;
         line-height: 32px;
         color: #1592e6;
@@ -118,89 +131,114 @@ export default {
         }
     }
 }
-.online-course {
+.list {
     display: flex;
-    background-color: #fff;
-    overflow: hidden;
-}
-.img-wrapper {
-    position: relative;
-    width: 240px;
-    height: 160px;
-    border-radius: 20px;
-    overflow: hidden;
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-}
-.info {
-    flex: 1;
-    width: 0;
-    display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     justify-content: space-between;
-    padding: 8px 0 8px 20px;
-}
-.top {
-    font-size: 28px;
-    font-family: Microsoft YaHei;
-    font-weight: bold;
-    line-height: 36px;
-    color: #333;
-    text-align: justify;
-    @include elps();
-}
-.middle {
-    margin-top: 12px;
-    font-size: 24px;
-    line-height: 34px;
-    color: #666;
-    @include elps();
-}
-.bottom {
-    margin-top: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    &-price {
-        font-size: 40px;
-        font-family: San Francisco Display;
-        font-weight: bold;
-        line-height: 44px;
-        color: #fe7700;
-        @include elps();
-        &.money::before {
-            content: '￥';
+    margin-top: 32px;
+    > li {
+        display: flex;
+        flex-direction: column;
+        margin-top: 20px;
+        width: 320px;
+        height: 370px;
+        overflow: hidden;
+        .img-wrapper {
+            position: relative;
+            width: 100%;
+            height: 214px;
+            border-radius: 20px 20px 0 0;
+            overflow: hidden;
+        }
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .info {
+            flex: 1;
+            // width: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 14px 0 10px;
+        }
+        .top {
             font-size: 28px;
+            font-family: Microsoft YaHei;
+            font-weight: bold;
+            line-height: 36px;
+            color: #000;
+            text-align: justify;
+            @include elps();
         }
-    }
-    &-origin {
-        margin-left: 12px;
-        font-size: 28px;
-        line-height: 34px;
-        color: #999;
-        text-decoration: line-through;
-        @include elps();
-        &.money::before {
-            content: '￥';
+        .middle {
+            margin-top: 2px;
+            font-size: 20px;
+            color: #666;
+            @include elps();
         }
-    }
-    &-btn {
-        flex-shrink: 0;
-        margin-left: auto;
-        width: 124px;
-        height: 48px;
-        line-height: 48px;
-        text-align: center;
-        background-color: #fe7700;
-        border-radius: 8px;
-        font-size: 26px;
-        color: #fff;
-    }
-    &-study {
-        background-color: #f2b036;
+        .bottom {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            &-price {
+                font-size: 32px;
+                font-weight: bold;
+                color: #fe7700;
+                @include elps();
+                &.money::before {
+                    content: '￥';
+                    font-size: 20px;
+                }
+            }
+            &-origin {
+                margin-left: 6px;
+                font-size: 20px;
+                color: #999;
+                @include elps();
+                &.money::before {
+                    content: '￥';
+                }
+            }
+            &-btn {
+                flex-shrink: 0;
+                margin-left: auto;
+                width: 134px;
+                height: 48px;
+                line-height: 48px;
+                text-align: center;
+                background-color: #fe7700;
+                border-radius: 8px;
+                font-size: 26px;
+                color: #fff;
+            }
+            &-study {
+                background-color: #f2b036;
+            }
+        }
+        &.long {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            height: 188px;
+            .img-wrapper {
+                width: 280px;
+                height: 188px;
+                border-radius: 20px;
+            }
+            .info {
+                padding: 8px 0 8px 20px;
+            }
+            .middle {
+                margin-top: 12px;
+                font-size: 24px;
+            }
+        }
+        &.margin-t-0 {
+            margin-top: 0;
+        }
     }
 }
 

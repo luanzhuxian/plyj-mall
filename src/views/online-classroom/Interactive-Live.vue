@@ -23,7 +23,7 @@
                                 v-for="(item, index) of nowLive"
                                 :key="index"
                                 :class="$style.nowLiveItem"
-                                @click.capture="$router.push({ name: 'LiveRoom', params: { id: item.id } })"
+                                @click.capture="$router.push({ name: 'LiveRoom', params: { id: item.roomValue } })"
                             >
                                 <img :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
                                 <div :class="$style.itemBottom">
@@ -54,7 +54,7 @@
                                 v-for="(item, index) of futureLive"
                                 :key="index"
                                 :class="$style.nowLiveItem"
-                                @click.capture="$router.push({ name: 'LiveRoom', params: { id: item.id } })"
+                                @click.capture="$router.push({ name: 'LiveRoom', params: { id: item.roomValue } })"
                             >
                                 <img :src="item.coverImg + '?x-oss-process=style/thum-small'" alt="">
                                 <div :class="$style.itemBottom">
@@ -124,6 +124,7 @@
 <script>
 import { getLiveList } from '../../apis/online-classroom.js'
 import LoadMore from '../../components/common/Load-More.vue'
+import { promise } from '../../assets/js/util'
 export default {
     name: 'InteractiveLive',
     components: {
@@ -156,9 +157,13 @@ export default {
             requestMethods: getLiveList
         }
     },
-    async activated () {
-        this.init()
-        this.getData()
+    async mounted () {
+        try {
+            this.init()
+            await this.getData()
+        } catch (e) {
+            throw e
+        }
     },
     computed: {
         // 正在直播
@@ -182,6 +187,7 @@ export default {
         async getData () {
             try {
                 await this.$nextTick()
+                await promise.timeout(650)
                 await this.$refs.LiveLoadMore.refresh()
             } catch (e) {
                 throw e

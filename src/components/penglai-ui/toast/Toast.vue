@@ -103,10 +103,9 @@ export default {
     }
     @keyframes pl-toast-animation {
         0% { transform: translate(-50%, -50%) scale(0); }
-        30% { transform: translate(-50%, -50%) scale(1.1); }
-        60% { transform: translate(-50%, -50%) scale(0.92); }
-        80% { transform: translate(-50%, -50%) scale(1.05); }
-        90% { transform: translate(-50%, -50%) scale(0.97); }
+        50% { transform: translate(-50%, -50%) scale(1.1); }
+        70% { transform: translate(-50%, -50%) scale(0.95); }
+        90% { transform: translate(-50%, -50%) scale(1.02); }
         100% { transform: translate(-50%, -50%) scale(1); }
     }
     @keyframes pl-toast-animation-backof {

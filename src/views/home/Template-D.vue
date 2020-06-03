@@ -5,10 +5,11 @@
             <banner :class="$style.banner" :data="BANNER" />
             <coupon :class="$style.coupon" :data="COUPON" v-if="isCouponShow" />
             <activity :class="$style.activity" :data="ACTIVITY" v-if="isActivityShow" />
-            <live :class="$style.live" v-if="isLiveShow" :data="parent.liveInfo" />
-            <online-course :class="$style.course" v-if="isCourseShow" :data="parent.courseInfo" />
+            <live :class="$style.live" :data="LIVE" v-if="isLiveShow" />
+            <online-course :class="$style.onlineCourse" :data="COURSE" v-if="isOnlineCourseShow" />
+            <series-course :class="$style.seriesCourse" :data="SERIES" v-if="isSeriesCourseShow" />
             <campaign v-if="isCampaignShow" />
-            <appointment :class="$style.appointment" :data="APPOINTMENT" :slides-per-view="2" />
+            <appointment :class="$style.appointment" :data="APPOINTMENT" :slides-per-view="2" v-if="APPOINTMENT.showStatue === 1" />
             <div :class="$style.miaosha" v-if="isMiaoshaShow">
                 <div v-if="skinId === 0" :class="$style.title" v-text="MIAO_SHA.moduleName" />
                 <skin-title
@@ -49,7 +50,7 @@
                 />
                 <yugou :data="YU_GOU" />
             </div>
-            <propagate :class="$style.propagate" :data="PROPAGATE" />
+            <propagate :class="$style.propagate" :data="PROPAGATE" v-if="PROPAGATE.showStatue === 1" />
             <div :class="$style.hotItem" v-if="POPULAR.showStatue === 1">
                 <div v-if="skinId === 0" :class="$style.title" v-text="POPULAR.moduleName" />
                 <skin-title
@@ -94,6 +95,7 @@ import Appointment from './components/Appointment.vue'
 import Propagate from './components/Propagate-Small.vue'
 import Live from './components/Live.vue'
 import OnlineCourse from './components/Online-Course.vue'
+import SeriesCourse from './components/Series-Course.vue'
 import Coupon from './activity/Coupon.vue'
 import Activity from './activity/Activity.vue'
 import Miaosha from './activity/Miaosha.vue'
@@ -104,7 +106,7 @@ import HotItem from './components/Hot-Item.vue'
 import Best from './components/Best.vue'
 import Recommend from './components/Recommend.vue'
 import SkinTitle from './skin/Skin-Title.vue'
-import Campaign from './components/Campaign'
+import Campaign from './components/Campaign.vue'
 import { skinClassNameMap } from './skin/map'
 
 export default {
@@ -117,6 +119,7 @@ export default {
         Propagate,
         Live,
         OnlineCourse,
+        SeriesCourse,
         Coupon,
         Activity,
         Miaosha,
@@ -160,6 +163,15 @@ export default {
         ACTIVITY () {
             return this.data.ACTIVITY || {}
         },
+        LIVE () {
+            return this.data.LIVE || {}
+        },
+        COURSE () {
+            return this.data.COURSE || {}
+        },
+        SERIES () {
+            return this.data.SERIES || {}
+        },
         APPOINTMENT () {
             return this.data.APPOINTMENT || {}
         },
@@ -187,18 +199,14 @@ export default {
         RECOMMEND () {
             return this.data.RECOMMEND || {}
         },
-        // statue: 1、开启 2、预热期 3、进行中
         isLiveShow () {
-            const { liveInfo } = this.parent
-            if (!liveInfo.liveModel || !liveInfo.liveModel.length) {
-                return false
-            }
-            const list = liveInfo.liveModel.filter(item => item.statue === 0 || item.statue === 4 || (item.statue === 2 && item.hasNotice))
-            return !!list.length
+            return this.LIVE.values && this.LIVE.values.length
         },
-        isCourseShow () {
-            const { courseInfo } = this.parent
-            return courseInfo && courseInfo.records && courseInfo.records.length
+        isOnlineCourseShow () {
+            return this.COURSE.values && this.COURSE.values.length
+        },
+        isSeriesCourseShow () {
+            return this.SERIES.values && this.SERIES.values.length
         },
         isCampaignShow () {
             return this.parent.isReportShow || this.parent.isBookShow
@@ -279,7 +287,8 @@ export default {
 
 .activity,
 .live,
-.course,
+.online-course,
+.series-course,
 .coupon,
 .propagate,
 .appointment {

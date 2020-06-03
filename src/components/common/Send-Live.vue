@@ -237,7 +237,7 @@ export default {
                         this.$error('该视频无法观看')
                     }
                 } else {
-                    this.$router.push({ name: 'LiveRoom', params: { id: row.id } })
+                    this.$router.push({ name: 'LiveRoom', params: { id: row.roomValue } })
                 }
             } else {
                 // 单课+系列课

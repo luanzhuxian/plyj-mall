@@ -95,7 +95,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['activityData', 'activityId', 'liveInfo', 'couponToReceive', 'invitingEvent', 'jxEvent', 'nwEvent']),
+        ...mapGetters(['activityData', 'activityId', 'liveInfo', 'couponToReceive']),
         topBtnType () {
             if (this.couponToReceive === null) return false
             return this.couponToReceive ? 1 : 2
@@ -106,15 +106,12 @@ export default {
             // 双十二
             if ([5, 6, 7].includes(this.activityId)) {
                 result = (this.liveInfo !== null && !!this.liveInfo) &&
-                // (this.invitingEvent !== null && !!this.invitingEvent) &&
-                // (this.jxEvent !== null && !!this.jxEvent) &&
                 this.couponToReceive !== null
             }
 
             // 新春
             if (this.activityId === 8) {
                 result = (this.liveInfo !== null && !!this.liveInfo) &&
-                (this.nwEvent !== null && !!this.nwEvent) &&
                 this.couponToReceive !== null
             }
 

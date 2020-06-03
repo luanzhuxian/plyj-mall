@@ -6,7 +6,6 @@
         padding: 0 24px !important;
         background: transparent !important;
     }
-    .shuang12,
     .adv,
     .activity,
     .appointment,
@@ -15,15 +14,34 @@
         background: transparent !important;
     }
 }
+/*  mixin */
+@mixin container ($padding-top, $background-image, $background-color: transparent) {
+    padding-top: $padding-top;
+    background-image: url($background-image) !important;
+    background-repeat: no-repeat !important;
+    background-position: center top !important;
+    background-size: 100% auto !important;
+    background-color: $background-color !important;
+    @content;
+}
+@mixin footer ($height, $color, $background-image: null, $background-color: transparent) {
+    height: $height !important;
+    color: $color !important;
+    background-image: url($background-image) !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: 100% !important;
+    background-color: $background-color !important;
+    @content;
+}
 
 // 圣诞皮肤
 .skin-xmas {
     @extend .skin-common;
     background-color: #c81819 !important;
     .container {
-        padding-top: 58px;
-        background: url('https://mallcdn.youpenglai.com/static/admall/skin/xmas/7a2048fd-b958-48af-8861-34c672b5fe84.png') no-repeat center top !important;
-        background-size: 100% auto !important;
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/xmas/7a2048fd-b958-48af-8861-34c672b5fe84.png';
+        @include container(58px, $background-image);
     }
     .search {
         &::before {
@@ -39,10 +57,8 @@
         }
     }
     .footer {
+        @include footer(120px, #fff);
         position: relative;
-        height: 120px !important;
-        color: #fff !important;
-        background: transparent !important;
         &::before {
             position: absolute;
             bottom: 10px;
@@ -74,18 +90,15 @@
     @extend .skin-common;
     background-color: #e4d1a3 !important;
     .container {
-        padding-top: 52px;
-        background: url('https://mallcdn.youpenglai.com/static/admall/skin/yuan-dan/84792abd-69ab-4de4-9e3f-0b00c3123e9c.png') no-repeat center top !important;
-        background-size: 100% auto !important;
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/yuan-dan/84792abd-69ab-4de4-9e3f-0b00c3123e9c.png';
+        @include container(52px, $background-image);
     }
     .search {
         padding: 0 92px !important;
     }
     .footer {
-        height: 300px !important;
-        color: #f2e2ba !important;
-        background: url('https://mallcdn.youpenglai.com/static/admall/skin/yuan-dan/cbfbc6a1-6e57-4cf8-82d9-54bb17d600ba.png') no-repeat center !important;
-        background-size: 100% !important;
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/yuan-dan/cbfbc6a1-6e57-4cf8-82d9-54bb17d600ba.png';
+        @include footer(300px, #f2e2ba, $background-image);
     }
 }
 
@@ -94,18 +107,15 @@
     @extend .skin-common;
     background-color: #ae1a10 !important;
     .container {
-        padding-top: 52px;
-        background: url('https://mallcdn.youpenglai.com/static/admall/skin/new-year/32724153-3431-4331-9589-b3018075aed6.png') no-repeat center top !important;
-        background-size: 100% auto !important;
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/new-year/32724153-3431-4331-9589-b3018075aed6.png';
+        @include container(52px, $background-image);
     }
     .search {
         padding: 0 92px !important;
     }
     .footer {
-        height: 150px !important;
-        color: #fff !important;
-        background: url('https://mallcdn.youpenglai.com/static/admall/skin/new-year/9c269eae-f95d-4651-9e37-1efbba2a3534.png') no-repeat center !important;
-        background-size: 100% !important;
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/new-year/9c269eae-f95d-4651-9e37-1efbba2a3534.png';
+        @include footer(150px, #fff, $background-image);
     }
     .skin-title {
         margin: 0 -24px;
@@ -117,17 +127,14 @@
     @extend .skin-common;
     background-color: #ff8401 !important;
     .container {
-        padding-top: 90px;
-        background: url('https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/558e1a1d-37a9-428e-9b4a-74b3d9edb9be.png') no-repeat center top !important;
-        background-size: 100% auto !important;
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/xiao-nian/558e1a1d-37a9-428e-9b4a-74b3d9edb9be.png';
+        @include container(90px, $background-image);
     }
     .search {
         padding: 0 92px !important;
     }
     .footer {
-        height: 90px !important;
-        color: #f2e2ba !important;
-        background: #ff8401 !important;
+        @include footer(90px, #f2e2ba, #ff8401);
     }
 }
 
@@ -136,27 +143,24 @@
     @extend .skin-common;
     background-color: #d6922d !important;
     .container {
-        padding-top: 90px;
-        background: url('https://mallcdn.youpenglai.com/static/admall/skin/yuan-xiao/b0c4d8b7-ccec-4d96-a571-10c365ff95ea.png') no-repeat center top !important;
-        background-size: 100% auto !important;
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/yuan-xiao/b0c4d8b7-ccec-4d96-a571-10c365ff95ea.png';
+        @include container(90px, $background-image);
     }
     .search {
         padding: 0 92px !important;
     }
     .footer {
-        height: 70px;
-        color: #f2e2ba;
-        background: #d6922d;
+        @include footer(90px, #f2e2ba, #d6922d);
+    }
+    .skin-title {
+        margin: 0 -24px 14px;
     }
     .teachers,
     .hot-item,
     .best,
     .recommend {
-        background: #dfab5f !important;
+        background: #d6922d !important;
         padding-bottom: 26px !important;
-    }
-    .skin-title {
-        margin: 0 -24px 14px;
     }
 }
 
@@ -165,19 +169,16 @@
     @extend .skin-common;
     background-color: #f6dde0 !important;
     .container {
-        padding-top: 75px;
-        background: url('https://mallcdn.youpenglai.com/static/admall/skin/women-day/bg.jpg') no-repeat center top !important;
-        background-size: 100% auto !important;
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/women-day/bg.jpg';
+        @include container(75px, $background-image);
         .search {
             margin-bottom: 15px;
             padding: 0 92px !important;
             height: 55px !important;
         }
         .footer {
+            @include footer(90px, #ea615f);
             padding-top: 10px;
-            height: 90px;
-            color: #ea615f;
-            background: transparent;
         }
         .skin-title {
             margin: 0 -24px 10px;
@@ -190,19 +191,16 @@
     @extend .skin-common;
     background-color: #f2c757 !important;
     .container {
-        padding-top: 65px;
-        background: url('https://mallcdn.youpenglai.com/static/admall/skin/nian-nian-fan/bg.jpg') no-repeat center top !important;
-        background-size: 100% auto !important;
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/nian-nian-fan/bg.jpg';
+        @include container(65px, $background-image);
         .search {
             margin-bottom: 25px;
             padding: 0 92px !important;
             height: 55px !important;
         }
         .footer {
+            @include footer(90px, #f35815);
             padding-top: 10px;
-            height: 90px;
-            color: #f35815;
-            background: transparent;
         }
         .skin-title {
             margin: 25px -24px;
@@ -215,19 +213,16 @@
     @extend .skin-common;
     background-color: #ade6bc !important;
     .container {
-        padding-top: 65px;
-        background: url('https://mallcdn.youpenglai.com/static/admall/skin/earth-day/bg.jpg') no-repeat center top !important;
-        background-size: 100% auto !important;
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/earth-day/bg.jpg';
+        @include container(65px, $background-image);
         .search {
             margin-bottom: 25px;
             padding: 0 92px !important;
             height: 55px !important;
         }
         .footer {
+            @include footer(90px, #19b47b);
             padding-top: 10px;
-            height: 90px;
-            color: #19b47b;
-            background: transparent;
         }
         .skin-title {
             margin: 9px -24px 20px;
@@ -240,19 +235,16 @@
     @extend .skin-common;
     background-color: #c2462e !important;
     .container {
-        padding-top: 129px;
-        background: url('https://mallcdn.youpenglai.com/static/admall/skin/labour-day/bg.jpg') no-repeat center top !important;
-        background-size: 100% auto !important;
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/labour-day/bg.jpg';
+        @include container(129px, $background-image);
         .search {
             margin-bottom: 12px;
             padding: 0 92px !important;
             height: 55px !important;
         }
         .footer {
+            @include footer(90px, #efc573);
             padding-top: 10px;
-            height: 90px;
-            color: #efc573;
-            background: transparent;
         }
         .skin-title {
             margin: 34px -24px 30px;
@@ -265,22 +257,41 @@
     @extend .skin-common;
     background-color: #ffe3e0 !important;
     .container {
-        padding-top: 75px;
-        background: url('https://mallcdn.youpenglai.com/static/admall/skin/mothers-day/bg.jpg') no-repeat center top !important;
-        background-size: 100% auto !important;
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/mothers-day/bg.jpg';
+        @include container(75px, $background-image);
         .search {
             margin-bottom: 25px;
             padding: 0 92px !important;
             height: 55px !important;
         }
         .footer {
+            @include footer(90px, #ea615f);
             padding-top: 10px;
-            height: 90px;
-            color: #ea615f;
-            background: transparent;
         }
         .skin-title {
             margin: 17px -24px 20px;
+        }
+    }
+}
+
+// 儿童节
+.skin-children-day {
+    @extend .skin-common;
+    background-color: #99dcfc !important;
+    .container {
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/children-day/bg.jpg';
+        @include container(130px, $background-image);
+        .search {
+            margin-bottom: 25px;
+            padding: 0 92px !important;
+            height: 55px !important;
+        }
+        .footer {
+            @include footer(90px, #fd7803);
+            padding-top: 10px;
+        }
+        .skin-title {
+            margin: 17px -24px 18px;
         }
     }
 }
@@ -290,17 +301,14 @@
     @extend .skin-common;
     background-color: #d1e5fe !important;
     .container {
-        padding-top: 136px;
-        background: url('https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/847981f6-e571-4dcd-a105-ee1a6a8ccddc.png') no-repeat center top !important;
-        background-size: 100% auto !important;
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/847981f6-e571-4dcd-a105-ee1a6a8ccddc.png';
+        @include container(136px, $background-image);
     }
     .search {
         padding: 0 92px !important;
     }
     .footer {
-        height: 90px;
-        color: #fff;
-        background: transparent;
+        @include footer(90px, #fff);
     }
     .skin-title {
         margin: 42px -24px 22px;

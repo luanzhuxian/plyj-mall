@@ -35,6 +35,11 @@ export default {
             }
         }
     },
+    watch: {
+        children () {
+            this.id = ''
+        }
+    },
     methods: {
         itemClick (item) {
             this.id = item.id
@@ -58,14 +63,14 @@ export default {
     display: inline-flex;
     flex-direction: column;
     align-items: center;
-    width: 33.333%;
+    width: 25%;
     margin-bottom: 32px;
     filter: grayscale(80%) blur(2px);
     transition: filter .2s ease-in-out, color .2s ease-in-out;
     > div {
       margin-top: 8px;
       color: #666;
-      font-size: 22px;
+      font-size: 20px;
     }
     &.active {
       filter: grayscale(0);
@@ -74,8 +79,8 @@ export default {
       }
     }
     > img {
-      width: 96px;
-      height: 96px;
+      width: 84px;
+      height: 84px;
       object-fit: contain;
     }
   }

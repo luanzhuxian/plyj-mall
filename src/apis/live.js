@@ -73,11 +73,18 @@ Instance.interceptors.response.use(response, resError)
  */
 export const sign = data => Instance.post(`/apis/v1/mall/live/room/sign`, data)
 /**
- * 获取直播活动全部信息
+ * 根据 roomValue 获取直播活动全部信息
+ * @param roomValue
+ * @return {Promise<AxiosResponse<T>>}
+ */
+export const getActiveCompleteInfo = (roomValue = '') => Instance.get(`/apis/v1/mall/live/activity/current/complete?roomValue=${ roomValue }`)
+
+/**
+ * 根据活动 id 获取直播活动全部信息
  * @param id
  * @return {Promise<AxiosResponse<T>>}
  */
-export const getActiveCompleteInfo = (id = '') => Instance.get(`/apis/v1/mall/live/activity/current/complete?id=${ id }`)
+export const getPlayBackActiveCompleteInfo = id => Instance.get(`/apis/v1/mall/live/activity/detail/${id}`)
 /**
  * 获取直播信息
  */

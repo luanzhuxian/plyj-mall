@@ -159,5 +159,44 @@ export default [
         meta: {
             title: '我的奖学金详情'
         }
+    },
+    {
+        path: '/my/welfare/redemption/:status',
+        name: 'MyRedemption',
+        props: true,
+        component: () => import('../views/my/welfare/redemption/Index.vue'),
+        meta: {
+            title: '我的兑换码'
+        }
+    },
+    {
+        path: '/my/welfare/redemption-activative/:code',
+        name: 'RedemptionActivative',
+        props: true,
+        component: () => import('../views/my/welfare/redemption/Activative.vue'),
+        meta: {
+            // 激活兑换码 使用code激活
+            title: '确认激活'
+        }
+    },
+    {
+        path: '/my/welfare/redemption-center/:codeId',
+        name: 'RedemptionCenter',
+        props: true,
+        component: () => import('../views/my/welfare/redemption/Center.vue'),
+        meta: {
+            // 兑换中心
+            title: '我的兑换码'
+        }
+    },
+    {
+        path: '/my/welfare/redeemed/:codeId',
+        name: 'RedeemedProductList',
+        props: true,
+        component: () => import('../views/my/welfare/redemption/Redeemed.vue'),
+        meta: {
+            // 已兑换
+            title: '我的兑换码'
+        }
     }
 ]

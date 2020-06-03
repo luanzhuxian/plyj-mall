@@ -15,11 +15,6 @@
                     v-show="showBox"
                 >
                     <div class="message">
-                        <!--<pl-svg
-              :class="$style.icon"
-              v-if="icon"
-              :name="icon"
-            />-->
                         <template v-if="useDangersHtml">
                             <p
                                 class="main-message"
@@ -50,6 +45,9 @@
                             :placeholder="placeholder"
                             type="text"
                         >
+                    </div>
+                    <div class="message-box-vnode">
+                        <slot />
                     </div>
                     <div class="buttons">
                         <button
@@ -149,7 +147,9 @@ export default {
                         })
                     }
                 }, 200)
+                window.addEventListener('popstate', this.popstateHandler)
             } else {
+                window.removeEventListener('popstate', this.popstateHandler)
                 this.showBox = false
                 setTimeout(() => {
                     this.showMask = false
@@ -158,14 +158,21 @@ export default {
         }
     },
     methods: {
+        popstateHandler (e) {
+            this.handleCancel()
+        },
         handleCancel () {
             this.show = false
             this.$emit('cancel')
         },
-        handleConfirm () {
-            if (this.type === 'propmt' && !this.validate()) return
-            this.$emit('confirm', this.propmtValue)
-            this.show = false
+        async handleConfirm () {
+            try {
+                if (this.type === 'propmt' && !this.validate()) return
+                await this.$emit('confirm', this.propmtValue)
+                this.show = false
+            } catch (e) {
+                throw e
+            }
         },
         validate () {
             const val = this.propmtValue

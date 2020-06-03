@@ -32,16 +32,18 @@
                             <div :class="$style.price">
                                 <span v-text="getMinPrice(item.goodsInfo.productSkuModels)" />
                             </div>
-                            <span :class="$style.howManyPay" v-if="item.goodsInfo.salesVolume === 0">正在热销中</span>
-                            <template v-else-if="item.goodsInfo.salesVolume > 0 && item.goodsInfo.salesVolume < 10">
-                                <span :class="$style.howManyPay">
-                                    {{ item.goodsInfo.pageviews }}人关注
-                                </span>
-                            </template>
-                            <template v-else-if="item.goodsInfo.salesVolume >= 10">
-                                <span :class="$style.howManyPay">
-                                    {{ item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume }}人付款
-                                </span>
+                            <template v-if="item.goodsInfo.showSales">
+                                <span :class="$style.howManyPay" v-if="item.goodsInfo.salesVolume === 0">正在热销中</span>
+                                <template v-else-if="item.goodsInfo.salesVolume > 0 && item.goodsInfo.salesVolume < 10">
+                                    <span :class="$style.howManyPay">
+                                        {{ item.goodsInfo.pageviews }}人关注
+                                    </span>
+                                </template>
+                                <template v-else-if="item.goodsInfo.salesVolume >= 10">
+                                    <span :class="$style.howManyPay">
+                                        {{ item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume }}人付款
+                                    </span>
+                                </template>
                             </template>
                         </div>
                     </div>

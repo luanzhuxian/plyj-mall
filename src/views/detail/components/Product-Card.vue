@@ -16,41 +16,44 @@
                 v-if="top"
                 v-text="top"
             />
-            <div class="product-card__info-subtop" v-if="!$slots.subTop" v-text="subTop" />
-            <slot name="middle" v-else />
-            <div
-                class="product-card__info-middle"
-                :class="{
-                    marginTopAuto: !$slots.subTop && !subTop
-                }"
-                v-if="!$slots.middle"
-                v-text="middle"
-            />
-            <slot name="middle" v-else />
-            <div
-                class="product-card__info-bottom"
-                :class="{
-                    marginTopAuto: !$slots.middle && !middle
-                }"
-                v-if="!$slots.bottom"
-            >
-                <span
-                    class="product-card__info-bottom-left"
-                    v-if="!$slots.bottomLeft"
-                    v-text="bottomLeft"
+            <slot name="subTop">
+                <div class="product-card__info-subtop" v-text="subTop" />
+            </slot>
+
+            <slot name="middle">
+                <div
+                    class="product-card__info-middle"
+                    :class="{
+                        marginTopAuto: !$slots.subTop && !subTop
+                    }"
+                    v-text="middle"
                 />
-                <slot name="bottomLeft" v-else />
-                <div class="product-card__info-bottom-right" v-if="!$slots.bottomRight">
-                    <button
-                        class="product-card__info-bottom-button"
-                        v-if="buttonText"
-                        v-text="buttonText"
-                        @click.stop="handleBtnClick"
-                    />
+            </slot>
+
+            <slot name="bottom">
+                <div
+                    class="product-card__info-bottom"
+                    :class="{
+                        marginTopAuto: !$slots.middle && !middle
+                    }"
+                >
+                    <slot name="bottomLeft">
+                        <span class="product-card__info-bottom-left" v-text="bottomLeft" />
+                    </slot>
+
+                    <slot name="bottomRight">
+                        <div class="product-card__info-bottom-right">
+                            <button
+                                class="product-card__info-bottom-button"
+                                v-if="buttonText"
+                                v-text="buttonText"
+                                @click.stop="handleBtnClick"
+                            />
+                        </div>
+                    </slot>
                 </div>
-                <slot name="bottomRight" v-else />
-            </div>
-            <slot name="bottom" v-else />
+            </slot>
+
         </div>
     </div>
 </template>

@@ -29,16 +29,18 @@
                                 <div :class="$style.price">
                                     <span v-text="getMinPrice(item.goodsInfo.productSkuModels)" />
                                 </div>
-                                <span :class="$style.howManyBuy" v-if="item.goodsInfo.salesVolume === 0">正在热销中</span>
-                                <template v-else-if="item.goodsInfo.salesVolume > 0 && item.goodsInfo.salesVolume < 10">
-                                    <span :class="$style.howManyBuy">
-                                        {{ item.goodsInfo.pageviews }}人关注
-                                    </span>
-                                </template>
-                                <template v-else-if="item.goodsInfo.salesVolume >= 10">
-                                    <span :class="$style.howManyBuy">
-                                        {{ `${item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume}人${productTypeMap[item.goodsInfo.productType]}` }}
-                                    </span>
+                                <template v-if="item.goodsInfo.showSales">
+                                    <span :class="$style.howManyBuy" v-if="item.goodsInfo.salesVolume === 0">正在热销中</span>
+                                    <template v-else-if="item.goodsInfo.salesVolume > 0 && item.goodsInfo.salesVolume < 10">
+                                        <span :class="$style.howManyBuy">
+                                            {{ item.goodsInfo.pageviews }}人关注
+                                        </span>
+                                    </template>
+                                    <template v-else-if="item.goodsInfo.salesVolume >= 10">
+                                        <span :class="$style.howManyBuy">
+                                            {{ `${item.goodsInfo.salesVolume >= 999 ? '999+' : item.goodsInfo.salesVolume}人${productTypeMap[item.goodsInfo.productType]}` }}
+                                        </span>
+                                    </template>
                                 </template>
                             </div>
                             <button>{{ `立即${productTypeMap[item.goodsInfo.productType]}` }}</button>
@@ -158,8 +160,12 @@ export default {
     z-index: 1;
   }
   .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     padding: 16px;
     box-sizing: border-box;
+    height: 186px;
     .pro-name {
       height: 72px;
       font-weight: bold;

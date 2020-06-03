@@ -72,7 +72,7 @@
                             <div v-else :class="$style.free">免费</div>
                         </template>
                         <div :class="$style.original">
-                            <div v-if="detail.priceType === 1" class="mr-30">
+                            <div v-if="detail.priceType === 1 && (isPresent || detail.originalPrice && detail.originalPrice !== detail.sellingPrice)" class="mr-30">
                                 <template v-if="isPresent">
                                     售价：<del v-text="detail.sellingPrice" />
                                 </template>
@@ -80,7 +80,7 @@
                                     原价：<del v-text="detail.originalPrice" />
                                 </template>
                             </div>
-                            <div>
+                            <div v-if="Number(detail.showSales) === 1">
                                 <span v-if="detail.sale === 0">正在热销中</span>
                                 <!-- <template v-else-if="detail.sale > 0 && detail.sale < 10">
                                 <span v-text="detail.sale" />人关注
@@ -205,7 +205,7 @@
                                 })"
                             >
                                 <span v-if="isPresent">获得赠课 去学习</span>
-                                <span v-else>立即学习</span>
+                                <span v-else>去学习</span>
                             </button>
                             <span v-if="courseType === 2" :class="$style.progress">
                                 {{ `已学习 ${detail.learnedNumber}/${detail.totalLiveNumber} 节` }}
@@ -225,7 +225,7 @@
                                 :class="$style.button + ' ' + $style.orange"
                                 disabled
                             >
-                                暂未开售 敬请期待
+                                即将开售
                             </button>
                             <button
                                 v-if="detail.isOpenSale === 0 || (detail.isOpenSale === 1 && detail.courseStatus === 1)"
@@ -310,7 +310,7 @@ import Skeleton from './components/Skeleton.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import Barrage from '../marketing-activity/longmen-festival/action/components/Barrage'
 import VideoPlayer from './components/Video-Player'
-import { getCourseDetail, checkIsPresentCourse } from '../../apis/product'
+import { getCourseDetail } from '../../apis/product'
 import {
     generateQrcode,
     cutImageCenter,
@@ -444,7 +444,6 @@ export default {
                 this.loading = true
                 const list = [
                     this.getDetail(),
-                    this.checkIsPresentCourse(),
                     ...(this.productActive === 7 ? [
                         this.getPublicBenefitStatistics(),
                         this.getPublicBenefitList()
@@ -505,8 +504,6 @@ export default {
          */
         async getDetail () {
             try {
-                // 重置一些状态
-                this.banners.splice(0, 1000000)
                 // 此步是为了兼容处理，当当前产品的活动结束，重新刷新产品详情页面，当作普通商品
                 const { result } = await getCourseDetail(this.productId, { productStatus: this.productActive })
                 if (!result) {
@@ -518,30 +515,23 @@ export default {
                 const {
                     courseType,
                     courseImg,
+                    courseMainImg,
                     relatedCoursesModels,
-                    videoLibEntities
+                    videoLibEntities,
+                    isGive
                 } = result
 
                 this.tab = courseType
                 this.courseType = courseType
-                this.banners = [courseImg]
+                this.banners = courseImg ? (courseMainImg.splice(0, 1, courseImg) && courseMainImg) : courseMainImg
                 this.relatedCourses = relatedCoursesModels || []
                 this.videoList = videoLibEntities || []
+                this.isPresent = !!isGive
                 this.detail = result
 
                 return result
             } catch (e) {
                 throw e
-            }
-        },
-        // 是否是赠课
-        async checkIsPresentCourse () {
-            try {
-                const { result } = await checkIsPresentCourse(this.productId)
-                this.isPresent = result
-                return result
-            } catch (error) {
-                throw error
             }
         },
         // 查询公益棕活动统计数据

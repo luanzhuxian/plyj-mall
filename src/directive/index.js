@@ -7,6 +7,9 @@ export default {
         inserted (el, { value }) {
             if (el.tagName === 'IMG') {
                 el.onerror = function () {
+                    if (el.src === img) {
+                        return
+                    }
                     if (value === 'classifyIcon') {
                         // 分类默认图片
                         el.src = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/category-default.png'
