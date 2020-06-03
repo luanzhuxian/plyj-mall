@@ -99,12 +99,12 @@ export default {
             // 通过openid登录
             if (state.openId) {
                 loginInfo = await login(state.openId)
-            } else {
-                // openid有问题时重新获取openid
-                await dispatch(type.GET_OPENID)
+                commit(type.SET_TOKEN, loginInfo.result)
+                return loginInfo
             }
-            commit(type.SET_TOKEN, loginInfo.result)
-            return loginInfo
+            // openid有问题时重新获取openid
+            await dispatch(type.GET_OPENID)
+            return null
         } catch (e) {
             throw e
         }
