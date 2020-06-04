@@ -47,8 +47,6 @@ export default {
             const mallDomain = window.location.pathname.split('/')[1] || ''
             const { result } = await getMallInfo(mallDomain)
             commit(type.GET_MALL_INFO, result)
-            console.log(result)
-
             // 获取本地缓存openId
             // const openId = localStorage.getItem(`openId_${ mallDomain }`) || ''
 
@@ -79,6 +77,7 @@ export default {
                 return result.OPEN_ID
             }
             location.replace(getWeixinURL(appSecret, appId, componentAppid, search))
+            return null
         } catch (e) {
             if (e.message.indexOf('code') > -1) {
                 MessageBox.confirm('微信登录失败，是否重试？')
@@ -94,11 +93,15 @@ export default {
             }
         }
     },
-    [type.LOGIN]: async ({ commit, dispatch, state }, openId) => {
+    [type.LOGIN]: async ({ commit, dispatch, state }) => {
         try {
-            const loginInfo = await login(openId)
-            commit(type.SET_TOKEN, loginInfo.result)
-            return loginInfo
+            const OPEN_ID = await dispatch(type.GET_OPENID)
+            if (OPEN_ID) {
+                const loginInfo = await login(OPEN_ID)
+                commit(type.SET_TOKEN, loginInfo.result)
+                return loginInfo
+            }
+            return null
             // let loginInfo = null
             //
             // // 通过openid登录
@@ -170,11 +173,11 @@ export default {
     [type.REFRESH_TOKEN]: ({ commit, state, dispatch }) => new Promise(async (resolve, reject) => {
         const refreshCount = Number(sessionStorage.getItem('refresh_count') || 0)
         const refresh_token = Cookie.get('refresh_token')
-        sessionStorage.setItem('refresh_count', (refreshCount + 1))
+        sessionStorage.setItem('refresh_count', String(refreshCount + 1))
 
         // refresh_token 连续刷三次以上时，说明存在异常，退出重新登录
         if (Number(refreshCount) > 3) {
-            sessionStorage.setItem('refresh_count', 0)
+            sessionStorage.setItem('refresh_count', '0')
             commit(type.LOG_OUT)
             await dispatch(type.LOGIN)
             return

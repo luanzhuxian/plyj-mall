@@ -25,8 +25,7 @@ import {
     SET_NW_EVENT,
     SET_DRAGON_GATE_CHARITY,
     SET_DRAGON_GATE_SIGN,
-    SET_DRAGON_GATE_PLAY,
-    GET_OPENID
+    SET_DRAGON_GATE_PLAY
 } from './store/mutation-type'
 
 import Cookie from './assets/js/storage-cookie'
@@ -89,8 +88,7 @@ export default {
             await this.getMallInfo()
             // 如果以及登录，且商城没切换，就不用重新登录
             if (!token || mallId !== lastMallId) {
-                const openId = await this.getOpenId()
-                await this.login(openId)
+                await this.login()
             }
             await this.getUserInfo()
             this.logined = true
@@ -115,7 +113,6 @@ export default {
             getUserInfo: USER_INFO,
             getMallInfo: GET_MALL_INFO,
             login: LOGIN,
-            getOpenId: GET_OPENID,
             getActivityData: GET_ACTIVITY_DATA,
             getSkinId: GET_SKIN_ID
         }),
