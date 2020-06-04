@@ -21,6 +21,7 @@ import { getTemplate, getSkinStatus } from '../apis/home'
 import {
     DelayExec,
     loadImage
+    // promise
 } from '../assets/js/util'
 import { upload } from '../assets/js/upload-image'
 import Cookie from '../assets/js/storage-cookie'
@@ -36,6 +37,7 @@ const getWeixinURL = (appSecret, appId, componentAppid, search) => {
     } else {
         openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${ appId }&redirect_uri=${ href }?${ Qs.stringify(search) }&response_type=code&scope=snsapi_userinfo&state=STATE&component_appid=${ componentAppid }#wechat_redirect`
     }
+    alert(openIdUrl)
     return openIdUrl
 }
 export default {
@@ -64,22 +66,26 @@ export default {
 
     // 获取openid并登录
     [type.GET_OPENID]: async ({ commit, dispatch, state }) => {
-        const { appSecret, mallDomain, componentAppid } = state.mallInfo
+        const { appSecret, mallDomain, componentAppid, appid: appId } = state.mallInfo
         const OPEN_ID = localStorage.getItem(`openId_${ mallDomain }`) || ''
-        if (OPEN_ID) return OPEN_ID
+        if (OPEN_ID) {
+            commit(type.SET_OPENID, { mallDomain, openId: OPEN_ID })
+            return OPEN_ID
+        }
         const search = Qs.parse(location.search.substring(1)) || {}
-        const appId = state.mallInfo.appid
         try {
+            alert(location.href)
             if (search.code) {
                 // 微信
                 const { result } = await getOpenId(appId, search.code)
-                commit(type.SET_OPENID, { mallDomain: state.mallInfo.mallDomain, openId: result.OPEN_ID })
+                commit(type.SET_OPENID, { mallDomain, openId: result.OPEN_ID })
                 return result.OPEN_ID
             }
             location.replace(getWeixinURL(appSecret, appId, componentAppid, search))
-            return null
+            /* eslint-disable no-throw-literal */
+            throw false
         } catch (e) {
-            if (e.message.indexOf('code') > -1) {
+            if (e) {
                 MessageBox.confirm('微信登录失败，是否重试？')
                     .then(() => {
                         delete search.code
@@ -88,33 +94,21 @@ export default {
                     .catch(() => {
                         window.wx.closeWindow()
                     })
-            } else {
-                throw e
             }
+            throw e
         }
     },
     [type.LOGIN]: async ({ commit, dispatch, state }) => {
         try {
+            alert('actions 登录')
             const OPEN_ID = await dispatch(type.GET_OPENID)
             if (OPEN_ID) {
                 const loginInfo = await login(OPEN_ID)
                 commit(type.SET_TOKEN, loginInfo.result)
+                await dispatch(type.USER_INFO)
                 return loginInfo
             }
             return null
-            // let loginInfo = null
-            //
-            // // 通过openid登录
-            // if (state.openId) {
-            //     loginInfo = await login(state.openId)
-            // } else {
-            //     // openid有问题时重新获取openid
-            //     await dispatch(type.GET_OPENID)
-            // }
-            // if (loginInfo) {
-            //     commit(type.SET_TOKEN, loginInfo.result)
-            // }
-            // return loginInfo
         } catch (e) {
             throw e
         }
