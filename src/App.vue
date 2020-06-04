@@ -86,10 +86,8 @@ export default {
             await this.getMallInfo()
             // 如果以及登录，且商城没切换，就不用重新登录
             if (!token) {
-                alert('登录')
                 await this.login()
             } else {
-                alert('获取用户信息')
                 await this.getUserInfo()
             }
             this.logined = true

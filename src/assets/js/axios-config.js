@@ -51,7 +51,6 @@ async function response (response) {
     }
     // 重新登录, 登录完成后尝试上次发起的请求
     try {
-      alert(`axios 登录: ${ config.url }`)
       await store.dispatch(LOGIN)
       let { method, data, headers, url, params } = config
       const res = await axios({

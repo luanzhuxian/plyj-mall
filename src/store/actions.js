@@ -37,7 +37,6 @@ const getWeixinURL = (appSecret, appId, componentAppid, search) => {
     } else {
         openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${ appId }&redirect_uri=${ href }?${ Qs.stringify(search) }&response_type=code&scope=snsapi_userinfo&state=STATE&component_appid=${ componentAppid }#wechat_redirect`
     }
-    alert(openIdUrl)
     return openIdUrl
 }
 export default {
@@ -74,7 +73,6 @@ export default {
         }
         const search = Qs.parse(location.search.substring(1)) || {}
         try {
-            alert(location.href)
             if (search.code) {
                 // 微信
                 const { result } = await getOpenId(appId, search.code)
@@ -100,7 +98,6 @@ export default {
     },
     [type.LOGIN]: async ({ commit, dispatch, state }) => {
         try {
-            alert('actions 登录')
             const OPEN_ID = await dispatch(type.GET_OPENID)
             if (OPEN_ID) {
                 const loginInfo = await login(OPEN_ID)
