@@ -47,16 +47,17 @@ export default {
             const mallDomain = window.location.pathname.split('/')[1] || ''
             const { result } = await getMallInfo(mallDomain)
             commit(type.GET_MALL_INFO, result)
+            console.log(result)
 
             // 获取本地缓存openId
-            const openId = localStorage.getItem(`openId_${ mallDomain }`) || ''
+            // const openId = localStorage.getItem(`openId_${ mallDomain }`) || ''
 
             // 如果openId不存在，获取一下openId
-            if (!openId) {
-                await dispatch(type.GET_OPENID)
-            } else {
-                commit(type.SET_OPENID, { mallDomain, openId })
-            }
+            // if (!openId) {
+            //     await dispatch(type.GET_OPENID)
+            // } else {
+            // }
+            // commit(type.SET_OPENID, { mallDomain, openId })
             return result
         } catch (e) {
             throw e
@@ -65,16 +66,17 @@ export default {
 
     // 获取openid并登录
     [type.GET_OPENID]: async ({ commit, dispatch, state }) => {
+        const { appSecret, mallDomain, componentAppid } = state.mallInfo
+        const OPEN_ID = localStorage.getItem(`openId_${ mallDomain }`) || ''
+        if (OPEN_ID) return OPEN_ID
         const search = Qs.parse(location.search.substring(1)) || {}
         const appId = state.mallInfo.appid
-        const { componentAppid } = state.mallInfo
-        const { appSecret } = state.mallInfo
         try {
             if (search.code) {
                 // 微信
                 const { result } = await getOpenId(appId, search.code)
                 commit(type.SET_OPENID, { mallDomain: state.mallInfo.mallDomain, openId: result.OPEN_ID })
-                return result
+                return result.OPEN_ID
             }
             location.replace(getWeixinURL(appSecret, appId, componentAppid, search))
         } catch (e) {
@@ -92,21 +94,24 @@ export default {
             }
         }
     },
-    [type.LOGIN]: async ({ commit, dispatch, state }) => {
+    [type.LOGIN]: async ({ commit, dispatch, state }, openId) => {
         try {
-            let loginInfo = null
-
-            // 通过openid登录
-            if (state.openId) {
-                loginInfo = await login(state.openId)
-            } else {
-                // openid有问题时重新获取openid
-                await dispatch(type.GET_OPENID)
-            }
-            if (loginInfo) {
-                commit(type.SET_TOKEN, loginInfo.result)
-            }
+            const loginInfo = await login(openId)
+            commit(type.SET_TOKEN, loginInfo.result)
             return loginInfo
+            // let loginInfo = null
+            //
+            // // 通过openid登录
+            // if (state.openId) {
+            //     loginInfo = await login(state.openId)
+            // } else {
+            //     // openid有问题时重新获取openid
+            //     await dispatch(type.GET_OPENID)
+            // }
+            // if (loginInfo) {
+            //     commit(type.SET_TOKEN, loginInfo.result)
+            // }
+            // return loginInfo
         } catch (e) {
             throw e
         }
