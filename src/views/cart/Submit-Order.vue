@@ -102,7 +102,7 @@
 
             <!-- 非实体商品显示（虚拟和课程） -->
             <template v-slot:noPhysical="{ type, product: item }">
-                <InfoItem v-if="item.productType === 'KNOWLEDGE_COURSE'">
+                <InfoItem v-if="item.productType === 'KNOWLEDGE_COURSE' || item.productType === 'SERIES_OF_COURSE'">
                     <template slot="label">
                         有效期
                     </template>
@@ -736,7 +736,7 @@ export default {
                     scholarshipId: redEnvelope.id || '',
                     addressSeq: this.selectedAddress.sequenceNbr
                 })
-                const { amount, totalAmount, freight, physicalProducts, virtualProducts, formalClass, experienceClass, knowledgeCourse } = result
+                const { amount, totalAmount, freight, physicalProducts, virtualProducts, formalClass, experienceClass, knowledgeCourse, seriesOfCourses } = result
 
                 // 为每个虚拟订单都添加备注字段
                 for (const p of physicalProducts) {
@@ -754,6 +754,9 @@ export default {
                 for (const item of knowledgeCourse) {
                     item.type = 'KNOWLEDGE_COURSE'
                 }
+                for (const item of seriesOfCourses) {
+                    item.type = 'SERIES_OF_COURSE'
+                }
                 this.detail = result
                 this.physicalAmount = amount
                 this.totalAmount = totalAmount
@@ -761,7 +764,7 @@ export default {
                 this.physicalProducts = physicalProducts
                 this.virtualProducts = virtualProducts
                 // 将先上课归到课程中
-                this.lessonList = [...formalClass, ...experienceClass, ...knowledgeCourse]
+                this.lessonList = [...formalClass, ...experienceClass, ...knowledgeCourse, ...seriesOfCourses]
 
                 // 是否显示学员选择栏，只要有一个商品允许（item.needStudentInfo === 1）就显示
                 this.needStudentList = [...formalClass, ...experienceClass, ...virtualProducts].filter(item => item.needStudentInfo === 1)
