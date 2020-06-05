@@ -157,7 +157,7 @@ export default {
         }
         .info {
             flex: 1;
-            // width: 0;
+            width: 0;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
