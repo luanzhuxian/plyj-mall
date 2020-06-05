@@ -701,24 +701,25 @@ export default {
         }),
         async refresh (productActive) {
             try {
+                await this.getDetail(productActive)
+            } catch (e) {
+                setTimeout(() => {
+                    this.$router.go(-1)
+                }, 2000)
+                throw e
+            }
+            try {
                 this.currentModel = {}
                 this.haibao = ''
                 this.tab = 2
                 this.showSpecifica = false
                 this.loading = true
-
-                const list = [
-                    this.getDetail(productActive),
-                    this.getCouponList(),
-                    ...(this.productActive === 7 ? [this.getPublicBenefitInfo()] : [])
-                ]
-
-                await Promise.all(list.map(p => p.catch(e => {
-                    console.error(e)
-                    return {}
-                })))
-                this.createShare()
+                await this.getCouponList()
+                if (this.productActive === 7) {
+                    await this.getPublicBenefitInfo()
+                }
                 this.loaded = true
+                await this.createShare()
             } catch (e) {
                 throw e
             } finally {
@@ -1123,12 +1124,16 @@ export default {
                 this.creating = false
             }
         },
-        countFinished () {
+        async countFinished () {
             // this.$set(this.detail, 'serverTime', '')
             // this.$set(this.detail, 'shoppingTimeLong', '')
             // this.$set(this.detail, 'preActivity', 2)
             // location.reload()
-            this.refresh()
+            try {
+                await this.refresh()
+            } catch (e) {
+                throw e
+            }
         }
     },
     async beforeRouteUpdate (to, from, next) {

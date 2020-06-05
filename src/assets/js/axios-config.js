@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { axios } from './axios'
 import store from '../../store'
-import { REFRESH_TOKEN, LOGIN } from '../../store/mutation-type'
+import { LOGIN } from '../../store/mutation-type'
 import Cookie from '../../assets/js/storage-cookie'
 class ResponseError extends Error {
   constructor (message) {

@@ -22,7 +22,7 @@ export default {
     lockStatus: state => state.userInfo.lockStatus,
     mobile: state => state.userInfo.mobile,
     serverTime: state => state.userInfo.serverTime,
-    openId: state => state.openId,
+    openId: state => state.userInfo.openId,
     userId: state => state.userInfo.userId,
     // 可提现金额
     balance: state => state.userInfo.balance,

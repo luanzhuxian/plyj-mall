@@ -62,8 +62,13 @@ export default {
         category: {
             handler () {
                 this.$nextTick(() => {
-                    this.$parent.$el.style.paddingTop = `${ this.$el.offsetHeight }px`
-                    this.getTotalWidth()
+                    this.$nextTick(() => {
+                        const parentEl = this.$parent.$el
+                        if (parentEl) {
+                            parentEl.style.paddingTop = `${ this.$el.offsetHeight }px`
+                            this.getTotalWidth()
+                        }
+                    })
                 })
             },
             immediate: true

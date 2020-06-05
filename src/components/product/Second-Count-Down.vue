@@ -93,7 +93,7 @@ export default {
         },
         countdown (duration) {
             this.COUNTDOWN = new Countdown(duration, data => {
-                if (!data) {
+                if (!data && this.data) {
                     this.show = false
                     this.$emit('done', true)
                     this.data[this.fields.start] = 0
