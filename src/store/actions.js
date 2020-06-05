@@ -48,15 +48,6 @@ export default {
             const mallDomain = window.location.pathname.split('/')[1] || ''
             const { result } = await getMallInfo(mallDomain)
             commit(type.GET_MALL_INFO, result)
-            // 获取本地缓存openId
-            // const openId = localStorage.getItem(`openId_${ mallDomain }`) || ''
-
-            // 如果openId不存在，获取一下openId
-            // if (!openId) {
-            //     await dispatch(type.GET_OPENID)
-            // } else {
-            // }
-            // commit(type.SET_OPENID, { mallDomain, openId })
             return result
         } catch (e) {
             throw e

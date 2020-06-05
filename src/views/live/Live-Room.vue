@@ -931,7 +931,7 @@ export default {
         async scrollBottom () {
             await this.$nextTick()
             const box = this.$refs.chatWrap
-            if (box) box.scrollBy(0, box.offsetHeight)
+            if (box && typeof box.scrollBy === 'function') box.scrollBy(0, box.offsetHeight)
         },
         async couponClick (id) {
             if (this.isCouponLoading) return

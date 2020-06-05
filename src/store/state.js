@@ -10,19 +10,24 @@ export default {
     },
     userInfo: {
         isAgentUser: false,
+        // 已申请润笔
         applyBalance: 0,
+        // 待入账润笔
         awaitBalance: 0,
+        // 可提现润笔
         balance: 0,
+        // 无效润笔
+        rejectBalance: 0,
+        // 成功提现润笔
+        successBalance: 0,
         cumulativeBalance: 0,
         currentBalance: 0,
         img: '',
         mobile: null,
         openId: '',
-        rejectBalance: 0,
         roleCode: '',
         lockStatus: '',
         status: null,
-        successBalance: 0,
         userId: '',
         userName: '',
         serverTime: '',
