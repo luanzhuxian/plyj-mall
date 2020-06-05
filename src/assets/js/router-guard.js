@@ -1,6 +1,7 @@
 import { router } from '../../router'
 import store from '../../store'
 import share from '../js/wechat/wechat-share'
+// 自定义微信分享，需要自己在页面配置分享信息
 const customShare = [
     'Product',
     'Curriculum',
@@ -10,6 +11,7 @@ const customShare = [
     'Classify',
     'CoursePackage'
 ]
+// 采取默认分享的路由，不需要自己配置分享信息，会拉取当前商城的一些信息
 const shareRoutes = [
     'Home',
     'My',
