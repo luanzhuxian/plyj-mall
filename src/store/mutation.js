@@ -13,10 +13,6 @@ export default {
     [type.GET_MALL_INFO] (state, payload) {
         copyFields(state.mallInfo, payload)
         sessionStorage.setItem('mallName', payload.mallName)
-
-        // 存储上一个商城的id
-        localStorage.setItem('lastMallId', Cookie.get('mallId'))
-
         // 缓存10周
         Cookie.set('mallId', payload.sequenceNbr, {
             expires: CalcCookieTime(6048000)

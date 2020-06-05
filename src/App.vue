@@ -78,21 +78,18 @@ export default {
             // 切换了商城之后，清空所有登录数据
             const mallDomain = window.location.pathname.split('/')[1]
             const localOpengId = localStorage.getItem(`openId_${ mallDomain }`)
+            const token = Cookie.get('token')
             // 用户切换商城的时候，清空所有登录认证信息
             if (!localOpengId) {
                 localStorage.clear()
                 sessionStorage.clear()
             }
+            // 首先获取上传信息
             await this.getMallInfo()
-            const mallId = Cookie.get('mallId')
-            const token = Cookie.get('token')
-            const lastMallId = localStorage.getItem('lastMallId')
-
             // 如果以及登录，且商城没切换，就不用重新登录
-            if (token && mallId === lastMallId) {
-                await this.getUserInfo()
-            } else {
+            if (!token) {
                 await this.login()
+            } else {
                 await this.getUserInfo()
             }
             this.logined = true
@@ -114,9 +111,9 @@ export default {
             setDragonGatePlay: SET_DRAGON_GATE_PLAY
         }),
         ...mapActions({
-            getUserInfo: USER_INFO,
             getMallInfo: GET_MALL_INFO,
             login: LOGIN,
+            getUserInfo: USER_INFO,
             getActivityData: GET_ACTIVITY_DATA,
             getSkinId: GET_SKIN_ID
         }),

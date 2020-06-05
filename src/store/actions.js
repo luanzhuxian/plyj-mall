@@ -21,6 +21,7 @@ import { getTemplate, getSkinStatus } from '../apis/home'
 import {
     DelayExec,
     loadImage
+    // promise
 } from '../assets/js/util'
 import { upload } from '../assets/js/upload-image'
 import Cookie from '../assets/js/storage-cookie'
@@ -47,16 +48,15 @@ export default {
             const mallDomain = window.location.pathname.split('/')[1] || ''
             const { result } = await getMallInfo(mallDomain)
             commit(type.GET_MALL_INFO, result)
-
             // 获取本地缓存openId
-            const openId = localStorage.getItem(`openId_${ mallDomain }`) || ''
+            // const openId = localStorage.getItem(`openId_${ mallDomain }`) || ''
 
             // 如果openId不存在，获取一下openId
-            if (!openId) {
-                await dispatch(type.GET_OPENID)
-            } else {
-                commit(type.SET_OPENID, { mallDomain, openId })
-            }
+            // if (!openId) {
+            //     await dispatch(type.GET_OPENID)
+            // } else {
+            // }
+            // commit(type.SET_OPENID, { mallDomain, openId })
             return result
         } catch (e) {
             throw e
@@ -65,20 +65,25 @@ export default {
 
     // 获取openid并登录
     [type.GET_OPENID]: async ({ commit, dispatch, state }) => {
+        const { appSecret, mallDomain, componentAppid, appid: appId } = state.mallInfo
+        const OPEN_ID = localStorage.getItem(`openId_${ mallDomain }`) || ''
+        if (OPEN_ID) {
+            commit(type.SET_OPENID, { mallDomain, openId: OPEN_ID })
+            return OPEN_ID
+        }
         const search = Qs.parse(location.search.substring(1)) || {}
-        const appId = state.mallInfo.appid
-        const { componentAppid } = state.mallInfo
-        const { appSecret } = state.mallInfo
         try {
             if (search.code) {
                 // 微信
                 const { result } = await getOpenId(appId, search.code)
-                commit(type.SET_OPENID, { mallDomain: state.mallInfo.mallDomain, openId: result.OPEN_ID })
-                return result
+                commit(type.SET_OPENID, { mallDomain, openId: result.OPEN_ID })
+                return result.OPEN_ID
             }
             location.replace(getWeixinURL(appSecret, appId, componentAppid, search))
+            /* eslint-disable no-throw-literal */
+            throw false
         } catch (e) {
-            if (e.message.indexOf('code') > -1) {
+            if (e) {
                 MessageBox.confirm('微信登录失败，是否重试？')
                     .then(() => {
                         delete search.code
@@ -87,24 +92,20 @@ export default {
                     .catch(() => {
                         window.wx.closeWindow()
                     })
-            } else {
-                throw e
             }
+            throw e
         }
     },
     [type.LOGIN]: async ({ commit, dispatch, state }) => {
         try {
-            let loginInfo = null
-
-            // 通过openid登录
-            if (state.openId) {
-                loginInfo = await login(state.openId)
-            } else {
-                // openid有问题时重新获取openid
-                await dispatch(type.GET_OPENID)
+            const OPEN_ID = await dispatch(type.GET_OPENID)
+            if (OPEN_ID) {
+                const loginInfo = await login(OPEN_ID)
+                commit(type.SET_TOKEN, loginInfo.result)
+                await dispatch(type.USER_INFO)
+                return loginInfo
             }
-            commit(type.SET_TOKEN, loginInfo.result)
-            return loginInfo
+            return null
         } catch (e) {
             throw e
         }
@@ -163,11 +164,11 @@ export default {
     [type.REFRESH_TOKEN]: ({ commit, state, dispatch }) => new Promise(async (resolve, reject) => {
         const refreshCount = Number(sessionStorage.getItem('refresh_count') || 0)
         const refresh_token = Cookie.get('refresh_token')
-        sessionStorage.setItem('refresh_count', (refreshCount + 1))
+        sessionStorage.setItem('refresh_count', String(refreshCount + 1))
 
         // refresh_token 连续刷三次以上时，说明存在异常，退出重新登录
         if (Number(refreshCount) > 3) {
-            sessionStorage.setItem('refresh_count', 0)
+            sessionStorage.setItem('refresh_count', '0')
             commit(type.LOG_OUT)
             await dispatch(type.LOGIN)
             return

@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { axios } from './axios'
 import store from '../../store'
-import { REFRESH_TOKEN, LOGIN } from '../../store/mutation-type'
+import { LOGIN } from '../../store/mutation-type'
 import Cookie from '../../assets/js/storage-cookie'
 class ResponseError extends Error {
   constructor (message) {
@@ -40,15 +40,14 @@ async function response (response) {
     }
     // 非登录失效的错误
     if (!loginInvalid) {
-      let err = {
+      return Promise.reject(new ResponseError(JSON.stringify({
         method: config.method,
         url: config.url,
         data: config.data ? JSON.parse(config.data) : null,
         params: config.params || null,
         devMessage: data.devMessage || '',
         message: msg || ''
-      }
-      return Promise.reject(new ResponseError(JSON.stringify(err, null, 4)))
+      }, null, 4)))
     }
     // 重新登录, 登录完成后尝试上次发起的请求
     try {

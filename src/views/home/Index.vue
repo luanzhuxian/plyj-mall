@@ -121,8 +121,7 @@ export default {
         try {
             // 疫情战报
             getReportActivity().then(({ result }) => {
-                result.isReportShow = result ? !!result.status : false
-                this.isReportShow = result.isReportShow
+                this.isReportShow = result ? !!result.status : false
                 this.reportId = result ? result.id : ''
                 this.setCampaignReport(result)
             })
