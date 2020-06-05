@@ -69,7 +69,7 @@ export default [
         props: true,
         component: () => import('../views/marketing-activity/combination-of-class/Course-Package.vue'),
         meta: {
-            title: '组合课'
+            title: '组合聚惠学'
         }
     }
 ]
