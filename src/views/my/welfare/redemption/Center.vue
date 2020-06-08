@@ -48,6 +48,11 @@ import ProductItem from './components/Product-Item'
 import {
     getProductByCodeId
 } from '../../../../apis/my-redemption'
+// 商品类型
+const productTypeKeyMap = {
+    2: 'KNOWLEDGE_COURSE',
+    3: 'SERIES_OF_COURSE'
+}
 export default {
     name: 'RedemptionCenter',
     props: {
@@ -141,12 +146,37 @@ export default {
             const detail = this.productList[index]
             // 兑换状态 : 1-已购买 2-已兑换 3-未开售 4-立即兑换
             if (detail.exhcangeStatus !== 4 || this.isMaxLimit) return
-            // 设置当前兑换码id信息
-            localStorage.setItem('currentRedeemCode', JSON.stringify({
+            // 设置订单商品详情
+            this.$store.commit('submitOrder/setOrderProducts', {
+                params: {
+                    activeProduct: 1,
+                    preActivity: 1,
+                    activityId: ''
+                },
+                products: [{
+                    productId: detail.productId,
+                    count: 1,
+                    skuCode1: '',
+                    skuCode2: '',
+                    price: detail.sellingPrice,
+                    // 如果当前用户是经纪人，则覆盖其他经纪人的id
+                    agentUser: '',
+                    productType: productTypeKeyMap[detail.productType]
+                }]
+            })
+            // 设置当前商品默认兑换码信息
+            const { exchangeCode, name, startTime, endTime } = this.detail
+            this.$store.commit('submitOrder/setCurExchangeCode', {
+                productId: detail.productId,
                 id: this.codeId,
-                name: this.detail.name,
-                exchangeCode: this.detail.exchangeCode
-            }))
+                exchangeCode,
+                startTime,
+                endTime,
+                name
+            })
+            this.$router.push({
+                name: 'SubmitOrder'
+            })
         }
     },
     deactivated () {

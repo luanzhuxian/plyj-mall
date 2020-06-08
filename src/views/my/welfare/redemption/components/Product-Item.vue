@@ -93,17 +93,6 @@ export default {
         },
         receive () {
             this.$emit('receive', this.id)
-            this.$router.push({
-                name: 'SubmitCurriculum',
-                params: {
-                    productId: this.id,
-                    count: 1
-                },
-                query: {
-                    productActive: 1,
-                    activityId: ''
-                }
-            })
         }
     }
 }

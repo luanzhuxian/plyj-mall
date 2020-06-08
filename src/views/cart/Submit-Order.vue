@@ -15,6 +15,9 @@
                 :products="products"
                 :pre-activity="preActivity"
                 :active-product="activeProduct"
+                :exchange-code-map="exchangeCodeMap"
+                :exchange-code.sync="exchangeCodeInfo"
+                @exchangeCodeChange="exchangeCodeChange"
                 @studentInited="studentInited"
                 @countChange="countChange"
                 ref="productVeiwer"
@@ -54,7 +57,7 @@
             </div>
 
             <Coupon
-                v-if="activeProduct === 1 && goodsAmount > 0"
+                v-if="activeProduct === 1 && goodsAmount > 0 && !exchangeCodeInfo.isDefault"
                 :active-product="activeProduct"
                 :coupon.sync="currentCoupon"
                 :coupon-list="couponList"
@@ -63,7 +66,7 @@
             />
 
             <Scholarship
-                v-show="goodsAmount > 0 && activeProduct === 1"
+                v-show="goodsAmount > 0 && activeProduct === 1 && !exchangeCodeInfo.isDefault"
                 :active-product="activeProduct"
                 :total-amount="totalAmount"
                 :freight="freight"
@@ -116,7 +119,7 @@
 <script>
 import AddressItem from '../../components/item/Address-Item.vue'
 import moment from 'moment'
-import { getCouponOfMax, getCouponByPrice, getRedEnvelopeListByPrice } from '../../apis/my-coupon'
+import { getCouponOfMax, getCouponByPrice, getRedEnvelopeListByPrice, getExchangeCodeMap } from '../../apis/my-coupon'
 import {
     confirmOrder,
     submitOrder,
@@ -164,6 +167,10 @@ export default {
             recommendCoupon: {},
             // 优惠券信息
             couponList: [],
+            // 当前默认选择的兑换码信息
+            exchangeCodeInfo: {},
+            // 商品兑换码列表
+            exchangeCodeMap: {},
             // 实体商品
             physicalProducts: [],
             // 全部商品列表
@@ -179,7 +186,7 @@ export default {
             form: {
                 activityId: '',
                 helper: '',
-                // 商品来源：1 正常购买下单， 2 团购商品购买下单，3秒杀商品购买下单，4.预购商品下单确认，5春耘，6组合商品
+                // 商品来源：1 正常购买下单， 2 团购商品购买下单，3秒杀商品购买下单，4.预购商品下单确认，5春耘，6组合商品，7公益， 8兑换码
                 source: 1,
                 // 其中的goodType包括: PHYSICAL_GOODS VIRTUAL_GOODS SERIES_OF_COURSE EXPERIENCE_CLASS KNOWLEDGE_COURSE SERIES_OF_COURSE LIVE_GOODS
                 skus: [],
@@ -197,7 +204,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['selectedAddress', 'openId', 'mobile', 'addressList', 'realName', 'userName', 'shareId', 'submitOrder/orderProducts']),
+        ...mapGetters(['selectedAddress', 'openId', 'mobile', 'addressList', 'realName', 'userName', 'shareId', 'submitOrder/orderProducts', 'submitOrder/exchangeCodeInfo']),
 
         /**
          * 传入的活动类型
@@ -242,8 +249,9 @@ export default {
         async init () {
             try {
                 const CONFIRM_LIST = await this.initProductInfo()
-                // 以下是设置订单红包和优惠券，只有普通订单才可以使用优惠券和红包
-                if (this.activeProduct === 1) {
+                await this.initRedeemCode()
+                // 以下是设置订单红包和优惠券，只有普通订单并且没有默认使用兑换码 才可以选择优惠券和红包 或者 兑换码
+                if (this.activeProduct === 1 && !this.exchangeCodeInfo.isDefault) {
                     const AMOUNT = CONFIRM_LIST.map(item => item.price * item.count).reduce((total, price) => total + price)
                     const COUPON_DATA = {
                         activeProduct: this.preActivity === 2 ? this.activeProduct : 1,
@@ -285,6 +293,19 @@ export default {
                     this.currentRedEnvelope = this.currentCoupon.scholarship === 0 ? {} : this.redEnvelopeList[0] || {}
                     this.form.cartCouponModel = this.currentCoupon.id ? { userCouponId: this.currentCoupon.id } : null
                     this.form.scholarshipModel = this.currentRedEnvelope.id ? { scholarshipId: this.currentRedEnvelope.id } : null
+
+                    // 初始化兑换码列表
+                    const productIdList = CONFIRM_LIST.map(item => item.productId)
+                    const { result: exchangeCodeMap } = await getExchangeCodeMap(productIdList)
+                    for (const productId in exchangeCodeMap) {
+                        for (const code of exchangeCodeMap[productId]) {
+                            const duration = moment(code.endTime).valueOf() - moment(serverTime).valueOf()
+                            const day = Math.floor(moment.duration(duration).asDays())
+                            code.timeDesc = ''
+                            if (day < 4) code.timeDesc = day < 1 ? '即将过期' : `${ day }天后过期`
+                        }
+                    }
+                    this.exchangeCodeMap = exchangeCodeMap
                 }
             } catch (e) {
                 throw e
@@ -293,8 +314,13 @@ export default {
         // 根据初始化的商品基本信息，获取商品详情和价格
         async getProductDetail () {
             try {
-                // 选择合适的优惠券
-                const { result } = await confirmOrder(this.form)
+                const form = JSON.parse(JSON.stringify(this.form))
+                // 使用兑换码后，修改部分参数
+                if (this.exchangeCodeInfo.id) {
+                    form.source = 8
+                    form.activityId = this.exchangeCodeInfo.id
+                }
+                const { result } = await confirmOrder(form)
                 const {
                     amount,
                     goodsTotalPrice,
@@ -362,6 +388,19 @@ export default {
         },
 
         /**
+         * 初始化默认兑换码信息
+         *  */
+        async initRedeemCode () {
+            try {
+                const exchangeCodeInfo = this['submitOrder/exchangeCodeInfo']
+                if (exchangeCodeInfo.id)exchangeCodeInfo.isDefault = true
+                this.exchangeCodeInfo = exchangeCodeInfo
+            } catch (e) {
+                throw e
+            }
+        },
+
+        /**
          * 修改优惠券
          * 需要注意的是，每次修改优惠券的时候，奖学金会联动的做出改变
          * @param coupon {Object} 当前优惠券
@@ -371,6 +410,8 @@ export default {
             try {
                 await this.$nextTick()
                 this.form.scholarshipModel = this.currentRedEnvelope.id ? { scholarshipId: this.currentRedEnvelope.id } : null
+                // 选择优惠券后，兑换码默认不使用
+                if (this.form.scholarshipModel) this.exchangeCodeInfo = {}
                 await this.getProductDetail()
             } catch (e) {
                 throw e
@@ -379,13 +420,27 @@ export default {
         // 修改红包
         async scholarshipChange (scholarship) {
             this.form.scholarshipModel = scholarship.id ? { scholarshipId: scholarship.id } : null
+            // 选择奖学金后，兑换码默认不使用
+            if (this.form.scholarshipModel) this.exchangeCodeInfo = {}
             try {
                 await this.getProductDetail()
             } catch (e) {
                 throw e
             }
         },
-
+        async exchangeCodeChange (item) {
+            this.exchangeCodeInfo = item
+            // 使用兑换码后，不可使用优惠券和奖学金
+            if (item.id) {
+                this.form.scholarshipModel = null
+                this.form.cartCouponModel = null
+            }
+            try {
+                await this.getProductDetail()
+            } catch (e) {
+                throw e
+            }
+        },
         // 修改联系人
         contactInfoChange ({ name, mobile }) {
             this.form.userAddress = name ? {
@@ -457,7 +512,12 @@ export default {
             }
             try {
                 this.submiting = true
-                const { result: orderBatchNumber } = await submitOrder(this.form)
+                const form = JSON.parse(JSON.stringify(this.form))
+                if (this.exchangeCodeInfo.id) {
+                    form.source = 8
+                    form.activityId = this.exchangeCodeInfo.id
+                }
+                const { result: orderBatchNumber } = await submitOrder(form)
                 await this.requestPayData(orderBatchNumber)
             } catch (e) {
                 throw e
@@ -538,6 +598,7 @@ export default {
             to.name !== 'AddAddress' &&
             to.name !== 'StudentList') {
             this.$store.commit('submitOrder/removeOrderProducts')
+            this.$store.commit('submitOrder/removeCurExchangeCode')
         }
         next()
     }

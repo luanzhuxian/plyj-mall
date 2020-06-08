@@ -74,6 +74,15 @@
                         <template slot="label">组合折扣</template>
                         <span slot="content">{{ item.discount / 10 }}折 -¥{{ ((item.sellingPrice - item.amount) / 100).toFixed(2) }}</span>
                     </InfoItem>-->
+                    <!--TODO.当前仅支持单个商品时使用兑换码-->
+                    <InfoItem v-if="activeProduct === 1 && products.length === 1 && (exchangeCodeMap[item.goodsId] && exchangeCodeMap[item.goodsId].length || exchangeCode.isDefault)">
+                        <ExchangeCode
+                            slot="footer"
+                            :exchange-code.sync="exchangeCode"
+                            :exchange-code-list="exchangeCodeMap[item.goodsId]"
+                            @change="chooseExchangeCode"
+                        />
+                    </InfoItem>
 
                     <InfoItem v-if="item.couponAmount > 0">
                         <template slot="label">优惠券</template>
@@ -106,6 +115,7 @@ import OrderItem from '../../../components/item/Order-Item.vue'
 import InfoItem from './Info-Item.vue'
 import StudentInline from './Student-Inline.vue'
 import CustomInline from './Custom-Inline.vue'
+import ExchangeCode from './Exchange-Code'
 import Count from '../../../components/common/Count.vue'
 import { mapGetters } from 'vuex'
 export default {
@@ -116,13 +126,36 @@ export default {
         InfoItem,
         StudentInline,
         Count,
-        CustomInline
+        CustomInline,
+        ExchangeCode
     },
     props: {
         products: {
             type: Array,
             default () {
                 return []
+            }
+        },
+        // 兑换码列表
+        /**
+        * {
+            productId1: [{exchangeCode1}, {exchangeCode2}]
+            productId2: []
+            productId3: []
+            productId4: []
+         * }
+        */
+        exchangeCodeMap: {
+            type: Object,
+            default () {
+                return {}
+            }
+        },
+        // 当前选定的兑换码信息
+        exchangeCode: {
+            type: Object,
+            default () {
+                return {}
             }
         },
         preActivity: {
@@ -189,6 +222,9 @@ export default {
                 }
             }
             return true
+        },
+        chooseExchangeCode (item) {
+            this.$emit('exchangeCodeChange', item)
         }
     }
 }
