@@ -42,7 +42,8 @@
                     </div>
                 </div>
                 <div :class="$style.buttons">
-                    <button v-if="status === 2 && count <= 0" style="background-image: url('https://mallcdn.youpenglai.com/static/mall/2.9.0/点击框(用完).png');" />
+                    <button v-if="!mobile" @click="bindMobile" style="background-image: url('https://mallcdn.youpenglai.com/static/mall/2.9.0/1033512533_18326417245_点击框.png');" />
+                    <button v-else-if="status === 2 && count <= 0" style="background-image: url('https://mallcdn.youpenglai.com/static/mall/2.9.0/点击框(用完).png');" />
                     <button v-else-if="status === 2 && count > 0" @click="drawLottery" style="background-image: url('https://mallcdn.youpenglai.com/static/mall/2.9.0/点击框.png');" />
                     <button v-else-if="status === 3 || status === 4" style="background-image: url('https://mallcdn.youpenglai.com/static/mall/2.9.0/点击框 3.png');" />
                     <button v-else style="background-image: url('https://mallcdn.youpenglai.com/static/mall/2.9.0/点击框 2.png');" />
@@ -235,7 +236,6 @@
 </template>
 
 <script>
-/* eslint-disable */
 // 根据屏幕大小转换canvas中使用的长度大小
 import GiftPopUp from '../../../../components/activity/Gift-Pop-Up.vue'
 import CouponItemViewer from '../../../../components/item/Coupon-Item-Viewer.vue'
@@ -324,18 +324,18 @@ export default {
         }
     },
     mounted () {
-      window.addEventListener('scroll', this.scrollHandler)
+        window.addEventListener('scroll', this.scrollHandler)
     },
     beforeDestroy () {
         clearInterval(this.drawLotteryTimer)
         window.removeEventListener('scroll', this.scrollHandler)
     },
     computed: {
-        ...mapGetters(['logoUrl'])
+        ...mapGetters(['logoUrl', 'mobile'])
     },
     methods: {
         scrollHandler () {
-            let scrollHeight = document.body.scrollHeight
+            const scrollHeight = document.body.scrollHeight
             if (window.innerHeight + window.scrollY + 100 >= scrollHeight && !this.loading && !this.done) {
                 clearTimeout(this.timer)
                 this.timer = setTimeout(async () => {
@@ -356,31 +356,31 @@ export default {
             }
         },
         async getDetail () {
-          try {
-              clearInterval(this.drawLotteryTimer)
-              const { result } = await getDetail(this.id)
-              this.awardList = result.gifts
-              this.detail = result
-              this.status = Number(result.status)
-              await this.$nextTick()
-              this.setAwards()
-              await this.getRecords()
-              await this.countDown()
+            try {
+                clearInterval(this.drawLotteryTimer)
+                const { result } = await getDetail(this.id)
+                this.awardList = result.gifts
+                this.detail = result
+                this.status = Number(result.status)
+                await this.$nextTick()
+                this.setAwards()
+                await this.getRecords()
+                await this.countDown()
 
-              // 启动灯的动画
-              const canvas = this.$refs.canvas
-              const inner = this.$refs.inner
-              canvas.width = inner.offsetWidth
-              canvas.height = inner.offsetHeight
-              const ctx = canvas.getContext('2d')
-              this.drawLotteryTimer = setInterval(() => {
-                  this.setLights(canvas, ctx)
-                  IS_WHITE = !IS_WHITE
-              }, 800)
-          }  catch (e) {
-              this.$router.replace({ name: 'Home' })
-              throw e
-          }
+                // 启动灯的动画
+                const canvas = this.$refs.canvas
+                const inner = this.$refs.inner
+                canvas.width = inner.offsetWidth
+                canvas.height = inner.offsetHeight
+                const ctx = canvas.getContext('2d')
+                this.drawLotteryTimer = setInterval(() => {
+                    this.setLights(canvas, ctx)
+                    IS_WHITE = !IS_WHITE
+                }, 800)
+            } catch (e) {
+                this.$router.replace({ name: 'Home' })
+                throw e
+            }
         },
         async countDown () {
             if (countDownInstance) {
@@ -399,7 +399,7 @@ export default {
                         return String(num).padStart(2, '0')
                     }
                     // 启动倒计时
-                    countDownInstance = new Countdown(duration, (data) => {
+                    countDownInstance = new Countdown(duration, data => {
                         if (!data) return location.reload()
                         const { seconds, minutes, hours, days } = data
                         this.date = {
@@ -417,21 +417,21 @@ export default {
         },
         // 获取奖品记录
         async getRecords () {
-          try {
-              const { result: count } = await getLotteryCount(this.id)
-              this.count = count
-              const { result: { records: awardRecords } } = await getAwardRecords(this.id)
-              this.lotteryRecords = awardRecords
-              const { result: { records: lotteryRecords } } = await getLotteryRecords(this.id)
-              this.awardRecords = lotteryRecords
-          } catch (e) {
-              throw e
-          }
+            try {
+                const { result: count } = await getLotteryCount(this.id)
+                this.count = count
+                const { result: { records: awardRecords } } = await getAwardRecords(this.id)
+                this.lotteryRecords = awardRecords
+                const { result: { records: lotteryRecords } } = await getLotteryRecords(this.id)
+                this.awardRecords = lotteryRecords
+            } catch (e) {
+                throw e
+            }
         },
         setAwards () {
             const turntableAwards = []
             for (const [i, award] of this.awardList.entries()) {
-                award.grade = i < 3 ? `${SectionToChinese(i + 1)}等奖` : '好礼'
+                award.grade = i < 3 ? `${ SectionToChinese(i + 1) }等奖` : '好礼'
                 turntableAwards.push({
                     ...award
                 })
@@ -444,6 +444,11 @@ export default {
                 })
             }
             this.turntableAwards = shuffle(turntableAwards)
+        },
+        bindMobile () {
+            const { name, params, query } = this.$route
+            sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({ name, query, params }))
+            this.$router.push({ name: 'BindMobile' })
         },
         // 开始抽奖
         async drawLottery (evt, close) {
@@ -472,6 +477,7 @@ export default {
                 throw e
             }
         },
+
         /**
          * 启动抽奖动画
          * @param index
@@ -520,7 +526,7 @@ export default {
         showResult () {
             if (this.lottery) {
                 // 中奖了
-                let { grade, awardType } = this.lottery
+                const { grade, awardType } = this.lottery
                 this.lotteryResult = {
                     title: `恭喜您获得<i style="color: #FCE804;">${ grade }</i>`,
                     message: awardType === 1 ? '奖品已自动存入“我的礼品中”，您可在“我的礼品中”查看' : awardType === 2 ? '奖品已自动存入“我的奖学金”中，您可在“我的奖学金”中进行查看' : '奖品已自动存入“我的卡券”中，您可在“我的卡券”中进行查看',
