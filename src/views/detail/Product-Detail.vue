@@ -125,7 +125,7 @@
                     <template v-if="currentModel.skuCode1Name">
                         已选择：“<span v-text="currentModel.skuCode1Name" />
                     </template>
-                    <template v-if="currentModel.skuCode2Name">，<i v-text="currentModel.skuCode2Name" /></template>”
+                    <template v-if="currentModel.skuCode2Name">，<i v-text="currentModel.skuCode2Name" /></template>
                     <span v-if="!currentModel.id">请选择规格</span>
                 </Field>
 
