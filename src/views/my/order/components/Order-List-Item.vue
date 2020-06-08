@@ -110,9 +110,9 @@
                 >
                     去使用
                 </pl-button>
-                <!--订单完成 + 未评论 支持 去评价-->
+                <!-- 实体商品/虚拟商品/正式课/体验课 + 订单完成 + 未评论 支持 去评价-->
                 <pl-button
-                    v-if="orderStatus === orderStatuskeyMap.FINISHED && commentStatus === 0"
+                    v-if="isCommentBtnShow"
                     round
                     plain
                     @click="$router.push({ name: 'OrderDetail', params: { orderId: orderId } })"
@@ -206,6 +206,13 @@ export default {
             type: Number,
             default: 0
         },
+        // 核销码信息
+        redeemCodeModels: {
+            type: Array,
+            default () {
+                return []
+            }
+        },
         // 订单总价
         amount: {
             type: [Number, String],
@@ -240,7 +247,17 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['skuSourceKeyMap', 'orderTypeMap', 'orderTypeKeyMap', 'orderStatusMap', 'orderStatuskeyMap', 'refundStatusMap', 'aftersaleStatusMap', 'aftersaleStatusKeyMap'])
+        ...mapGetters(['skuSourceKeyMap', 'orderTypeMap', 'orderTypeKeyMap', 'orderStatusMap', 'orderStatuskeyMap', 'refundStatusMap', 'aftersaleStatusMap', 'aftersaleStatusKeyMap']),
+        // 是否显示评价按钮
+        isCommentBtnShow () {
+            // TODO.&& assessmentStatus === 0
+            // 核销码 status: 0 待使用 1 已使用 2 退款中 3已退款 4已过期
+            return this.orderStatus === this.orderStatuskeyMap.FINISHED &&
+          (
+              (this.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS && this.aftersaleStatus === this.aftersaleStatusKeyMap.NO_AFTER_SALES) ||
+            ([this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS].includes(this.orderType) && this.redeemCodeModels.some(item => item.status === 1))
+          )
+        }
     },
     methods: {
         // 取消订单
