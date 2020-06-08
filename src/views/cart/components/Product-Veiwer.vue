@@ -78,7 +78,7 @@
                     <InfoItem v-if="activeProduct === 1 && products.length === 1 && (exchangeCodeMap[item.goodsId] && exchangeCodeMap[item.goodsId].length || exchangeCode.isDefault)">
                         <ExchangeCode
                             slot="footer"
-                            :exchange-code.sync="exchangeCode"
+                            :exchange-code="exchangeCode"
                             :exchange-code-list="exchangeCodeMap[item.goodsId]"
                             @change="chooseExchangeCode"
                         />

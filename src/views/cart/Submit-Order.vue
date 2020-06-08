@@ -16,7 +16,7 @@
                 :pre-activity="preActivity"
                 :active-product="activeProduct"
                 :exchange-code-map="exchangeCodeMap"
-                :exchange-code.sync="exchangeCodeInfo"
+                :exchange-code="exchangeCodeInfo"
                 @exchangeCodeChange="exchangeCodeChange"
                 @studentInited="studentInited"
                 @countChange="countChange"

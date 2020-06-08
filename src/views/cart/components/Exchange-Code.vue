@@ -78,7 +78,6 @@ export default {
         // 选择兑换码, 选择完成后，重新计算价格
         async exchangeCodeClick (item) {
             this.$emit('change', item)
-            this.$emit('update:exchangeCode', item)
             this.showExchangeCode = false
         }
     }

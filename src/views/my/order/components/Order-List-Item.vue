@@ -56,9 +56,9 @@
                 >
                     {{ pastDue ? '已过期' : isStart ? '去付尾款' : '未开始付尾款' }}
                 </pl-button>
-                <!-- 待付款/待付尾款 支持 取消订单-->
+                <!-- 待付款/非实体订单-待付尾款(实体订单的尾款为线下支付) 支持 取消订单-->
                 <pl-button
-                    v-if="[orderStatuskeyMap.WAIT_PAY, orderStatuskeyMap.WAIT_PAY_TAIL_MONEY].includes(orderStatus)"
+                    v-if="orderStatuskeyMap.WAIT_PAY === orderStatus || (orderType !== orderTypeKeyMap.PHYSICAL_GOODS && orderStatuskeyMap.WAIT_PAY_TAIL_MONEY === orderStatus) "
                     round
                     plain
                     @click="doOperation('cancelOrder')"

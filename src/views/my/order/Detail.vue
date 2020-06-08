@@ -165,6 +165,11 @@
                     <span v-text="activeProductStatus[detail.orderSource] || '商品金额'" />
                     <span class="rmb">{{ detail.goodsPrice | formatAmount }}</span>
                 </p>
+                <!--兑换码信息-->
+                <p v-if="detail.exchangeCode">
+                    <span>兑换码({{ detail.exchangeCode | separator(' ', 4) }})</span>
+                    <span>-¥{{ goodsModel.sellingPrice }}</span>
+                </p>
                 <!--优惠券-->
                 <p v-if="detail.couponAmount">
                     <span>优惠券</span>
@@ -244,7 +249,7 @@
                 <pl-fields
                     size="middle"
                     :text="`学员信息${i + 1}`"
-                    :right-text="i < redeemCodeModels.length ? `核销码：${localSeparator(redeemCodeModels[i].code,' ', 4)}`: ''"
+                    :right-text="i < redeemCodeModels.length && redeemCodeModels[i].code ? `核销码：${localSeparator(redeemCodeModels[i].code,' ', 4)}`: ''"
                     icon="icon-name-card"
                     title-color="#F2B036"
                     :icon-width="40"
@@ -344,9 +349,9 @@
             class="footer"
             :class="$style.footer"
         >
-            <!-- 待付款/待付尾款 支持 取消订单-->
+            <!-- 待付款/非实体订单-待付尾款(实体订单的尾款为线下支付) 支持 取消订单-->
             <pl-button
-                v-if="[orderStatuskeyMap.WAIT_PAY, orderStatuskeyMap.WAIT_PAY_TAIL_MONEY].includes(detail.status)"
+                v-if="orderStatuskeyMap.WAIT_PAY === detail.status || (detail.orderType !== orderTypeKeyMap.PHYSICAL_GOODS && orderStatuskeyMap.WAIT_PAY_TAIL_MONEY === detail.status) "
                 round
                 plain
                 @click="isPickerShow = true"

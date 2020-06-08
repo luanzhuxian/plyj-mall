@@ -70,7 +70,7 @@
             </div>
         </div>
         <div
-            v-if="[2,3,4,5,6,7].includes(activeProduct) && preActive === 2"
+            v-if="([2,3,4,5,6,7].includes(activeProduct) && preActive === 2) || activeProduct === 8"
             :class="{
                 [$style.activeTag]: true,
                 [$style.publicBenefitTag]: activeProduct === 7
