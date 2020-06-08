@@ -172,14 +172,14 @@ export const applyRefund = data => axios.post('/apis/v2/order/refunds/apply/refu
  * @param {string} orderId - 订单id
  * @return {Promise<Object>}
  */
-export const getAwaitPayInfo = orderId => axios.post('/apis/v2/order/pay/sub/paymentCode', { orderId })
+export const getAwaitPayInfo = orderId => axios.post(`/apis/v2/order/pay/sub/paymentCode/${ orderId }`)
 
 /**
- * 获取待支付商品支付需要的数据（二次支付）
+ * 获取待付尾款商品支付需要的数据（尾款）
  * @param {string} orderId - 订单id
  * @return {Promise<Object>}
  */
-export const getAwaitTailPayInfo = orderId => axios.post('/apis/v2/order/pay/tail/money', { orderId })
+export const getAwaitTailPayInfo = orderId => axios.post(`/apis/v2/order/pay/tail/money/${ orderId }`)
 
 /**
  * 计算可退款最大金额

@@ -56,9 +56,9 @@
                 >
                     {{ pastDue ? '已过期' : isStart ? '去付尾款' : '未开始付尾款' }}
                 </pl-button>
-                <!-- 待付款/非实体订单-待付尾款(实体订单的尾款为线下支付) 支持 取消订单-->
+                <!-- 待付款 支持 取消订单-->
                 <pl-button
-                    v-if="orderStatuskeyMap.WAIT_PAY === orderStatus || (orderType !== orderTypeKeyMap.PHYSICAL_GOODS && orderStatuskeyMap.WAIT_PAY_TAIL_MONEY === orderStatus) "
+                    v-if="orderStatuskeyMap.WAIT_PAY === orderStatus"
                     round
                     plain
                     @click="doOperation('cancelOrder')"
@@ -103,7 +103,7 @@
                 </pl-button>
                 <!--虚拟商品/正式课/体验课 + 待收货 支持 去使用-->
                 <pl-button
-                    v-if="[orderTypeKeyMap.PHYSICAL_GOODS, orderTypeKeyMap.FORMAL_CLASS, orderTypeKeyMap.EXPERIENCE_CLASS].includes(orderType) && orderStatus === orderStatuskeyMap.WAIT_RECEIVE"
+                    v-if="[orderTypeKeyMap.VIRTUAL_GOODS, orderTypeKeyMap.FORMAL_CLASS, orderTypeKeyMap.EXPERIENCE_CLASS].includes(orderType) && orderStatus === orderStatuskeyMap.WAIT_RECEIVE"
                     type="warning"
                     round
                     @click="$router.push({ name: 'OrderDetail', params: { orderId: orderId } })"
@@ -241,22 +241,19 @@ export default {
             }
         },
         //  是否评论
-        commentStatus: {
-            type: Number,
-            default: 0
+        commented: {
+            type: Boolean,
+            default: false
         }
     },
     computed: {
         ...mapGetters(['skuSourceKeyMap', 'orderTypeMap', 'orderTypeKeyMap', 'orderStatusMap', 'orderStatuskeyMap', 'refundStatusMap', 'aftersaleStatusMap', 'aftersaleStatusKeyMap']),
-        // 是否显示评价按钮
+        // 是否显示评价按钮 实体/虚拟/正式课/体验课 + 订单完成 + 无售后 + 未评论
         isCommentBtnShow () {
-            // TODO.&& assessmentStatus === 0
-            // 核销码 status: 0 待使用 1 已使用 2 退款中 3已退款 4已过期
             return this.orderStatus === this.orderStatuskeyMap.FINISHED &&
-          (
-              (this.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS && this.aftersaleStatus === this.aftersaleStatusKeyMap.NO_AFTER_SALES) ||
-            ([this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS].includes(this.orderType) && this.redeemCodeModels.some(item => item.status === 1))
-          )
+              this.aftersaleStatus === this.aftersaleStatusKeyMap.NO_AFTER_SALES &&
+              !this.commented &&
+              [this.orderTypeKeyMap.PHYSICAL_GOODS, this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS].includes(this.orderType)
         }
     },
     methods: {

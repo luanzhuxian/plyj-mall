@@ -349,9 +349,9 @@
             class="footer"
             :class="$style.footer"
         >
-            <!-- 待付款/非实体订单-待付尾款(实体订单的尾款为线下支付) 支持 取消订单-->
+            <!-- 待付款 支持 取消订单-->
             <pl-button
-                v-if="orderStatuskeyMap.WAIT_PAY === detail.status || (detail.orderType !== orderTypeKeyMap.PHYSICAL_GOODS && orderStatuskeyMap.WAIT_PAY_TAIL_MONEY === detail.status) "
+                v-if="orderStatuskeyMap.WAIT_PAY === detail.status"
                 round
                 plain
                 @click="isPickerShow = true"
@@ -594,14 +594,12 @@ export default {
         usefulCodeNumber () {
             return this.redeemCodeModels.filter(item => item.status === 0).length
         },
-        // 是否显示评价按钮
+        // 是否显示评价按钮 实体/虚拟/正式课/体验课 + 订单完成 + 无售后 + 未评论
         isCommentBtnShow () {
-            // TODO.&& this.goodsModel.assessmentStatus === 0
             return this.detail.status === this.orderStatuskeyMap.FINISHED &&
-          (
-              (this.detail.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS && this.detail.aftersaleStatus === this.aftersaleStatusKeyMap.NO_AFTER_SALES) ||
-            ([this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS].includes(this.detail.orderType) && this.redeemCodeModels.some(item => item.status === 1))
-          )
+              this.detail.aftersaleStatus === this.aftersaleStatusKeyMap.NO_AFTER_SALES &&
+              !this.detail.commented &&
+              [this.orderTypeKeyMap.PHYSICAL_GOODS, this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS].includes(this.detail.orderType)
         }
     },
     async activated () {
@@ -672,8 +670,8 @@ export default {
                         this.updateQrcode()
                     }
                 }
-                // 设置订单文案
-                {
+                // 设置订单文案: 待支付/待付尾款订单显示倒计时描述， 其他订单状态显示如下
+                if (![this.orderStatuskeyMap.WAIT_PAY, this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY].includes(this.detail.status)) {
                     let tip = ''
                     const { validityPeriodStart, validityPeriodEnd, validity } = goodsModel
                     tip = suggestionMap[result.status]
@@ -735,7 +733,7 @@ export default {
         setTime () {
             if (![this.orderStatuskeyMap.WAIT_PAY, this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY].includes(this.detail.status)) return
             // 服务器时间
-            const now = Number(this.detail.currentServerTime)
+            const now = moment((this.detail.currentServerTime)).valueOf()
             const useStartTime = moment((this.detail.startExpire)).valueOf()
             const useEndTime = moment((this.detail.endExpire)).valueOf()
             // 是否开始
@@ -878,7 +876,7 @@ export default {
                 await this.$confirm(isCombinedOrder ? `是否取消该订单，取消后组合订单将同步取消？` : '订单一旦取消，将无法恢复 确认要取消订单？')
                 await cancelOrder(this.orderId, reason)
                 this.$success('交易关闭')
-                this.getDetail()
+                await this.getDetail()
                 this.setOrderOperatedList(this.orderActionMap.cancel)
             } catch (e) {
                 throw e
