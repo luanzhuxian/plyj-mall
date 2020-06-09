@@ -69,6 +69,17 @@
                 <div :class="$style.btnText">¥ {{ activityProductModel.price }}</div>
             </button>
         </div>
+        <!-- 公益商品下单 -->
+        <div :class="$style.buttons" v-else-if="activeProduct === 7 && preActivity === 2">
+            <button
+                :class="$style.buyNowBtn"
+                @click="clickHandler(3)"
+                :disabled="loading || disableConfirm"
+            >
+                公益购买
+                <div :class="$style.btnText">¥ {{ activityProductModel.price }}</div>
+            </button>
+        </div>
         <!-- 正常商品下单 -->
         <div :class="$style.buttons" v-else>
             <button
