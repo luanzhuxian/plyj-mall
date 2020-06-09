@@ -4,7 +4,7 @@
     <div v-else :class="$style.orderDetail">
         <div :class="$style.top">
             <top-text
-                :title="orderStatusMap[detail.status]"
+                :title="orderStatusDesc"
                 :tip="orderStatusTip"
             />
         </div>
@@ -82,9 +82,9 @@
                     :activity-id="activityDataId"
                 />
                 <div :class="$style.buttons">
-                    <!--实际支付大于0 + 支持售后 + 无售后 + 订单状态为待发货/待收货 支持 申请退款-->
+                    <!--普通订单 + 实际支付大于0 + 支持售后 + 无售后 + 订单状态为待发货/待收货 支持 申请退款-->
                     <pl-button
-                        v-if="detail.amount && detail.supportAfterSales && detail.aftersaleStatus === aftersaleStatusKeyMap.NO_AFTER_SALES && [orderStatuskeyMap.WAIT_SHIP, orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status)"
+                        v-if="detail.orderSource === skuSourceKeyMap.NORMAL && detail.amount && detail.supportAfterSales && detail.aftersaleStatus === aftersaleStatusKeyMap.NO_AFTER_SALES && [orderStatuskeyMap.WAIT_SHIP, orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status)"
                         plain
                         round
                         @click="applyRefund"
@@ -93,7 +93,7 @@
                     </pl-button>
                     <!--实际支付大于0 + 支持售后 支持 申请退款-->
                     <pl-button
-                        v-if="detail.aftersaleStatus === aftersaleStatusKeyMap.PROCESSING"
+                        v-if="detail.orderSource === skuSourceKeyMap.NORMAL && detail.aftersaleStatus === aftersaleStatusKeyMap.PROCESSING"
                         plain
                         round
                         @click="$router.push({ name: 'RefundDetail', params: { id: detail.refundId } })"
@@ -103,7 +103,7 @@
                     <!--售后完成 支持 退款完成显示-->
                     <pl-button
                         class="refund-finish"
-                        v-if="detail.aftersaleStatus === aftersaleStatusKeyMap.PROCESSING_COMPLETED"
+                        v-if="detail.orderSource === skuSourceKeyMap.NORMAL && detail.aftersaleStatus === aftersaleStatusKeyMap.PROCESSING_COMPLETED"
                         plain
                         round
                         :style="{ opacity: goodsModel.aftersaleStatusExtend === aftersaleStatusKeyMap.PROCESSING ? 0.3 : 1 }"
@@ -114,7 +114,7 @@
                     <!--退货中 支持 寄件运单号显示-->
                     <pl-button
                         :class="$style.large"
-                        v-if="detail.aftersaleStatus === aftersaleStatusKeyMap.PROCESSINGE"
+                        v-if="detail.orderSource === skuSourceKeyMap.NORMAL && detail.aftersaleStatus === aftersaleStatusKeyMap.PROCESSINGE"
                         type="warning"
                         plain
                         round
@@ -167,7 +167,7 @@
                 </p>
                 <!--兑换码信息-->
                 <p v-if="detail.exchangeCode">
-                    <span>兑换码({{ detail.exchangeCode | separator(' ', 4) }})</span>
+                    <span>兑换码（{{ detail.exchangeCode | separator(' ', 4) }}）</span>
                     <span>-¥{{ goodsModel.sellingPrice }}</span>
                 </p>
                 <!--优惠券-->
@@ -403,7 +403,7 @@
             </pl-button>
             <!--待付款 支持 去付款-->
             <pl-button
-                v-if="detail.status === orderStatuskeyMap.WAIT_PAY"
+                v-if="detail.orderSource !== skuSourceKeyMap.SPRINGPLOUGHING && detail.orderSource !== skuSourceKeyMap.COURSEPACKAGE && detail.status === orderStatuskeyMap.WAIT_PAY"
                 type="warning"
                 round
                 :loading="payloading"
@@ -577,6 +577,11 @@ export default {
     },
     computed: {
         ...mapGetters(['skuSourceKeyMap', 'orderStatusMap', 'orderStatuskeyMap', 'orderTypeKeyMap', 'aftersaleStatusKeyMap', 'orderActionMap']),
+        orderStatusDesc () {
+            return [this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS].includes(this.detail.orderType) &&
+        this.orderStatuskeyMap.WAIT_RECEIVE === this.detail.status
+                ? this.orderStatusMap[this.orderStatuskeyMap.WAIT_RECEIVE_OF_VIRTUAL] : this.orderStatusMap[this.detail.status]
+        },
         // 订单是否因取消而关闭
         isClosedByCancle () {
             return this.detail.status === this.orderStatuskeyMap.CLOSED && !(this.orderLastPayInfo.callbackTime)

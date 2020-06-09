@@ -57,7 +57,7 @@
             </div>
 
             <Coupon
-                v-if="activeProduct === 1 && goodsAmount > 0 && !exchangeCodeInfo.isDefault"
+                v-if="activeProduct === 1 && goodsAmount > 0 && !exchangeCodeInfo.id"
                 :active-product="activeProduct"
                 :coupon.sync="currentCoupon"
                 :coupon-list="couponList"
@@ -66,7 +66,7 @@
             />
 
             <Scholarship
-                v-show="goodsAmount > 0 && activeProduct === 1 && !exchangeCodeInfo.isDefault"
+                v-if="goodsAmount > 0 && activeProduct === 1 && !exchangeCodeInfo.id"
                 :active-product="activeProduct"
                 :total-amount="totalAmount"
                 :freight="freight"
@@ -432,6 +432,8 @@ export default {
             this.exchangeCodeInfo = item
             // 使用兑换码后，不可使用优惠券和奖学金
             if (item.id) {
+                this.currentRedEnvelope = {}
+                this.currentCoupon = {}
                 this.form.scholarshipModel = null
                 this.form.cartCouponModel = null
             }

@@ -13,7 +13,7 @@
             </div>
             <p
                 :class="$style.status"
-                v-text="orderStatusMap[orderStatus]"
+                v-text="orderStatusDesc"
             />
         </div>
         <order-item
@@ -34,9 +34,9 @@
                 <span :class="$style.price">{{ amount }}</span>
             </div>
             <div :class="$style.buttons">
-                <!--正常待付款 支持 付款(目前只区别于预购的待付尾款)-->
+                <!--正常待付款 支持 付款(目前只区别于预购的待付尾款), 组合聚会学 + 春耘 不支持二次付款-->
                 <pl-button
-                    v-if="orderStatus === orderStatuskeyMap.WAIT_PAY"
+                    v-if="skuSource !== skuSourceKeyMap.SPRINGPLOUGHING && skuSource !== skuSourceKeyMap.COURSEPACKAGE && orderStatus === orderStatuskeyMap.WAIT_PAY"
                     type="warning"
                     round
                     :loading="isPayloading"
@@ -248,6 +248,11 @@ export default {
     },
     computed: {
         ...mapGetters(['skuSourceKeyMap', 'orderTypeMap', 'orderTypeKeyMap', 'orderStatusMap', 'orderStatuskeyMap', 'refundStatusMap', 'aftersaleStatusMap', 'aftersaleStatusKeyMap']),
+        orderStatusDesc () {
+            return [this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS].includes(this.orderType) &&
+                  this.orderStatuskeyMap.WAIT_RECEIVE === this.orderStatus
+                ? this.orderStatusMap[this.orderStatuskeyMap.WAIT_RECEIVE_OF_VIRTUAL] : this.orderStatusMap[this.orderStatus]
+        },
         // 是否显示评价按钮 实体/虚拟/正式课/体验课 + 订单完成 + 无售后 + 未评论
         isCommentBtnShow () {
             return this.orderStatus === this.orderStatuskeyMap.FINISHED &&

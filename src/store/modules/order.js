@@ -39,7 +39,8 @@ export default {
             BOOKING: 4,
             SPRINGPLOUGHING: 5,
             COURSEPACKAGE: 6,
-            WELFARE: 7
+            WELFARE: 7,
+            EXCHANGECODE: 8
         },
         // 订单状态
         orderStatusMap: {
@@ -48,6 +49,7 @@ export default {
             WAIT_PAY_TAIL_MONEY: '待付尾款',
             WAIT_SHIP: '待发货',
             WAIT_RECEIVE: '待收货',
+            WAIT_RECEIVE_OF_VIRTUAL: '待使用',
             FINISHED: '交易成功',
             // 取消订单/申请售后 后的订单
             CLOSED: '订单关闭'
@@ -58,6 +60,7 @@ export default {
             WAIT_PAY_TAIL_MONEY: 'WAIT_PAY_TAIL_MONEY',
             WAIT_SHIP: 'WAIT_SHIP',
             WAIT_RECEIVE: 'WAIT_RECEIVE',
+            WAIT_RECEIVE_OF_VIRTUAL: 'WAIT_RECEIVE_OF_VIRTUAL',
             FINISHED: 'FINISHED',
             CLOSED: 'CLOSED'
         },
