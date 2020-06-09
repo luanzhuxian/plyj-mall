@@ -53,12 +53,11 @@ export default {
         border: 4px solid rgba(233,151,47,1);
         border-radius: 50%;
         font-size: 56px;
-        font-family: FZQingKeBenYueSongS-R-GB;
         color: #fff;
-        @for $i from 1 through 4 {
-            $difference: 76px;
+        @for $i from 1 through 5 {
+            $gap: 76px;
             &:nth-of-type(#{$i}) {
-                left: ($i - 1) * $difference;
+                left: ($i - 1) * $gap;
                 z-index: $i;
             }
         }
