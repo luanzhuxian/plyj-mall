@@ -369,6 +369,9 @@ export default {
             })
         },
         skuChange (skuCode1, skuCode2) {
+            // 该行是有用的，目的是触发多次 watcher 更新，解决选择数量问题
+            this.currentSku1 = ''
+
             this.currentSku1 = skuCode1
             skuCode2 = skuCode2 || this.currentSku2 || ''
             const skuCode2List = this.skuList.filter(item => item.skuCode1 === skuCode1)
