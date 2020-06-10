@@ -84,24 +84,25 @@
                         />
                     </InfoItem>
 
-                    <InfoItem v-if="item.couponAmount > 0">
+                    <InfoItem v-if="false && item.couponAmount > 0">
                         <template slot="label">优惠券</template>
-                        <span slot="content" class="gray-1">-¥{{ item.couponAmount / 100 }}</span>
+                        <span slot="content" class="gray-1">-¥{{ item.couponAmount | formatAmount }}</span>
                     </InfoItem>
 
-                    <InfoItem v-if="item.scholarship > 0">
+                    <InfoItem v-if="false && item.scholarship > 0">
                         <template slot="label">奖学金</template>
-                        <span slot="content" class="gray-1">-¥{{ item.scholarship / 100 }}</span>
+                        <span slot="content" class="gray-1">-¥{{ item.scholarship | formatAmount }}</span>
                     </InfoItem>
 
-                    <InfoItem v-if="item.postageAmount > 0">
+                    <InfoItem v-if="false && item.postageAmount > 0">
                         <template slot="label">普通快递</template>
-                        <span slot="content" style="color: red;">+ ¥{{ item.postageAmount / 100 }}</span>
+                        <span slot="content" style="color: red;">+ ¥{{ item.postageAmount | formatAmount }}</span>
                     </InfoItem>
 
+                    <!--产品建议: 确认订单页面，不显示详细优惠信息，防止产品再变，前台先手动计算-->
                     <InfoItem>
-                        <template slot="label">商品金额</template>
-                        <span slot="content" class="gray-1">¥ {{ item.amount / 100 }}</span>
+                        <template slot="label">商品小计</template>
+                        <span slot="content" class="gray-1">¥ {{ (item.amount + item.couponAmount + item.scholarship - item.postageAmount) | formatAmount }}</span>
                     </InfoItem>
                 </OtherInfo>
             </div>

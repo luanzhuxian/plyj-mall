@@ -133,6 +133,13 @@ export const submitOrder = data => axios.post(`/apis/v2/order/uniformly`, data)
 export const getOrderPayData = orderBatchNumber => axios.post(`/apis/v2/order/pay/paymentCode?orderBatchNumber=${ orderBatchNumber }`)
 
 /**
+ * 因为支付失败，根据批次号取消订单
+ * @param batchNumber {String} 批次号
+ * @return {Promise<*>}
+ */
+export const cancleOrderListByBatchNumber = batchNumber => axios.get(`/apis/v2/order/cancel/batch?orderBatchNumber=${ batchNumber }`)
+
+/**
  * 订单详情
  * @param orderId {String}
  * @return {Promise<*>}

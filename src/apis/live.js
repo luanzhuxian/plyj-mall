@@ -90,23 +90,11 @@ export const getPlayBackActiveCompleteInfo = id => Instance.get(`/apis/v1/mall/l
  */
 export const getRoomStatus = () => Instance.get(`/apis/v1/mall/live/room/statue`)
 /**
- * 直播支付
- * @param liveActivityId {String}
- * @return {Promise<AxiosResponse<T>>}
- */
-export const pay = liveActivityId => Instance.post(`/apis/v1/mall/live/order/unifiedOrder?liveActivityId=${ liveActivityId }`)
-/**
  * 是否支付过
  * @param liveActivityId {String}
  * @return {Promise<AxiosResponse<T>>}
  */
 export const hasPied = liveActivityId => Instance.post(`/apis/v1/mall/live/order/customer/payed?liveActivityId=${ liveActivityId }`)
-/**
- * 取消订单
- * @param liveActivityId {String}
- * @return {Promise<AxiosResponse<T>>}
- */
-export const cancelOrder = liveActivityId => Instance.post(`/apis/v1/mall/live/order/cancelOrder?liveActivityId=${ liveActivityId }`)
 /**
  * 设置用户进入直播间
  * @param params

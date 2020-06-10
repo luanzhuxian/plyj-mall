@@ -45,12 +45,16 @@
 import {
     getPlayBackActiveCompleteInfo as getActiveCompleteInfo,
     getVideoMesById,
-    pay,
-    cancelOrder,
     setComeInConut,
     // 是否有权限观看
     hasPermission
 } from '../../apis/live.js'
+import {
+    submitOrder,
+    getOrderPayData,
+    cancleOrderListByBatchNumber
+} from '../../apis/order-manager'
+import { setTimeoutSync } from '../../assets/js/util'
 import { getLivePlayBackInfo } from './../../apis/live-library'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
 import PaidPlayer from '../../components/common/Paid-Player.vue'
@@ -82,7 +86,9 @@ export default {
         }
     },
     data () {
+        this.requestPayDataCount = 0
         return {
+            submiting: false,
             activityName: '',
             needPay: false,
             // 价格
@@ -256,40 +262,98 @@ export default {
         },
         async submitOrder () {
             try {
-                const mes = await pay(this.activityId)
-                await this.pay(mes)
-            } catch (e) { throw e }
-        },
-        async pay (CREDENTIAL) {
-            return new Promise(async (resolve, reject) => {
-                try {
-                    await wechatPay(CREDENTIAL)
-                    this.getDetail()
-                    this.getVideoMes()
-                    this.$success('付款成功立即观看')
-                    this.needPay = false
-                    await this.setComeInConut(1)
-                } catch (e) {
-                    this.needPay = false
-                    this.$confirm({
-                        message: '支付失败',
-                        viceMessage: '<p>若要正常观看</p><p>请重新发起支付</p>',
-                        confirmText: '重新支付',
-                        useDangersHtml: true
-                    }).then(() => {
-                        this.needPay = true
-                    })
-                        .catch(() => {
-                            this.cancelPay()
-                        })
-                    await cancelOrder(this.activityId).then(res => {
-                        reject(e)
-                    })
-                        .catch(err => {
-                            reject(err)
-                        })
+                if (this.submiting) return
+                this.submiting = true
+                const form = {
+                    activityId: '',
+                    helper: '',
+                    // 商品来源：1 正常购买下单， 2 团购商品购买下单，3秒杀商品购买下单，4.预购商品下单确认，5春耘，6组合商品，7公益， 8兑换码
+                    source: 1,
+                    // 其中的goodType包括: PHYSICAL_GOODS VIRTUAL_GOODS SERIES_OF_COURSE EXPERIENCE_CLASS KNOWLEDGE_COURSE SERIES_OF_COURSE LIVE_GOODS
+                    skus: [
+                        {
+                            count: 1,
+                            goodsId: this.detail.activityId,
+                            goodsType: this.detail.liveType === 'live' ? 'LIVE_GOODS' : 'VIDEO_GOODS',
+                            productCustomInfo: '',
+                            sku1: '',
+                            sku2: ''
+                        }
+                    ],
+                    // 地址信息
+                    userAddress: null,
+                    // 留言
+                    orderPostscript: '',
+                    // 奖学金
+                    scholarshipModel: null,
+                    // 优惠券
+                    cartCouponModel: null,
+                    // 发票
+                    invoiceInfoModel: null
                 }
-            })
+                const { result: orderBatchNumber } = await submitOrder(form)
+                await this.requestPayData(orderBatchNumber)
+            } catch (e) {
+                throw e
+            }
+        },
+        async requestPayData (orderBatchNumber) {
+            try {
+                // 每500ms请求一次支付数据，如果请求次数超过20次，就终止请求
+                // 下次请求的开始时间 =  500ms + 当前请求时间
+                if (this.requestPayDataCount >= 20) {
+                    this.requestPayDataCount = 0
+                    this.submiting = false
+                    throw new Error('支付失败')
+                }
+                await setTimeoutSync(500)
+                // 如果没有拿到请求数据，再次尝试发起请求
+                // 如果有，则发起支付
+                const { result: payData } = await getOrderPayData(orderBatchNumber)
+                if (!payData) {
+                    this.requestPayDataCount++
+                    await this.requestPayData(orderBatchNumber)
+                } else {
+                    await this.pay(payData)
+                }
+            } catch (e) {
+                this.requestPayDataCount = 0
+                await this.handlepayError(orderBatchNumber)
+                throw e
+            }
+        },
+
+        /**
+       * 支付
+       * @param CREDENTIAL {Object} 支付数据
+       * @returns {Promise<*>}
+       */
+        async pay (CREDENTIAL) {
+            try {
+                if (CREDENTIAL.appId) {
+                    await wechatPay(CREDENTIAL)
+                    this.$success('支付成功')
+                    this.submiting = false
+                    this.needPay = false
+                } else if (this.detail.paidAmount === 0) {
+                    this.$success('支付成功')
+                    this.submiting = false
+                    this.needPay = false
+                } else {
+                    throw new Error('支付失败')
+                }
+            } catch (e) {
+                throw e
+            }
+        },
+        // 处理支付失败的场景
+        async handlepayError (orderBatchNumber) {
+            try {
+                await cancleOrderListByBatchNumber(orderBatchNumber)
+                this.submiting = false
+            } catch (e) {
+                throw e
+            }
         },
         cancelPay () {
             this.$router.back()

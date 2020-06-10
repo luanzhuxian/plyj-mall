@@ -123,7 +123,8 @@ import { getCouponOfMax, getCouponByPrice, getRedEnvelopeListByPrice, getExchang
 import {
     confirmOrder,
     submitOrder,
-    getOrderPayData
+    getOrderPayData,
+    cancleOrderListByBatchNumber
 } from '../../apis/order-manager'
 import { mapGetters } from 'vuex'
 import OrderItemSkeleton from '../../components/skeleton/Order-Item.vue'
@@ -204,7 +205,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['selectedAddress', 'openId', 'mobile', 'addressList', 'realName', 'userName', 'shareId', 'submitOrder/orderProducts', 'submitOrder/exchangeCodeInfo']),
+        ...mapGetters(['selectedAddress', 'openId', 'mobile', 'addressList', 'realName', 'userName', 'shareId', 'skuSourceKeyMap', 'submitOrder/orderProducts', 'submitOrder/exchangeCodeInfo']),
 
         /**
          * 传入的活动类型
@@ -528,16 +529,15 @@ export default {
             }
         },
         async requestPayData (orderBatchNumber) {
-            // 每500ms请求一次支付数据，如果请求次数超过20次，就终止请求
-            // 下次请求的开始时间 =  500ms + 当前请求时间
-            if (this.requestPayDataCount >= 20) {
-                this.requestPayDataCount = 0
-                this.submiting = false
-                this.$error('支付失败')
-                return
-            }
-            await setTimeoutSync(500)
             try {
+                // 每500ms请求一次支付数据，如果请求次数超过20次，就终止请求
+                // 下次请求的开始时间 =  500ms + 当前请求时间
+                if (this.requestPayDataCount >= 20) {
+                    this.requestPayDataCount = 0
+                    this.submiting = false
+                    throw new Error('支付失败')
+                }
+                await setTimeoutSync(500)
                 // 如果没有拿到请求数据，再次尝试发起请求
                 // 如果有，则发起支付
                 const { result: payData } = await getOrderPayData(orderBatchNumber)
@@ -549,6 +549,22 @@ export default {
                 }
             } catch (e) {
                 this.requestPayDataCount = 0
+                await this.handlepayError(orderBatchNumber)
+                throw e
+            }
+        },
+        // 处理支付失败的场景
+        async handlepayError (orderBatchNumber) {
+            try {
+                /**
+                 * 组合聚惠学 + 春耘 支付失败，要手动关闭订单； 再跳到全部订单中
+                 * 其他直接跳
+                 * */
+                if (this.activeProduct === this.skuSourceKeyMap.SPRINGPLOUGHING || this.activeProduct === this.skuSourceKeyMap.COURSEPACKAGE) {
+                    await cancleOrderListByBatchNumber(orderBatchNumber)
+                }
+                await this.$router.replace({ name: 'Orders', params: { status: 'ALL_ORDERS' } })
+            } catch (e) {
                 throw e
             }
         },

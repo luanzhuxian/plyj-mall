@@ -33,13 +33,21 @@ export default {
         },
         // 商品活动类型关键字
         skuSourceKeyMap: {
+            // 普通商品
             NORMAL: 1,
+            // 团购商品
             GROUP: 2,
+            // 秒杀商品
             SECOND: 3,
+            // 预购商品
             BOOKING: 4,
+            // 春耘
             SPRINGPLOUGHING: 5,
+            // 组合聚会学
             COURSEPACKAGE: 6,
+            // 公益助力
             WELFARE: 7,
+            // 兑换码
             EXCHANGECODE: 8
         },
         // 订单状态
