@@ -345,10 +345,12 @@ export default {
                 if (CREDENTIAL.appId) {
                     await wechatPay(CREDENTIAL)
                     this.$success('支付成功')
+                    await this.getLivePlayBackInfo()
                     this.submiting = false
                     this.needPay = false
                 } else if (this.detail.paidAmount === 0) {
                     this.$success('支付成功')
+                    await this.getLivePlayBackInfo()
                     this.submiting = false
                     this.needPay = false
                 } else {

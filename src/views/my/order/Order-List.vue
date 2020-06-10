@@ -19,7 +19,7 @@
                 ref="loadMore"
                 :form="form"
                 :loading.sync="loading"
-                :request-methods="getOrderList"
+                :request-methods="requestMethods"
                 no-content-tip="您还没有相关订单~"
                 @refresh="onRefresh"
                 @more="onRefresh"
@@ -58,6 +58,7 @@
 import LoadMore from '../../../components/common/Load-More.vue'
 import {
     getOrderList,
+    getWaitCommentOrderList,
     getAwaitPayInfo,
     getAwaitTailPayInfo,
     confirmReceipt,
@@ -78,7 +79,11 @@ export default {
         OrderListItem
     },
     computed: {
-        ...mapGetters(['skuSourceKeyMap', 'orderTypeMap', 'orderTypeKeyMap', 'orderStatuskeyMap', 'orderOperatedList', 'orderActionMap'])
+        ...mapGetters(['skuSourceKeyMap', 'orderTypeMap', 'orderTypeKeyMap', 'orderStatuskeyMap', 'orderOperatedList', 'orderActionMap']),
+        requestMethods () {
+            // 订单列表 待评价接口 与 其他状态接口不同
+            return this.$route.params.status === 'FINISHED' ? getWaitCommentOrderList : getOrderList
+        }
     },
     data () {
         return {
@@ -100,7 +105,6 @@ export default {
                 size: 10,
                 orderStatus: ''
             },
-            getOrderList,
             $refresh: null,
             loading: false,
             payloading: false,
@@ -358,7 +362,7 @@ export default {
                 --this.total
                 // 若实际订单总数大于当前页面订单总数时，去请求数据
                 if (this.total > this.orderList.length) {
-                    const { result } = await this.getOrderList(this.form)
+                    const { result } = await this.requestMethods(this.form)
                     const currentLastOrder = result.records[result.records.length - 1]
                     // 因删除过订单后offsetHeight不足初始获取的值，无法在加载更多，将删除留下的空位填充用currentPage的最后一个数据
                     if (currentLastOrder) {

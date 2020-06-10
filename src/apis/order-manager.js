@@ -30,6 +30,9 @@ export const physicalorderShipmentPublic = orderSn => axios.put(`/apis/v1/order/
 // ALL_ORDER:所有订单 NEW:待提交 WAIT_PAY:待支付 WAIT_SHIP:待发货 WAIT_RECEIVE:待收货 FINISHED:订单完成 WAIT_REFUND:待退款 WAIT_RETURN:等待买家发货 RETURN_RECEIVE:等待商家收货 CLOSED:订单关闭
 export const getOrderList = ({ current, size, orderStatus }) => axios.get(`/apis/v2/order/user/page?current=${ current }&size=${ size }&orderStatus=${ orderStatus }`)
 
+// 获取待评论订单列表
+export const getWaitCommentOrderList = ({ current, size }) => axios.get(`/apis/v2/order/user/waitComment/page?current=${ current }&size=${ size }`)
+
 // 查看每种订单的数量
 // export const orderPhysicalorderSummary = () => axios.get(`/apis/v1/order/current/user`)
 // 发票详情
