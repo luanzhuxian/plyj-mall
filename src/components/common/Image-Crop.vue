@@ -1,8 +1,8 @@
 <template>
     <div class="m-image-crop">
-        <img v-imgError
-             class="show-img"
-             :src="currentValue | fileSrc"
+        <img
+            class="show-img"
+            :src="currentValue | fileSrc"
         >
         <svg
             v-if="hasRemove"
@@ -657,9 +657,9 @@ export default {
                 } else if (value.id) {
                     return this.config.path + value.id
                 }
-                return ''
+                return null
             }
-            return ''
+            return null
         }
     },
     directives: {
