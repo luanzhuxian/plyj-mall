@@ -47,7 +47,8 @@ import {
     getVideoMesById,
     setComeInConut,
     // 是否有权限观看
-    hasPermission
+    hasPermission,
+    hasPied
 } from '../../apis/live.js'
 import {
     submitOrder,
@@ -228,13 +229,24 @@ export default {
             } catch (e) { throw e }
         },
         // 是否支付
-        hasPay () {
+        async hasPay () {
             // 已送课
             if (this.isGive) {
                 return
             }
-            // needPay 是否需要付费 1需要  0不需要，paidAmount 支付了多少钱
-            this.needPay = (this.detail.needPay === 1 && this.detail.paidAmount === 0)
+            // 免费直播也需要产生订单
+            if (!this.mchId) {
+                this.$confirm('商家未开通支付，请联系管理员')
+            }
+            try {
+                const needPay = await hasPied(this.activityId)
+                if (!needPay) {
+                    // 还没支付
+                    this.needPay = true
+                }
+            } catch (e) {
+                throw e
+            }
         },
         async getDetail () {
             try {
@@ -360,7 +372,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['mallDomain', 'roleCode'])
+        ...mapGetters(['mallDomain', 'roleCode', 'mchId'])
     }
 }
 </script>
