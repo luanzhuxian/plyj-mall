@@ -586,7 +586,8 @@ export default {
             }
             this.$store.commit('submitOrder/setOrderProducts', {
                 params: {
-                    productActive: this.productActive,
+                    activeProduct: this.productActive,
+                    preActivity: this.detail.preActivity,
                     activityId: this.activityId
                 },
                 products: [
