@@ -11,7 +11,7 @@ export const getPublicBenefitDetail = activityId => axios.get(`/apis/v1/commonwe
  * 公益行动统计
  * @param {string} activityId
  */
-export const getPublicBenefitStatistics = activityId => axios.get(`/apis/v1/commonweal/${ activityId }/statistics`)
+export const getPublicBenefitStatistics = activityId => axios.get(`/apis/v2/commonweal/${ activityId }/statistics`)
 
 /**
  * 公益榜单
