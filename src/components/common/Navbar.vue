@@ -177,7 +177,7 @@ export default {
             return this.$route.matched.some(val => val.name === 'My')
         },
         isSkinShow () {
-            return !!this.skinId
+            return skinClassNameMap.has(this.skinId)
         }
     },
     watch: {

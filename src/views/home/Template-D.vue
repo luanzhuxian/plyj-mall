@@ -11,74 +11,74 @@
             <campaign v-if="isCampaignShow" />
             <appointment :class="$style.appointment" :data="APPOINTMENT" :slides-per-view="2" v-if="APPOINTMENT.showStatue === 1" />
             <div :class="$style.miaosha" v-if="isMiaoshaShow">
-                <div v-if="skinId === 0" :class="$style.title" v-text="MIAO_SHA.moduleName" />
                 <skin-title
-                    v-else
+                    v-if="isSkinShow"
                     :class="$style.skinTitle"
                     :data="MIAO_SHA.moduleName"
                     :skin-id="skinId"
                 />
+                <div v-else-if="skinId !== null" :class="$style.title" v-text="MIAO_SHA.moduleName" />
                 <miaosha :data="MIAO_SHA" />
             </div>
             <div :class="$style.package" v-if="isPackageShow">
-                <div v-if="skinId === 0" :class="$style.title" v-text="PACKAGE.moduleName" />
                 <skin-title
-                    v-else
+                    v-if="isSkinShow"
                     :class="$style.skinTitle"
                     :data="PACKAGE.moduleName"
                     :skin-id="skinId"
                 />
+                <div v-else-if="skinId !== null" :class="$style.title" v-text="PACKAGE.moduleName" />
                 <package :data="PACKAGE" />
             </div>
             <div :class="$style.pintuan" v-if="isPintuanShow">
-                <div v-if="skinId === 0" :class="$style.title" v-text="PIN_TUAN.moduleName" />
                 <skin-title
-                    v-else
+                    v-if="isSkinShow"
                     :class="$style.skinTitle"
                     :data="PIN_TUAN.moduleName"
                     :skin-id="skinId"
                 />
+                <div v-else-if="skinId !== null" :class="$style.title" v-text="PIN_TUAN.moduleName" />
                 <pintuan :data="PIN_TUAN" />
             </div>
             <div :class="$style.yugou" v-if="isYugouShow">
-                <div v-if="skinId === 0" :class="$style.title" v-text="YU_GOU.moduleName" />
                 <skin-title
-                    v-else
+                    v-if="isSkinShow"
                     :class="$style.skinTitle"
                     :data="YU_GOU.moduleName"
                     :skin-id="skinId"
                 />
+                <div v-else-if="skinId !== null" :class="$style.title" v-text="YU_GOU.moduleName" />
                 <yugou :data="YU_GOU" />
             </div>
             <propagate :class="$style.propagate" :data="PROPAGATE" v-if="PROPAGATE.showStatue === 1" />
             <div :class="$style.hotItem" v-if="POPULAR.showStatue === 1">
-                <div v-if="skinId === 0" :class="$style.title" v-text="POPULAR.moduleName" />
                 <skin-title
-                    v-else
+                    v-if="isSkinShow"
                     :class="$style.skinTitle"
                     :data="POPULAR.moduleName"
                     :skin-id="skinId"
                 />
+                <div v-else-if="skinId !== null" :class="$style.title" v-text="POPULAR.moduleName" />
                 <hot-item :data="POPULAR" />
             </div>
             <div :class="$style.best" v-if="CLASS.showStatue === 1">
-                <div v-if="skinId === 0" :class="$style.title" v-text="CLASS.moduleName" />
                 <skin-title
-                    v-else
+                    v-if="isSkinShow"
                     :class="$style.skinTitle"
                     :data="CLASS.moduleName"
                     :skin-id="skinId"
                 />
+                <div v-else-if="skinId !== null" :class="$style.title" v-text="CLASS.moduleName" />
                 <best :data="CLASS" />
             </div>
             <div :class="$style.recommend" v-if="RECOMMEND.values && RECOMMEND.values.length">
-                <div v-if="skinId === 0" :class="$style.title" v-text="RECOMMEND.moduleName" />
                 <skin-title
-                    v-else
+                    v-if="isSkinShow"
                     :class="$style.skinTitle"
                     :data="RECOMMEND.moduleName"
                     :skin-id="skinId"
                 />
+                <div v-else-if="skinId !== null" :class="$style.title" v-text="RECOMMEND.moduleName" />
                 <recommend :data="RECOMMEND" />
             </div>
             <footer :class="$style.footer">
@@ -234,6 +234,9 @@ export default {
         },
         isClassShow () {
             return this.CLASS.showStatue === 1 && this.CLASS.values && this.CLASS.values.length
+        },
+        isSkinShow () {
+            return skinClassNameMap.has(this.skinId)
         }
     }
 }

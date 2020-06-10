@@ -296,6 +296,28 @@
     }
 }
 
+// 父亲节
+.skin-fathers-day {
+    @extend .skin-common;
+    background-color: #a3cbfb !important;
+    .container {
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/fathers-day/bg.jpg';
+        @include container(130px, $background-image);
+        .search {
+            margin-bottom: 25px;
+            padding: 0 92px !important;
+            height: 55px !important;
+        }
+        .footer {
+            @include footer(90px, #1764c7);
+            padding-top: 10px;
+        }
+        .skin-title {
+            margin: 55px -24px 30px;
+        }
+    }
+}
+
 // 共战疫
 .skin-campaign {
     @extend .skin-common;

@@ -355,7 +355,7 @@ export default {
         localStorage.removeItem(`LIVE_MESSAGE_${ this.mallDomain }`)
         this.receiveCouponIdList = []
         if (this.roleCode === 'VISITOR') {
-            await this.$confirm({
+            this.$confirm({
                 message: '为了您的账号安全，请绑定手机号',
                 confirmText: '去绑定',
                 closeOnClickMask: false
