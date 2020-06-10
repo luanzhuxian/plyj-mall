@@ -50,11 +50,12 @@
                         />
                     </InfoItem>
 
-                    <InfoItem v-if="activeProduct === 1">
+                    <!--知识课程不支持修改数量-->
+                    <InfoItem v-if="activeProduct === 1 && [orderTypeKeyMap.KNOWLEDGE_COURSE, orderTypeKeyMap.SERIES_OF_COURSE].indexOf(item.goodsType) === -1">
                         <template slot="label">修改数量</template>
                         <template slot="content">
                             <Count
-                                :min="item.minBuyNum"
+                                :min="item.minBuyNum || 1"
                                 :max="item.purchaseQuantity > 0 ? item.purchaseQuantity : item.stock"
                                 :count="item.count"
                                 @change="(count, next) => { countChange(count, item, next) }"
@@ -101,7 +102,7 @@
 
                     <!--产品建议: 确认订单页面，不显示详细优惠信息，防止产品再变，前台先手动计算-->
                     <InfoItem>
-                        <template slot="label">商品小计</template>
+                        <template slot="label">小计</template>
                         <span slot="content" class="gray-1">¥ {{ (item.amount + item.couponAmount + item.scholarship - item.postageAmount) | formatAmount }}</span>
                     </InfoItem>
                 </OtherInfo>
@@ -170,7 +171,8 @@ export default {
     },
     computed: {
         ...mapGetters({
-            CHECKED_STUDENT: 'submitOrder/checkedStudents'
+            CHECKED_STUDENT: 'submitOrder/checkedStudents',
+            orderTypeKeyMap: 'orderTypeKeyMap'
         })
     },
     methods: {

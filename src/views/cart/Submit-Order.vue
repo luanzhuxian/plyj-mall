@@ -56,17 +56,18 @@
                 />
             </div>
 
+            <!--知识课程暂时不支持使用优惠券-->
             <Coupon
-                v-if="activeProduct === 1 && goodsAmount > 0 && !exchangeCodeInfo.id"
+                v-if="activeProduct === 1 && goodsAmount > 0 && !isKnowlegeCourse && !exchangeCodeInfo.id"
                 :active-product="activeProduct"
                 :coupon.sync="currentCoupon"
                 :coupon-list="couponList"
                 :recommend-coupon="recommendCoupon"
                 @change="couponChange"
             />
-
+            <!--知识课程暂时不支持使用奖学金-->
             <Scholarship
-                v-if="goodsAmount > 0 && activeProduct === 1 && !exchangeCodeInfo.id"
+                v-if="goodsAmount > 0 && activeProduct === 1 && !isKnowlegeCourse && !exchangeCodeInfo.id"
                 :active-product="activeProduct"
                 :total-amount="totalAmount"
                 :freight="freight"
@@ -205,7 +206,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['selectedAddress', 'openId', 'mobile', 'addressList', 'realName', 'userName', 'shareId', 'skuSourceKeyMap', 'submitOrder/orderProducts', 'submitOrder/exchangeCodeInfo']),
+        ...mapGetters(['selectedAddress', 'openId', 'mobile', 'addressList', 'realName', 'userName', 'shareId', 'orderTypeKeyMap', 'skuSourceKeyMap', 'submitOrder/orderProducts', 'submitOrder/exchangeCodeInfo']),
 
         /**
          * 传入的活动类型
@@ -229,6 +230,9 @@ export default {
         },
         params () {
             return this['submitOrder/orderProducts'].params || { activityId: '', preActivity: '', activeProduct: '1' }
+        },
+        isKnowlegeCourse () {
+            return this.form.skus.some(item => [this.orderTypeKeyMap.KNOWLEDGE_COURSE, this.orderTypeKeyMap.SERIES_OF_COURSE].includes(item.goodsType))
         }
     },
     watch: {
@@ -253,47 +257,51 @@ export default {
                 await this.initRedeemCode()
                 // 以下是设置订单红包和优惠券，只有普通订单并且没有默认使用兑换码 才可以选择优惠券和红包 或者 兑换码
                 if (this.activeProduct === 1 && !this.exchangeCodeInfo.isDefault) {
-                    const AMOUNT = CONFIRM_LIST.map(item => item.price * item.count).reduce((total, price) => total + price)
-                    const COUPON_DATA = {
-                        activeProduct: this.preActivity === 2 ? this.activeProduct : 1,
-                        activityId: this.activityId,
-                        cartProducts: CONFIRM_LIST,
-                        addressSeq: this.selectedAddress.sequenceNbr
-                    }
-                    // 初始化优惠券列表
-                    const { result: COUPON_LIST } = await getCouponByPrice(COUPON_DATA)
-                    // 获取推荐的优惠券
-                    const { result: MAX_COUPON } = await getCouponOfMax(COUPON_DATA)
-                    // 获取奖学金
-                    const { result: RED_ENVELOP } = await getRedEnvelopeListByPrice(AMOUNT)
                     // 获取服务器时间
                     const { result: serverTime } = await getServerTime()
                     // 设置服务器时间
                     this.serverTime = serverTime
-                    // 设置优惠券列表
-                    this.couponList = COUPON_LIST.map(item => {
-                        const duration = moment(item.useEndTime).valueOf() - moment(serverTime).valueOf()
-                        const day = Math.floor(moment.duration(duration).asDays())
-                        item.timeDesc = ''
-                        if (day < 4) item.timeDesc = day < 1 ? '即将过期' : `${ day }天后过期`
-                        return item
-                    })
-                    // 设置当前选中的优惠券
-                    this.currentCoupon = COUPON_LIST.find(coupon => coupon.id === MAX_COUPON.id) || {}
-                    // 设置推荐的优惠券
-                    this.recommendCoupon = MAX_COUPON
-                    // 设置奖学金列表
-                    this.redEnvelopeList = RED_ENVELOP.map(item => {
-                        const duration = moment(item.useEndTime).valueOf() - moment(serverTime).valueOf()
-                        const day = Math.floor(moment.duration(duration).asDays())
-                        item.timeDesc = ''
-                        if (day < 4) item.timeDesc = day < 1 ? '即将过期' : `${ day }天后过期`
-                        return item
-                    })
-                    // 设置当前选中的奖学金
-                    this.currentRedEnvelope = this.currentCoupon.scholarship === 0 ? {} : this.redEnvelopeList[0] || {}
-                    this.form.cartCouponModel = this.currentCoupon.id ? { userCouponId: this.currentCoupon.id } : null
-                    this.form.scholarshipModel = this.currentRedEnvelope.id ? { scholarshipId: this.currentRedEnvelope.id } : null
+
+                    if (!this.isKnowlegeCourse) {
+                        console.log(this.products)
+                        const AMOUNT = CONFIRM_LIST.map(item => item.price * item.count).reduce((total, price) => total + price)
+                        const COUPON_DATA = {
+                            activeProduct: this.preActivity === 2 ? this.activeProduct : 1,
+                            activityId: this.activityId,
+                            cartProducts: CONFIRM_LIST,
+                            addressSeq: this.selectedAddress.sequenceNbr
+                        }
+                        // 初始化优惠券列表
+                        const { result: COUPON_LIST } = await getCouponByPrice(COUPON_DATA)
+                        // 获取推荐的优惠券
+                        const { result: MAX_COUPON } = await getCouponOfMax(COUPON_DATA)
+                        // 获取奖学金
+                        const { result: RED_ENVELOP } = await getRedEnvelopeListByPrice(AMOUNT)
+                        // 设置优惠券列表
+                        this.couponList = COUPON_LIST.map(item => {
+                            const duration = moment(item.useEndTime).valueOf() - moment(serverTime).valueOf()
+                            const day = Math.floor(moment.duration(duration).asDays())
+                            item.timeDesc = ''
+                            if (day < 4) item.timeDesc = day < 1 ? '即将过期' : `${ day }天后过期`
+                            return item
+                        })
+                        // 设置当前选中的优惠券
+                        this.currentCoupon = COUPON_LIST.find(coupon => coupon.id === MAX_COUPON.id) || {}
+                        // 设置推荐的优惠券
+                        this.recommendCoupon = MAX_COUPON
+                        // 设置奖学金列表
+                        this.redEnvelopeList = RED_ENVELOP.map(item => {
+                            const duration = moment(item.useEndTime).valueOf() - moment(serverTime).valueOf()
+                            const day = Math.floor(moment.duration(duration).asDays())
+                            item.timeDesc = ''
+                            if (day < 4) item.timeDesc = day < 1 ? '即将过期' : `${ day }天后过期`
+                            return item
+                        })
+                        // 设置当前选中的奖学金
+                        this.currentRedEnvelope = this.currentCoupon.scholarship === 0 ? {} : this.redEnvelopeList[0] || {}
+                        this.form.cartCouponModel = this.currentCoupon.id ? { userCouponId: this.currentCoupon.id } : null
+                        this.form.scholarshipModel = this.currentRedEnvelope.id ? { scholarshipId: this.currentRedEnvelope.id } : null
+                    }
 
                     // 初始化兑换码列表
                     const productIdList = CONFIRM_LIST.map(item => item.productId)

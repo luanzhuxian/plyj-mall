@@ -29,7 +29,7 @@
         />
         <div :class="$style.listItemBottom">
             <div :class="$style.priceWrapper">
-                <span :class="$style.totalCount">{{ `共${count}件商品` }}</span>
+                <span :class="$style.totalCount">{{ `共${count}件` }}</span>
                 <span :class="$style.bold">总价：</span>
                 <span :class="$style.price">{{ amount }}</span>
             </div>

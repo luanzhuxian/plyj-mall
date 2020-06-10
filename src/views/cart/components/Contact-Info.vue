@@ -71,10 +71,15 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['selectedAddress'])
+        ...mapGetters(['selectedAddress', 'realName', 'userName', 'mobile'])
     },
     mounted () {
-        this.contactInfoModel = JSON.parse(localStorage.getItem('CONTACT_INFO_MODEL')) || this.contactInfoModel
+        // 默认使用用户的注册信息
+        const defaultContactInfo = {
+            name: this.realName || this.userName,
+            mobile: this.mobile
+        }
+        this.contactInfoModel = JSON.parse(localStorage.getItem('CONTACT_INFO_MODEL')) || defaultContactInfo
         this.$emit('change', JSON.parse(JSON.stringify(this.contactInfoModel)))
     },
     methods: {
