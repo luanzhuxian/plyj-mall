@@ -58,7 +58,7 @@ export default {
             WAIT_SHIP: '待发货',
             WAIT_RECEIVE: '待收货',
             WAIT_RECEIVE_OF_VIRTUAL: '待使用',
-            FINISHED: '交易成功',
+            FINISHED: '已完成',
             // 取消订单/申请售后 后的订单
             CLOSED: '订单关闭'
         },

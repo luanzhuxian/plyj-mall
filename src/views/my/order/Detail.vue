@@ -133,9 +133,10 @@
                         晒单评价
                     </pl-button>
                 </div>
+                <!--只有虚拟商品/正式课/体验课 才有使用说明-->
                 <div
                     :class="$style.explain"
-                    v-if="detail.orderType !== orderTypeKeyMap.PHYSICAL_GOODS && goodsModel.goodsDescription"
+                    v-if="[orderTypeKeyMap.VIRTUAL_GOODS, orderTypeKeyMap.FORMAL_CLASS, orderTypeKeyMap.EXPERIENCE_CLASS].includes(detail.orderType) && goodsModel.goodsDescription"
                 >
                     <ModuleTitle
                         title="使用说明"
@@ -162,7 +163,7 @@
                 </template>
                 <!-- 其他商品价格 -->
                 <p v-else>
-                    <span v-text="activeProductStatus[detail.orderSource] || '商品金额'" />
+                    <span v-text="activeProductStatus[detail.orderSource] || '金额'" />
                     <span class="rmb">{{ detail.goodsPrice | formatAmount }}</span>
                 </p>
                 <!--兑换码信息-->
