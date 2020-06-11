@@ -87,6 +87,19 @@ if (NODE_ENV === VUE_APP_MODEL) {
                 // Passing in attachProps is optional and is true if it is not provided. If you set it to false, Sentry will suppress sending all Vue components’ props for logging.
                 attachProps: true
             })
-        ]
+        ],
+        beforeSend (event) {
+            if (!event) {
+                return null
+            }
+            if ('message' in event && !event.message) {
+                return null
+            }
+            if (event.exception.values.some(item => item.type === 'ResponseError')) {
+                event.fingerprint = ['response-error']
+                event.level = 'warning'
+            }
+            return event
+        }
     })
 }
