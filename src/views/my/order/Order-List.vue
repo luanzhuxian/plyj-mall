@@ -124,6 +124,13 @@ export default {
         to.meta.noRefresh = from.name === 'OrderDetail' || from.name === 'Freight'
         next()
     },
+    beforeRouteLeave (to, from, next) {
+        // 因为这两个页面，不会重新刷新订单列表页面，所以倒计时不清除
+        if (to.name !== 'OrderDetail' && to.name !== 'Freight') {
+            this.clearCountdown()
+        }
+        next()
+    },
     mounted () {
         this.$refresh = this.$refs.loadMore.refresh
     },
@@ -137,9 +144,6 @@ export default {
         }
         this.form.orderStatus = this.status
         this.$refresh()
-    },
-    deactivated () {
-        this.clearCountdown()
     },
     methods: {
         ...mapMutations(['clearOrderOperatedList']),
