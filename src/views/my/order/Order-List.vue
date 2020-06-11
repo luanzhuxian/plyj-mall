@@ -192,7 +192,7 @@ export default {
                         }
                         if (this.status === 'WAIT_PAY') {
                             // 5-春耘计划 + 6-组合聚惠学 取消订单后，会同步取消掉统一批次下的所有订单，所以重新刷新页面
-                            const isCombinedOrder = [5, 6].some(item => item === order.skuSource)
+                            const isCombinedOrder = [5, 6].includes(order.skuSource)
                             isCombinedOrder ? this.$refresh() : this.orderList.splice(index, 1)
                         }
                     }
@@ -271,7 +271,10 @@ export default {
                     m: m.padStart(2, '0'),
                     s: s.padStart(2, '0')
                 }
-                this.$set(this.orderList, index, item)
+                // 当前订单不在当前tab页面显示时，不再set
+                if (this.orderList.some(detail => detail.orderId === item.orderId)) {
+                    this.$set(this.orderList, index, item)
+                }
             })
             countdownInstance.start()
             // 存储所有计时器实例，退出页面后清除这样计时器
