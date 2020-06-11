@@ -98,7 +98,8 @@ export default {
         need () {
             this.$store.commit('submitOrder/setInvoiceProducts', {
                 products: [
-                    ...this.products.filter(item => item.sellingPrice !== 0 && item.supportInvoice === 1)
+                    // 只有 支持申请发票 并且 商品实付款不为0 才可被选择申请发票
+                    ...this.products.filter(item => item.amount !== 0 && item.supportInvoice === 1)
                 ],
                 fromRoute: {
                     name: this.$route.name,
