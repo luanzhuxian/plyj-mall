@@ -406,6 +406,7 @@ export default {
         },
         setCount () {
             this.min = this.currentSku.minBuyNum || 1
+            this.currentSku.count = this.currentSku.count || 1
             const max = Math.max(this.currentSku.count, this.min)
             this.localCurrentSku.count = max
             this.count = max

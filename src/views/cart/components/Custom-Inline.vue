@@ -8,8 +8,8 @@
                 :class="$style.item"
             >
                 <span v-text="label + ' ' + (i + 1)" />
-                <span v-if="checkValue(stu)">已填写</span>
-                <span v-else>未填写</span>
+                <span v-if="checkValue(stu)">已完善</span>
+                <span v-else>去完善</span>
             </div>
         </div>
 
@@ -136,10 +136,10 @@ export default {
             this.currentForm = stu
             this.showForm = true
         },
-        // 检查必填的值石佛填写
+        // 不管必填还是非必填，全部都填写为 已完善，否则就是 去完善
         checkValue (stu) {
             for (const k of Object.keys(stu)) {
-                if (!stu[k] && this.rules[k][0].required) {
+                if (!stu[k]) {
                     return false
                 }
             }
