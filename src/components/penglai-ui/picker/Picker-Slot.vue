@@ -117,8 +117,6 @@ export default {
         },
         touchmove (e) {
             if (!started) return
-            e.preventDefault()
-            e.stopPropagation()
             const { clientY } = e.touches[0]
             const moved = clientY - startY
             this.setTranslate(moved)
@@ -126,10 +124,7 @@ export default {
         },
         touchend (e) {
             if (!started) return
-            e.preventDefault()
-            e.stopPropagation()
             started = false
-            document.removeEventListener('touchmove', this.touchmvoe)
             speedValue = this.speed(e.changedTouches[0].clientY)
             initedSpeed = speedValue
             requestAnimationFrame(this.inertia)
@@ -177,10 +172,10 @@ export default {
                 requestAnimationFrame(this.inertia)
             } else {
                 /*
-        * 惯性运动结束
-        * 规律：
-        * active 每递增1，就减少一个 activeOffsetTop
-        * */
+                * 惯性运动结束
+                * 规律：
+                * active 每递增1，就减少一个 activeOffsetTop
+                * */
                 this.trasition = true
                 if (this.active < 0) {
                     this.active = 0
