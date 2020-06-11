@@ -208,10 +208,10 @@
             </div>
         </div>
 
-        <!-- 收货人信息 -->
+        <!-- 实体订单 + 有收货信息 时，显示 收货人信息 -->
         <div :class="$style.panel">
             <address-item
-                v-if="receiverModel.address"
+                v-if="detail.orderType === orderTypeKeyMap.PHYSICAL_GOODS && receiverModel.address"
                 :address="{
                     realName: receiverModel.name,
                     mobile: receiverModel.mobile,
