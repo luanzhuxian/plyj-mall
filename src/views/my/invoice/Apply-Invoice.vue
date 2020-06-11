@@ -165,9 +165,16 @@
                             alt=""
                         >
                         <pl-svg
+                            v-show="isSelected(prod)"
                             :class="$style.selectIcon"
                             name="icon-success"
-                            :fill="isSelected(prod) ? '#F2B036' : '#ccc'"
+                            fill="#F2B036"
+                        />
+                        <pl-svg
+                            v-show="!isSelected(prod)"
+                            :class="$style.selectIcon"
+                            name="icon-success"
+                            fill="#ccc"
                         />
                     </label>
                 </li>
