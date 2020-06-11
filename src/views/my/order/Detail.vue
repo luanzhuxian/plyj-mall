@@ -326,8 +326,8 @@
             </div>
         </div>
 
-        <!-- 发票信息 -->
-        <div :class="[$style.panel, $style.invoice]">
+        <!-- 发票信息：0元 + 不支持开发票 不显示 -->
+        <div v-if="detail.supportAfterSales && (detail.amount - detail.freight) > 0 " :class="[$style.panel, $style.invoice]">
             <div :class="$style.title">
                 发票信息：<span :class="$style.color222" v-if="!detail.invoiceId">未开票</span>
             </div>
