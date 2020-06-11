@@ -50,8 +50,8 @@
                         />
                     </InfoItem>
 
-                    <!--知识课程不支持修改数量-->
-                    <InfoItem v-if="activeProduct === 1 && [orderTypeKeyMap.KNOWLEDGE_COURSE, orderTypeKeyMap.SERIES_OF_COURSE].indexOf(item.goodsType) === -1">
+                    <!--知识课程 + 购物车的确认订单 不支持修改数量-->
+                    <InfoItem v-if="activeProduct === 1 && !isCart && [orderTypeKeyMap.KNOWLEDGE_COURSE, orderTypeKeyMap.SERIES_OF_COURSE].indexOf(item.goodsType) === -1">
                         <template slot="label">修改数量</template>
                         <template slot="content">
                             <Count
@@ -137,6 +137,9 @@ export default {
             default () {
                 return []
             }
+        },
+        isCart: {
+            type: Boolean
         },
         // 兑换码列表
         /**

@@ -507,7 +507,10 @@ export default {
                 products: confirmList
             })
             this.$router.push({
-                name: 'SubmitOrder'
+                name: 'SubmitOrder',
+                query: {
+                    isCart: true
+                }
             })
         },
 

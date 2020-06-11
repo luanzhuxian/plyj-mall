@@ -17,6 +17,7 @@
                 :active-product="activeProduct"
                 :exchange-code-map="exchangeCodeMap"
                 :exchange-code="exchangeCodeInfo"
+                :is-cart="isCart"
                 @exchangeCodeChange="exchangeCodeChange"
                 @studentInited="studentInited"
                 @countChange="countChange"
@@ -207,6 +208,10 @@ export default {
     },
     computed: {
         ...mapGetters(['selectedAddress', 'openId', 'mobile', 'addressList', 'realName', 'userName', 'shareId', 'orderTypeKeyMap', 'skuSourceKeyMap', 'submitOrder/orderProducts', 'submitOrder/exchangeCodeInfo']),
+        // 是否从购物车进入的确认订单页面
+        isCart () {
+            return !!this.$route.query.isCart
+        },
 
         /**
          * 传入的活动类型
