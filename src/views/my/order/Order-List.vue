@@ -72,7 +72,6 @@
                                 v-if="item.status !== 'WAIT_SHIP'"
                             >
                                 <pl-button
-                                    v-if="item.status === 'WAIT_PAY'"
                                     round
                                     plain
                                     @click="cancelOrder(item, i)"
