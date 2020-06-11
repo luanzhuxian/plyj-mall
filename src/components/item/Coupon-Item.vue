@@ -228,7 +228,7 @@ export default {
     flex-direction: column;
     margin-bottom: 32px;
     width: 100%;
-    overflow: hidden;
+    /*overflow: hidden;*/
 
     > img {
       width: 100%;
