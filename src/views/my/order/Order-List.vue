@@ -192,7 +192,7 @@ export default {
                         }
                         if (this.status === 'WAIT_PAY') {
                             // 5-春耘计划 + 6-组合聚惠学 取消订单后，会同步取消掉统一批次下的所有订单，所以重新刷新页面
-                            const isCombinedOrder = [5, 6](order.skuSource)
+                            const isCombinedOrder = [5, 6].some(item => item === order.skuSource)
                             isCombinedOrder ? this.$refresh() : this.orderList.splice(index, 1)
                         }
                     }
