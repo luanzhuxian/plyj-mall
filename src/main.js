@@ -95,6 +95,9 @@ if (NODE_ENV === VUE_APP_MODEL) {
             if ('message' in event && !event.message) {
                 return null
             }
+            if (event.exception.values.some(item => item.value.match('登录信息失效，请重新获取'))) {
+                return null
+            }
             if (event.exception.values.some(item => item.type === 'ResponseError')) {
                 event.fingerprint = ['response-error']
                 event.level = 'warning'
