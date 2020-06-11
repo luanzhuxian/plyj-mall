@@ -103,9 +103,11 @@ export default {
     },
     methods: {
         touchstart (e) {
+            console.log('touchStart')
             if (this.scrolling) {
                 return
             }
+            console.log(1111)
             e.preventDefault()
             e.stopPropagation()
             started = true
@@ -116,7 +118,9 @@ export default {
             this.$emit('update:scrolling', true)
         },
         touchmove (e) {
+            console.log('touchmove')
             if (!started) return
+            console.log(2)
             e.preventDefault()
             e.stopPropagation()
             const { clientY } = e.touches[0]
@@ -125,7 +129,9 @@ export default {
             startY += moved
         },
         touchend (e) {
+            console.log('touchend')
             if (!started) return
+            console.log(3)
             e.preventDefault()
             e.stopPropagation()
             started = false
