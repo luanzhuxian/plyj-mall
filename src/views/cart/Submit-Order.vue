@@ -610,7 +610,7 @@ export default {
         // 校验数据
         checkData () {
             if (this.physicalProducts.length && !this.selectedAddress.mobile) {
-                this.$warning('请选择收获地址')
+                this.$warning('请选择收货地址')
                 return false
             }
             if (!this.physicalProducts.length && !(this.form.userAddress && this.form.userAddress.mobile)) {
