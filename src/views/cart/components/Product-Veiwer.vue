@@ -59,6 +59,7 @@
                                 :max="item.purchaseQuantity > 0 ? item.purchaseQuantity : item.stock"
                                 :count="item.count"
                                 @change="(count, next) => { countChange(count, item, next) }"
+                                @maxOverflow="maxOverflow"
                             />
                         </template>
                     </InfoItem>
@@ -191,6 +192,15 @@ export default {
          */
         countChange (count, product, next) {
             this.$emit('countChange', { count, product, next })
+        },
+
+        /**
+         * 超出最大购买数量
+         * @param val {number} 当前值
+         * @param max {number} 最大值
+         */
+        maxOverflow (val, max) {
+            this.$error(`购买数量不能超过 ${ max } 个`)
         },
         checkStudents () {
             for (const pro of this.products) {
