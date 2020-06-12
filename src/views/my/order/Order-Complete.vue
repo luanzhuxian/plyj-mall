@@ -63,7 +63,7 @@ export default {
   min-height: 100vh;
   .top {
     box-sizing: border-box;
-    height: 264px;
+    min-height: 264px;
     padding: 32px 0 88px;
     overflow: hidden;
     background-image: url('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/order-complete-bg.png');
