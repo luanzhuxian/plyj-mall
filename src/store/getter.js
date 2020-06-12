@@ -65,7 +65,7 @@ export default {
     currentTime: state => state.currentTime,
 
     // 全局数据
-    shareId: state => state.SHARE_ID,
+    shareId: state => state.SHARE_ID || state.userInfo.userId,
 
     // 杂项
     // 是否禁止支付
