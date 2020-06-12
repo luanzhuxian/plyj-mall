@@ -29,7 +29,7 @@
                                 <pl-svg name="icon-RedEnvelope" width="40" />
                             </span>
                             <span :class="$style.count">￥{{ item.amount }}</span>
-                            <span v-if="item.amount > (totalAmount + (currentRedEnvelope.amount || 0) - (freight || 0))" :class="$style.isOver">使用后超出抵用金额不返还</span>
+                            <span v-if="item.amount > totalAmount" :class="$style.isOver">使用后超出抵用金额不返还</span>
                             <span :class="$style.choices">
                                 <pl-svg v-if="item.id === currentRedEnvelope.id" name="icon-xuanzhong" width="40" />
                                 <pl-svg v-else name="icon-weixuanzhong1" width="40" />
