@@ -21,14 +21,16 @@
                     class="right-text--bold"
                     text="服务类型："
                     :right-text="refundTypeMap[refundType] || '请选择'"
-                    show-right-icon
+                    :show-right-icon="Number(refundType) === 1"
+                    :can-click="Number(refundType) === 1"
                     @click="showRefundType = true"
                 />
-                <pl-fields
+                <!--<pl-fields
                     text="货物状态："
-                    v-if="refundGoodsInfo.orderType === 'PHYSICAL'"
+                    v-if="refundGoodsInfo.goodsType === 'PHYSICAL_GOODS'"
                     show-right-icon
-                />
+                    @click="showGoodsType = true"
+                />-->
                 <pl-fields
                     :text="refundGoodsInfo.orderType === 'PHYSICAL' ? '退货原因：' : '退款原因'"
                     show-right-icon
@@ -124,7 +126,27 @@
                         <div :class="$style.popupItem" v-text="refundTypeMap[k]" />
                     </pl-radio>
                 </pl-radio-group>
-                <pl-button size="large" type="warning" @click="showRefundType = false">
+                <pl-button class="mt-22" size="large" type="warning" @click="showRefundType = false">
+                    确定
+                </pl-button>
+            </div>
+        </pl-popup>
+
+        <pl-popup
+            title="获取状态"
+            :show.sync="showGoodsType"
+        >
+            <div :class="$style.popupContentWrapper">
+                <pl-radio-group v-model="form.type">
+                    <pl-radio
+                        v-for="item of goodsStatusPopupOptions"
+                        :label="item.dictDataValue"
+                        :key="item.dictDataKey"
+                    >
+                        <div :class="$style.popupItem" v-text="item.dictDataValue" />
+                    </pl-radio>
+                </pl-radio-group>
+                <pl-button class="mt-22" size="large" type="warning" @click="showRefundType = false">
                     确定
                 </pl-button>
             </div>
@@ -133,144 +155,151 @@
 </template>
 
 <script>
-/* eslint-disable */
-    import OrderItem from '../../../components/item/Order-Item.vue'
-    import {
-        getOrderDetail,
-        getRefundOrderDetail,
-        applyRefund,
-        getMap as getRefundReasonMap,
-        getMaxRefund
-    } from '../../../apis/order-manager'
-    import { mapGetters } from 'vuex'
-    export default {
-        name: 'RefundApply',
-        components: {
-            OrderItem
+import OrderItem from '../../../components/item/Order-Item.vue'
+import {
+    applyRefund,
+    getMap as getRefundReasonMap,
+    getMaxRefund
+} from '../../../apis/order-manager'
+import { mapGetters } from 'vuex'
+export default {
+    name: 'RefundApply',
+    components: {
+        OrderItem
+    },
+    props: {
+        orderId: {
+            type: String,
+            default: null
         },
-        props: {
-            orderId: {
-                type: String,
-                default: null
-            },
 
-            // 1: '退款', 2: '退款退货'
-            refundType: {
-                type: [String, Number],
-                default: null
-            },
-
-            // APPLY, MODIFY
-            type: {
-                type: String,
-                default: 'APPLY'
-            },
-            refundId: {
-                type: String,
-                default: null
-            }
+        // 1: '退款', 2: '退款退货'
+        refundType: {
+            type: [String, Number],
+            default: null
         },
-        data() {
-            return {
-                showRefundType: false,
-                showRefundReason: false,
-                loading: false,
-                refundReasonList: [],
-                // 最大退款金额
-                maxRefundAmount: 0,
-                form: {
-                    images: [],
-                    reasonForReturn: '',
-                    // 描述
-                    content: '',
-                    orderId: '',
-                    // 退款类型
-                    type: '',
-                    amount: ''
+
+        // APPLY, MODIFY
+        type: {
+            type: String,
+            default: 'APPLY'
+        },
+        refundId: {
+            type: String,
+            default: null
+        }
+    },
+    data () {
+        return {
+            showRefundType: false,
+            showRefundReason: false,
+            showGoodsType: false,
+            loading: false,
+            refundReasonList: [],
+            goodsStatusPopupOptions: [
+                {
+                    dictDataKey: '1',
+                    dictDataValue: '已收到货'
+                }, {
+                    dictDataKey: '2',
+                    dictDataValue: '未收到货'
                 }
+            ],
+            // 最大退款金额
+            maxRefundAmount: 0,
+            form: {
+                images: [],
+                reasonForReturn: '',
+                // 描述
+                content: '',
+                orderId: '',
+                // 退款类型
+                type: '',
+                amount: ''
             }
-        },
-        computed: {
-            ...mapGetters(['refundTypeMap', 'refundGoodsInfo']),
-            refundReasonCode() {
-                return this.refundGoodsInfo.orderType !== 'PHYSICAL'
-                    ? 'REASONREFUNDVIRTURALANDCLASS'
-                    : (this.orderStatus === 'WAIT_SHIP'
-                        ? 'REASONBUYERPAID'
-                        : (this.orderStatus === 'WAIT_RECEIVE' || this.orderStatus === 'FINISHED')
-                            ? this.radio.refundType === '1'
-                                ? this.radio.goodsStatus === '1'
-                                    ? 'REASONSRECEIVEDGOODS'
-                                    : 'REASONSNOTRECEIVEDGOODS'
-                                : 'REASONSRECEIVEDGOODS'
-                            : '')
+        }
+    },
+    computed: {
+        ...mapGetters(['refundTypeMap', 'refundGoodsInfo']),
+        refundReasonCode () {
+            return this.refundGoodsInfo.orderType !== 'PHYSICAL'
+                ? 'REASONREFUNDVIRTURALANDCLASS'
+                : (this.orderStatus === 'WAIT_SHIP'
+                    ? 'REASONBUYERPAID'
+                    : (this.orderStatus === 'WAIT_RECEIVE' || this.orderStatus === 'FINISHED')
+                        ? this.radio.refundType === '1'
+                            ? this.radio.goodsStatus === '1'
+                                ? 'REASONSRECEIVEDGOODS'
+                                : 'REASONSNOTRECEIVEDGOODS'
+                            : 'REASONSRECEIVEDGOODS'
+                        : '')
+        }
+    },
+    async created () {
+        this.form.type = String(this.refundType)
+        this.form.orderId = this.orderId
+        try {
+            ({ result: this.refundReasonList } = await getRefundReasonMap(this.refundReasonCode));
+            ({ result: this.maxRefundAmount } = await getMaxRefund(this.orderId, this.form.type))
+            this.form.amount = this.maxRefundAmount / 100
+        } catch (e) {
+            setTimeout(() => {
+                this.$router.replace({ name: 'OrderDetail', params: { id: this.orderId } })
+            }, 2000)
+            throw e
+        }
+    },
+    methods: {
+        async submitApply () {
+            if (!this.checkData()) {
+                return
             }
-        },
-        async created () {
-            this.form.type = String(this.refundType);
-            this.form.orderId = this.orderId
             try {
-                ({result: this.refundReasonList} = await getRefundReasonMap(this.refundReasonCode));
-                ({result: this.maxRefundAmount} = await getMaxRefund(this.orderId, this.form.type));
-                this.form.amount = this.maxRefundAmount / 100;
+                this.loading = true
+                const form = JSON.parse(JSON.stringify(this.form))
+                form.amount = form.amount * 10
+                const { result } = await applyRefund(form)
+                if (result) {
+                    this.$warning('申请成功')
+                    setTimeout(() => {
+                        this.loading = false
+                        this.$router.replace({ name: 'OrderDetail', params: { id: this.orderId } })
+                    }, 2000)
+                }
             } catch (e) {
                 setTimeout(() => {
+                    this.loading = false
                     this.$router.replace({ name: 'OrderDetail', params: { id: this.orderId } })
                 }, 2000)
                 throw e
             }
         },
-        methods: {
-            async submitApply() {
-                if (!this.checkData()) {
-                    return
-                }
-                try {
-                    this.loading = true
-                    let form = JSON.parse(JSON.stringify(this.form))
-                    form.amount = form.amount * 10
-                    const { result } = await applyRefund(form)
-                    if (result) {
-                        this.$warning('申请成功')
-                        setTimeout(() => {
-                            this.loading = false
-                            this.$router.replace({ name: 'OrderDetail', params: { id: this.orderId } })
-                        }, 2000)
-                    }
-                } catch (e) {
-                    setTimeout(() => {
-                        this.loading = false
-                        this.$router.replace({ name: 'OrderDetail', params: { id: this.orderId } })
-                    }, 2000)
-                    throw e
-                }
-            },
-            checkData () {
-                if (!this.form.reasonForReturn) {
-                    this.$warning('请选择退款原因')
-                    return false
-                }
-                if (!this.form.amount) {
-                    this.$warning('退款金额必须大于0')
-                    return false
-                }
-                return true
-            },
-            onInput(e) {
-                if (Number.isNaN(Number(e.target.innerText))) {
-                    document.getElementById('edit').innerText = '0'
-                    this.form.amount = 0
-                } else {
-                    this.form.amount = Number(e.target.innerText)
-                    if (this.form.amount > this.maxRefundAmount) {
-                        this.form.amount = this.maxRefundAmount
-                        document.getElementById('edit').innerText = this.maxRefundAmount
-                        this.$warning(`最大退款金额为${ this.maxRefundAmount }`)
-                    }
+        checkData () {
+            if (!this.form.reasonForReturn) {
+                this.$warning('请选择退款原因')
+                return false
+            }
+            if (!this.form.amount) {
+                this.$warning('退款金额必须大于0')
+                return false
+            }
+            return true
+        },
+        onInput (e) {
+            if (Number.isNaN(Number(e.target.innerText))) {
+                document.getElementById('edit').innerText = '0'
+                this.form.amount = 0
+            } else {
+                this.form.amount = Number(e.target.innerText)
+                if (this.form.amount > this.maxRefundAmount) {
+                    this.form.amount = this.maxRefundAmount
+                    document.getElementById('edit').innerText = this.maxRefundAmount
+                    this.$warning(`最大退款金额为${ this.maxRefundAmount }`)
                 }
             }
         }
     }
+}
 </script>
 
 <style module lang="scss">

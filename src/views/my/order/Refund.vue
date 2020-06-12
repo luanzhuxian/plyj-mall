@@ -15,30 +15,6 @@
         <section :class="$style.content">
             <div :class="$style.panel">
                 <router-link
-                    :class="$style.item"
-                    tag="div"
-                    replace
-                    :to="{ name: 'RefundApply', params: { orderId, refundType: '2', type: 'APPLY' } }"
-                >
-                    <div :class="$style.itemLeft">
-                        <div :class="$style.itemTitle">
-                            仅退款(无需退货)
-                        </div>
-                        <div>
-                            未收到货（包含未签收），请您先联系商家协商
-                            <br>
-                            商家同意后可直接退款；
-                        </div>
-                    </div>
-                    <pl-svg
-                        :class="$style.itemRight"
-                        name="icon-right"
-                        fill="#DEDEDE"
-                        width="22"
-                    />
-                </router-link>
-
-                <router-link
                     v-if="orderType === 'PHYSICAL' && orderStatus !== 'WAIT_SHIP'"
                     :class="$style.item"
                     tag="div"
@@ -53,6 +29,29 @@
                             已收到货，需要退换所收到的商品，商家收到商品后
                             <br>
                             可退款；
+                        </div>
+                    </div>
+                    <pl-svg
+                        :class="$style.itemRight"
+                        name="icon-right"
+                        fill="#DEDEDE"
+                        width="22"
+                    />
+                </router-link>
+                <router-link
+                    :class="$style.item"
+                    tag="div"
+                    replace
+                    :to="{ name: 'RefundApply', params: { orderId, refundType: '2', type: 'APPLY' } }"
+                >
+                    <div :class="$style.itemLeft">
+                        <div :class="$style.itemTitle">
+                            仅退款(无需退货)
+                        </div>
+                        <div>
+                            未收到货（包含未签收），请您先联系商家协商
+                            <br>
+                            商家同意后可直接退款；
                         </div>
                     </div>
                     <pl-svg
