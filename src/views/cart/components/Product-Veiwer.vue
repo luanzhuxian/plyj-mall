@@ -211,9 +211,11 @@ export default {
         checkStudents () {
             for (const pro of this.products) {
                 const students = this.CHECKED_STUDENT[pro.sku1 + pro.sku2] || []
-                if (pro.needStudents && students.length < pro.count) {
-                    if (students.length) {
+                if (pro.needStudents && students.length !== pro.count) {
+                    if (students.length < pro.count) {
                         this.$warning(`请再选择${ pro.count - students.length }名学员信息`)
+                    } else if (students.length > pro.count) {
+                        this.$warning(`请取消选择多余${ students.length - pro.count }名学员信息`)
                     } else {
                         this.$warning(`请选择${ pro.count }名学员信息`)
                     }

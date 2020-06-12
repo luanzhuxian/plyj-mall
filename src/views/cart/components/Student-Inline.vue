@@ -46,10 +46,13 @@ export default {
         this.$nextTick(() => {
             const { sku1, sku2 } = this.product
             this.students = this.checkedStudents[sku1 + sku2] || []
+
+            /*
             // 如果缓存的学员数量比当前商品数量大,需要截取一下
             if (this.students.length > this.count) {
                 this.students = this.students.slice(0, this.count)
             }
+            */
             this.$emit('inited', this.students.map(item => ({
                 name: item.stuName,
                 mobile: item.stuMobile

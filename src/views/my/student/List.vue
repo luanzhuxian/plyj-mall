@@ -14,7 +14,7 @@
                     :data="item"
                     :checked="item.checked"
                     @change="selectChange"
-                    :disabled="checked.indexOf(item) === -1 && checked.length === maxCount"
+                    :disabled="checked.indexOf(item) === -1 && checked.length >= maxCount"
                 />
                 <div :class="$style.content">
                     <div :class="$style.name">
