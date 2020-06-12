@@ -28,7 +28,7 @@
                     <router-link
                         tag="div"
                         v-for="(item, i) of orderList"
-                        :key="i"
+                        :key="item.orderId"
                         :to="{ name: 'OrderDetail', params: { orderId: item.orderId } }"
                     >
                         <OrderListItem
@@ -265,16 +265,10 @@ export default {
                 const h = String(data.hours)
                 const m = String(data.minutes)
                 const s = String(data.seconds)
-                item.countDown = {
-                    d: d.padStart(2, '0'),
-                    h: h.padStart(2, '0'),
-                    m: m.padStart(2, '0'),
-                    s: s.padStart(2, '0')
-                }
-                // 当前订单不在当前tab页面显示时，不再set
-                if (this.orderList.some(detail => detail.orderId === item.orderId)) {
-                    this.$set(this.orderList, index, item)
-                }
+                item.d = d.padStart(2, '0')
+                item.h = h.padStart(2, '0')
+                item.m = m.padStart(2, '0')
+                item.s = s.padStart(2, '0')
             })
             countdownInstance.start()
             // 存储所有计时器实例，退出页面后清除这样计时器

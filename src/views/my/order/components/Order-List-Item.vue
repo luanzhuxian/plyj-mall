@@ -124,10 +124,10 @@
             <div class="fz-24 gray-3 mt-28" v-if="[orderStatuskeyMap.WAIT_PAY_TAIL_MONEY, orderStatuskeyMap.WAIT_PAY].includes(orderStatus) && (skuSource !== skuSourceKeyMap.SPRINGPLOUGHING && skuSource !== skuSourceKeyMap.COURSEPACKAGE) && isStart && !pastDue">
                 <span v-show="isStart">剩余{{ orderStatus === orderStatuskeyMap.WAIT_PAY_TAIL_MONEY? '尾款': '' }}支付时间：</span>
                 <span v-show="!isStart">距离开始支付时间：</span>
-                <span v-show="countDown.d !== '00'">{{ countDown.d }}天</span>
-                <span v-show="countDown.h !== '00'">{{ countDown.h }}时</span>
-                <span>{{ countDown.m }}分</span>
-                <span>{{ countDown.s }}秒</span>
+                <span v-show="d !== '00'">{{ d }}天</span>
+                <span v-show="h !== '00'">{{ h }}时</span>
+                <span>{{ m }}分</span>
+                <span>{{ s }}秒</span>
             </div>
         </div>
     </div>
@@ -233,12 +233,25 @@ export default {
             type: Boolean,
             default: false
         },
-        // 二次支付倒计时信息
-        countDown: {
-            type: Object,
-            default () {
-                return {}
-            }
+        // 二次支付倒计时信息: 天
+        d: {
+            type: String,
+            default: '00'
+        },
+        // 二次支付倒计时信息: 小时
+        h: {
+            type: String,
+            default: '00'
+        },
+        // 二次支付倒计时信息: 分
+        m: {
+            type: String,
+            default: '00'
+        },
+        // 二次支付倒计时信息: 秒
+        s: {
+            type: String,
+            default: '00'
         },
         //  是否评论
         commented: {
