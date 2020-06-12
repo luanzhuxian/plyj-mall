@@ -44,7 +44,7 @@
             </div>
 
             <div
-                v-if="freight"
+                v-if="hasPhySicalGood"
                 :class="$style.itemSelector"
             >
                 <pl-fields
@@ -52,14 +52,14 @@
                     text="普通快递"
                     icon="icon-express"
                     :icon-gap="12"
-                    :right-text="'¥' + freight"
+                    :right-text="freight ? '¥' + freight : '包邮'"
                     left-text-weight="bold"
                 />
             </div>
 
             <!--知识课程暂时不支持使用优惠券-->
             <Coupon
-                v-if="activeProduct === 1 && goodsAmount > 0 && !isKnowlegeCourse && !exchangeCodeInfo.id"
+                v-if="activeProduct === 1 && goodsAmount > 0 && !hasKnowlegeCourse && !exchangeCodeInfo.id"
                 :active-product="activeProduct"
                 :coupon.sync="currentCoupon"
                 :coupon-list="couponList"
@@ -68,7 +68,7 @@
             />
             <!--知识课程暂时不支持使用奖学金-->
             <Scholarship
-                v-if="goodsAmount > 0 && activeProduct === 1 && !isKnowlegeCourse && !exchangeCodeInfo.id"
+                v-if="goodsAmount > 0 && activeProduct === 1 && !hasKnowlegeCourse && !exchangeCodeInfo.id"
                 :active-product="activeProduct"
                 :total-amount="totalAmount"
                 :freight="freight"
@@ -236,8 +236,11 @@ export default {
         params () {
             return this['submitOrder/orderProducts'].params || { activityId: '', preActivity: '', activeProduct: '1' }
         },
-        isKnowlegeCourse () {
+        hasKnowlegeCourse () {
             return this.form.skus.some(item => [this.orderTypeKeyMap.KNOWLEDGE_COURSE, this.orderTypeKeyMap.SERIES_OF_COURSE].includes(item.goodsType))
+        },
+        hasPhySicalGood () {
+            return this.form.skus.some(item => this.orderTypeKeyMap.PHYSICAL_GOODS === item.goodsType)
         }
     },
     watch: {
@@ -267,8 +270,7 @@ export default {
                     // 设置服务器时间
                     this.serverTime = serverTime
 
-                    if (!this.isKnowlegeCourse) {
-                        console.log(this.products)
+                    if (!this.hasKnowlegeCourse) {
                         const AMOUNT = CONFIRM_LIST.map(item => item.price * item.count).reduce((total, price) => total + price)
                         const COUPON_DATA = {
                             activeProduct: this.preActivity === 2 ? this.activeProduct : 1,
