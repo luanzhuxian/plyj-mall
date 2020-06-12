@@ -46,10 +46,12 @@
 
         <!-- 物流信息 -->
         <div :class="[$style.panel, $style.express]"
-             v-if="detail.orderType === orderTypeKeyMap.PHYSICAL_GOODS && [orderStatuskeyMap.WAIT_SHIP, orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.orderStatus) && !isClosedByCancle"
+             v-if="detail.orderType === orderTypeKeyMap.PHYSICAL_GOODS && [orderStatuskeyMap.WAIT_SHIP, orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status) && !isClosedByCancle"
         >
             <pl-svg name="icon-express" :class="$style.icon" />
-            <span :class="$style.content">{{ detail.orderStatus === orderStatuskeyMap.WAIT_SHIP? '待发货' : '已发货' }}</span>
+            <span :class="$style.content">
+                {{ detail.status === orderStatuskeyMap.WAIT_SHIP ? '待发货' : `${shippingInfoModel.logisticsCompany}  ${shippingInfoModel.logisticsNo}` }}
+            </span>
         </div>
 
         <div :class="$style.panel" v-if="hasExpressInfo && false">
@@ -197,9 +199,9 @@
                     <span>-¥{{ detail.combinationSpecialPrice | formatAmount }}</span>
                 </p>
                 <!--运费-->
-                <p v-if="detail.freight">
+                <p v-if="detail.orderType === orderTypeKeyMap.PHYSICAL_GOODS">
                     <span>运费</span>
-                    <span class="rmb">{{ detail.freight | formatAmount }}</span>
+                    <span class="rmb">{{ (detail.freight || 0) | formatAmount }}</span>
                 </p>
             </div>
 
@@ -315,12 +317,12 @@
                 <pl-list
                     v-if="detail.orderType === orderTypeKeyMap.PHYSICAL_GOODS && detail.status === orderStatuskeyMap.WAIT_RECEIVE && !isClosedByCancle"
                     title="配送方式："
-                    :content="detail.courierCompany"
+                    :content="shippingInfoModel.logisticsCompany"
                 />
                 <pl-list
                     v-if="detail.orderType === orderTypeKeyMap.PHYSICAL_GOODS && detail.status === orderStatuskeyMap.WAIT_RECEIVE && !isClosedByCancle"
                     title="发货时间："
-                    :content="detail.shipTime"
+                    :content="shippingInfoModel.operatorTime"
                 />
             </div>
             <div :class="$style.infoBottom" v-if="detail.orderPostscript">
@@ -344,7 +346,7 @@
                 <div>
                     <span v-text="invoiceMap[invoiceModel.invoiceType].sub" />
                     <!--个人发票 - 取 收货人电话； 单位发票-取 纳税人识别号 -->
-                    <span v-text="invoiceModel.invoiceType === 1? receiverModel.mobile : invoiceModel.taxpayerNumber" />
+                    <span v-text="invoiceModel.invoiceType === 1? invoiceModel.companyPhone : invoiceModel.taxpayerNumber" />
                 </div>
             </div>
         </div>
@@ -547,6 +549,8 @@ export default {
             receiverModel: {},
             // 核销码
             redeemCodeModels: [],
+            // 物流信息
+            shippingInfoModel: {},
             //  实体订单-用户信息 / 虚拟订单-学员信息
             studentInfo: [],
             activityDataStatus: 1,
@@ -643,7 +647,7 @@ export default {
         async getDetail () {
             try {
                 const { result } = await getOrderDetail(this.orderId)
-                const { goodsModel, orderPayTransInfos, redeemCodeModels, productCustomInfo, invoiceInfoModel } = result
+                const { goodsModel, orderPayTransInfos, redeemCodeModels, productCustomInfo, invoiceInfoModel, shippingInfoModel } = result
                 result.refundId = (result.orderRefundsModel && result.orderRefundsModel.id) || ''
                 // 组合折扣 扣除的金额 = 商品价格 * 折扣
                 result.combinationSpecialPrice = (result.goodsPrice || 0) * (100 - (result.discount || 0)) / 100
@@ -659,6 +663,7 @@ export default {
                     mobile: result.consigneeMobile,
                     address: result.address
                 }
+                this.shippingInfoModel = shippingInfoModel
                 // 物流信息
                 this.logisticsInfoModel = {}
                 // 发票信息
@@ -737,23 +742,30 @@ export default {
         // 设置时间
         setTime () {
             // 只有 待付款 / 待付尾款 有支付倒计时
-            if (![this.orderStatuskeyMap.WAIT_PAY, this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY].includes(this.detail.status)) return
+            if (![this.orderStatuskeyMap.WAIT_PAY, this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY, this.orderStatuskeyMap.WAIT_RECEIVE].includes(this.detail.status)) return
             // 春耘 / 组合聚惠学 不显示支付倒计时
             if (this.detail.orderSource === this.skuSourceKeyMap.SPRINGPLOUGHING || this.detail.orderSource === this.skuSourceKeyMap.COURSEPACKAGE) return
             // 服务器时间
             const now = moment((this.detail.currentServerTime)).valueOf()
-            const useStartTime = moment((this.detail.startExpire)).valueOf()
-            const useEndTime = moment((this.detail.endExpire)).valueOf()
-            // 是否开始
-            this.finalPaymentIsStarted = now >= useStartTime
-            // 是否过期
-            this.finalPaymentIsEnded = now >= useEndTime
-            if (!this.finalPaymentIsStarted) {
+            if (this.orderStatuskeyMap.WAIT_RECEIVE === this.detail.status) {
+                // 默认自动收货时间为10天
+                const maxReceive = moment((this.shippingInfoModel.operatorTime)).add(10, 'days')
+                const endTime = moment(maxReceive).valueOf()
+                if (endTime > now) this.countDown(endTime - now)
+            } else {
+                const useStartTime = moment((this.detail.startExpire)).valueOf()
+                const useEndTime = moment((this.detail.endExpire)).valueOf()
+                // 是否开始
+                this.finalPaymentIsStarted = now >= useStartTime
+                // 是否过期
+                this.finalPaymentIsEnded = now >= useEndTime
+                if (!this.finalPaymentIsStarted) {
                 // 可以开始支付了，倒计时支付
-                this.countDown(useStartTime - now)
-            } else if (!this.finalPaymentIsEnded) {
+                    this.countDown(useStartTime - now)
+                } else if (!this.finalPaymentIsEnded) {
                 // 可以开始支付了，倒计时支付
-                this.countDown(useEndTime - now)
+                    this.countDown(useEndTime - now)
+                }
             }
         },
         // 设置倒计时
@@ -1008,6 +1020,7 @@ export default {
     .icon {
       width: 64px;
       height: 64px;
+      margin-top: -3px;
       margin-right: 28px;
       vertical-align: middle;
       fill: $--warning-color;
