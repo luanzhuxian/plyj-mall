@@ -21,7 +21,7 @@
             :name="goodsName"
             :option="subSkuName ? `${skuName},${subSkuName}` : skuName"
             :count="count"
-            :price="unitPrice"
+            :price="localFormatAmount(unitPrice)"
             :status="aftersaleStatusMap[aftersaleStatus]"
             :active-product="skuSource"
             :pre-active="skuSource !== 1 ? 2 : ''"
@@ -31,7 +31,7 @@
             <div :class="$style.priceWrapper">
                 <span :class="$style.totalCount">{{ `共${count}件` }}</span>
                 <span :class="$style.bold">总价：</span>
-                <span :class="$style.price">{{ amount }}</span>
+                <span :class="$style.price">{{ amount | formatAmount }}</span>
             </div>
             <div :class="$style.buttons">
                 <!--正常待付款 支持 付款(目前只区别于预购的待付尾款), 组合聚会学 + 春耘 不支持二次付款-->
@@ -136,6 +136,7 @@
 <script>
 import OrderItem from '../../../../components/item/Order-Item.vue'
 import { mapGetters } from 'vuex'
+import filter from '../../../../filter/index'
 export default {
     name: 'OrderListItem',
     components: {
@@ -181,7 +182,7 @@ export default {
             type: String,
             default: ''
         },
-        // 商品单价
+        // 商品单价（分）
         unitPrice: {
             type: Number,
             default: 0
@@ -213,7 +214,7 @@ export default {
                 return []
             }
         },
-        // 订单总价
+        // 订单总价（分）
         amount: {
             type: [Number, String],
             default: 0
@@ -257,6 +258,11 @@ export default {
         commented: {
             type: Boolean,
             default: false
+        }
+    },
+    data () {
+        return {
+            localFormatAmount: filter.formatAmount
         }
     },
     computed: {

@@ -70,7 +70,6 @@ import wechatPay from '../../../assets/js/wechat/wechat-pay'
 import moment from 'moment'
 import Countdown from '../../../assets/js/Countdown'
 import OrderListItem from './components/Order-List-Item'
-import filter from '../../../filter/index'
 
 export default {
     name: 'OrderList',
@@ -225,8 +224,6 @@ export default {
         onRefresh (list, total) {
             this.clearCountdown()
             for (const [i, item] of list.entries()) {
-                item.unitPrice = filter.formatAmount(item.unitPrice)
-                item.amount = filter.formatAmount(item.amount)
                 this.setCountDown(item, i)
             }
             this.orderList = list
@@ -367,7 +364,6 @@ export default {
                     const currentLastOrder = result.records[result.records.length - 1]
                     // 因删除过订单后offsetHeight不足初始获取的值，无法在加载更多，将删除留下的空位填充用currentPage的最后一个数据
                     if (currentLastOrder) {
-                        currentLastOrder.amount = currentLastOrder.amount.toFixed(2)
                         this.orderList.push(currentLastOrder)
                     }
                 }
