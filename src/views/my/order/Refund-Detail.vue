@@ -210,12 +210,7 @@
         />
 
         <!-- 联系我们底部弹窗 -->
-        <pl-popup :show.sync="isPopupShow">
-            <ContantPop @callUs="callUs" />
-        </pl-popup>
-
-        <!--拨号-->
-        <Contact :show.sync="showContact" />
+        <Contact :show.sync="isPopupShow" />
     </div>
 </template>
 
@@ -230,7 +225,6 @@ import ModuleTitle from '../../../components/common/Module-Title.vue'
 import OrderItem from '../../../components/item/Order-Item.vue'
 import Collapse from '../../../components/penglai-ui/collapse/Collapse.vue'
 import CollapseItem from '../../../components/penglai-ui/collapse/Collapse-Item.vue'
-import ContantPop from './components/Contant-Pop'
 import Contact from '../../../components/common/Contact'
 import {
     getRefundOrderDetail,
@@ -261,7 +255,6 @@ export default {
         OrderItem,
         Collapse,
         CollapseItem,
-        ContantPop,
         Contact
     },
     props: {
@@ -275,7 +268,6 @@ export default {
             loading: false,
             detailLoading: false,
             isPopupShow: false,
-            showContact: false,
             isPickerShow: false,
             // 1: 待退货 2:待收货 3:退货完成 4:待退款 5:退款中 6:退款成功 7:退款失败
             refundStatus: '',
@@ -371,10 +363,6 @@ export default {
             const { result: expressMap } = await getExpressMap(expressMapCode)
             this.expressMap = expressMap
             this.pickerColumns[0].values = expressMap.map(item => item.dictDataValue)
-        },
-        callUs () {
-            this.showContact = true
-            this.isPopupShow = false
         },
         onPickerConfirm (selected) {
             this.form.expressName = selected[0]

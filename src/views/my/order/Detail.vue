@@ -450,12 +450,7 @@
         />
 
         <!-- 联系我们底部弹窗 -->
-        <pl-popup :show.sync="isPopupShow">
-            <ContantPop @callUs="callUs" />
-        </pl-popup>
-
-        <!--拨号-->
-        <Contact :show.sync="showContact" />
+        <Contact :show.sync="isPopupShow" />
     </div>
 </template>
 
@@ -463,7 +458,6 @@
 import { mapGetters, mapMutations } from 'vuex'
 import moment from 'moment'
 import TopText from '../../../components/common/Top-Text.vue'
-import Contact from '../../../components/common/Contact.vue'
 import OrderItem from '../../../components/item/Order-Item.vue'
 import ModuleTitle from '../../../components/common/Module-Title.vue'
 import ExpressItem from '../../../components/item/Express-Item.vue'
@@ -471,7 +465,7 @@ import AddressItem from '../../../components/item/Address-Item.vue'
 import OrderDetailSkeleton from './components/Order-detail-Skeleton'
 import OrderCodeItem from './components/Order-Code-Item'
 import SharePoster from '../../../components/common/Share-Poster'
-import ContantPop from './components/Contant-Pop'
+import Contact from '../../../components/common/Contact.vue'
 import {
     getOrderDetail,
     getAwaitPayInfo,
@@ -511,8 +505,7 @@ export default {
         OrderCodeItem,
         OrderDetailSkeleton,
         Contact,
-        SharePoster,
-        ContantPop
+        SharePoster
     },
     props: {
         orderId: {
@@ -524,8 +517,6 @@ export default {
         return {
             localSeparator: filter.separator,
             loading: false,
-            // 显示拨号
-            showContact: false,
             // 当前是否正在支付
             payloading: false,
             // 显示联系我们
@@ -812,10 +803,6 @@ export default {
         },
         setOrderOperatedList (action) {
             this.$store.commit('setOrderOperatedList', { id: this.orderId, action })
-        },
-        callUs () {
-            this.showContact = true
-            this.isPopupShow = false
         },
         // 跳转申请退款页面
         applyRefund () {
