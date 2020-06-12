@@ -223,14 +223,14 @@ export default {
         },
         onRefresh (list, total) {
             this.clearCountdown()
-            for (const [i, item] of list.entries()) {
-                this.setCountDown(item, i)
+            for (const item of list) {
+                this.setCountDown(item)
             }
             this.orderList = list
             this.total = total
         },
         // 待支付订单，支付时间倒计时
-        setCountDown (item, i) {
+        setCountDown (item) {
             const now = moment(item.currentTime).valueOf()
             const useStartTime = moment(item.startTime).valueOf()
             const useEndTime = moment(item.endTime).valueOf()
@@ -238,20 +238,19 @@ export default {
             item.pastDue = now >= useEndTime
             if (!item.isStart) {
                 // 可以开始支付了，倒计时支付
-                this.countDown(useStartTime - now, i, item)
+                this.countDown(useStartTime - now, item)
             } else if (!item.pastDue) {
                 // 可以开始支付了，倒计时支付
-                this.countDown(useEndTime - now, i, item)
+                this.countDown(useEndTime - now, item)
             }
         },
 
         /**
          * 开始每条订单的倒计时
          * @param duration {Number}
-         * @param index {Number} 订单下标
          * @param item {Object} 订单数据，用于绑定倒计时数据
          */
-        countDown (duration, index, item) {
+        countDown (duration, item) {
             const countdownInstance = new Countdown(duration, data => {
                 if (!data) {
                     // 倒计时结束，刷新数据
@@ -266,6 +265,11 @@ export default {
                 item.h = h.padStart(2, '0')
                 item.m = m.padStart(2, '0')
                 item.s = s.padStart(2, '0')
+                // 解决无法直接更新dom问题
+                const index = this.orderList.findIndex(detail => detail.orderId === item.orderId)
+                if (index !== -1) {
+                    this.orderList.splice(index, 1, item)
+                }
             })
             countdownInstance.start()
             // 存储所有计时器实例，退出页面后清除这样计时器
