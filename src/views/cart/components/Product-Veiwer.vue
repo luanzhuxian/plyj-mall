@@ -25,6 +25,12 @@
                     border
                 />
                 <OtherInfo>
+                    <!--虚拟/正式课/体验课 显示 使用时间-->
+                    <InfoItem v-if="['VIRTUAL_GOODS', 'FORMAL_CLASS', 'EXPERIENCE_CLASS'].includes(item.goodsType)">
+                        <template slot="label">使用时间</template>
+                        <span slot="content" class="gray-1" v-if="item.redeemCodeStartTime">{{ item.redeemCodeStartTime | dateFormat('YYYY.MM.DD') }}-{{ item.redeemCodeEndTime | dateFormat('YYYY.MM.DD') }}</span>
+                        <span slot="content" class="gray-1" v-else>长期有效</span>
+                    </InfoItem>
                     <InfoItem
                         v-if="item.needStudents"
                         :id="item.sku1 + item.sku2"
@@ -52,7 +58,7 @@
 
                     <!--知识课程 + 购物车的确认订单 不支持修改数量-->
                     <InfoItem v-if="activeProduct === 1 && !isCart && [orderTypeKeyMap.KNOWLEDGE_COURSE, orderTypeKeyMap.SERIES_OF_COURSE].indexOf(item.goodsType) === -1">
-                        <template slot="label">修改数量</template>
+                        <template slot="label">购买数量</template>
                         <template slot="content">
                             <Count
                                 :min="item.minBuyNum || 1"
