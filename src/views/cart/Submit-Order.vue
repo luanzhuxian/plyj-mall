@@ -302,10 +302,10 @@ export default {
                             if (day < 4) item.timeDesc = day < 1 ? '即将过期' : `${ day }天后过期`
                             return item
                         })
-                        // 设置当前选中的奖学金
-                        this.currentRedEnvelope = this.currentCoupon.scholarship === 0 ? {} : this.redEnvelopeList[0] || {}
                         this.form.cartCouponModel = this.currentCoupon.id ? { userCouponId: this.currentCoupon.id } : null
-                        this.form.scholarshipModel = this.currentRedEnvelope.id ? { scholarshipId: this.currentRedEnvelope.id } : null
+                        // 默认不选择奖学金
+                        this.currentRedEnvelope = {}
+                        this.form.scholarshipModel = null
                     }
 
                     // 初始化兑换码列表
@@ -423,9 +423,10 @@ export default {
             this.form.cartCouponModel = coupon.id ? { userCouponId: coupon.id } : null
             try {
                 await this.$nextTick()
+                this.currentRedEnvelope = {}
                 this.form.scholarshipModel = this.currentRedEnvelope.id ? { scholarshipId: this.currentRedEnvelope.id } : null
                 // 选择优惠券后，兑换码默认不使用
-                if (this.form.scholarshipModel) this.exchangeCodeInfo = {}
+                if (coupon.id) this.exchangeCodeInfo = {}
                 await this.getProductDetail()
             } catch (e) {
                 throw e
@@ -435,7 +436,7 @@ export default {
         async scholarshipChange (scholarship) {
             this.form.scholarshipModel = scholarship.id ? { scholarshipId: scholarship.id } : null
             // 选择奖学金后，兑换码默认不使用
-            if (this.form.scholarshipModel) this.exchangeCodeInfo = {}
+            if (scholarship.id) this.exchangeCodeInfo = {}
             try {
                 await this.getProductDetail()
             } catch (e) {
