@@ -212,7 +212,7 @@
             try {
                 ({result: this.refundReasonList} = await getRefundReasonMap(this.refundReasonCode));
                 ({result: this.maxRefundAmount} = await getMaxRefund(this.orderId, this.form.type));
-                this.form.amount = this.maxRefundAmount;
+                this.form.amount = this.maxRefundAmount / 100;
             } catch (e) {
                 setTimeout(() => {
                     this.$router.replace({ name: 'OrderDetail', params: { id: this.orderId } })
@@ -227,7 +227,9 @@
                 }
                 try {
                     this.loading = true
-                    const { result } = await applyRefund(this.form)
+                    let form = JSON.parse(JSON.stringify(this.form))
+                    form.amount = form.amount * 10
+                    const { result } = await applyRefund(form)
                     if (result) {
                         this.$warning('申请成功')
                         setTimeout(() => {
