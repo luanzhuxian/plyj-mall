@@ -415,10 +415,10 @@
             </pl-button>
             <!--知识课程 + 订单完成 支持 去学习-->
             <pl-button
-                v-if="detail.orderType === orderTypeKeyMap.KNOWLEDGE_COURSE && (detail.status === orderStatuskeyMap.FINISHED)"
+                v-if="(detail.orderType === orderTypeKeyMap.KNOWLEDGE_COURSE || detail.orderType === orderTypeKeyMap.SERIES_OF_COURSE) && (detail.status === orderStatuskeyMap.FINISHED)"
                 type="warning"
                 round
-                @click="$router.push({ name: 'Courses', params: { courseType: '1' } })"
+                @click="$router.push({ name: 'Courses', params: { courseType: detail.orderType === orderTypeKeyMap.KNOWLEDGE_COURSE? '1' : '2' } })"
             >
                 去学习
             </pl-button>
@@ -670,24 +670,22 @@ export default {
                 // 设置订单文案: 待支付/待付尾款订单显示倒计时描述， 其他订单状态显示如下
                 if (![this.orderStatuskeyMap.WAIT_PAY, this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY].includes(this.detail.status)) {
                     let tip = ''
-                    const { validityPeriodStart, validityPeriodEnd, validity } = goodsModel
                     tip = suggestionMap[result.status]
                     if (this.detail.aftersaleStatus === this.aftersaleStatusKeyMap.PROCESSING_COMPLETED) {
                         tip = '退款完成'
                     }
-                    if (result.status === this.orderStatuskeyMap.WAIT_RECEIVE) {
-                        // 知识课程/系列课程 观看有效期
-                        if ([this.orderTypeKeyMap.KNOWLEDGE_COURSE, this.orderTypeKeyMap.SERIES_OF_COURSE].includes(result.orderType)) {
-                            tip = validity ? `购买后${ validity }天内学完` : '购买后不限观看次数'
-                        }
-                        // 虚拟商品/正式课/体验课 使用有效期
-                        if ([this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS].includes(result.orderType)) {
-                            if (validityPeriodStart) {
-                                const start = moment(validityPeriodStart).format('YYYY-MM-DD')
-                                const end = moment(validityPeriodEnd).format('YYYY-MM-DD')
-                                tip = (start === end) ? `有效期 ${ start }` : `有效期 ${ start } 至 ${ end }`
-                            } else {
-                                tip = '长期有效'
+                    if (redeemCodeModels.length) {
+                        if (result.status === this.orderStatuskeyMap.WAIT_RECEIVE || result.status === this.orderStatuskeyMap.FINISHED) {
+                            const { expirationStartTime, expirationEndTime } = redeemCodeModels[0]
+                            // 虚拟商品/正式课/体验课 使用有效期
+                            if ([this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS].includes(result.orderType)) {
+                                if (expirationStartTime) {
+                                    const start = moment(expirationStartTime).format('YYYY-MM-DD')
+                                    const end = moment(expirationEndTime).format('YYYY-MM-DD')
+                                    tip = (start === end) ? `有效期 ${ start }` : `有效期 ${ start } 至 ${ end }`
+                                } else {
+                                    tip = '长期有效'
+                                }
                             }
                         }
                     }
