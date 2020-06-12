@@ -2,11 +2,12 @@
     <div :class="$style.studentInline" @click="selectStudent">
         <span v-if="!students.length">请选择</span>
         <div :class="$style.studentList" v-else>
-            <span
+            <!-- <span
                 v-for="(stu, i) of students"
                 :key="i"
                 v-text="stu.stuName + (i === students.length - 1 ? '' : ',')"
-            />
+            />-->
+            已选{{ students.length }}人
         </div>
         <pl-svg :class="$style.rightArrow" name="icon-right" fill="#ccc" height="24" />
     </div>
