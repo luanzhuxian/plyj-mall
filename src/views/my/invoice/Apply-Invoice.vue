@@ -342,6 +342,11 @@ export default {
                 this.$warning('请选择要开票的商品')
                 return
             }
+            if(this.receiveInfo.mailingMethod === 1){
+              if(!this.receiveInfo.mobile) return this.$warning('请填写联系电话')
+              if(!this.receiveInfo.city) return this.$warning('请选择区域')
+              if(!this.receiveInfo.address) return this.$warning('请填写详细地址')
+            }
             const receiveInfo = this.receiveInfo
             // const invoiceModel = {
             //     invoiceType: this.type,
@@ -417,7 +422,10 @@ export default {
                     this.loading = false
                 }
             } else {
-                this.$store.commit('submitOrder/setInvoiceInfo', invoiceModel)
+                let params = {...receiveInfo}
+                params.invoiceTitle=this.type === 1 ? this.receiveName : this.form.firmName
+                params.companyPhone=this.receiveMobile
+                this.$store.commit('submitOrder/setInvoiceInfo', params)
             }
 
             const APPLY_INVOICE_FROM = this['submitOrder/invoiceFromRoute']

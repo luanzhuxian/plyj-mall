@@ -76,7 +76,7 @@ export default {
     },
     mounted () {
         const INVOICE_MODEL = this.$store.getters['submitOrder/invoiceInfo']
-        if (INVOICE_MODEL && INVOICE_MODEL.invoiceType !== undefined) {
+        if (INVOICE_MODEL && INVOICE_MODEL.companyPhone !== undefined) {
             this.$emit('selected', INVOICE_MODEL)
             this.invioceType = 1
         }
@@ -92,7 +92,7 @@ export default {
         noNeed () {
             this.invioceType = 0
             this.showPopup = false
-            this.$storm.commit('submitOrder/removeInvoiceInfo')
+            this.$store.commit('submitOrder/removeInvoiceInfo')
             this.$emit('selected', null)
         },
         need () {
