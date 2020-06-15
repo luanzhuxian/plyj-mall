@@ -91,9 +91,9 @@ export default {
                 await this.getUserInfo()
             }
             this.logined = true
-            await this.getEntryData()
             // 标记一天中首次访问
             setFirstVisit()
+            await this.getEntryData()
         } catch (e) {
             throw e
         }

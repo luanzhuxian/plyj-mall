@@ -59,7 +59,7 @@ import TemplateFanchang from './templates/Template-Fanchang.vue'
 import TemplateXinchun from './templates/Template-Xinchun.vue'
 import TemplateDragonGate from './templates/Template-Dragon-Gate.vue'
 import InviteNewcomersHomeEntry from '../marketing-activity/double-12/invitenewcomers/InviteNewcomersHomeEntry.vue'
-import NewcomersHomeEntry from '../marketing-activity/double-12/newcomers/NewcomersHomeEntry.vue'
+import NewcomersHomeEntry from '../marketing-activity/newcomers/NewcomersHomeEntry.vue'
 import NewYearNewcomersHomeEntry from '../marketing-activity/new-year/newcomers/NewcomersHomeEntry.vue'
 
 export default {
