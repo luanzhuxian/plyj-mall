@@ -268,9 +268,10 @@ export default {
     computed: {
         ...mapGetters(['skuSourceKeyMap', 'orderTypeMap', 'orderTypeKeyMap', 'orderStatusMap', 'orderStatuskeyMap', 'refundStatusMap', 'aftersaleStatusMap', 'aftersaleStatusKeyMap']),
         orderStatusDesc () {
+            // 虚拟订单 待收货 改为 待使用； 订单完成 还未评价的 待评价
             return [this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS].includes(this.orderType) &&
                   this.orderStatuskeyMap.WAIT_RECEIVE === this.orderStatus
-                ? this.orderStatusMap[this.orderStatuskeyMap.WAIT_RECEIVE_OF_VIRTUAL] : this.orderStatusMap[this.orderStatus]
+                ? this.orderStatusMap[this.orderStatuskeyMap.WAIT_RECEIVE_OF_VIRTUAL] : this.isCommentBtnShow ? '待评价' : this.orderStatusMap[this.orderStatus]
         },
         // 是否显示评价按钮 实体/虚拟/正式课/体验课 + 订单完成 + 无售后 + 未评论
         isCommentBtnShow () {

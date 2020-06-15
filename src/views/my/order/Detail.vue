@@ -584,9 +584,10 @@ export default {
     computed: {
         ...mapGetters(['skuSourceKeyMap', 'orderStatusMap', 'orderStatuskeyMap', 'orderTypeKeyMap', 'aftersaleStatusKeyMap', 'orderActionMap']),
         orderStatusDesc () {
+            // 虚拟订单 待收货 改为 待使用； 订单完成 还未评价的 待评价
             return [this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS].includes(this.detail.orderType) &&
         this.orderStatuskeyMap.WAIT_RECEIVE === this.detail.status
-                ? this.orderStatusMap[this.orderStatuskeyMap.WAIT_RECEIVE_OF_VIRTUAL] : this.orderStatusMap[this.detail.status]
+                ? this.orderStatusMap[this.orderStatuskeyMap.WAIT_RECEIVE_OF_VIRTUAL] : this.isCommentBtnShow ? '待评价' : this.orderStatusMap[this.detail.status]
         },
         // 订单是否因取消而关闭
         isClosedByCancle () {
