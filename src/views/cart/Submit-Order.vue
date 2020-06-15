@@ -637,6 +637,7 @@ export default {
             to.name !== 'StudentList') {
             this.$store.commit('submitOrder/removeOrderProducts')
             this.$store.commit('submitOrder/removeCurExchangeCode')
+            this.$store.commit('submitOrder/removeInvoiceInfo')
         }
         next()
     }
