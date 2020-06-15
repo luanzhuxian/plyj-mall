@@ -165,16 +165,9 @@
                             alt=""
                         >
                         <pl-svg
-                            v-show="isSelected(prod)"
                             :class="$style.selectIcon"
                             name="icon-success"
-                            fill="#F2B036"
-                        />
-                        <pl-svg
-                            v-show="!isSelected(prod)"
-                            :class="$style.selectIcon"
-                            name="icon-success"
-                            fill="#ccc"
+                            :fill="isSelected(prod) ? '#F2B036' : '#ccc'"
                         />
                     </label>
                 </li>
@@ -296,7 +289,7 @@ export default {
     },
     activated () {
         const APPLY_INVOICE = this['submitOrder/invoiceProducts']
-        if (!APPLY_INVOICE) {
+        if (!APPLY_INVOICE.length) {
             this.$router.go(-1)
             this.$destroy()
             return
