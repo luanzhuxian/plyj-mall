@@ -57,7 +57,8 @@ export default {
             computedWidth: null,
             computedHeight: null,
             update: true,
-            clonedSvg: {}
+            clonedSvg: {},
+            count: 0
         }
     },
     computed: {
@@ -117,7 +118,15 @@ export default {
              */
             const svg = document.getElementById(this.name)
             if (!svg) {
-                console.error(`svg ${ this.name } 不存在`)
+                // 如果图标加载失败，再尝试3次
+                if (this.count >= 3) {
+                    console.error(`svg ${ this.name } 不存在`)
+                    return
+                }
+                setTimeout(() => {
+                    this.change(fill)
+                    this.count++
+                }, 1000)
                 return
             }
             // 补全颜色值,用颜色作为新生成的图标id，这样，就可以保证相同颜色的图标可以复用
