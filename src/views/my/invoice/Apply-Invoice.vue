@@ -422,7 +422,7 @@ export default {
                     this.loading = false
                 }
             } else {
-                let params = {...receiveInfo}
+                let params = {...invoiceModel}
                 params.invoiceTitle=this.type === 1 ? this.receiveName : this.form.firmName
                 params.companyPhone=this.receiveMobile
                 this.$store.commit('submitOrder/setInvoiceInfo', params)

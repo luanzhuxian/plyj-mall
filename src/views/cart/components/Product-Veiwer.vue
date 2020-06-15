@@ -56,8 +56,8 @@
                         />
                     </InfoItem>
 
-                    <!--知识课程 + 购物车的确认订单 不支持修改数量-->
-                    <InfoItem v-if="activeProduct === 1 && !isCart && [orderTypeKeyMap.KNOWLEDGE_COURSE, orderTypeKeyMap.SERIES_OF_COURSE].indexOf(item.goodsType) === -1">
+                    <!--知识课程 + 购物车的确认订单 不支持修改数量; 普通商品/团购/预购/公益-->
+                    <InfoItem v-if="[1, 2, 3, 4, 7].includes(activeProduct) && !isCart && [orderTypeKeyMap.KNOWLEDGE_COURSE, orderTypeKeyMap.SERIES_OF_COURSE].indexOf(item.goodsType) === -1">
                         <template slot="label">购买数量</template>
                         <template slot="content">
                             <Count
