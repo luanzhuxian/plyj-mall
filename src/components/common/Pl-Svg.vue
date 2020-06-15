@@ -23,8 +23,6 @@
 </template>
 
 <script>
-// import { promise } from '../../assets/js/util'
-
 export default {
     name: 'PlSvg',
     props: {
