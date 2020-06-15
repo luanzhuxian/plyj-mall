@@ -425,7 +425,11 @@ export default {
             this.form.cartCouponModel = coupon.id ? { userCouponId: coupon.id } : null
             try {
                 await this.$nextTick()
-                this.currentRedEnvelope = {}
+                // 选择优惠券时，若 当前除去奖学金之外的总价，大于零，才可使用奖学金 + 当前优惠券支持使用奖学金
+                const currentTotalAmount = this.totalAmount + (this.currentRedEnvelope.amount || 0) - (coupon.amount || 0)
+                if (!(coupon.scholarship && currentTotalAmount)) {
+                    this.currentRedEnvelope = {}
+                }
                 this.form.scholarshipModel = this.currentRedEnvelope.id ? { scholarshipId: this.currentRedEnvelope.id } : null
                 // 选择优惠券后，兑换码默认不使用
                 if (coupon.id) this.exchangeCodeInfo = {}
