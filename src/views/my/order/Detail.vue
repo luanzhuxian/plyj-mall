@@ -394,7 +394,8 @@
             <!-- 支持 实付款大于0 + 订单创建后未取消 + 可申请发票 + 未申请过发票 + 无售后 支持 申请发票-->
             <pl-button
                 v-if="
-                    (detail.amount - detail.freight) > 0 &&
+                    detail.orderSource === skuSourceKeyMap.NORMAL &&
+                        (detail.amount - detail.freight) > 0 &&
                         [orderStatuskeyMap.WAIT_SHIP, orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status) &&
                         detail.aftersaleStatus === aftersaleStatusKeyMap.NO_AFTER_SALES &&
                         detail.supportInvoice &&
