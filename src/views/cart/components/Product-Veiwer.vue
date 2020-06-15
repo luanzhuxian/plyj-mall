@@ -7,8 +7,8 @@
         >
             <div
                 :class="$style.orderItemBox"
-                v-for="item of products"
-                :key="item.sku1 + item.sku2 + '_' + item.count"
+                v-for="(item, i) of products"
+                :key="item.sku1 + item.sku2 + '_' + item.count + '_' + i"
             >
                 <OrderItem
                     :img="item.goodsImage"
