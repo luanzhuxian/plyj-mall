@@ -595,6 +595,7 @@ export default {
             } catch (e) {
                 this.requestPayDataCount = 0
                 await this.handlepayError(orderBatchNumber)
+                await this.$router.replace({ name: 'Orders', params: { status: 'ALL_ORDERS' } })
                 throw e
             }
         },
@@ -606,7 +607,6 @@ export default {
                 // 只有普通 实体/虚拟/正式课/体验课 + 非活动状态 才可二次支付不必关闭订单，其他支付失败直接关闭订单
                 if (orderType && this.activeProduct === this.skuSourceKeyMap.NORMAL) return
                 await cancleOrderListByBatchNumber(orderBatchNumber)
-                await this.$router.replace({ name: 'Orders', params: { status: 'ALL_ORDERS' } })
             } catch (e) {
                 throw e
             }
