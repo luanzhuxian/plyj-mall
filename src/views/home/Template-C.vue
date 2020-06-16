@@ -3,9 +3,9 @@
         <div :class="$style.container">
             <search :class="$style.search" placeholder="搜索商品" />
             <propagate :class="$style.propagate" :data="PROPAGATE" />
-            <live :class="$style.live" :data="LIVE" v-if="LIVE.values && LIVE.values.length" />
-            <online-course :class="$style.onlineCourse" :data="COURSE" v-if="COURSE.values && COURSE.values.length" />
-            <series-course :class="$style.seriesCourse" :data="SERIES" v-if="SERIES.values && SERIES.values.length" />
+            <live :class="$style.live" :data="LIVE" v-if="isLiveShow" />
+            <online-course :class="$style.onlineCourse" :data="COURSE" v-if="isOnlineCourseShow" />
+            <series-course :class="$style.seriesCourse" :data="SERIES" v-if="isSeriesCourseShow" />
             <campaign v-if="isCampaignShow" />
             <!-- <activity :class="$style.activity" v-if="isNwEventShow" /> -->
             <!-- <d12-activity :class="$style.activity" /> -->
@@ -141,6 +141,15 @@ export default {
         },
         RECOMMEND () {
             return this.data.RECOMMEND || {}
+        },
+        isLiveShow () {
+            return this.LIVE.showStatue === 1 && this.LIVE.values && this.LIVE.values.length
+        },
+        isOnlineCourseShow () {
+            return this.COURSE.showStatue === 1 && this.COURSE.values && this.COURSE.values.length
+        },
+        isSeriesCourseShow () {
+            return this.SERIES.showStatue === 1 && this.SERIES.values && this.SERIES.values.length
         },
         // isNwEventShow () {
         //     return this.parent.nwEvent && this.parent.nwEvent.permissionStatus
