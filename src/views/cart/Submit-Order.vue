@@ -128,6 +128,7 @@ import {
     getOrderPayData,
     cancleOrderListByBatchNumber
 } from '../../apis/order-manager'
+import { getList } from '../../apis/student'
 import { mapGetters } from 'vuex'
 import OrderItemSkeleton from '../../components/skeleton/Order-Item.vue'
 import AddressItemSkeleton from '../../components/skeleton/Address-Item.vue'
@@ -207,7 +208,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['selectedAddress', 'openId', 'mobile', 'addressList', 'realName', 'userName', 'shareId', 'orderTypeKeyMap', 'skuSourceKeyMap', 'submitOrder/orderProducts', 'submitOrder/exchangeCodeInfo']),
+        ...mapGetters(['selectedAddress', 'openId', 'mobile', 'addressList', 'realName', 'userName', 'shareId', 'orderTypeKeyMap', 'skuSourceKeyMap', 'submitOrder/orderProducts', 'submitOrder/exchangeCodeInfo', 'submitOrder/checkedStudents']),
         // 是否从购物车进入的确认订单页面
         isCart () {
             return !!this.$route.query.isCart
@@ -323,6 +324,8 @@ export default {
                     }
                     this.exchangeCodeMap = exchangeCodeMap
                 }
+                // 设置默认学员
+                await this.setDefaultChecked()
             } catch (e) {
                 throw e
             }
@@ -411,6 +414,28 @@ export default {
                 const exchangeCodeInfo = this['submitOrder/exchangeCodeInfo']
                 if (exchangeCodeInfo.id)exchangeCodeInfo.isDefault = true
                 this.exchangeCodeInfo = exchangeCodeInfo
+            } catch (e) {
+                throw e
+            }
+        },
+
+        // 设置默认选中的学生， 若没有当前规格的商品，根据个数取默认的学员数据
+        async setDefaultChecked () {
+            try {
+                if (!this.products.some(item => item.needStudents)) return
+                const { result } = await getList()
+                const list = result.records || []
+                const defaultStudent = list.filter(item => item.defaultStatus === 1)
+                for (const item of this.products) {
+                    if (!item.needStudents) continue
+                    const sku = item.sku1 + item.sku2
+                    const CURRENT_CHECKED_STUDENT = this['submitOrder/checkedStudents'][sku] || []
+                    if (!CURRENT_CHECKED_STUDENT.length) {
+                        const student = defaultStudent.slice(0, item.count)
+                        item.students = student
+                        this.$store.commit('submitOrder/setCheckedStudent', { sku, student })
+                    }
+                }
             } catch (e) {
                 throw e
             }
