@@ -160,12 +160,16 @@
                 <!-- 预购商品价格 -->
                 <template v-if="detail.orderSource === skuSourceKeyMap.BOOKING">
                     <p>
+                        <span>定金(不退<i v-if="detail.orderIntentionAmountDouble > 1">，翻{{ detail.orderIntentionAmountDouble }}倍</i>)</span>
+                        <span class="rmb">{{ detail.orderIntentionAmount | formatAmount }}</span>
+                    </p>
+                    <p v-if="detail.status === orderStatuskeyMap.WAIT_PAY_TAIL_MONEY">
                         <span>待付尾款</span>
                         <span class="rmb">{{ detail.orderAmountTailMoney | formatAmount }}</span>
                     </p>
-                    <p>
-                        <span>定金(不退<i v-if="detail.orderIntentionAmountDouble > 1">，翻{{ detail.orderIntentionAmountDouble }}倍</i>)</span>
-                        <span class="rmb">{{ detail.orderIntentionAmount | formatAmount }}</span>
+                    <p v-else>
+                        <span>尾款</span>
+                        <span class="rmb">{{ detail.amount - detail.orderIntentionAmount * detail.orderIntentionAmountDouble - (detail.freight || 0) | formatAmount }}</span>
                     </p>
                 </template>
                 <!-- 其他商品价格 -->
@@ -213,8 +217,8 @@
                 <span class="fz-30">
                     总价：
                 </span>
-                <!-- 预购商品时，总价 = 定金 + 尾款 -->
-                <span :class="$style.totalMoney + ' fz-30 rmb'">{{ detail.amount | formatAmount }}</span>
+                <!-- 商品待付尾款时，总价 = 定金 + 尾款 -->
+                <span :class="$style.totalMoney + ' fz-30 rmb'">{{ (detail.status === orderStatuskeyMap.WAIT_PAY_TAIL_MONEY ? detail.amount + detail.orderAmountTailMoney : detail.amount) | formatAmount }}</span>
             </div>
         </div>
 
