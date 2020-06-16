@@ -93,12 +93,6 @@
                 :physical-products="physicalProducts"
                 @change="contactInfoChange"
             />
-
-            <!-- 订单备注（只有一个商品时显示） -->
-            <div :class="$style.oneProductMark">
-                <span>订单备注</span>
-                <input type="text" placeholder="请和商家协商一致后填写" v-model="form.orderPostscript">
-            </div>
         </div>
         <div
             :class="$style.skeleton"
@@ -196,8 +190,6 @@ export default {
                 skus: [],
                 // 地址信息
                 userAddress: null,
-                // 留言
-                orderPostscript: '',
                 // 奖学金
                 scholarshipModel: null,
                 // 优惠券
@@ -353,6 +345,7 @@ export default {
                 this.totalAmount = amount / 100
                 this.freight = Number(freightAmount) / 100
                 this.physicalProducts = PHYSICAL_GOODS
+                this.setOrderPostscript(this.products, skus)
                 // 将线上课归到课程中
                 this.products = skus
                 this.customList = skus.filter(item => item.skuCustoms.length)
@@ -522,6 +515,16 @@ export default {
                 }
             }
         },
+        // 增加备注
+        setOrderPostscript (from, to) {
+            for (const pro of from) {
+                if (!pro.orderPostscript) continue
+                const index = to.findIndex(item => pro.goodsId === item.goodsId && pro.sku1 === item.sku1 && pro.sku2 === item.sku2)
+                if (index !== -1) {
+                    to[index].orderPostscript = pro.orderPostscript
+                }
+            }
+        },
 
         /**
          * 修改商品数量事件
@@ -560,6 +563,7 @@ export default {
             }
             try {
                 this.submiting = true
+                this.setOrderPostscript(this.products, this.form.skus)
                 const form = JSON.parse(JSON.stringify(this.form))
                 if (this.exchangeCodeInfo.id) {
                     form.source = 8

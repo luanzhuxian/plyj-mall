@@ -108,6 +108,14 @@
                         <span slot="content" style="color: red;">+ ¥{{ item.postageAmount | formatAmount }}</span>
                     </InfoItem>
 
+                    <!--订单备注: 只有 实体/虚拟/正式课/体验课 支持订单备注 -->
+                    <InfoItem v-if="['PHYSICAL_GOODS', 'VIRTUAL_GOODS', 'FORMAL_CLASS', 'EXPERIENCE_CLASS'].includes(item.goodsType)">
+                        <template slot="label">订单备注</template>
+                        <span slot="content" class="gray-1">
+                            <input type="text" style="text-align: right;" placeholder="请和商家协商一致后填写" v-model="item.orderPostscript">
+                        </span>
+                    </InfoItem>
+
                     <!--产品建议: 确认订单页面，不显示详细优惠信息，防止产品再变，前台先手动计算-->
                     <InfoItem>
                         <template slot="label">小计</template>
