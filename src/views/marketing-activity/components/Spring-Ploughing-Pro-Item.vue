@@ -3,12 +3,12 @@
     <div
         :class="[$style.springPloughingProItem, $style[color]]"
         @click="$router.push({
-            name: data.productType ==='KNOWLEDGE_COURSE' ? 'Curriculum' : 'Product',
+            name: ~['KNOWLEDGE_COURSE', 'SERIES_OF_COURSE'].indexOf(data.productType) ? 'Curriculum' : 'Product',
             params: {
                 productId: data.goodsId
             },
             query: {
-                currentProductStatus: data.productType ==='KNOWLEDGE_COURSE' ? 6 : 5
+                currentProductStatus
             }
         })"
     >
@@ -26,12 +26,10 @@
                 <!--数量：{{ data.count }}-->
                 <!--{{ data.sku1Name }}{{ data.sku2Name ? ` ,${data.sku2Name}` : '' }}-->
             </div>
-            <!-- <div> -->
             <div :class="$style.price">折后价：￥{{ data.amount }}</div>
             <div :class="$style.originalPrice">
                 原价：<span :class="$style.text">￥{{ data.originPrice }}</span>
             </div>
-            <!-- </div> -->
         </div>
     </div>
 </template>
@@ -49,6 +47,11 @@ export default {
         color: {
             type: String,
             default: 'green'
+        },
+        // 5: 春耘计划， 6：组合聚惠学
+        currentProductStatus: {
+            type: Number,
+            default: 5
         }
     }
 }
