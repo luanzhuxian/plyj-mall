@@ -92,8 +92,8 @@ export default {
             this.orderList = list
         },
         setTime (item, index) {
-            const { userEndTime, userStartTime, currentTime } = item
-            const now = Number(currentTime)
+            const { endTime: userEndTime, startTime: userStartTime, currentTime } = item
+            const now = moment(currentTime).valueOf()
             const startTime = moment(userStartTime).valueOf()
             const endTime = moment(userEndTime).valueOf()
             // 是否开始付尾款

@@ -11,7 +11,7 @@
             :img="goodsImages"
             :name="goodsName"
             :option="subSkuName ? `${skuName},${subSkuName}` : skuName"
-            :count="countt"
+            :count="count"
             :price="unitPrice"
             :status="refundStatusMap[businessStatus]"
             border
@@ -36,20 +36,11 @@
                         <span>{{ countDown.s }}秒</span>
                     </template>
                 </div>
+                <!--未开始/已过期/实体商品 不支持 去付尾款-->
                 <pl-button
-                    v-if="!pastDue && orderStatus !== orderStatuskeyMap.WAIT_PAY"
                     type="warning"
                     round
-                    :disabled="!isStart"
-                    @click.stop="$router.push({ name: 'OrderDetail', params: { orderId: orderId } })"
-                >
-                    去使用
-                </pl-button>
-                <pl-button
-                    v-if="orderStatus === orderStatuskeyMap.WAIT_PAY"
-                    type="warning"
-                    round
-                    :disabled="!isStart || pastDue"
+                    :disabled="!isStart || pastDue || (orderType === 'PHYSICAL_GOODS')"
                     :loading="isPayloading"
                     @click.stop="doOperation('pay')"
                 >
