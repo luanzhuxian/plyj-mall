@@ -251,6 +251,8 @@ export default {
             this.loading = true
             await this.init()
             await this.getProductDetail()
+            // 设置默认学员
+            await this.setDefaultChecked()
             this.loading = false
         } catch (e) {
             throw e
@@ -324,8 +326,6 @@ export default {
                     }
                     this.exchangeCodeMap = exchangeCodeMap
                 }
-                // 设置默认学员
-                await this.setDefaultChecked()
             } catch (e) {
                 throw e
             }
