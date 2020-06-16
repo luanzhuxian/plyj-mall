@@ -704,6 +704,11 @@ export default {
         }),
         async refresh (productActive) {
             try {
+                this.currentModel = {}
+                this.haibao = ''
+                this.tab = 2
+                this.showSpecifica = false
+                this.loading = true
                 await this.getDetail(productActive)
             } catch (e) {
                 setTimeout(() => {
@@ -712,11 +717,6 @@ export default {
                 throw e
             }
             try {
-                this.currentModel = {}
-                this.haibao = ''
-                this.tab = 2
-                this.showSpecifica = false
-                this.loading = true
                 await this.getCouponList()
                 if (this.productActive === 7) {
                     await this.getPublicBenefitInfo()
