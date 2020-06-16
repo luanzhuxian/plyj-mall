@@ -743,8 +743,10 @@ export default {
         },
         // 设置时间
         setTime () {
-            // 只有 待付款 / 待付尾款 有支付倒计时
-            if (![this.orderStatuskeyMap.WAIT_PAY, this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY, this.orderStatuskeyMap.WAIT_RECEIVE].includes(this.detail.status)) return
+            // 只有 待付款 / 待付尾款 有支付倒计时 + 实体订单 有 确认收货倒计时
+            if ((![this.orderStatuskeyMap.WAIT_PAY, this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY].includes(this.detail.status)) ||
+              !(this.orderStatuskeyMap.WAIT_RECEIVE === this.detail.status && this.detail.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS)
+            ) return
             // 春耘 / 组合聚惠学 不显示支付倒计时
             if (this.detail.orderSource === this.skuSourceKeyMap.SPRINGPLOUGHING || this.detail.orderSource === this.skuSourceKeyMap.COURSEPACKAGE) return
             // 服务器时间
