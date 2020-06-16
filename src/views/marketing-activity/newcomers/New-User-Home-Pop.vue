@@ -1,0 +1,33 @@
+<!-- 新人有礼首页弹框提示 -->
+<template>
+    <pl-mask :show="show" @close="close">
+        <router-link
+            tag="img"
+            :to="{ name: 'Newcomers' }"
+            :class="$style.img"
+            width="460"
+            src="https://mallcdn.youpenglai.com/static/admall/2.11.0/newuser-pop.png"
+            alt=""
+        /></pl-mask>
+</template>
+
+<script>
+export default {
+    name: 'NewUserHomePop',
+    props: {
+        show: Boolean
+    },
+    methods: {
+        close () {
+            console.log(123)
+            this.$emit('update:show', false)
+        }
+    }
+}
+</script>
+
+<style module lang="scss">
+    .img {
+        width: 460px;
+    }
+</style>

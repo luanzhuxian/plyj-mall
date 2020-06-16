@@ -42,10 +42,6 @@
             </div>
             <invite-newcomers-home-entry />
         </div>
-        <!-- 双十二-新人有礼 -->
-        <newcomers-home-entry />
-        <!-- 新春开学季-新人有礼 -->
-        <new-year-newcomers-home-entry />
         <pl-svg :class="$style.loading" name="icon-loading" fill="#FFF" width="90" v-if="!allLoaded" />
     </div>
 </template>
@@ -59,8 +55,6 @@ import TemplateFanchang from './templates/Template-Fanchang.vue'
 import TemplateXinchun from './templates/Template-Xinchun.vue'
 import TemplateDragonGate from './templates/Template-Dragon-Gate.vue'
 import InviteNewcomersHomeEntry from '../marketing-activity/double-12/invitenewcomers/InviteNewcomersHomeEntry.vue'
-import NewcomersHomeEntry from '../marketing-activity/newcomers/NewcomersHomeEntry.vue'
-import NewYearNewcomersHomeEntry from '../marketing-activity/new-year/newcomers/NewcomersHomeEntry.vue'
 
 export default {
     name: 'Activity',
@@ -71,9 +65,7 @@ export default {
         TemplateFanchang,
         TemplateXinchun,
         TemplateDragonGate,
-        InviteNewcomersHomeEntry,
-        NewcomersHomeEntry,
-        NewYearNewcomersHomeEntry
+        InviteNewcomersHomeEntry
     },
     provide () {
         return {

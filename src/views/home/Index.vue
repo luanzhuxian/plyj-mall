@@ -20,8 +20,6 @@
                 :data="modules"
             />
             <invite-newcomers-home-entry />
-            <newcomers-home-entry />
-            <new-year-newcomers-home-entry />
             <!--瓜分奖学金-->
             <split-burse />
             <!--送课弹框-->
@@ -46,8 +44,6 @@ import TemplateB from './Template-B.vue'
 import TemplateC from './Template-C.vue'
 import TemplateD from './Template-D.vue'
 import InviteNewcomersHomeEntry from '../marketing-activity/double-12/invitenewcomers/InviteNewcomersHomeEntry.vue'
-import NewcomersHomeEntry from '../marketing-activity/newcomers/NewcomersHomeEntry.vue'
-import NewYearNewcomersHomeEntry from '../marketing-activity/new-year/newcomers/NewcomersHomeEntry.vue'
 import SplitBurse from './../../components/common/Split-Burse.vue'
 import SendLive from './../../components/common/Send-Live.vue'
 import { getTemplate } from '../../apis/home'
@@ -71,8 +67,6 @@ export default {
         TemplateC,
         TemplateD,
         InviteNewcomersHomeEntry,
-        NewYearNewcomersHomeEntry,
-        NewcomersHomeEntry,
         SplitBurse,
         SendLive
     },

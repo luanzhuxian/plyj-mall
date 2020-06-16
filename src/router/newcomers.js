@@ -1,6 +1,6 @@
 export default [
     {
-        path: '/newcomers/:activityId',
+        path: '/newcomers',
         name: 'Newcomers',
         component: () => import('../views/marketing-activity/newcomers/Newcomers.vue'),
         meta: {

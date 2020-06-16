@@ -100,6 +100,8 @@ export default {
             }
         }
     },
+    mounted () {
+    },
     methods: {
         clickHandler (e) {
             this.$emit('click', e)
@@ -108,6 +110,8 @@ export default {
             this.$emit('hover', e)
         },
         change (fill) {
+            console.log(fill)
+            console.log(this.name)
             if (!this.name || !fill || this.type !== 'svg') return
 
             /**

@@ -6,12 +6,19 @@
 
         <navbar v-if="showNavbar.indexOf($route.name) > -1" />
         <QuickNavbar v-else />
+        <NewUserHomePop
+            v-if="$route.name === 'Home'"
+            :show.sync="showNewUser"
+        />
+        <NewUserHomeBtn v-if="$route.name === 'Home'" />
     </div>
 </template>
 
 <script>
 import Navbar from './components/common/Navbar.vue'
 import QuickNavbar from './components/common/Quick-Navbar.vue'
+import NewUserHomePop from './views/marketing-activity/newcomers/New-User-Home-Pop.vue'
+import NewUserHomeBtn from './views/marketing-activity/newcomers/New-User-Home-Btn.vue'
 import { mapMutations, mapActions } from 'vuex'
 import {
     SET_THEME,
@@ -42,11 +49,14 @@ import { setFirstVisit } from './apis/longmen-festival/lottery'
 export default {
     components: {
         Navbar,
-        QuickNavbar
+        QuickNavbar,
+        NewUserHomePop,
+        NewUserHomeBtn
     },
     data () {
         return {
             logined: false,
+            showNewUser: true,
             exclude: [
                 'ShoppingCart',
                 'LiveRoom',
