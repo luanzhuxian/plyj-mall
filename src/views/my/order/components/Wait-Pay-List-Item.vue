@@ -20,11 +20,11 @@
             <div :class="$style.priceWrapper">
                 <span :class="$style.totalCount">共{{ count }}件商品</span>
                 <span :class="$style.bold">定金：</span>
-                <span :class="$style.price">{{ orderIntentionAmount }}</span>
+                <span :class="$style.price">{{ orderIntentionAmount | formatAmount }}</span>
             </div>
             <div :class="$style.priceWrapper">
                 <span :class="$style.bold">待付尾款：</span>
-                <span :class="$style.price">{{ orderAmountTailMoney }}</span>
+                <span :class="$style.price">{{ orderAmountTailMoney | formatAmount }}</span>
             </div>
             <div :class="$style.buttons">
                 <div :class="$style.time">

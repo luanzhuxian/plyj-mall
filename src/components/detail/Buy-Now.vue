@@ -146,14 +146,14 @@ export default {
             clickAddToCart: false,
             clickBuyNow: false,
             loading: false,
-            showContact: false
+            showContact: false,
 
             /**
-       * 购买方式
-       * 2 按正常商品购买
-       * 3 按活动商品购买
-       */
-            // buyWay: 2
+             * 购买方式
+             * 2 按正常商品购买
+             * 3 按活动商品购买
+             */
+            buyWay: 2
         }
     },
     props: {
@@ -313,9 +313,9 @@ export default {
             // helper分享时携带的id
             this.$store.commit('submitOrder/setOrderProducts', {
                 params: {
-                    activeProduct: this.activeProduct || 1,
-                    preActivity: this.preActivity || '',
-                    activityId: this.activityProductModel ? this.activityProductModel.activityId || '' : ''
+                    activeProduct: this.buyWay === 2 ? 1 : this.activeProduct,
+                    preActivity: (this.buyWay === 2 || this.activeProduct === 1) ? null : this.preActivity,
+                    activityId: (this.activeProduct === 1 || this.buyWay === 2) ? null : (this.activityProductModel && this.activityProductModel.activityId) || null
                 },
                 products: [
                     {
@@ -349,14 +349,14 @@ export default {
             if (type === 2) {
                 this.clickBuyNow = true
                 this.clickAddToCart = false
-                // this.buyWay = 2
+                this.buyWay = 2
             }
 
             // 立即购买按钮or定金购买
             if (type === 3) {
                 this.clickBuyNow = true
                 this.clickAddToCart = false
-                // this.buyWay = 3
+                this.buyWay = 3
             }
             this.showSpecifica = true
         },
