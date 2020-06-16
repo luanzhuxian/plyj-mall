@@ -601,13 +601,11 @@ export default {
         // 处理支付失败的场景
         async handlepayError (orderBatchNumber) {
             try {
-                /**
-                 * 组合聚惠学 + 春耘 支付失败，要手动关闭订单； 再跳到全部订单中
-                 * 其他直接跳
-                 * */
-                if (this.activeProduct === this.skuSourceKeyMap.SPRINGPLOUGHING || this.activeProduct === this.skuSourceKeyMap.COURSEPACKAGE) {
-                    await cancleOrderListByBatchNumber(orderBatchNumber)
-                }
+                const FORMALS = ['PHYSICAL_GOODS', 'VIRTUAL_GOODS', 'FORMAL_CLASS', 'EXPERIENCE_CLASS']
+                const orderType = this.products.some(item => FORMALS.includes(item.goodsType))
+                // 只有普通 实体/虚拟/正式课/体验课 + 非活动状态 才可二次支付不必关闭订单，其他支付失败直接关闭订单
+                if (orderType && this.activeProduct === this.skuSourceKeyMap.NORMAL) return
+                await cancleOrderListByBatchNumber(orderBatchNumber)
                 await this.$router.replace({ name: 'Orders', params: { status: 'ALL_ORDERS' } })
             } catch (e) {
                 throw e

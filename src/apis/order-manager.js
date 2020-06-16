@@ -140,7 +140,7 @@ export const getOrderPayData = orderBatchNumber => axios.post(`/apis/v2/order/pa
  * @param batchNumber {String} 批次号
  * @return {Promise<*>}
  */
-export const cancleOrderListByBatchNumber = batchNumber => axios.get(`/apis/v2/order/cancel/batch?orderBatchNumber=${ batchNumber }`)
+export const cancleOrderListByBatchNumber = batchNumber => axios.get(`/apis/v2/order/cancel/batch?batchNumber=${ batchNumber }`)
 
 /**
  * 订单详情
