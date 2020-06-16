@@ -73,8 +73,9 @@
                     <InfoItem v-if="(activeProduct === 5 || activeProduct === 6) && item.discount < 100">
                         <template slot="label" v-if="activeProduct === 5">春耘折扣</template>
                         <template slot="label" v-else-if="activeProduct === 6">组合折扣</template>
-                        <span slot="content" class="primary-color">
-                            {{ item.discount / 10 }}折
+                        <span slot="content">
+                            <span class="primary-color">{{ item.discount / 10 }}折</span>
+                            <span> -¥{{ item.count * item.sellingPrice - item.amount | formatAmount }}</span>
                         </span>
                     </InfoItem>
 

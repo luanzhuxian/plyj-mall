@@ -196,7 +196,10 @@
                 <!--组合折扣-->
                 <p v-if="detail.orderSource === skuSourceKeyMap.COURSEPACKAGE && detail.combinationSpecialPrice">
                     <span>组合折扣</span>
-                    <span>-¥{{ detail.combinationSpecialPrice | formatAmount }}</span>
+                    <span>
+                        <span class="color-fe7700">{{ detail.discount / 10 }}折 </span>
+                        <span>-¥{{ detail.combinationSpecialPrice | formatAmount }}</span>
+                    </span>
                 </p>
                 <!--运费-->
                 <p v-if="detail.orderType === orderTypeKeyMap.PHYSICAL_GOODS">
@@ -334,7 +337,9 @@
         </div>
 
         <!-- 发票信息：0元 + 不支持开发票 不显示 -->
-        <div v-if="detail.supportAfterSales && (detail.amount - detail.freight) > 0 " :class="[$style.panel, $style.invoice]">
+        <div v-if=" detail.orderSource === skuSourceKeyMap.NORMAL &&
+            (detail.amount - detail.freight) > 0 &&
+            detail.supportInvoice " :class="[$style.panel, $style.invoice]">
             <div :class="$style.title">
                 发票信息：<span :class="$style.color222" v-if="!detail.invoiceId">未开票</span>
             </div>
@@ -1238,4 +1243,7 @@ export default {
     border: 1px solid #fe7700;
     color: #fe7700;
 }
+  .color-fe7700 {
+    color: #fe7700;
+  }
 </style>
