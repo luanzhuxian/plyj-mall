@@ -112,7 +112,7 @@
                     <InfoItem v-if="['PHYSICAL_GOODS', 'VIRTUAL_GOODS', 'FORMAL_CLASS', 'EXPERIENCE_CLASS'].includes(item.goodsType)">
                         <template slot="label">订单备注</template>
                         <span slot="content" class="gray-1">
-                            <input type="text" style="text-align: right;" placeholder="请和商家协商一致后填写" v-model="item.orderPostscript">
+                            <input type="text" style="text-align: right;" placeholder="选填" v-model="item.orderPostscript">
                         </span>
                     </InfoItem>
 
