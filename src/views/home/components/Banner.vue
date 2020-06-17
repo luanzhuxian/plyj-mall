@@ -156,6 +156,10 @@ export default {
             if (type === 48) {
                 const { dragonGateCharity } = this
                 if (!dragonGateCharity || !dragonGateCharity.id) return false
+
+                const endTime = moment(dragonGateCharity.endTime).valueOf()
+                if (endTime < Date.now()) return false
+
                 return this.$router.push({ name: 'LongmenAction', params: { id: dragonGateCharity.id } })
             }
             // 粽粽有礼

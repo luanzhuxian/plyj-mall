@@ -140,12 +140,17 @@ export default {
                     endTime = moment(nwEvent.activityEndTime).valueOf()
                     if (startTime > Date.now()) return this.$warning('活动未开始')
                     if (endTime < Date.now()) return this.$warning('活动已结束')
+
                     id = nwEvent.id
                     break
 
                 case 'dragon-gate-charity':
                     const { dragonGateCharity } = this
                     if (!dragonGateCharity || !dragonGateCharity.id) return this.$warning('活动已结束')
+
+                    endTime = moment(dragonGateCharity.endTime).valueOf()
+                    if (endTime < Date.now()) return this.$warning('活动已结束')
+
                     id = dragonGateCharity.id
                     break
 
@@ -157,6 +162,7 @@ export default {
                     endTime = moment(dragonGateSign.activityEndTime).valueOf()
                     if (startTime > Date.now()) return this.$warning('活动未开始')
                     if (endTime < Date.now()) return this.$warning('活动已结束')
+
                     id = this.dragonGateSign.id
                     break
 
@@ -168,6 +174,7 @@ export default {
                     endTime = moment(dragonGatePlay.endTime).valueOf()
                     if (startTime > Date.now()) return this.$warning('活动未开始')
                     if (endTime < Date.now()) return this.$warning('活动已结束')
+
                     id = this.dragonGatePlay.id
                     break
 
