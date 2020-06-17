@@ -126,6 +126,8 @@ import {
     loadImage
 } from '../../../assets/js/util'
 import Countdown from '../../../assets/js/Countdown'
+import share from '../../../assets/js/wechat/wechat-share'
+import { SET_SHARE_ID } from '../../../store/mutation-type'
 
 const POSTER_BG = 'https://mallcdn.youpenglai.com/static/mall/2.0.0/activity/4b676734-b0c9-4aca-942d-ce62e481ebcf.jpeg'
 
@@ -162,17 +164,28 @@ export default {
             }
         }
     },
+    props: {
+        brokerId: {
+            type: String,
+            default: ''
+        }
+    },
     computed: {
-        ...mapGetters(['avatar', 'userName', 'mobile'])
+        ...mapGetters(['avatar', 'userName', 'mobile', 'userId', 'mallUrl', 'shareId', 'appId'])
     },
     async activated () {
         try {
             await this.getSpringCombination()
             const t = await Countdown.getServerTime()
+            this.share()
             console.log(t)
         } catch (e) {
             throw e
         }
+    },
+    mounted () {
+        // 全局缓存分享人id
+        this.$store.commit(SET_SHARE_ID, this.brokerId)
     },
     deactivated () {
         this.countInstaceList.map(item => item.stop())
@@ -336,11 +349,32 @@ export default {
             ctx.textBaseline = 'hanging'
             createText(ctx, 100, 32, `${ this.userName } 邀你一起春耘计划`, 34, 510, 1)
             ctx.drawImage(BG, 0, 88, 638, 1046)
-            const QR = await generateQrcode({ size: 200, text: location.href, type: 'canvas' })
+            const QR = await generateQrcode({ size: 200, text: this.shareUrl, type: 'canvas' })
             ctx.drawImage(QR, 216, 826, 204, 204)
             this.poster = cvs.toDataURL('image/jpeg', 0.9)
             this.showPoster = true
             this.creating = false
+        },
+        share () {
+            let shareUrl = ''
+            let img
+            const { appId, mallUrl, userId } = this
+            if (userId) {
+                shareUrl = `${ mallUrl }/spring-ploughing/${ userId }?noCache=${ Date.now() }`
+            } else {
+                shareUrl = `${ mallUrl }/spring-ploughing?noCache=${ Date.now() }`
+            }
+            this.shareUrl = shareUrl
+            if (this.list.length) {
+                img = this.list[0].models[0].image
+            }
+            share({
+                appId,
+                title: `${ this.userName } 邀您参加春耘计划`,
+                desc: '一年之“绩”在于春，冬储春耘，打响新春第一战',
+                link: shareUrl,
+                imgUrl: img
+            })
         }
     }
 }

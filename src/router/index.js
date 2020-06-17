@@ -10,7 +10,6 @@ import setting from './setting'
 import Cart from './cart'
 import Appointment from './appointment'
 import NotFound from '../views/404.vue'
-import DoubleTwelveDay from './double-twelve-day'
 import Live from './live'
 import Activity from './activity'
 import Newcomers from './newcomers'
@@ -105,7 +104,6 @@ const allRoutes = [
     ...setting,
     ...Cart,
     ...Appointment,
-    ...DoubleTwelveDay,
     ...Live,
     ...Activity,
     ...Newcomers,

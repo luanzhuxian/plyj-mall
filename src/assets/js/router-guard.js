@@ -9,7 +9,8 @@ const customShare = [
     'InviteNewcomers',
     'Newcomers',
     'Classify',
-    'CoursePackage'
+    'CoursePackage',
+    'SpringPloughing'
 ]
 // 采取默认分享的路由，不需要自己配置分享信息，会拉取当前商城的一些信息
 const shareRoutes = [
