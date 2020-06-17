@@ -660,8 +660,8 @@ export default {
                 const { result } = await getOrderDetail(this.orderId)
                 const { goodsModel, orderPayTransInfos, redeemCodeModels, productCustomInfo, invoiceInfoModel, shippingInfoModel } = result
                 result.refundId = (result.orderRefundsModel && result.orderRefundsModel.id) || ''
-                // 组合折扣 扣除的金额 = 商品价格 * 折扣
-                result.combinationSpecialPrice = (result.goodsPrice || 0) * (100 - (result.discount || 0)) / 100
+                // 组合折扣  = 商品总价 - 运费 - 实际付款值
+                result.combinationSpecialPrice = (result.goodsPrice || 0) - (result.freight || 0) - (result.amount || 0)
                 this.detail = result
                 goodsModel.sellingPrice = filter.formatAmount(goodsModel.sellingPrice)
                 // 商品详情
