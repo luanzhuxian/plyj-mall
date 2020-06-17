@@ -31,7 +31,8 @@
             <div :class="$style.priceWrapper">
                 <span :class="$style.totalCount">{{ `共${count}件` }}</span>
                 <span :class="$style.bold">总价：</span>
-                <span :class="$style.price">{{ amount | formatAmount }}</span>
+                <!-- 商品待付尾款时，总价 = 定金 + 尾款 -->
+                <span :class="$style.price + ' fz-30 rmb'">{{ (orderStatus === orderStatuskeyMap.WAIT_PAY_TAIL_MONEY ? amount + orderAmountTailMoney : amount) | formatAmount }}</span>
             </div>
             <div :class="$style.buttons">
                 <!--正常待付款 支持 付款(目前只区别于预购的待付尾款), 组合聚会学 + 春耘 不支持二次付款-->
@@ -216,6 +217,11 @@ export default {
         },
         // 订单总价（分）
         amount: {
+            type: [Number, String],
+            default: 0
+        },
+        // 尾款金额
+        orderAmountTailMoney: {
             type: [Number, String],
             default: 0
         },
