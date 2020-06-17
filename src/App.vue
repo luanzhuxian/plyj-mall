@@ -92,6 +92,7 @@ export default {
             }
             this.logined = true
             await this.getEntryData()
+            await this.getActivityData()
             // 标记一天中首次访问
             setFirstVisit()
         } catch (e) {
@@ -112,27 +113,19 @@ export default {
             getMallInfo: GET_MALL_INFO,
             login: LOGIN,
             getUserInfo: USER_INFO,
-            getActivityData: GET_ACTIVITY_DATA,
+            getMainCenter: GET_ACTIVITY_DATA,
             getSkinId: GET_SKIN_ID
         }),
-        // 获取首页、主会场页所需数据
+        // 获取商城主会场、皮肤数据
         async getEntryData () {
             try {
                 const list = [
                     // 待领优惠券
                     getMyCouponInfo(),
                     // 获取主会场数据
-                    this.getActivityData(),
+                    this.getMainCenter(),
                     // 获取皮肤id
                     this.getSkinId()
-                ]
-
-                const activityList = [
-                    getLiveInfo(),
-                    getNianweiInfo(),
-                    getDragonGateCharityInfo(),
-                    getDragonGateSignInfo(),
-                    getDragonGatePlayInfo()
                 ]
 
                 const [{ result: coupon }] = await Promise.all(list.map(p => p.catch(e => {
@@ -140,6 +133,20 @@ export default {
                     return { result: {} }
                 })))
                 this.setCouponInfo(coupon)
+            } catch (error) {
+                throw error
+            }
+        },
+        // 获取首页、主会场页所需活动数据
+        async getActivityData () {
+            try {
+                const activityList = [
+                    getLiveInfo(),
+                    getNianweiInfo(),
+                    getDragonGateCharityInfo(),
+                    getDragonGateSignInfo(),
+                    getDragonGatePlayInfo()
+                ]
 
                 const [
                     { result: live },
