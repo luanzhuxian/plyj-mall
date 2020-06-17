@@ -39,20 +39,34 @@
                 </button>
             </div>
 
-            <div
-                :class="$style.personInvioce"
-                v-show="type === 1"
+            <!--个人发票-->
+            <pl-form
+                :class="$style.firmInvioce"
+                v-if="type === 1"
+                :model="personalInfo"
+                :rules="personalInfoRules"
+                ref="personalInfo"
             >
-                <div :class="$style.personName">
-                    <span>姓名：</span>
-                    <span v-text="receiveName || realName" />
-                </div>
-                <div :class="$style.personMobile">
-                    <span>手机号：</span>
-                    <span>{{ mobile || receiveMobile | formatAccount }}</span>
-                </div>
-            </div>
+                <pl-form-item
+                    border
+                    prop="name"
+                >
+                    <pl-input
+                        size="middle"
+                        placeholder="姓名"
+                        v-model="personalInfo.name"
+                    />
+                </pl-form-item>
+                <pl-form-item prop="mobile">
+                    <pl-input
+                        size="middle"
+                        placeholder="手机号"
+                        v-model="personalInfo.mobile"
+                    />
+                </pl-form-item>
+            </pl-form>
 
+            <!--单位发票-->
             <pl-form
                 :class="$style.firmInvioce"
                 v-if="type === 2 && invoiceList.length === 0"
@@ -85,7 +99,7 @@
                     />
                 </pl-form-item>
             </pl-form>
-
+            <!--单位发票附加信息-->
             <pl-form
                 :class="$style.firmInvioce"
                 v-if="type === 2 && invoiceList.length > 0"
@@ -125,7 +139,8 @@
             <pl-form>
                 <pl-form-item label="收票方式">
                     <pl-radio v-model="receiveInfo.mailingMethod" align="flex-start" inline :label="0">自提</pl-radio>
-                    <pl-radio v-model="receiveInfo.mailingMethod" align="flex-start" inline :label="1">邮寄</pl-radio>
+                    <!--当前订单列表中若没有实体商品,不支持邮寄-->
+                    <pl-radio v-if="hasPhysicalGoods()" v-model="receiveInfo.mailingMethod" align="flex-start" inline :label="1">邮寄</pl-radio>
                 </pl-form-item>
                 <template v-if="receiveInfo.mailingMethod === 1">
                     <pl-form-item label="联系电话">
@@ -181,6 +196,8 @@
         >
             确定
         </pl-button>
+
+        <!--发票须知-->
         <pl-popup :show.sync="showInvioceIntro">
             <h2
                 :class="$style.invioceIntroTitle"
@@ -195,6 +212,7 @@
             </div>
         </pl-popup>
 
+        <!--发票税号说明-->
         <pl-popup :show.sync="showInvioceNum">
             <h2
                 :class="$style.invioceIntroTitle"
@@ -212,6 +230,7 @@
             </div>
         </pl-popup>
 
+        <!--选择城市-->
         <CitySelector
             :show.sync="showCitySelector"
             @select="selectCity"
@@ -223,6 +242,7 @@
 <script>
 /* eslint-disable */
 import { mapGetters } from 'vuex'
+import { isPhone } from '../../../assets/js/validate'
 import {
     addInvoice,
     getInvoiceList,
@@ -238,26 +258,45 @@ export default {
     },
     data () {
         return {
+            // 是否显示 发票须知
             showInvioceIntro: false,
+            // 发票税号说明
             showInvioceNum: false,
+            // 选择城市
             showCitySelector: false,
             // 待开票商品
             applyInvoice: [],
+            // 选择的开票商品
             checkedList: [],
             // 已添加的发票信息列表
             invoiceList: [],
+            // 默认开具 个人发票
             type: 1,
             // 当前选中的发票信息
             currentInvoice: null,
-            form: {
-                tin: '',
-                firmName: ''
+            defaultName:'',
+            defaultMobile:'',
+            personalInfo:{
+              name: '',
+              mobile: ''
             },
+            personalInfoRules:{
+              name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
+              mobile: [
+                { required: true, message: '请输入手机号', trigger: 'blur'  },
+                { validator: isPhone, message: '手机号格式错误', trigger: 'blur' }
+              ],
+            },
+            form: {
+                firmName: '', // 单位名称
+                tin: '' // 纳税人识别号
+            },
+            // 收票方式
             receiveInfo: {
                 mobile: '',
                 city: '',
                 address: '',
-                mailingMethod: 0
+                mailingMethod: 0 // 0-自提 1-邮寄
             },
             rules: {
                 firmName: [{ required: true, message: '请输入单位名称', trigger: 'blur' }],
@@ -296,9 +335,16 @@ export default {
         }
         this.checkedList = [...APPLY_INVOICE]
         this.applyInvoice = APPLY_INVOICE
+        // 设置默认邮寄信息
         this.receiveInfo.mobile = this.mobile || this.receiveMobile
         this.receiveInfo.city = this.selectedAddress.addressPrefix
         this.receiveInfo.address = this.selectedAddress.agencyAddress
+        // 设置默认信息
+        this.defaultName = this.receiveName || this.realName
+        this.defaultMobile = this.mobile || this.receiveMobile
+        // 设置默认个人信息
+        this.personalInfo.name = this.defaultName
+        this.personalInfo.mobile =  this.defaultMobile
         try {
             this.getInvoiceList()
         } catch (e) {
@@ -306,6 +352,9 @@ export default {
         }
     },
     methods: {
+        hasPhysicalGoods(){
+          return this.applyInvoice.some(item => item.goodsType === 'PHYSICAL_GOODS')
+        },
         isSelected (pro) {
             return this.checkedList.some(item => item.sku1 === pro.sku1 && item.sku2 === pro.sku2)
         },
@@ -321,6 +370,7 @@ export default {
                 throw e
             }
         },
+      // 选择开票商品
         selectChange (e, prod) {
             const { checked } = e.target
             if (checked) {
@@ -338,35 +388,43 @@ export default {
             this.$router.push({ name: 'AddInvoice' })
         },
         async confirm () {
+            // 校验是否选择商品
             if (this.checkedList.length === 0) {
                 this.$warning('请选择要开票的商品')
                 return
             }
+            // 个人发票内容校验
+            if(this.type === 1){
+              if(!this.personalInfo.name) return this.$warning('请输入姓名')
+              if(!this.personalInfo.mobile) return this.$warning('请输入手机号')
+              if(!isPhone(this.personalInfo.mobile)) return this.$warning('手机号格式错误')
+            }
+            // 单位发票内容校验
+            if(this.type === 2){
+              if(!this.form.firmName && !this.currentInvoice.entName) return this.$warning('请输入单位名称')
+              if(!this.form.tin && !this.currentInvoice.tin) return this.$warning('请输入纳税人识别号')
+            }
+            // 选择邮寄时,以下内容必填
             if(this.receiveInfo.mailingMethod === 1){
               if(!this.receiveInfo.mobile) return this.$warning('请填写联系电话')
               if(!this.receiveInfo.city) return this.$warning('请选择区域')
               if(!this.receiveInfo.address) return this.$warning('请填写详细地址')
             }
             const receiveInfo = this.receiveInfo
-            // const invoiceModel = {
-            //     invoiceType: this.type,
-            //     invoiceTitle: this.realName || this.receiveName,
-            //     receiverMobile: receiveInfo.mailingMethod === 1 ? receiveInfo.mobile : (this.mobile || this.receiveMobile),
-            //     userAddress: `${ receiveInfo.city }${ receiveInfo.address }`,
-            //     mailingMethod: receiveInfo.mailingMethod
-            // }
             let invoiceModel = null
             let invoiceAmount = 0
             const orderDetails = []
             if (this.type === 1) {
+                // 个人发票
                 invoiceModel = {
                     invoiceType: 1,
                     mailingMethod: receiveInfo.mailingMethod,
-                    invoiceTitle: this.realName || this.receiveName,
-                    receiverMobile: receiveInfo.mailingMethod === 1 ? receiveInfo.mobile : (this.mobile || this.receiveMobile),
+                    invoiceTitle: this.personalInfo.name,
+                    receiverMobile: receiveInfo.mailingMethod === 1 ? receiveInfo.mobile : this.personalInfo.mobile,
                     userAddress: receiveInfo.mailingMethod === 1 ? `${ receiveInfo.city }${ receiveInfo.address }` : ''
                 }
             } else {
+                // 单位发票
                 if (this.currentInvoice) {
                     this.form.tin = this.currentInvoice.tin
                     this.form.firmName = this.currentInvoice.entName
@@ -376,7 +434,7 @@ export default {
                     invoiceType: 2,
                     tin: this.form.tin,
                     invoiceTitle: this.form.firmName,
-                    receiverMobile: receiveInfo.mailingMethod === 1 ? receiveInfo.mobile : (this.mobile || this.receiveMobile),
+                    receiverMobile: receiveInfo.mailingMethod === 1 ? receiveInfo.mobile : this.defaultMobile,
                     mailingMethod: receiveInfo.mailingMethod,
                     userAddress: receiveInfo.mailingMethod === 1 ? `${ receiveInfo.city }${ receiveInfo.address }` : ''
                 }
@@ -408,13 +466,13 @@ export default {
                 try {
                     this.loading = true
                     await applyInvoice({
-                        invoiceTitle: this.type === 1 ? this.receiveName : this.form.firmName,
-                        invoiceType: this.type,
+                        invoiceTitle: invoiceModel.invoiceTitle,
+                        invoiceType: invoiceModel.invoiceType,
                         taxpayerNumber: this.type === 2 ? this.form.tin : '',
                         orderIds: [this.orderId],
-                        companyPhone: receiveInfo.mailingMethod === 1 ? receiveInfo.mobile : (this.mobile || this.receiveMobile),
-                        mailingMethod: receiveInfo.mailingMethod,
-                        companyAddr: receiveInfo.mailingMethod === 1 ? `${ receiveInfo.city }${ receiveInfo.address }` : ''
+                        companyPhone: invoiceModel.receiverMobile,
+                        mailingMethod: invoiceModel.mailingMethod,
+                        companyAddr: invoiceModel.userAddress
                     })
                 } catch (e) {
                     throw e
@@ -422,9 +480,8 @@ export default {
                     this.loading = false
                 }
             } else {
-                let params = {...invoiceModel}
-                params.invoiceTitle=this.type === 1 ? this.receiveName : this.form.firmName
-                params.companyPhone=this.receiveMobile
+                const params = { ...invoiceModel }
+                params.companyPhone = invoiceModel.receiverMobile,
                 this.$store.commit('submitOrder/setInvoiceInfo', params)
             }
 
