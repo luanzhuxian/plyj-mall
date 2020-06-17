@@ -30,7 +30,6 @@
 </template>
 
 <script>
-import moment from 'moment'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -136,8 +135,8 @@ export default {
                     if (!nwEvent || !nwEvent.id) return this.$warning('活动已结束')
                     if (!nwEvent.permissionStatus) return this.$warning('您无法参与活动')
 
-                    startTime = moment(nwEvent.activityStartTime).valueOf()
-                    endTime = moment(nwEvent.activityEndTime).valueOf()
+                    startTime = new Date(nwEvent.activityStartTime).valueOf()
+                    endTime = new Date(nwEvent.activityEndTime).valueOf()
                     if (startTime > Date.now()) return this.$warning('活动未开始')
                     if (endTime < Date.now()) return this.$warning('活动已结束')
 
@@ -148,7 +147,7 @@ export default {
                     const { dragonGateCharity } = this
                     if (!dragonGateCharity || !dragonGateCharity.id) return this.$warning('活动已结束')
 
-                    endTime = moment(dragonGateCharity.endTime).valueOf()
+                    endTime = new Date(dragonGateCharity.endTime).valueOf()
                     if (endTime < Date.now()) return this.$warning('活动已结束')
 
                     id = dragonGateCharity.id
@@ -158,8 +157,8 @@ export default {
                     const { dragonGateSign } = this
                     if (!dragonGateSign || !dragonGateSign.id) return this.$warning('活动已结束')
 
-                    startTime = moment(dragonGateSign.activityStartTime).valueOf()
-                    endTime = moment(dragonGateSign.activityEndTime).valueOf()
+                    startTime = new Date(dragonGateSign.activityStartTime).valueOf()
+                    endTime = new Date(dragonGateSign.activityEndTime).valueOf()
                     if (startTime > Date.now()) return this.$warning('活动未开始')
                     if (endTime < Date.now()) return this.$warning('活动已结束')
 
@@ -170,8 +169,8 @@ export default {
                     const { dragonGatePlay } = this
                     if (!dragonGatePlay || !dragonGatePlay.id) return this.$warning('活动已结束')
 
-                    startTime = moment(dragonGatePlay.startTime).valueOf()
-                    endTime = moment(dragonGatePlay.endTime).valueOf()
+                    startTime = new Date(dragonGatePlay.startTime).valueOf()
+                    endTime = new Date(dragonGatePlay.endTime).valueOf()
                     if (startTime > Date.now()) return this.$warning('活动未开始')
                     if (endTime < Date.now()) return this.$warning('活动已结束')
 

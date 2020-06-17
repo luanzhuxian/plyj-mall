@@ -19,7 +19,6 @@
 </template>
 
 <script>
-import moment from 'moment'
 import { mapGetters } from 'vuex'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import CountDown from '../../../components/product/Count-Down.vue'
@@ -157,7 +156,7 @@ export default {
                 const { dragonGateCharity } = this
                 if (!dragonGateCharity || !dragonGateCharity.id) return false
 
-                const endTime = moment(dragonGateCharity.endTime).valueOf()
+                const endTime = new Date(dragonGateCharity.endTime).valueOf()
                 if (endTime < Date.now()) return false
 
                 return this.$router.push({ name: 'LongmenAction', params: { id: dragonGateCharity.id } })
@@ -167,8 +166,8 @@ export default {
                 const { dragonGateSign } = this
                 if (!dragonGateSign || !dragonGateSign.id) return false
 
-                const startTime = moment(dragonGateSign.activityStartTime).valueOf()
-                const endTime = moment(dragonGateSign.activityEndTime).valueOf()
+                const startTime = new Date(dragonGateSign.activityStartTime).valueOf()
+                const endTime = new Date(dragonGateSign.activityEndTime).valueOf()
                 if (startTime > Date.now() || endTime < Date.now()) return false
 
                 return this.$router.push({ name: 'LongmenSignIn', params: { id: this.dragonGateSign.id } })
@@ -178,8 +177,8 @@ export default {
                 const { dragonGatePlay } = this
                 if (!dragonGatePlay || !dragonGatePlay.id) return false
 
-                const startTime = moment(dragonGatePlay.startTime).valueOf()
-                const endTime = moment(dragonGatePlay.endTime).valueOf()
+                const startTime = new Date(dragonGatePlay.startTime).valueOf()
+                const endTime = new Date(dragonGatePlay.endTime).valueOf()
                 if (startTime > Date.now() || endTime < Date.now()) return false
 
                 return this.$router.push({ name: 'LongmenLottery', params: { id: this.dragonGatePlay.id } })
