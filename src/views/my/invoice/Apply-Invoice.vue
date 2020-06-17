@@ -326,32 +326,39 @@ export default {
             return this.$route.query.receiveName || ''
         }
     },
-    activated () {
-        const APPLY_INVOICE = this['submitOrder/invoiceProducts']
-        if (!APPLY_INVOICE.length) {
+    async activated () {
+      try {
+        this.init()
+      } catch (e) {
+        throw e
+      }
+    },
+    methods: {
+        async init(){
+          const APPLY_INVOICE = this['submitOrder/invoiceProducts']
+          if (!APPLY_INVOICE.length) {
             this.$router.go(-1)
             this.$destroy()
             return
-        }
-        this.checkedList = [...APPLY_INVOICE]
-        this.applyInvoice = APPLY_INVOICE
-        // 设置默认邮寄信息
-        this.receiveInfo.mobile = this.mobile || this.receiveMobile
-        this.receiveInfo.city = this.selectedAddress.addressPrefix
-        this.receiveInfo.address = this.selectedAddress.agencyAddress
-        // 设置默认信息
-        this.defaultName = this.receiveName || this.realName
-        this.defaultMobile = this.mobile || this.receiveMobile
-        // 设置默认个人信息
-        this.personalInfo.name = this.defaultName
-        this.personalInfo.mobile =  this.defaultMobile
-        try {
-            this.getInvoiceList()
-        } catch (e) {
+          }
+          this.checkedList = [...APPLY_INVOICE]
+          this.applyInvoice = APPLY_INVOICE
+          // 设置默认邮寄信息
+          this.receiveInfo.mobile = this.mobile || this.receiveMobile
+          this.receiveInfo.city = this.selectedAddress.addressPrefix
+          this.receiveInfo.address = this.selectedAddress.agencyAddress
+          // 设置默认信息
+          this.defaultName = this.receiveName || this.realName
+          this.defaultMobile = this.mobile || this.receiveMobile
+          // 设置默认个人信息
+          this.personalInfo.name = this.defaultName
+          this.personalInfo.mobile =  this.defaultMobile
+          try {
+            await this.getInvoiceList()
+          } catch (e) {
             throw e
-        }
-    },
-    methods: {
+          }
+        },
         hasPhysicalGoods(){
           return this.applyInvoice.some(item => item.goodsType === 'PHYSICAL_GOODS')
         },
