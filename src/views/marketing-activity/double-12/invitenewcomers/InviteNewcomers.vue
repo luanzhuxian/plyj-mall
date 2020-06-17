@@ -194,12 +194,26 @@ export default {
                 const nameWidth = ctx.measureText(this.userName).width
                 ctx.fillText(`与您分享精彩活动`, `${ 154 + nameWidth }`, 833)
                 ctx.save()
-                drawRoundRect(ctx, rectX, 316, rectWidth, 44, 22, '#fd806a', '#fd806a')
+                drawRoundRect({
+                    ctx,
+                    x: rectX,
+                    y: 316,
+                    width: rectWidth,
+                    height: 44,
+                    radius: 22,
+                    fillStyle: '#fd806a'
+                })
                 ctx.restore()
                 ctx.fillStyle = '#d1ee10'
                 ctx.baseline = 'hanging'
                 ctx.font = '24px Microsoft YaHei UI'
-                createText(ctx, rectX + 14, 348, endTime, 44)
+                createText({
+                    ctx,
+                    x: rectX + 14,
+                    y: 348,
+                    text: endTime,
+                    lineHeight: 44
+                })
                 this.poster = cvs.toDataURL('image/jpeg')
                 this.showHaibao = true
             } catch (e) {

@@ -6,7 +6,7 @@
             title="活动细则"
             append-body
         >
-            <ul :class="$style.content">
+            <ol :class="$style.content">
                 <li>
                     <span>活动时间：2019.05.20 至 2019.06.20</span>
                 </li>
@@ -15,13 +15,13 @@
                 </li>
                 <li>
                     <span>活动说明：</span>
-                    <ul :class="$style.content">
+                    <ol :class="$style.content">
                         <li>在活动有效期内，新用户注册成为店铺的会员，且成功绑定手机号，即可领取优惠大礼包1份；</li>
                         <li>每个账号限领一次。</li>
                         <li>用户领取成功后，优惠券将自动存入“我的卡包”中，使用有效期内用户可随时查看使用；奖学金将自动存入“我的奖学金”中，使用有效期内用户可随时查看使用；礼品可自动存入“我的礼品”中，兑换有效期内用户可随时进行礼品兑换</li>
-                    </ul>
+                    </ol>
                 </li>
-            </ul>
+            </ol>
         </pl-popup>
     </div>
 </template>

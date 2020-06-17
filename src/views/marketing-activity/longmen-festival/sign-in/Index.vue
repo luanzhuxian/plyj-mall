@@ -814,25 +814,62 @@ export default {
                 let avatar = this.avatar || default_avatar
                 avatar = await this.loadImage(avatar)
                 avatar = await cutArcImage(avatar)
-                drawRoundRect(ctx, 24, 840, 100, 100, 50, '#038C1A', '#038C1A')
+                drawRoundRect({
+                    ctx,
+                    x: 24,
+                    y: 840,
+                    width: 100,
+                    height: 100,
+                    radius: 50,
+                    fillStyle: '#038C1A'
+                })
                 ctx.drawImage(avatar, 25, 841, 98, 98)
 
                 // 绘制粽粽有礼描述
                 ctx.font = '20px bold'
                 ctx.fillStyle = '#000'
                 ctx.textBaseline = 'hanging'
-                createText(ctx, 134, 860, desc, 34, 138, 1)
-                createText(ctx, 134, 890, '粽粽有礼', 34, 138, 1)
-
+                createText({
+                    ctx,
+                    x: 134,
+                    y: 860,
+                    text: desc,
+                    lineHeight: 34,
+                    width: 138
+                })
+                createText({
+                    ctx,
+                    x: 134,
+                    y: 890,
+                    text: '粽粽有礼',
+                    lineHeight: 34,
+                    width: 138
+                })
                 // 绘制二维码
-                drawRoundRect(ctx, 250, 840, 100, 100, 10, '#038C1A', '#038C1A')
+                drawRoundRect({
+                    ctx,
+                    x: 250,
+                    y: 840,
+                    width: 100,
+                    height: 100,
+                    radius: 10,
+                    fillStyle: '#038C1A'
+                })
                 ctx.drawImage(this.qrcode, 252, 842, 96, 96)
 
                 // 绘制二维码旁的文字
                 ctx.font = '20px bold'
                 ctx.fillStyle = '#000'
                 ctx.textBaseline = 'hanging'
-                createText(ctx, 360, 852, '长按识别保存图片分享给好友，一起参与活动', 24, 136, 3)
+                createText({
+                    ctx,
+                    x: 360,
+                    y: 852,
+                    text: '长按识别保存图片分享给好友，一起参与活动',
+                    lineHeight: 24,
+                    width: 136,
+                    lineNumber: 3
+                })
 
                 const sharePoster = canvas.toDataURL('image/jpeg', 0.7)
                 this.newYearPoster = sharePoster

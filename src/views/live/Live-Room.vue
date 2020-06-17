@@ -1024,22 +1024,55 @@ export default {
                 ctx.font = 'bold 28px Microsoft YaHei UI'
                 ctx.fillStyle = '#fff'
                 ctx.textBaseline = 'hanging'
-                const nameWidth = createText(ctx, 100, 28, this.userName, 34, 350, 1)
-                createText(ctx, 100 + nameWidth + 14, 28, '邀您观看直播', 34, 350, 1)
+                const nameWidth = createText({
+                    ctx,
+                    x: 100,
+                    y: 28,
+                    text: this.userName,
+                    lineHeight: 34,
+                    width: 350
+                })
+                createText({
+                    ctx,
+                    x: 100 + nameWidth + 14,
+                    y: 28,
+                    text: '邀您观看直播',
+                    lineHeight: 34,
+                    width: 350
+                })
                 // 绘制封面
                 ctx.drawImage(coverImgEl, 14, 102, 610, 406)
                 // 绘制直播名称
                 ctx.font = 'bold 32px Microsoft YaHei UI'
-                createText(ctx, 200, 534, name, 44, 400, 1)
+                createText({
+                    ctx,
+                    x: 200,
+                    y: 534,
+                    text: name,
+                    lineHeight: 44,
+                    width: 400
+                })
                 // 绘制直播时间
                 ctx.font = '24px Microsoft YaHei UI'
                 const date = `${ moment(liveStartTime).format('YYYY-MM-DD HH:mm') } 开始直播`
-                createText(ctx, 258, 598, date, 34)
+                createText({
+                    ctx,
+                    x: 258,
+                    y: 598,
+                    text: date,
+                    lineHeight: 34
+                })
                 // 绘制价格
                 if (isPay && paidAmount) {
                     ctx.font = 'bold 44px Microsoft YaHei UI'
                     const price = `仅需 ${ paidAmount }元`
-                    createText(ctx, 200, 644, price, 58)
+                    createText({
+                        ctx,
+                        x: 200,
+                        y: 644,
+                        text: price,
+                        lineHeight: 58
+                    })
                 }
                 this.poster = canvas.toDataURL()
                 this.showPoster = true

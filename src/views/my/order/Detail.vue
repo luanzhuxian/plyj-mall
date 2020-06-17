@@ -646,9 +646,8 @@ import {
     getWaitPayBalanceInfo
 } from '../../../apis/order-manager'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
-import { generateQrcode } from '../../../assets/js/util'
+import { generateQrcode, createText } from '../../../assets/js/util'
 import Countdown from '../../../assets/js/Countdown'
-import { createText } from '../../../assets/js/validate'
 import filter from '../../../filter/index'
 
 const updateLocalStorage = (key, value) => {
@@ -919,7 +918,15 @@ export default {
                 ctx.fillText(`${ item.mobile }`, 475, 1070)
                 ctx.font = '33px Microsoft YaHei'
                 ctx.fillStyle = '#333'
-                createText(ctx, 330, 1250, `${ this.productInfoModel.productDetailModels[0].productName }`, 50, 500, 2)
+                createText({
+                    ctx,
+                    x: 330,
+                    y: 1250,
+                    text: `${ this.productInfoModel.productDetailModels[0].productName }`,
+                    lineHeight: 50,
+                    width: 500,
+                    lineNumber: 2
+                })
 
                 // ctx.fillText(`${this.productInfoModel.productDetailModels[0].productName}`, 330, 1250)
                 ctx.font = '33px Microsoft YaHei'

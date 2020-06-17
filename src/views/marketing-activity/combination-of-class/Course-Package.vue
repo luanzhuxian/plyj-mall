@@ -374,7 +374,14 @@ export default {
             ctx.font = '24px Microsoft YaHei UI'
             ctx.fillStyle = '#fff'
             ctx.textBaseline = 'hanging'
-            createText(ctx, 100, 32, `${ this.userName } 邀您参加组合聚惠学`, 34, 510, 1)
+            createText({
+                ctx,
+                x: 200,
+                y: 32,
+                text: `${ this.userName } 邀您参加组合聚惠学`,
+                lineHeight: 34,
+                width: 510
+            })
             ctx.drawImage(BG, 0, 88, 638, 1046)
             const QR = await generateQrcode({ size: 200, text: this.shareUrl, type: 'canvas' })
             ctx.drawImage(QR, 204, 730, 238, 238)
