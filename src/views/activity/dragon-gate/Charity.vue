@@ -1,19 +1,37 @@
 <template>
     <panel :custom-class="$style.charityPanel" :title="panelTitle" button="更多公益活动" @click="handleClick">
         <div :class="$style.charity">
-            <p :class="$style.charityJoin">
-                已加入<b>{{ statistics.orderNo || 0 }}</b>人
-            </p>
-            <p :class="$style.charityText">
-                累计公益金
-            </p>
-            <div :class="$style.charityTotal">
-                <b v-for="(number, index) of integer" :key="'integer-' + index">{{ number }}</b>
-                <template v-if="Number(decimal)">
-                    <i>.</i>
-                    <b v-for="(number, index) of decimal" :key="'decimal-' + index">{{ number }}</b>
-                </template>
-            </div>
+            <template v-if="!isStarted">
+                <div :class="$style.charityCountdown">
+                    距活动开始仅剩：
+                    <countdown :duration="duration" @finish="() => isStarted = true">
+                        <template v-slot="{time}">
+                            <i :class="$style.block">{{ String(time.days).padStart(2, '0') }}</i>
+                            <span :class="$style.colon">天</span>
+                            <i :class="$style.block">{{ String(time.hours).padStart(2, '0') }}</i>
+                            <span :class="$style.colon">:</span>
+                            <i :class="$style.block">{{ String(time.minutes).padStart(2, '0') }}</i>
+                            <span :class="$style.colon">:</span>
+                            <i :class="$style.block">{{ String(time.seconds).padStart(2, '0') }}</i>
+                        </template>
+                    </countdown>
+                </div>
+            </template>
+            <template v-else>
+                <p :class="$style.charityJoin">
+                    已加入<b>{{ statistics.orderNo || 0 }}</b>人
+                </p>
+                <p :class="$style.charityText">
+                    累计公益金
+                </p>
+                <div :class="$style.charityTotal">
+                    <b v-for="(number, index) of integer" :key="'integer-' + index">{{ number }}</b>
+                    <template v-if="Number(decimal)">
+                        <i>.</i>
+                        <b v-for="(number, index) of decimal" :key="'decimal-' + index">{{ number }}</b>
+                    </template>
+                </div>
+            </template>
             <router-link
                 :class="$style.charityProduct"
                 v-for="(item, index) of productList"
@@ -54,11 +72,13 @@
 
 <script>
 import Panel from './Panel.vue'
+import Countdown from '../components/Countdown.vue'
 
 export default {
     name: 'Charity',
     components: {
-        Panel
+        Panel,
+        Countdown
     },
     props: {
         data: {
@@ -74,7 +94,9 @@ export default {
                 name: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/ngyzxd.png',
                 width: 368,
                 height: 80
-            }
+            },
+            isStarted: false,
+            duration: 0
         }
     },
     computed: {
@@ -102,6 +124,15 @@ export default {
             return donationAmount ? donationAmount.toString().split('.')[1] : '0'
         }
     },
+    created () {
+        if (this.data.values.length) {
+            const activity = this.data.values[0]
+            const { startTime, systemTime } = activity
+            const duration = new Date(systemTime).valueOf() - new Date(startTime).valueOf()
+            this.isStarted = duration > 0
+            this.duration = Math.abs(duration)
+        }
+    },
     methods: {
         handleClick () {
             if (this.data.values.length) {
@@ -124,6 +155,26 @@ export default {
     flex-direction: column;
     align-items: center;
     color: #fff;
+    &-countdown {
+        margin-top: 10px;
+        font-size: 30px;
+        font-family: Microsoft YaHei;
+        line-height: 40px;
+        color: #fff;
+        .block {
+            box-sizing: border-box;
+            padding: 0 5px;
+            height: 52px;
+            line-height: 44px;
+            text-align: center;
+            color: #10fe72;
+            border: 4px solid #10fe72;
+            border-radius: 4px;
+        }
+        .colon {
+            margin: 0 10px;
+        }
+    }
     &-text {
         font-size: 36px;
         font-family: PingFang SC;
