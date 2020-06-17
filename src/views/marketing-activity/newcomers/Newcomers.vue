@@ -26,7 +26,7 @@
         <div :class="$style.contentBox">
             <div :class="{ [$style.contentMain]: true, [$style.scholarship]: true }">
                 <div :class="$style.top">
-                    优惠券大礼包 <i class="rmb">1000</i>
+                    新人奖学金 <i class="rmb">1000</i>
                 </div>
                 <div :class="$style.scholarshipWrap">
                     <div :class="$style.scholarshipList">

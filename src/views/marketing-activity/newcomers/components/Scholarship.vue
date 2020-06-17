@@ -19,7 +19,7 @@ export default {
         height: 245px;
         margin-right: 20px;
         text-align: center;
-        background: url("https://mallcdn.youpenglai.com/static/admall/2.11.0/red-envelope.png") no-repeat center center;
+        background: url("https://mallcdn.youpenglai.com/static/admall/2.11.0/red-envelope2.png") no-repeat center center;
         background-size: 100% 100%;
         > .price {
             margin-top: 38px;
