@@ -1,28 +1,28 @@
 <template>
     <div :class="$style.burseItem">
-        <ul>
-            <div @click="check">
-                <li>
+        <div :class="$style.content">
+            <div :class="$style.edit" @click="check">
+                <div :class="$style.btn">
                     <span v-if="isEdit" :class="{[$style.checked]: isEdit && item.checked}" />
-                </li>
-                <li>
-                    <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/hongbao.png" :style="{ width: 122 / 7.5 + 'vw', height: 90 / 7.5 + 'vw' }" alt="">
-                </li>
+                </div>
+                <div :class="$style.img">
+                    <img src="https://mallcdn.youpenglai.com/static/admall/2.11.0/red-envelope.png" alt="">
+                </div>
             </div>
-            <div>
-                <li>
+            <div :class="$style.desc">
+                <div :class="$style.name">
                     <template v-if="item.activityType === 'GROUPBUGACTIVITY'">团购奖学金</template>
                     <template v-if="item.activityType === 'LUCK_DRAW_ACTIVITY'">抽奖奖学金</template>
                     <template v-if="item.activityType === 'SIGNIN_ACTIVITY'">签到奖学金</template>
-                </li>
-                <li>全场通用</li>
-                <li>{{ item.useStartTime }} 领取</li>
+                </div>
+                <div>全场通用</div>
+                <div>{{ item.useStartTime }} 领取</div>
             </div>
-        </ul>
-        <ul>
-            <li>+{{ item.amount }}</li>
-            <li><span v-if="isWatch" @click.stop="$router.push({name:'MyBurseDetail',params:{id:item.id}})">去查看</span></li>
-        </ul>
+        </div>
+        <div :class="$style.amount">
+            <div>+{{ item.amount }}</div>
+            <div><span v-if="isWatch" @click.stop="$router.push({name:'MyBurseDetail',params:{id:item.id}})">去查看</span></div>
+        </div>
         <!--已使用，已过期图标-->
         <template v-if="hasStatusImg">
             <img v-if="useStatus === 2" src="https://mallcdn.youpenglai.com/static/mall/icons/olds/burse (1).png" style="width: 24.8vw" alt="">
@@ -83,14 +83,21 @@ export default {
     padding: 46px 26px;
     border-radius: 20px;
     margin-top: 20px;
-    > ul:nth-of-type(1) {
+    > .content {
       display: flex;
       justify-content: flex-start;
-      > div:nth-of-type(1) {
+      > .edit {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        > li:nth-of-type(1) > span {
+        > .img {
+            width: 115px;
+            > img {
+              width: 86px;
+              vertical-align: middle;
+            }
+        }
+        > .btn > span {
           display: inline-block;
           width: 36px;
           height: 36px;
@@ -130,55 +137,55 @@ export default {
             background-color: #ddd;
           }
         }
-        img {
-          vertical-align: middle;
-        }
       }
-      > div:nth-of-type(2) {
+      > .desc {
         color: #AAAAAA;
         font-size: 24px;
         font-weight: 300;
-        > li {
+        > div {
           margin-top: 10px;
-        }
-        > li:nth-of-type(1) {
-          font-size: 28px;
-          font-weight: 400;
-          color: #373737;
-          margin-top: 0;
+          &.name {
+            font-size: 28px;
+            font-weight: 400;
+            color: #373737;
+            margin-top: 0;
+          }
         }
       }
     }
-    > ul:nth-of-type(2) {
+    > .amount {
       display: flex;
       flex-wrap: wrap;
       justify-content: flex-end;
       align-content: flex-end;
       width: auto;
-      > li:nth-of-type(1) {
-        width: 100%;
-        height: 58px;
-        font-size: 44px;
-        font-weight: 400;
-        color: #FF6533;
-        text-align: right;
-      }
-      > li:nth-of-type(2) {
-        width: 122px;
-        height: 34px;
-        margin-top: 6px;
-        text-align: right;
-        > span {
-          font-size:20px;
-          display: inline-block;
+      > div {
+        &:nth-of-type(1) {
+          width: 100%;
+          height: 58px;
+          font-size: 44px;
+          font-weight: 400;
+          color: #FF6533;
+          text-align: right;
+        }
+        &:nth-of-type(2) {
           width: 122px;
-          border-radius: 20px;
-          text-align: center;
-          color: #FFFFFF;
-          line-height: 34px;
-          background:#FE7700;
+          height: 34px;
+          margin-top: 6px;
+          text-align: right;
+          > span {
+            font-size:20px;
+            display: inline-block;
+            width: 122px;
+            border-radius: 20px;
+            text-align: center;
+            color: #FFFFFF;
+            line-height: 34px;
+            background:#FE7700;
+          }
         }
       }
+
     }
     > img {
       position: absolute;
