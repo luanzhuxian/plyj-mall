@@ -150,7 +150,11 @@
                     </div>
 
                     <div>
-                        <Comments v-show="tab === 1" :product-id="productId" :show="tab === 1" />
+                        <Comments
+                            v-show="tab === 1"
+                            :show="tab === 1"
+                            :product-id="productId"
+                        />
                         <DetailInfo
                             v-show="tab === 2"
                             :content="detail.detail || '暂无详情'"

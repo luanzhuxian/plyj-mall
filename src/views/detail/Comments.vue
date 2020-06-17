@@ -1,18 +1,22 @@
 <template>
     <div :class="$style.comment + ' radius-20'" ref="comment">
         <div :class="$style.header" v-if="total > 0">
-            <pl-button size="small" :type="form.flag ? 'default' : 'primary'" round plain @click="all">
+            <pl-button size="small" :type="form.status ? 'default' : 'primary'" round plain @click="search('')">
                 全部
             </pl-button>
-            <pl-button v-if="assessmentPicCount > 0" size="small" :type="form.flag ? 'primary' : 'default'" round plain @click="hasImage">
+            <pl-button v-if="assessmentPicCount > 0" size="small" :type="form.status ? 'primary' : 'default'" round plain @click="search(1)">
                 有图 <i>({{ assessmentPicCount }})</i>
             </pl-button>
         </div>
-        <template v-if="list.length > 0">
+        <p :class="$style.noComments" v-if="!list.length && productId">
+            <span>暂无评论</span>
+        </p>
+        <template v-else>
             <div :class="$style.commentItem" v-for="(item, i) of list" :id="'item' + i" :key="item.id" @click="goDetail(item)">
                 <!-- 头像 -->
                 <img v-imgError v-img-error :src="item.headUrl || ''" alt="">
                 <div :class="$style.content">
+                    <!--昵称 + 评分-->
                     <div :class="$style.contentTop">
                         <div :class="$style.name" v-text="item.nickName" />
                         <div :class="$style.grade">
@@ -24,11 +28,11 @@
                     <div :class="$style.itemSku">
                         <span v-text="item.createTimeText" />
                         <span>
-                            <i v-text="item.orderProductREntity.attribute1" />
-                            “<i v-text="item.orderProductREntity.skuName" />”
-                            <template v-if="item.orderProductREntity.skuName2">
-                                ，<i v-text="item.orderProductREntity.attribute2" />
-                                “<i v-text="item.orderProductREntity.skuName2" />”
+                            <i v-text="item.attribute" />
+                            “<i v-text="item.skuCode1Name" />”
+                            <template v-if="item.skuCode2Name">
+                                ，<i v-text="item.subAttribute" />
+                                “<i v-text="item.skuCode2Name" />”
                             </template>
                         </span>
                         <!--<span>颜色“白色”，版本“55寸 4核处理器”</span>-->
@@ -36,26 +40,24 @@
                     <!-- 内容 -->
                     <div :class="$style.commentContent" v-text="item.content" />
                     <!-- 图片 -->
-                    <div :class="$style.imgs + ' radius-20'" v-if="item.mediaInfoEntityList.length > 0">
+                    <div :class="$style.imgs + ' radius-20'" v-if="item.url.length > 0">
                         <img v-imgError
-                             v-for="(img, j) of item.mediaInfoEntityList"
+                             v-for="(img, j) of item.url"
                              :key="j"
                              v-img-error
-                             :src="img.mediaUrl + '?x-oss-process=style/thum'"
-                             @click.stop="preview(img.mediaUrl)"
+                             :src="img + '?x-oss-process=style/thum'"
+                             @click.stop="preview(img)"
                              alt=""
                         >
                     </div>
-                    <!-- 回复 -->
-                    <div :class="$style.reply" v-if="item.childs.length">
-                        <span v-text="item.childs[0].content" />
+                    <!-- 商家回复: 目前只支持回复一次 -->
+                    <div :class="$style.reply" v-if="item.child.length">
+                        <span v-text="item.child[0].content" />
                     </div>
                 </div>
             </div>
         </template>
-        <p :class="$style.noComments" v-if="length === 0 && productId">
-            <span>暂无评论</span>
-        </p>
+        <!--查看大图-->
         <image-swiper @slideChange="slideChange" :show.sync="showImageSwipe" :index="previewIndex" :items="imgs" :total="imgs.length">
             <template v-slot:footer>
                 <div :class="$style.swiperFooter">
@@ -81,16 +83,15 @@ export default {
     },
     data () {
         return {
+            // 是否显示大图
             showImageSwipe: false,
+            loading: false,
             form: {
                 current: 1,
                 size: 5,
-                productId: '',
-                // 有图
-                flag: false
+                // ''-全部 1-有图
+                status: ''
             },
-            getComments,
-            loading: false,
             list: [],
             total: 0,
             imgs: [],
@@ -108,31 +109,20 @@ export default {
         show: Boolean
     },
     computed: {
-        length () {
-            return this.list.length
-        },
         assessmentPicCount () {
             return this.list[0] ? this.list[0].assessmentPicCount : 0
         }
     },
-    async activated () {
-        this.reset()
-        this.form.productId = this.productId
+    async created () {
         try {
-            await this.getList()
+            await this.getList(true)
         } catch (e) {
             throw e
         }
     },
-    deactivated () {
-        this.total = 0
-        this.list = []
-    },
-    async created () {
-        this.reset()
-        this.form.productId = this.productId
+    async activated () {
         try {
-            await this.getList()
+            await this.getList(true)
         } catch (e) {
             throw e
         }
@@ -140,89 +130,56 @@ export default {
     mounted () {
         window.addEventListener('scroll', this.scroll)
     },
+    deactivated () {
+        this.reset()
+        this.list = []
+        this.total = 0
+        this.imgs = []
+        this.imgsMap = {}
+        this.currentContent = {}
+        this.previewIndex = 0
+    },
     beforeDestroy () {
         window.removeEventListener('scroll', this.scroll)
     },
     methods: {
-        async getList () {
+        async getList (isClearAll) {
             try {
                 this.loading = true
-                const { result } = await getComments(this.form)
+                const { result } = await getComments(this.productId, this.form)
+                if (isClearAll) {
+                    // 是否清除当前页面已有数据
+                    this.list = []
+                }
+                for (const item of result.records) {
+                    // 后台存储的打分是10分制, 前台为5分制
+                    item.goodsScore /= 2
+                    this.list.push(item)
+                }
+                this.total = result.total
+                this.size = result.size
+                this.getImageList(result.records)
+            } catch (e) {
+                throw e
+            } finally {
+                this.loading = false
+            }
+        },
+        // 仅查看评论 status ''-查看全部评论 1-查看有图评论
+        async search (status) {
+            try {
+                // 已经是当前状态 / 正在加载中 不允许继续请求
+                if (this.form.status === status || this.loading) return
                 this.list = []
-                for (const item of result.records) {
-                    this.list.push(item)
-                }
-                this.total = result.total
-                this.size = result.size
-                this.getImageList(result.records)
+                this.imgs = []
+                this.imgsMap = {}
+                this.reset()
+                this.form.status = status
+                await this.getList(true)
             } catch (e) {
                 throw e
-            } finally {
-                this.loading = false
             }
         },
-        async more () {
-            try {
-                this.loading = true
-                const { result } = await getComments(this.form)
-                for (const item of result.records) {
-                    this.list.push(item)
-                }
-                this.getImageList(result.records)
-                this.total = result.total
-                this.size = result.size
-            } catch (e) {
-                throw e
-            } finally {
-                this.loading = false
-            }
-        },
-        reset () {
-            resetForm(this.form, {
-                current: 1,
-                size: 5,
-                productId: this.productId,
-                flag: false
-            })
-        },
-        goDetail (item) {
-            sessionStorage.setItem('comment', JSON.stringify(item))
-            this.$router.push({
-                name: 'CommentDetail'
-            })
-        },
-        scroll (e) {
-            if (!this.show) return
-            if (this.loading) return
-            if (this.length === this.total) return
-            if (this.assessmentPicCount > 0 && this.length === this.assessmentPicCount) return
-            const lastId = `item${ this.length - 1 }`
-            if (document.getElementById(lastId).getBoundingClientRect().top - window.innerHeight < 0) {
-                this.form.current++
-                this.more()
-            }
-        },
-        hasImage () {
-            if (this.form.flag || this.loading) return
-            this.imgs = []
-            this.imgsMap = {}
-            this.reset()
-            this.form.flag = true
-            this.getList()
-        },
-        all () {
-            if (!this.form.flag || this.loading) return
-            this.imgs = []
-            this.imgsMap = {}
-            this.reset()
-            this.form.flag = false
-            this.getList()
-        },
-        preview (url) {
-            this.previewIndex = this.imgs.findIndex(item => item.oSrc === url)
-            this.showImageSwipe = true
-        },
-
         // 批量加载图片
         batchLoadImg (url) {
             return new Promise((resolve, reject) => {
@@ -242,33 +199,71 @@ export default {
                 }
             })
         },
-        slideChange (index, total) {
-            const imgName = this.getImgName(this.imgs[index].oSrc)
-            this.currentContent = this.imgsMap[imgName]
-
-            // 进行到倒数第二张时,请求更多，只有在查看有图模式下可行
-            if (total - index - 1 === 1 && this.form.flag) {
-                this.form.current++
-                this.more()
+        // 重置数据
+        reset () {
+            resetForm(this.form, {
+                current: 1,
+                size: 5,
+                status: ''
+            })
+        },
+        // 查看评论详情
+        goDetail (item) {
+            sessionStorage.setItem('comment', JSON.stringify(item))
+            this.$router.push({ name: 'CommentDetail' })
+        },
+        // 查看大图
+        preview (url) {
+            this.previewIndex = this.imgs.findIndex(item => item.oSrc === url)
+            this.showImageSwipe = true
+        },
+        // 页面滑动
+        async scroll (e) {
+            try {
+                if (!this.show) return
+                if (this.loading) return
+                if (this.list.length === this.total) return
+                if (this.assessmentPicCount > 0 && this.list.length === this.assessmentPicCount) return
+                const lastId = `item${ this.list.length - 1 }`
+                if (document.getElementById(lastId).getBoundingClientRect().top - window.innerHeight < 0) {
+                    this.form.current++
+                    await this.getList()
+                }
+            } catch (e) {
+                throw e
             }
         },
+        // 支持大图滑动
+        async slideChange (index, total) {
+            try {
+                const imgName = this.getImgName(this.imgs[index].oSrc)
+                this.currentContent = this.imgsMap[imgName]
 
+                // 进行到倒数第二张时,请求更多，只有在查看有图模式下可行
+                if (total - index - 1 === 1 && this.form.status) {
+                    this.form.current++
+                    await this.getList()
+                }
+            } catch (e) {
+                throw e
+            }
+        },
         // 提取图片相关信息
         async getImageList (comments) {
             for (const item of comments) {
-                if (item.mediaInfoEntityList.length === 0) continue
-                const pro = item.orderProductREntity
-                for (const img of item.mediaInfoEntityList) {
-                    await this.batchLoadImg(img.mediaUrl)
-                    const imgName = this.getImgName(img.mediaUrl)
+                if (item.url.length === 0) continue
+                for (const img of item.url) {
+                    await this.batchLoadImg(img)
+                    const imgName = this.getImgName(img)
                     this.imgsMap[imgName] = {
                         nickName: item.nickName,
                         content: item.content,
-                        sku: `${ pro.attribute1 }“${ pro.skuName }”${ pro.attribute2 ? `，${ pro.attribute2 }“${ pro.skuName2 }”` : '' }`
+                        sku: `${ item.attribute }“${ item.skuCode1Name }”${ item.subAttribute ? `，${ item.subAttribute }“${ item.skuCode2Name }”` : '' }`
                     }
                 }
             }
         },
+        // 获取图片关键字
         getImgName (url) {
             const path = url.substring(url.indexOf('img/'))
             return path.split('/')[1].split('.')[0].replace('-', '')
