@@ -116,15 +116,6 @@ export default {
         show () {
             return this.list.length
         },
-        isDragonGateCharityShow () {
-            return !!this.dragonGateCharity && this.dragonGateCharity.id
-        },
-        isDragonGateSignShow () {
-            return !!this.dragonGateSign && this.dragonGateSign.id
-        },
-        isDragonGatePlayShow () {
-            return !!this.dragonGatePlay && this.dragonGatePlay.id
-        },
         isReportShow () {
             return !!this.campaignReport && this.campaignReport.isReportShow && this.campaignReport.id
         },
@@ -136,36 +127,64 @@ export default {
         jump ({ value }) {
             const { map, nwEvent } = this
             let id
-            if (value === 'newyear') {
-                if (!nwEvent || !nwEvent.id) return this.$warning('活动已结束')
-                if (!nwEvent.permissionStatus) return this.$warning('您无法参与活动')
+            let startTime
+            let endTime
 
-                const startTime = moment(nwEvent.activityStartTime).valueOf()
-                const endTime = moment(nwEvent.activityEndTime).valueOf()
-                if (startTime > Date.now()) return this.$warning('活动未开始')
-                if (endTime < Date.now()) return this.$warning('活动已结束')
-                id = nwEvent.id
+            switch (value) {
+                case 'newyear':
+
+                    if (!nwEvent || !nwEvent.id) return this.$warning('活动已结束')
+                    if (!nwEvent.permissionStatus) return this.$warning('您无法参与活动')
+
+                    startTime = moment(nwEvent.activityStartTime).valueOf()
+                    endTime = moment(nwEvent.activityEndTime).valueOf()
+                    if (startTime > Date.now()) return this.$warning('活动未开始')
+                    if (endTime < Date.now()) return this.$warning('活动已结束')
+                    id = nwEvent.id
+                    break
+
+                case 'dragon-gate-charity':
+                    const { dragonGateCharity } = this
+                    if (!dragonGateCharity || !dragonGateCharity.id) return this.$warning('活动已结束')
+                    id = dragonGateCharity.id
+                    break
+
+                case 'dragon-gate-sign':
+                    const { dragonGateSign } = this
+                    if (!dragonGateSign || !dragonGateSign.id) return this.$warning('活动已结束')
+
+                    startTime = moment(dragonGateSign.activityStartTime).valueOf()
+                    endTime = moment(dragonGateSign.activityEndTime).valueOf()
+                    if (startTime > Date.now()) return this.$warning('活动未开始')
+                    if (endTime < Date.now()) return this.$warning('活动已结束')
+                    id = this.dragonGateSign.id
+                    break
+
+                case 'dragon-gate-play':
+                    const { dragonGatePlay } = this
+                    if (!dragonGatePlay || !dragonGatePlay.id) return this.$warning('活动已结束')
+
+                    startTime = moment(dragonGatePlay.startTime).valueOf()
+                    endTime = moment(dragonGatePlay.endTime).valueOf()
+                    if (startTime > Date.now()) return this.$warning('活动未开始')
+                    if (endTime < Date.now()) return this.$warning('活动已结束')
+                    id = this.dragonGatePlay.id
+                    break
+
+                case 'report':
+                    if (!this.isReportShow) return this.$warning('活动已结束')
+                    id = this.campaignReport.id
+                    break
+
+                case 'sign':
+                    if (!this.isBookShow) return this.$warning('活动已结束')
+                    id = this.campaignBook.activityId
+                    break
+
+                default:
+                    break
             }
-            if (value === 'dragon-gate-charity') {
-                if (!this.isDragonGateCharityShow) return this.$warning('活动已结束')
-                id = this.dragonGateCharity.id
-            }
-            if (value === 'dragon-gate-sign') {
-                if (!this.isDragonGateSignShow) return this.$warning('活动已结束')
-                id = this.dragonGateSign.id
-            }
-            if (value === 'dragon-gate-play') {
-                if (!this.isDragonGatePlayShow) return this.$warning('活动已结束')
-                id = this.dragonGatePlay.id
-            }
-            if (value === 'report') {
-                if (!this.isReportShow) return this.$warning('活动已结束')
-                id = this.campaignReport.id
-            }
-            if (value === 'sign') {
-                if (!this.isBookShow) return this.$warning('活动已结束')
-                id = this.campaignBook.activityId
-            }
+
             this.$router.push({
                 name: map[value].path,
                 ...(id ? { params: { id } } : null)

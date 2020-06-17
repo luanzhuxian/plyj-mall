@@ -118,8 +118,10 @@ export default {
         try {
             // 疫情战报
             getReportActivity().then(({ result }) => {
-                this.isReportShow = result.isReportShow = result ? !!result.status : false
-                this.reportId = result ? result.id : ''
+                const { id = '', status = 0 } = result
+
+                this.isReportShow = result.isReportShow = !!status
+                this.reportId = id
                 this.setCampaignReport(result)
             })
             // 疫情签到
@@ -152,6 +154,7 @@ export default {
         async getTemplate () {
             try {
                 const { result } = await getTemplate({ type: 1 })
+
                 if (!result) {
                     this.noFinish = true
                     this.$alert('商城还在装修中哦，请您先看看我们都有哪些商品吧 😘')
@@ -161,8 +164,8 @@ export default {
                     throw new Error('商城未装修，但是访问了页面')
                 }
 
-                const { type, moduleModels } = result
                 const modules = {}
+                const { type, moduleModels } = result
                 const findModule = function (id) {
                     return this.find(module => module.moduleType === id)
                 }.bind(moduleModels)
