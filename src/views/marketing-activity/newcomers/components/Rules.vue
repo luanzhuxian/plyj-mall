@@ -40,10 +40,9 @@ export default {
 <style module lang="scss">
     .rules {
         position: absolute;
+        right: 0;
+        top: 210px;
         > .entry {
-            position: fixed;
-            right: 0;
-            top: 210px;
             width: 128px;
             line-height: 50px;
             color: #fff;

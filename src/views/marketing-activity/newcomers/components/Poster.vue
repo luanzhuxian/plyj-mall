@@ -47,6 +47,13 @@ export default {
 
                 // 绘制logo
                 if (this.logoUrl) {
+                    CTX.beginPath()
+                    CTX.lineWidth = 24
+                    CTX.strokeStyle = '#fbefd7'
+                    CTX.moveTo(-10, 94)
+                    CTX.lineTo(94, -10)
+                    CTX.stroke()
+                    CTX.lineWidth = 1
                     let logo = await loadImage(this.logoUrl)
                     logo = cutArcImage(logo)
                     CTX.drawImage(logo, 10, 10, 66, 66)
@@ -91,6 +98,7 @@ export default {
                 let avatar = await loadImage(this.avatar)
                 avatar = cutArcImage(avatar)
                 CTX.drawImage(avatar, 72, 482, 60, 60)
+
                 CTX.font = `bold 24px Micorsoft Yahei`
                 CTX.fillStyle = '#FB5A18'
                 CTX.textAlign = 'left'
@@ -145,10 +153,9 @@ export default {
 <style module lang="scss">
     .poster {
         position: absolute;
+        right: 0;
+        top: 276px;
         > .entry {
-            position: fixed;
-            right: 0;
-            top: 276px;
             width: max-content;
             padding: 0 15px;
             line-height: 50px;

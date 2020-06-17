@@ -152,6 +152,7 @@ export default {
 
 <style lang="scss" module>
 .newcomers {
+    position: relative;
     padding: 0 12px 58px 12px;
     background: #FA8E59 url("https://mallcdn.youpenglai.com/static/admall/2.11.0/newuser-bg.jpg") no-repeat top center;
     background-size: 100%;
