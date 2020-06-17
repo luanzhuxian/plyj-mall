@@ -2,16 +2,9 @@
     <div :class="$style.newcomers">
         <h1>新人活动温暖感恩回馈</h1>
         <h2>新人优惠大礼包 惊喜派送</h2>
-        <div :class="$style.time">
-            <span>距活动开始仅剩：</span>
-            <span :class="$style.timeItem">02</span>
-            <i>天</i>
-            <span :class="$style.timeItem">23</span>
-            <i>:</i>
-            <span :class="$style.timeItem">59</span>
-            <i>:</i>
-            <span :class="$style.timeItem">59</span>
-        </div>
+        <Rules />
+        <Poster />
+        <Countdown :duration="1" @end="countdownEnd" />
         <div :class="$style.count">
             已有<i>12</i>人领取了新人优惠大礼包
         </div>
@@ -76,9 +69,12 @@ import moment from 'moment'
 import { mapGetters } from 'vuex'
 import share from '../../../assets/js/wechat/wechat-share'
 import CouponItem from '../../../components/item/Coupon-Item.vue'
-import Coupon from './Coupon.vue'
-import Scholarship from './Scholarship.vue'
-import Gift from './Gift.vue'
+import Coupon from './components/Coupon.vue'
+import Scholarship from './components/Scholarship.vue'
+import Gift from './components/Gift.vue'
+import Countdown from './components/Countdown.vue'
+import Rules from './components/Rules.vue'
+import Poster from './components/Poster.vue'
 import { getNewcomersDetail } from '../../../apis/newcomers'
 
 export default {
@@ -86,7 +82,10 @@ export default {
     components: {
         Coupon,
         Gift,
-        Scholarship
+        Scholarship,
+        Countdown,
+        Rules,
+        Poster
     },
     data () {
         return {
@@ -143,6 +142,10 @@ export default {
     },
 
     methods: {
+        // 倒计时结束
+        countdownEnd () {
+            console.log(123123)
+        }
     }
 }
 </script>
@@ -150,7 +153,7 @@ export default {
 <style lang="scss" module>
 .newcomers {
     padding: 0 12px 58px 12px;
-    background: #FA8E59 url("https://mallcdn.youpenglai.com/static/admall/2.11.0/newuser-bg.png") no-repeat top center;
+    background: #FA8E59 url("https://mallcdn.youpenglai.com/static/admall/2.11.0/newuser-bg.jpg") no-repeat top center;
     background-size: 100%;
     overflow: hidden;
     > h1 {
@@ -171,32 +174,6 @@ export default {
         color: #FC6E1F;
         background-color: #FBEFD7;
         border-radius: 20px;
-    }
-    > .time {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 436px;
-        height: 72px;
-        margin: 378px auto 0;
-        text-align: center;
-        font-size: 24px;
-        background: linear-gradient(180deg, #F67D3E, #FB621C) no-repeat;
-        border-radius: 36px;
-        > span {
-            color: #FBEFD7;
-        }
-        > i {
-            color: #FBEFD7;
-            margin: 0 4px;
-        }
-        > .timeItem {
-            width: 36px;
-            line-height: 38px;
-            color: #DF5B2F;
-            background-color: #FBEFD7;
-            border-radius: 6px;
-        }
     }
     > button {
         display: block;

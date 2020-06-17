@@ -8,7 +8,8 @@
             width="460"
             src="https://mallcdn.youpenglai.com/static/admall/2.11.0/newuser-pop.png"
             alt=""
-        /></pl-mask>
+        />
+    </pl-mask>
 </template>
 
 <script>
@@ -19,7 +20,6 @@ export default {
     },
     methods: {
         close () {
-            console.log(123)
             this.$emit('update:show', false)
         }
     }
