@@ -118,20 +118,31 @@ export default {
         // 获取首页、主会场页所需数据
         async getEntryData () {
             try {
-                const activityList = [
-                    getLiveInfo(),
+                const list = [
+                    // 待领优惠券
                     getMyCouponInfo(),
-                    getNianweiInfo(),
-                    getDragonGateCharityInfo(),
-                    getDragonGateSignInfo(),
-                    getDragonGatePlayInfo(),
+                    // 获取主会场数据
                     this.getActivityData(),
+                    // 获取皮肤id
                     this.getSkinId()
                 ]
 
+                const activityList = [
+                    getLiveInfo(),
+                    getNianweiInfo(),
+                    getDragonGateCharityInfo(),
+                    getDragonGateSignInfo(),
+                    getDragonGatePlayInfo()
+                ]
+
+                const [{ result: coupon }] = await Promise.all(list.map(p => p.catch(e => {
+                    console.error(e)
+                    return { result: {} }
+                })))
+                this.setCouponInfo(coupon)
+
                 const [
                     { result: live },
-                    { result: coupon },
                     { result: nianwei },
                     { result: charity },
                     { result: sign },
@@ -141,7 +152,6 @@ export default {
                     return { result: {} }
                 })))
                 this.setLiveInfo(live)
-                this.setCouponInfo(coupon)
                 this.setNwEvent(nianwei)
                 this.setDragonGateCharity(charity)
                 this.setDragonGateSign(sign)
