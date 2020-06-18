@@ -95,7 +95,7 @@ export default {
                 width: 368,
                 height: 80
             },
-            isStarted: false,
+            isStarted: true,
             duration: 0
         }
     },
@@ -125,13 +125,13 @@ export default {
         }
     },
     created () {
-        if (this.data.values.length) {
-            const activity = this.data.values[0]
-            const { startTime, systemTime } = activity
-            const duration = new Date(systemTime).valueOf() - new Date(startTime).valueOf()
-            this.isStarted = duration > 0
-            this.duration = Math.abs(duration)
-        }
+        // if (this.data.values.length) {
+        //     const activity = this.data.values[0]
+        //     const { startTime, systemTime } = activity
+        //     const duration = new Date(systemTime).valueOf() - new Date(startTime).valueOf()
+        //     this.isStarted = duration > 0
+        //     this.duration = Math.abs(duration)
+        // }
     },
     methods: {
         handleClick () {
