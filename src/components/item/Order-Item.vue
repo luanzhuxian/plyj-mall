@@ -190,11 +190,6 @@ export default {
             if (this.productId) {
                 e.stopPropagation()
                 const query = {}
-                // 公益活动
-                if (Number(this.activeProduct) === 7 && this.activityStatus === 1) {
-                    query.currentProductStatus = 7
-                    query.activityId = this.activityId
-                }
                 const routeName = routeNameMap[this.orderType]
                 this.$router.push({
                     name: this.routeName || routeName,
