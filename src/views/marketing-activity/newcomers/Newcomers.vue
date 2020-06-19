@@ -268,6 +268,17 @@ export default {
                     return
                 }
                 await akeyToGet(this.activityInfo.id, this.shareId)
+                let text = `<p>恭喜你获得新人优惠大礼包</p>`
+                if (this.totalCouponPrice > 0) {
+                    text += `<p>价值<i style="color: #FE7700">${ this.totalCouponPrice }</i>元的优惠券</p>`
+                }
+                if (this.totalScholarship > 0) {
+                    text += `<p>价值<i style="color: #FE7700">${ this.totalScholarship }</i>元的奖学金</p>`
+                }
+                if (this.gifts.length > 0) {
+                    text += `<p><i style="color: #FE7700">${ this.totalScholarship }</i>个新人礼品</p>`
+                }
+                this.$toast({ message: text })
             } catch (e) {
                 throw e
             }

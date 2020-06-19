@@ -28,8 +28,8 @@
                 width="72"
             />
             <div class="toast-message">
-                <p v-text="message" />
-                <p class="toast-vice-message" v-text="viceMessage" />
+                <p v-html="message" />
+                <p class="toast-vice-message" v-html="viceMessage" />
                 <slot />
             </div>
         </div>
@@ -92,6 +92,7 @@ export default {
             max-width: 100%;
             margin-top: 16px;
             font-size: 32px;
+            line-height: 48px;
             word-break: break-all;
             white-space: pre-wrap;
 
