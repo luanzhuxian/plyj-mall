@@ -20,7 +20,7 @@
             @end="countdownEnd"
         />
         <div :class="$style.count">
-            已有<i>12</i>人领取了新人优惠大礼包
+            已有<i v-text="activityInfo.publishNum" />人领取了新人优惠大礼包
         </div>
 
         <div :class="$style.contentBox">

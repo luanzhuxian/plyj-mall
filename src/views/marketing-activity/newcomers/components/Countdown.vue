@@ -59,8 +59,8 @@ export default {
     },
     methods: {
         start () {
+            this.stop()
             if (this.duration > 0) {
-                this.stop()
                 const COUNTDOWN = new Countdown(this.duration, this.callback)
                 COUNTDOWN.start()
                 this.COUNTDOWN = COUNTDOWN
