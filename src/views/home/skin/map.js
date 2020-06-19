@@ -12,6 +12,7 @@ export const skinClassNameMap = {
     10: 'skinMothersDay',
     11: 'skinChildrenDay',
     12: 'skinFathersDay',
+    13: 'skinDragonBoat',
     99: 'skinCampaign',
     has (id) {
         return Reflect.has(this, id)
@@ -138,6 +139,16 @@ export const skinNavMap = {
         shoppingChartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/fathers-day/cart.png',
         my: 'https://mallcdn.youpenglai.com/static/admall/skin/fathers-day/my.png',
         myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/fathers-day/my.png'
+    },
+    13: {
+        home: 'https://mallcdn.youpenglai.com/static/admall/skin/dragon-boat/home.png',
+        homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/dragon-boat/home.png',
+        classify: 'https://mallcdn.youpenglai.com/static/admall/skin/dragon-boat/classify.png',
+        classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/dragon-boat/classify.png',
+        shoppingChart: 'https://mallcdn.youpenglai.com/static/admall/skin/dragon-boat/cart.png',
+        shoppingChartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/dragon-boat/cart.png',
+        my: 'https://mallcdn.youpenglai.com/static/admall/skin/dragon-boat/my.png',
+        myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/dragon-boat/my.png'
     },
     99: {
         home: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/98e32f2b-679b-485d-8a9a-6e62659f91b1.png',

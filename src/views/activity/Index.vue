@@ -135,7 +135,9 @@ export default {
     methods: {
         async getTemplate () {
             try {
-                const { activityId } = this
+                const { activityId, activityData } = this
+                const { type, moduleModels } = activityData
+
                 if (activityId === 0) {
                     this.noFinish = true
                     this.$alert('主会场还在装修中哦，请您先看看我们都有哪些商品吧 😘')
@@ -144,7 +146,7 @@ export default {
                         })
                     return false
                 }
-                const { type, moduleModels } = this.activityData
+
                 if (type === 5) {
                     this.modules.MIAO_SHA = moduleModels[0]
                     this.modules.PIN_TUAN = moduleModels[1]

@@ -10,6 +10,8 @@
 .skin-labour-day,
 .skin-mothers-day,
 .skin-children-day,
+.skin-fathers-day,
+.skin-dragon-boat,
 .skin-campaign {
     .route {
         box-sizing: border-box;
@@ -97,6 +99,13 @@
     .route {
         &.active > .tab-name {
             color: #1764c7;
+        }
+    }
+}
+.skin-dragon-boat {
+    .route {
+        &.active > .tab-name {
+            color: #258d6b;
         }
     }
 }

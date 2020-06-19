@@ -92,6 +92,7 @@ export default {
             }
             this.logined = true
             await this.getEntryData()
+            await this.getActivityData()
             // 标记一天中首次访问
             setFirstVisit()
         } catch (e) {
@@ -112,26 +113,43 @@ export default {
             getMallInfo: GET_MALL_INFO,
             login: LOGIN,
             getUserInfo: USER_INFO,
-            getActivityData: GET_ACTIVITY_DATA,
+            getMainCenter: GET_ACTIVITY_DATA,
             getSkinId: GET_SKIN_ID
         }),
-        // 获取首页、主会场页所需数据
+        // 获取商城主会场、皮肤数据
         async getEntryData () {
+            try {
+                const list = [
+                    // 待领优惠券
+                    getMyCouponInfo(),
+                    // 获取主会场数据
+                    this.getMainCenter(),
+                    // 获取皮肤id
+                    this.getSkinId()
+                ]
+
+                const [{ result: coupon }] = await Promise.all(list.map(p => p.catch(e => {
+                    console.error(e)
+                    return { result: {} }
+                })))
+                this.setCouponInfo(coupon)
+            } catch (error) {
+                throw error
+            }
+        },
+        // 获取首页、主会场页所需活动数据
+        async getActivityData () {
             try {
                 const activityList = [
                     getLiveInfo(),
-                    getMyCouponInfo(),
                     getNianweiInfo(),
                     getDragonGateCharityInfo(),
                     getDragonGateSignInfo(),
-                    getDragonGatePlayInfo(),
-                    this.getActivityData(),
-                    this.getSkinId()
+                    getDragonGatePlayInfo()
                 ]
 
                 const [
                     { result: live },
-                    { result: coupon },
                     { result: nianwei },
                     { result: charity },
                     { result: sign },
@@ -141,7 +159,6 @@ export default {
                     return { result: {} }
                 })))
                 this.setLiveInfo(live)
-                this.setCouponInfo(coupon)
                 this.setNwEvent(nianwei)
                 this.setDragonGateCharity(charity)
                 this.setDragonGateSign(sign)
@@ -153,4 +170,3 @@ export default {
     }
 }
 </script>
-<style module lang="scss"></style>
