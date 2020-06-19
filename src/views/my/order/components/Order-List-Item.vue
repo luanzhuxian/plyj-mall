@@ -122,7 +122,13 @@
                 </pl-button>
             </div>
             <!--付款倒计时-->
-            <div class="fz-24 gray-3 mt-28" v-if="[orderStatuskeyMap.WAIT_PAY_TAIL_MONEY, orderStatuskeyMap.WAIT_PAY].includes(orderStatus) && (skuSource !== skuSourceKeyMap.SPRINGPLOUGHING && skuSource !== skuSourceKeyMap.COURSEPACKAGE) && isStart && !pastDue">
+            <div class="fz-24 gray-3 mt-28"
+                 v-if="(skuSource !== skuSourceKeyMap.SPRINGPLOUGHING && skuSource !== skuSourceKeyMap.COURSEPACKAGE) &&
+                     (
+                         (orderStatuskeyMap.WAIT_PAY === orderStatus && isStart && !pastDue)
+                     || (orderStatuskeyMap.WAIT_PAY_TAIL_MONEY === orderStatus && !isStart && !pastDue)
+                     )"
+            >
                 <span v-show="isStart">剩余{{ orderStatus === orderStatuskeyMap.WAIT_PAY_TAIL_MONEY? '尾款': '' }}支付时间：</span>
                 <span v-show="!isStart">距离开始支付时间：</span>
                 <span v-show="d !== '00'">{{ d }}天</span>
