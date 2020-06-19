@@ -258,7 +258,7 @@ export default {
                     return
                 }
                 // 绑定手机了但不是新用户
-                if (this.isNew) {
+                if (!this.isNew) {
                     await this.$alert({
                         title: '仅新注册用户可领取',
                         message: '活动期间仅新注册为会员可领取新人优惠大礼包，快去邀请好友领取吧~',
