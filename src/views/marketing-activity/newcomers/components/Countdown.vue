@@ -1,7 +1,7 @@
 <template>
     <div :class="$style.countdown">
-        <span v-if="!isSarted">距活动开始仅剩：</span>
-        <span v-else-if="isSarted && !isEnd">距活动结束仅剩：</span>
+        <span v-if="!isStart">距活动开始仅剩：</span>
+        <span v-else-if="isStart && !isEnd">距活动结束仅剩：</span>
         <span v-else>活动已结束仅</span>
         <span :class="$style.timeItem" v-text="day" />
         <i>天</i>
@@ -33,50 +33,45 @@ export default {
         endTime: {
             type: Number,
             default: 0
+        },
+        duration: {
+            type: Number,
+            default: 0
+        },
+        isStart: Boolean,
+        isEnd: Boolean
+    },
+    watch: {
+        duration () {
+            this.start()
         }
     },
     computed: {
-        duration () {
-            if (!this.isSarted) {
-                return this.startTime - Date.now()
-            }
-            if (this.isSarted && !this.isEnd) {
-                return this.endTime - Date.now()
-            }
-            return 0
-        },
-        // 是否已经开始
-        isSarted () {
-            return Date.now() - this.startTime > 0
-        },
-        isEnd () {
-            return Date.now() - this.endTime > 0
-        }
     },
-    watch: {
-        duration: {
-            handler (val) {
-                if (val && val > 0) {
-                    this.start()
-                }
-            },
-            immediate: true
-        }
+    activated () {
+        this.start()
     },
     deactivated () {
-        this.COUNTDOWN.stop()
+        this.stop()
     },
     beforeDestroy () {
-        this.COUNTDOWN.stop()
+        this.stop()
     },
     methods: {
         start () {
-            const COUNTDOWN = new Countdown(this.duration, this.callback)
-            COUNTDOWN.start()
-            this.COUNTDOWN = COUNTDOWN
+            if (this.duration > 0) {
+                this.stop()
+                const COUNTDOWN = new Countdown(this.duration, this.callback)
+                COUNTDOWN.start()
+                this.COUNTDOWN = COUNTDOWN
+            }
+        },
+        stop () {
+            if (this.COUNTDOWN) {
+                this.COUNTDOWN.stop()
+            }
         },
         callback (data) {
-            console.log(data)
             if (!data) {
                 this.$emit('end')
                 return

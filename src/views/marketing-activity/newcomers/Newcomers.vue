@@ -2,12 +2,21 @@
     <div :class="$style.newcomers">
         <h1>新人活动温暖感恩回馈</h1>
         <h2>新人优惠大礼包 惊喜派送</h2>
-        <Rules />
-        <Poster />
-        <Countdown
-            :duration="1"
+        <Rules
             :start-time="startTime"
             :end-time="endTime"
+            :activity-brief="activityInfo.activityBrief"
+        />
+        <Poster
+            :show-logo="activityInfo.logoShow"
+            :logo="activityInfo.logoUrl"
+        />
+        <Countdown
+            :start-time="startTime"
+            :end-time="endTime"
+            :duration="duration"
+            :is-sarted="isSarted"
+            :is-end="isEnd"
             @end="countdownEnd"
         />
         <div :class="$style.count">
@@ -88,8 +97,9 @@
             <span>快来领取新人优惠大礼包，领取成功后，您可进入个人中心中查看</span>
         </div>
 
-        <button disabled>活动即将开始</button>
-        <button>一键领取</button>
+        <button v-if="!isSarted" disabled>活动即将开始</button>
+        <button v-else-if="isSarted && !isEnd" @click="akeyToGet">一键领取</button>
+        <button v-else disabled>活动已结束</button>
     </div>
 </template>
 
@@ -107,7 +117,8 @@ import Rules from './components/Rules.vue'
 import Poster from './components/Poster.vue'
 import {
     getNewcomersDetail,
-    getNewUserInfoList
+    getNewUserInfoList,
+    akeyToGet
 } from '../../../apis/newcomers'
 
 export default {
@@ -125,7 +136,8 @@ export default {
             isShowRule: false,
             seeMoreCoupon: false,
             isShowDlg: true,
-            activityInfo: {}
+            activityInfo: {},
+            duration: 0
         }
     },
     props: {
@@ -156,13 +168,17 @@ export default {
         },
         endTime () {
             return moment(this.activityInfo.activityEndTime).valueOf() || 0
+        },
+        // 是否已经开始
+        isSarted () {
+            return Date.now() - this.startTime > 0
+        },
+        isEnd () {
+            return Date.now() - this.endTime > 0
         }
     },
 
     watch: {
-    },
-
-    async created () {
     },
 
     async activated () {
@@ -179,6 +195,16 @@ export default {
            try {
                const { result } = await getNewUserInfoList()
                this.activityInfo = result || {}
+               let duration = 0
+               const startTime = moment(result.activityStartTime).valueOf() || 0
+               const endTime = moment(result.activityStartTime).valueOf() || 0
+               if (!this.isSarted) {
+                   duration = startTime - Date.now()
+               }
+               if (this.isSarted && !this.isEnd) {
+                   duration = endTime - Date.now()
+               }
+               this.duration = duration
            } catch (e) {
                throw e
            }
@@ -186,9 +212,9 @@ export default {
         share () {
             let shareUrl = ''
             if (this.userId) {
-                shareUrl = `${ this.mallUrl }/detail/product/${ this.productId }/${ this.userId }?noCache=${ Date.now() }`
+                shareUrl = `${ this.mallUrl }/newcomers/${ this.userId }?t=${ Date.now() }`
             } else {
-                shareUrl = `${ this.mallUrl }/detail/product/${ this.productId }?noCache=${ Date.now() }`
+                shareUrl = `${ this.mallUrl }/newcomers?t=${ Date.now() }`
             }
             this.shareUrl = shareUrl
             share({
@@ -201,8 +227,19 @@ export default {
             })
         },
         // 倒计时结束
-        countdownEnd () {
-            console.log(123123)
+        async countdownEnd () {
+            try {
+                await this.getNewUserInfoList()
+            } catch (e) {
+                throw e
+            }
+        },
+        async akeyToGet () {
+            try {
+                await akeyToGet(this.activityInfo.id, this.shareId)
+            } catch (e) {
+                throw e
+            }
         }
     }
 }

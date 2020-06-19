@@ -23,6 +23,13 @@ export default {
             loading: false
         }
     },
+    props: {
+        showLogo: Boolean,
+        logo: {
+            type: String,
+            default: ''
+        }
+    },
     computed: {
         ...mapGetters(['logoUrl', 'avatar', 'userName', 'mallUrl'])
     },
@@ -46,7 +53,7 @@ export default {
                 CTX.drawImage(BG, 0, 0, 540, 468)
 
                 // 绘制logo
-                if (this.logoUrl) {
+                if ((this.logo || this.logoUrl) && this.showLogo) {
                     CTX.beginPath()
                     CTX.lineWidth = 24
                     CTX.strokeStyle = '#fbefd7'
@@ -54,7 +61,7 @@ export default {
                     CTX.lineTo(94, -10)
                     CTX.stroke()
                     CTX.lineWidth = 1
-                    let logo = await loadImage(this.logoUrl)
+                    let logo = await loadImage(this.logo || this.logoUrl)
                     logo = cutArcImage(logo)
                     CTX.drawImage(logo, 10, 10, 66, 66)
                 }
@@ -102,13 +109,16 @@ export default {
                 CTX.font = `bold 24px Micorsoft Yahei`
                 CTX.fillStyle = '#FB5A18'
                 CTX.textAlign = 'left'
+                const TEXT = `${ this.userName }邀请你参与新人有礼活动`
+                const TEXT_WIDTH = CTX.measureText(TEXT).width
                 createText({
                     ctx: CTX,
-                    text: `${ this.userName }邀请你参与新人有礼活动`,
+                    text: TEXT,
                     width: 312,
                     lineHeight: 32,
                     x: 148,
-                    y: 500
+                    y: TEXT_WIDTH > 312 ? 485 : 500,
+                    lineNumber: 2
                 })
                 const qrcode = await generateQrcode({
                     size: 500,
