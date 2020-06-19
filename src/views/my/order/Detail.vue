@@ -195,7 +195,10 @@
                 <!--春耘减免-->
                 <p v-if="detail.orderSource === skuSourceKeyMap.SPRINGPLOUGHING && detail.combinationSpecialPrice">
                     <span>春耘减免</span>
-                    <span>-¥{{ detail.combinationSpecialPrice | formatAmount }}</span>
+                    <span>
+                        <span class="color-fe7700">{{ detail.discount / 10 }}折 </span>
+                        <span>-¥{{ detail.combinationSpecialPrice | formatAmount }}</span>
+                    </span>
                 </p>
                 <!--组合折扣-->
                 <p v-if="detail.orderSource === skuSourceKeyMap.COURSEPACKAGE && detail.combinationSpecialPrice">
