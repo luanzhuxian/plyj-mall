@@ -12,7 +12,7 @@
             :name="goodsName"
             :option="subSkuName ? `${skuName},${subSkuName}` : skuName"
             :count="count"
-            :price="unitPrice"
+            :price="localFormatAmount(unitPrice)"
             :status="refundStatusMap[businessStatus]"
             border
         />
@@ -53,6 +53,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import filter from '../../../../filter/index'
 import OrderItem from '../../../../components/item/Order-Item.vue'
 export default {
     name: 'WaitPayListItem',
@@ -148,6 +149,11 @@ export default {
         isPayloading: {
             type: Boolean,
             default: false
+        }
+    },
+    data () {
+        return {
+            localFormatAmount: filter.formatAmount
         }
     },
     methods: {
