@@ -4,6 +4,7 @@
             class="pl-toast"
             :class="{ 'pl-toast-visible': show }"
             v-show="show"
+            :style="{'--animationDuration': animationDuration}"
         >
             <pl-svg
                 v-if="type === 'error'"
@@ -45,15 +46,18 @@ export default {
             message: '',
             viceMessage: '',
             timer: 0,
-            type: ''
+            type: '',
+            animationDuration: '0.4s'
         }
     },
     methods: {
         close () {
             this.show = false
-        },
-        closed () {
-            document.body.removeChild(this.$el)
+            setTimeout(() => {
+                const el = this.$el
+                this.$destroy()
+                document.body.removeChild(el)
+            }, Number.parseFloat('0.4s') * 1000)
         }
     }
 }
@@ -115,11 +119,11 @@ export default {
         100% { transform: translate(-50%, -50%) scale(0); }
     }
     .show-pl-toast-enter-active {
-        animation: pl-toast-animation .4s;
+        animation: pl-toast-animation var(--animationDuration);
         animation-fill-mode: backwards;
     }
     .show-pl-toast-leave-active {
-        animation: pl-toast-animation-backof .4s;
+        animation: pl-toast-animation-backof var(--animationDuration);
         animation-fill-mode: forwards;
     }
     .show-pl-toast-leave, .show-pl-toast-enter-to {

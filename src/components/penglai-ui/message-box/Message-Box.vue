@@ -2,9 +2,9 @@
     <transition name="fade">
         <div
             class="message-box"
-            v-if="showMask"
+            v-show="showMask"
             @click.self="() => { closeOnClickMask ? handleCancel() : '' }"
-            @transitionend="closed"
+            @transitionend="transitionend"
         >
             <transition
                 enter-active-class="animated bounceInDown"
@@ -191,8 +191,13 @@ export default {
             }
             return true
         },
-        closed () {
+        transitionend () {
             this.propmtValue = ''
+            if (!this.show) {
+                const el = this.$el
+                this.$destroy()
+                document.body.removeChild(el)
+            }
         }
     }
 }
