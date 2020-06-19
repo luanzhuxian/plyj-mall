@@ -10,12 +10,13 @@
         <Poster
             :show-logo="activityInfo.logoShow"
             :logo="activityInfo.logoUrl"
+            ref="poster"
         />
         <Countdown
             :start-time="startTime"
             :end-time="endTime"
             :duration="duration"
-            :is-sarted="isSarted"
+            :is-start="isSarted"
             :is-end="isEnd"
             @end="countdownEnd"
         />
@@ -23,7 +24,7 @@
             已有<i v-text="activityInfo.publishNum" />人领取了新人优惠大礼包
         </div>
 
-        <div :class="$style.contentBox">
+        <div :class="$style.contentBox" v-if="coupons.length">
             <div :class="{ [$style.contentMain]: true, [$style.coupon]: true }">
                 <div :class="$style.top">
                     优惠券大礼包 <i class="rmb" v-text="totalCouponPrice" />
@@ -53,7 +54,7 @@
             </div>
         </div>
 
-        <div :class="$style.contentBox">
+        <div :class="$style.contentBox" v-if="scholarships.length">
             <div :class="{ [$style.contentMain]: true, [$style.scholarship]: true }">
                 <div :class="$style.top">
                     新人奖学金 <i class="rmb" v-text="totalScholarship" />
@@ -71,7 +72,7 @@
             </div>
         </div>
 
-        <div :class="$style.contentBox" class="mb-28">
+        <div :class="$style.contentBox" class="mb-28" v-if="gifts.length">
             <div :class="{ [$style.contentMain]: true, [$style.gift]: true }">
                 <div :class="$style.top">
                     新人礼品 <span class="gray-3 fz-24">注册成为新会员即可获得</span>
@@ -118,7 +119,8 @@ import Poster from './components/Poster.vue'
 import {
     getNewcomersDetail,
     getNewUserInfoList,
-    akeyToGet
+    akeyToGet,
+    isNewUser
 } from '../../../apis/newcomers'
 
 export default {
@@ -193,21 +195,82 @@ export default {
     methods: {
         async getNewUserInfoList () {
            try {
-               const { result } = await getNewUserInfoList()
-               this.activityInfo = result || {}
+               const { result: activityInfo } = await getNewUserInfoList()
+               // 活动不存在
+               if (!activityInfo) {
+                   this.$alert({
+                       title: '活动不存在',
+                       message: '您可返回商城参与其它活动哦~',
+                       confirmText: '去逛逛'
+                   }).finally(() => {
+                       this.$router.push({ name: 'Home' })
+                   })
+                   return
+               }
+               // 处理活动数据
+               this.activityInfo = activityInfo || {}
                let duration = 0
-               const startTime = moment(result.activityStartTime).valueOf() || 0
-               const endTime = moment(result.activityStartTime).valueOf() || 0
+               const startTime = moment(activityInfo.activityStartTime).valueOf() || 0
+               const endTime = moment(activityInfo.activityEndTime).valueOf() || 0
+               await this.$nextTick()
                if (!this.isSarted) {
                    duration = startTime - Date.now()
                }
                if (this.isSarted && !this.isEnd) {
                    duration = endTime - Date.now()
                }
+               // 活动已结束
+               if (this.isEnd) {
+                   await this.$alert({
+                       title: '新人有礼活动已结束',
+                       message: '您可返回商城参与其它活动哦',
+                       confirmText: '去分享给好友',
+                       useDangersHtml: true
+                   })
+                    return
+               }
                this.duration = duration
+               const { result: isNew } = await isNewUser(activityInfo.id)
+               this.isNew = isNew
+               if (isNew) {
+                   await this.$alert({
+                       title: '恭喜您成功注册会员',
+                       message: this.isEnd ? `<p>新人有礼活动已结束</p><p>很遗憾！未领取新人优惠大礼包</p>` : `<p>新人优惠大礼包已领取成功</p><p>请在有效期内使用</p><p>快去邀请好友领取吧~~</p>`,
+                       confirmText: '去分享给好友',
+                       useDangersHtml: true
+                   })
+                   await this.$refs.poster.generate()
+               }
            } catch (e) {
                throw e
            }
+        },
+        async akeyToGet () {
+            try {
+                // 未绑定手机
+                if (!this.mobile) {
+                    sessionStorage.setItem('BIND_MOBILE_FROM', {
+                        name: this.$route.name,
+                        params: this.$route.params,
+                        query: this.$route.query
+                    })
+                    this.$router.push({ name: 'BindMobile' })
+                    return
+                }
+                // 绑定手机了但不是新用户
+                if (this.isNew) {
+                    await this.$alert({
+                        title: '仅新注册用户可领取',
+                        message: '活动期间仅新注册为会员可领取新人优惠大礼包，快去邀请好友领取吧~',
+                        confirmText: '去分享给好友'
+                    })
+                    await this.$refs.poster.generate()
+                    return
+                }
+                await akeyToGet(this.activityInfo.id, this.shareId)
+            } catch (e) {
+                throw e
+            }
         },
         share () {
             let shareUrl = ''
@@ -230,13 +293,6 @@ export default {
         async countdownEnd () {
             try {
                 await this.getNewUserInfoList()
-            } catch (e) {
-                throw e
-            }
-        },
-        async akeyToGet () {
-            try {
-                await akeyToGet(this.activityInfo.id, this.shareId)
             } catch (e) {
                 throw e
             }

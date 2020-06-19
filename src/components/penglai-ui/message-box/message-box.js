@@ -7,17 +7,17 @@ const confirm = (config = {}) => new Promise((resolve, reject) => {
         el: document.createElement('div')
     })
     document.body.appendChild(Instance.$el)
-    const { slot = null, cancelText = '取消', confirmText = '确定', message = '', html = '', viceMessage = '', icon, closeOnClickMask = true, confirmStyle, cancelStyle, useDangersHtml = false } = config
+    const { slot = null, cancelText = '取消', confirmText = '确定', title = '', html = '', message = '', icon, closeOnClickMask = true, confirmStyle, cancelStyle, useDangersHtml = false } = config
     if (slot) {
         Instance.$slots.default = [slot]
     }
     Instance.$nextTick(() => {
         Instance.html = html
-        Instance.message = message
+        Instance.message = title
         Instance.useDangersHtml = useDangersHtml
-        Instance.viceMessage = viceMessage
+        Instance.viceMessage = message
         if (typeof config === 'string') {
-            Instance.message = config
+            Instance.title = config
         }
         Instance.cancelText = cancelText
         Instance.confirmText = confirmText
@@ -40,16 +40,16 @@ const alert = (config = {}) => new Promise((resolve, reject) => {
         el: document.createElement('div')
     })
     document.body.appendChild(Instance.$el)
-    const { slot = null, cancelText = '取消', confirmText = '确定', message = '', viceMessage = '', icon, confirmStyle, cancelStyle, useDangersHtml = false } = config
+    const { slot = null, cancelText = '取消', confirmText = '确定', title = '', message = '', icon, confirmStyle, cancelStyle, useDangersHtml = false } = config
     if (slot) {
         Instance.$slots.default = [slot]
     }
     Instance.$nextTick(() => {
-        Instance.message = message
+        Instance.message = title
         Instance.useDangersHtml = useDangersHtml
-        Instance.viceMessage = viceMessage
+        Instance.viceMessage = message
         if (typeof config === 'string') {
-            Instance.message = config
+            Instance.title = config
         }
         Instance.cancelText = cancelText
         Instance.confirmText = confirmText
@@ -71,19 +71,19 @@ const propmt = (config = {}) => new Promise((resolve, reject) => {
         el: document.createElement('div')
     })
     document.body.appendChild(Instance.$el)
-    const { slot = null, cancelText = '取消', confirmText = '确定', message = '', viceMessage = '', icon, placeholder = '请输入', rules = [], value = '', useDangersHtml = false } = config
+    const { slot = null, cancelText = '取消', confirmText = '确定', title = '', message = '', icon, placeholder = '请输入', rules = [], value = '', useDangersHtml = false } = config
     if (slot) {
         Instance.$slots.default = [slot]
     }
     Instance.$nextTick(() => {
-        Instance.message = message
+        Instance.message = title
         Instance.useDangersHtml = useDangersHtml
-        Instance.viceMessage = viceMessage
+        Instance.viceMessage = message
         Instance.placeholder = placeholder
         Instance.propmtValue = value
         Instance.rules = rules
         if (typeof config === 'string') {
-            Instance.message = config
+            Instance.title = config
         }
         Instance.cancelText = cancelText
         Instance.confirmText = confirmText

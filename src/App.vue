@@ -7,10 +7,10 @@
         <navbar v-if="showNavbar.indexOf($route.name) > -1" />
         <QuickNavbar v-else />
         <NewUserHomePop
-            v-if="$route.name === 'Home'"
-            :show.sync="showNewUser"
+            v-if="$route.name === 'Home' && isNewUser"
+            :show.sync="isNewUser"
         />
-        <NewUserHomeBtn v-if="$route.name === 'Home'" />
+        <NewUserHomeBtn v-if="$route.name === 'Home' && isNewUser" />
     </div>
 </template>
 
@@ -46,6 +46,8 @@ import {
 } from './apis/home'
 import { setFirstVisit } from './apis/longmen-festival/lottery'
 
+// 新人有礼
+import { isNewUser, getNewUserInfoList } from './apis/newcomers'
 export default {
     components: {
         Navbar,
@@ -56,7 +58,7 @@ export default {
     data () {
         return {
             logined: false,
-            showNewUser: true,
+            isNewUser: false,
             exclude: [
                 'ShoppingCart',
                 'LiveRoom',
@@ -104,6 +106,7 @@ export default {
             // 标记一天中首次访问
             setFirstVisit()
             await this.getEntryData()
+            await this.getNewUserInfo()
         } catch (e) {
             throw e
         }
@@ -125,6 +128,18 @@ export default {
             getActivityData: GET_ACTIVITY_DATA,
             getSkinId: GET_SKIN_ID
         }),
+        // 获取新人有礼数据
+        async getNewUserInfo () {
+            try {
+                const { result: info } = await getNewUserInfoList()
+                if (info && info.id) {
+                    const { result } = await isNewUser(info.id)
+                    this.isNewUser = result
+                }
+            } catch (e) {
+                throw e
+            }
+        },
         // 获取首页、主会场页所需数据
         async getEntryData () {
             try {

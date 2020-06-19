@@ -24,6 +24,14 @@ export const getNewUserInfoList = () => axios.get(`/apis/v2/c/newcomerActivitys/
 /**
  * 一键全部领取活动 礼物、优惠券、奖学金
  * @param activityId {string}
+ * @param shareUserId {string}
  * @return {*}
  */
 export const akeyToGet = (activityId, shareUserId) => axios.post(`/apis/v2/c/newcomerActivitys/${ activityId }/claim/all`, { shareUserId })
+
+/**
+ * 判断是否为新人
+ * @param activityId {string}
+ * @return {*}
+ */
+export const isNewUser = activityId => axios.get(`/apis/v2/c/newcomerActivitys/${ activityId }/isNewUser`)
