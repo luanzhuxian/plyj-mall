@@ -69,7 +69,7 @@
                             </div>
                             <div
                                 :class="$style.buttons"
-                                v-if="item.status !== 'WAIT_SHIP'"
+                                v-if="item.status === 'WAIT_PAY'"
                             >
                                 <pl-button
                                     round
