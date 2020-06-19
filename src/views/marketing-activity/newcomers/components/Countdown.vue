@@ -1,6 +1,8 @@
 <template>
     <div :class="$style.countdown">
-        <span>距活动开始仅剩：</span>
+        <span v-if="!isSarted">距活动开始仅剩：</span>
+        <span v-else-if="isSarted && !isEnd">距活动结束仅剩：</span>
+        <span v-else>活动已结束仅</span>
         <span :class="$style.timeItem" v-text="day" />
         <i>天</i>
         <span :class="$style.timeItem" v-text="hour" />
@@ -24,16 +26,37 @@ export default {
         }
     },
     props: {
-        duration: {
+        startTime: {
             type: Number,
-            default: 100000
+            default: 0
+        },
+        endTime: {
+            type: Number,
+            default: 0
+        }
+    },
+    computed: {
+        duration () {
+            if (!this.isSarted) {
+                return this.startTime - Date.now()
+            }
+            if (this.isSarted && !this.isEnd) {
+                return this.endTime - Date.now()
+            }
+            return 0
+        },
+        // 是否已经开始
+        isSarted () {
+            return Date.now() - this.startTime > 0
+        },
+        isEnd () {
+            return Date.now() - this.endTime > 0
         }
     },
     watch: {
         duration: {
             handler (val) {
-                console.log(val)
-                if (val) {
+                if (val && val > 0) {
                     this.start()
                 }
             },

@@ -1,16 +1,39 @@
 <template>
-    <div :class="$style.gift">
-        <img src="https://mallcdn.youpenglai.com/static/admall/2.11.0/newuser-pop.png" alt="">
+    <div :class="{ [$style.gift]: true, [$style.one]: count === 1 }">
+        <img :src="image" alt="">
         <div>
-            <div :class="$style.name" class="fz-24">阿卡丽商店噶山豆根</div>
-            <div :class="$style.time" class="fz-20 gray-3">2019.1.15-2019.4.30可兑换</div>
+            <div :class="$style.name" class="fz-24" v-text="name" />
+            <div :class="$style.time" class="fz-20 gray-3">{{ start | dateFormat('YYYY.M.D') }}-{{ end | dateFormat('YYYY.M.D') }}可兑换</div>
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    name: 'Gift'
+    name: 'Gift',
+    props: {
+        image: {
+            type: String,
+            default: ''
+        },
+        name: {
+            type: String,
+            default: ''
+        },
+        start: {
+            type: String,
+            default: ''
+        },
+        end: {
+            type: String,
+            default: ''
+        },
+        // 礼品数量
+        count: {
+            type: Number,
+            default: 1
+        }
+    }
 }
 </script>
 
@@ -21,6 +44,8 @@ export default {
         height: 404px;
         margin-right: 16px;
         font-size: 0;
+        border-radius: 20px 20px 0 0;
+        overflow: hidden;
         background-color: #FFEAE1;
         > img {
             display: block;
@@ -31,6 +56,30 @@ export default {
             padding: 26px 12px;
             > .name {
                 margin-bottom: 18px;
+                @include elps-wrap(1);
+            }
+        }
+        &.one {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            height: 180px;
+            width: 614px;
+            margin-right: 0;
+            box-sizing: border-box;
+            border-radius: 20px;
+            > img {
+                width: 180px;
+                height: 180px;
+            }
+            > div {
+                padding: 28px 32px;
+                > .name {
+                    margin-bottom: 20px;
+                    font-weight: bold;
+                    font-size: 30px;
+                    @include elps-wrap(1);
+                }
             }
         }
     }

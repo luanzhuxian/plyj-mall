@@ -1,14 +1,24 @@
 <template>
     <div :class="$style.scholarship">
-        <div :class="$style.price" class="rmb">1000</div>
+        <div :class="$style.price" class="rmb" v-text="price" />
         <p>全场商品通用</p>
-        <p>领取后30天内可用</p>
+        <p>领取后{{ days }}天内可用</p>
     </div>
 </template>
 
 <script>
 export default {
-    name: 'Scholarship'
+    name: 'Scholarship',
+    props: {
+        price: {
+            type: Number,
+            default: 0
+        },
+        days: {
+            type: Number,
+            default: 0
+        }
+    }
 }
 </script>
 

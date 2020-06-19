@@ -10,9 +10,10 @@
             v-text="price"
         />
         <div :class="$style.info">
-            <div>满减券</div>
-            <div>满1000减999</div>
-            <div>(有效期  2019.4.15-2019.4.30)</div>
+            <div v-if="type === 1">满减券</div>
+            <div v-else>品类券</div>
+            <div>满{{ limit }}减{{ price }}</div>
+            <div>(有效期 {{ start | dateFormat('YYYY.M.D') }}-{{ end | dateFormat('YYYY.M.D') }})</div>
         </div>
     </div>
 </template>
@@ -23,7 +24,19 @@ export default {
     props: {
         price: {
             type: [String, Number],
-            default: 100000000
+            default: 0
+        },
+        limit: {
+            type: [String, Number],
+            default: 0
+        },
+        start: {
+            type: String,
+            default: ''
+        },
+        end: {
+            type: String,
+            default: ''
         },
         type: {
             type: Number,
@@ -49,6 +62,7 @@ export default {
             margin-bottom: 0;
         }
         > .price {
+            width: 160px;
             font-size: 40px;
             font-weight: bold;
             color: #FF4622;

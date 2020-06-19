@@ -4,7 +4,12 @@
         <h2>新人优惠大礼包 惊喜派送</h2>
         <Rules />
         <Poster />
-        <Countdown :duration="1" @end="countdownEnd" />
+        <Countdown
+            :duration="1"
+            :start-time="startTime"
+            :end-time="endTime"
+            @end="countdownEnd"
+        />
         <div :class="$style.count">
             已有<i>12</i>人领取了新人优惠大礼包
         </div>
@@ -12,27 +17,46 @@
         <div :class="$style.contentBox">
             <div :class="{ [$style.contentMain]: true, [$style.coupon]: true }">
                 <div :class="$style.top">
-                    优惠券大礼包 <i class="rmb">1000</i>
+                    优惠券大礼包 <i class="rmb" v-text="totalCouponPrice" />
                 </div>
-                <Coupon />
-                <Coupon />
-                <Coupon />
-                <pl-button size="large" round type="warning">
-                    查看更多优惠券
-                </pl-button>
+                <div
+                    :class="{ [$style.couponList]: true, [$style.more]: seeMoreCoupon, [$style.few]: coupons.length < 4 }"
+                    :style="{ height: coupons.length > 3 ? (seeMoreCoupon ? ((6 * 180 + 5 * 18) / 7.5) + 'vw' : 576 / 7.5 + 'vw') : 'auto' }"
+                >
+                    <Coupon
+                        v-for="(item, i) of coupons"
+                        :key="i"
+                        :price="item.amount"
+                        :type="item.couponType"
+                        :limit="item.useLimitAmount"
+                        :start="item.useStartTime"
+                        :end="item.useEndTime"
+                    />
+                </div>
+                <template v-if="coupons.length > 3">
+                    <pl-button v-if="!seeMoreCoupon" size="large" round type="warning" @click="seeMoreCoupon = true">
+                        查看更多优惠券
+                    </pl-button>
+                    <button v-else style="color: #FA8E59" :class="$style.collapse" @click="seeMoreCoupon = false">
+                        收起 <pl-svg name="icon-right" width="30" fill="#FA8E59" />
+                    </button>
+                </template>
             </div>
         </div>
 
         <div :class="$style.contentBox">
             <div :class="{ [$style.contentMain]: true, [$style.scholarship]: true }">
                 <div :class="$style.top">
-                    新人奖学金 <i class="rmb">1000</i>
+                    新人奖学金 <i class="rmb" v-text="totalScholarship" />
                 </div>
                 <div :class="$style.scholarshipWrap">
                     <div :class="$style.scholarshipList">
-                        <Scholarship />
-                        <Scholarship />
-                        <Scholarship />
+                        <Scholarship
+                            v-for="(item, i) of scholarships"
+                            :key="i"
+                            :price="item.scholarshipPrice"
+                            :days="item.scholarshipEffectiveTime"
+                        />
                     </div>
                 </div>
             </div>
@@ -45,9 +69,15 @@
                 </div>
                 <div :class="$style.giftWrap">
                     <div :class="$style.giftList">
-                        <Gift />
-                        <Gift />
-                        <Gift />
+                        <Gift
+                            v-for="(item, i) of gifts"
+                            :key="i"
+                            :image="item.giftImage"
+                            :name="item.giftName"
+                            :start="item.useStartTime"
+                            :end="item.useEndTime"
+                            :count="gifts.length"
+                        />
                     </div>
                 </div>
             </div>
@@ -75,7 +105,10 @@ import Gift from './components/Gift.vue'
 import Countdown from './components/Countdown.vue'
 import Rules from './components/Rules.vue'
 import Poster from './components/Poster.vue'
-import { getNewcomersDetail } from '../../../apis/newcomers'
+import {
+    getNewcomersDetail,
+    getNewUserInfoList
+} from '../../../apis/newcomers'
 
 export default {
     name: 'Newcomers',
@@ -90,58 +123,83 @@ export default {
     data () {
         return {
             isShowRule: false,
+            seeMoreCoupon: false,
             isShowDlg: true,
             activityInfo: {}
         }
     },
-
+    props: {
+        shareId: {
+            type: String,
+            default: ''
+        }
+    },
     computed: {
-        ...mapGetters(['appId', 'mallDomain', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl']),
-        // isNewUser () {
-        //     return !this.userId
-        // },
-        // isActivityStoped () {
-        //     return moment(this.activityInfo.activityEndTime).isBefore(moment()) || this.activityInfo.status === 0
-        // },
-        // btnClaimText () {
-        //     if (this.activityInfo.status === 0) {
-        //         return '该活动已停止，暂不能领用礼包'
-        //     }
-        //     if (moment(this.activityInfo.activityEndTime).isBefore(moment())) {
-        //         return '该活动已结束，不能领用礼包'
-        //     }
-        //     if (!this.isNewUser) {
-        //         return '您已成功领取礼包'
-        //     }
-        //     return '一键领取'
-        // },
-        // activityBrief () {
-        //     return (this.activityInfo.activityBrief || '').replace(/\n/g, '<br>')
-        // }
+        ...mapGetters(['appId', 'mallDomain', 'agentUser', 'mallUrl', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl']),
+        coupons () {
+            return this.activityInfo.couponModels || []
+        },
+        scholarships () {
+            return this.activityInfo.scholarships || []
+        },
+        gifts () {
+            return this.activityInfo.gifts || []
+        },
+        totalCouponPrice () {
+            return this.coupons.length ? this.coupons.map(item => item.amount).reduce((a, b) => a + b) : 0
+        },
+        totalScholarship () {
+            return this.scholarships.length ? this.scholarships.map(item => item.scholarshipPrice).reduce((a, b) => a + b) : 0
+        },
+        startTime () {
+            return moment(this.activityInfo.activityStartTime).valueOf() || 0
+        },
+        endTime () {
+            return moment(this.activityInfo.activityEndTime).valueOf() || 0
+        }
     },
 
     watch: {
-        // 'activityInfo.hasClaim' (newVal, old) {
-        //     if (newVal && (!this.isActivityStoped)) {
-        //         this.reClaimed()
-        //     }
-        // }
     },
 
     async created () {
     },
 
     async activated () {
-        // try {
-        //     await this.getNewcomersDetail()
-        //     await this.tryClaim(true)
-        //     this.share()
-        // } catch (e) {
-        //     throw e
-        // }
+        try {
+            await this.getNewUserInfoList()
+            this.share()
+        } catch (e) {
+            throw e
+        }
     },
 
     methods: {
+        async getNewUserInfoList () {
+           try {
+               const { result } = await getNewUserInfoList()
+               this.activityInfo = result || {}
+           } catch (e) {
+               throw e
+           }
+        },
+        share () {
+            let shareUrl = ''
+            if (this.userId) {
+                shareUrl = `${ this.mallUrl }/detail/product/${ this.productId }/${ this.userId }?noCache=${ Date.now() }`
+            } else {
+                shareUrl = `${ this.mallUrl }/detail/product/${ this.productId }?noCache=${ Date.now() }`
+            }
+            this.shareUrl = shareUrl
+            share({
+                appId: this.appId,
+                title: `${ this.mallName }————新人活动温暖感恩回馈`,
+                desc: `新人优惠大礼包，惊喜大派送，${ this.userName }邀请你参与新人有礼活动`,
+                link: shareUrl,
+                imgUrl: 'https://mallcdn.youpenglai.com/static/admall/2.11.0/newuser-bg.jpg',
+                willHide: ['menuItem:share:timeline']
+            })
+        },
         // 倒计时结束
         countdownEnd () {
             console.log(123123)
@@ -217,9 +275,23 @@ export default {
             display: flex;
             flex-direction: column;
             align-items: center;
+            > .couponList {
+                overflow: hidden;
+                transition: height .5s linear;
+                &.few {
+                    padding-bottom: 56px;
+                }
+            }
             > button {
                 width: 450px;
                 margin: 38px 0 46px 0;
+                &.collapse {
+                    font-size: 30px;
+                    > svg {
+                        transform: rotate(-90deg);
+                        vertical-align: -4px;
+                    }
+                }
             }
         }
         &.scholarship, &.gift {
