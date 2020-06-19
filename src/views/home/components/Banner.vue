@@ -19,9 +19,9 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import CountDown from '../../../components/product/Count-Down.vue'
-import { mapGetters } from 'vuex'
 
 export default {
     name: 'Banner',
@@ -62,15 +62,6 @@ export default {
         },
         isBookShow () {
             return !!this.campaignBook && this.campaignBook.isBookShow && this.campaignBook.activityId
-        },
-        isDragonGateCharityShow () {
-            return !!this.dragonGateCharity && this.dragonGateCharity.id
-        },
-        isDragonGateSignShow () {
-            return !!this.dragonGateSign && this.dragonGateSign.id
-        },
-        isDragonGatePlayShow () {
-            return !!this.dragonGatePlay && this.dragonGatePlay.id
         }
     },
     methods: {
@@ -162,17 +153,34 @@ export default {
             }
             // 公益棕行动
             if (type === 48) {
-                if (!this.isDragonGateCharityShow) return false
-                return this.$router.push({ name: 'LongmenAction', params: { id: this.dragonGateCharity.id } })
+                const { dragonGateCharity } = this
+                if (!dragonGateCharity || !dragonGateCharity.id) return false
+
+                const endTime = new Date(dragonGateCharity.endTime).valueOf()
+                if (endTime < Date.now()) return false
+
+                return this.$router.push({ name: 'LongmenAction', params: { id: dragonGateCharity.id } })
             }
             // 粽粽有礼
             if (type === 49) {
-                if (!this.isDragonGateSignShow) return false
+                const { dragonGateSign } = this
+                if (!dragonGateSign || !dragonGateSign.id) return false
+
+                const startTime = new Date(dragonGateSign.activityStartTime).valueOf()
+                const endTime = new Date(dragonGateSign.activityEndTime).valueOf()
+                if (startTime > Date.now() || endTime < Date.now()) return false
+
                 return this.$router.push({ name: 'LongmenSignIn', params: { id: this.dragonGateSign.id } })
             }
             // 龙门抽大奖
             if (type === 410) {
-                if (!this.isDragonGatePlayShow) return false
+                const { dragonGatePlay } = this
+                if (!dragonGatePlay || !dragonGatePlay.id) return false
+
+                const startTime = new Date(dragonGatePlay.startTime).valueOf()
+                const endTime = new Date(dragonGatePlay.endTime).valueOf()
+                if (startTime > Date.now() || endTime < Date.now()) return false
+
                 return this.$router.push({ name: 'LongmenLottery', params: { id: this.dragonGatePlay.id } })
             }
             // 其他

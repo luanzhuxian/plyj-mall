@@ -60,17 +60,18 @@ class Raf {
         Object.assign(this, {
             root,
             prev: Date.now(),
-            setHandler: root.requestAnimationFrame || this.fallback,
-            clearHandler: root.cancelAnimationFrame || root.clearTimeout
+            // setHandler: root.requestAnimationFrame || this.fallback,
+            // clearHandler: root.cancelAnimationFrame || root.clearTimeout
+            setHandler: this.fallback.bind(this),
+            clearHandler: root.clearTimeout
         })
     }
 
     fallback (callback) {
-        let { prev } = this
         const curr = Date.now()
-        const ms = Math.max(0, 16 - (curr - prev))
+        const ms = Math.max(0, 1000 - (curr - this.prev))
         const id = setTimeout(callback, ms)
-        prev = curr + ms
+        this.prev = curr + ms
         return id
     }
 

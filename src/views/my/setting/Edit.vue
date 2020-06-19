@@ -1,9 +1,10 @@
 <template>
     <div :class="$style.setting">
         <div :class="$style.top">
-            <img v-imgError
-                 :src="avatar"
-                 alt=""
+            <img
+                v-imgError
+                :src="avatar"
+                alt=""
             >
             <div :class="$style.baseInfo">
                 <span

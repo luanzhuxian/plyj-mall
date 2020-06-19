@@ -1,5 +1,8 @@
 import Compressor from 'compressorjs'
 import { getSTS } from '../../apis/base-api'
+import store from '../../store'
+const { VUE_APP_MODEL } = process.env
+const ENV = VUE_APP_MODEL === 'production' ? 'pro' : 'dev'
 const OSS = require('ali-oss')
 const REGION = 'oss-accelerate'
 const BUCKET = 'penglai-weimall'
@@ -89,8 +92,10 @@ export const upload = async function (file) {
     } catch (e) {
         throw new Error('不允许的图片格式')
     }
+    // 使用商城id分开存储
+    const mallId = store.getters.mallId
     const client = await getClient()
-    const key = `img/${ randomString() }.${ ext }`
+    const key = mallId ? `img/mall/${ENV}/${mallId}/${randomString()}.${ext}` : `img/admall/${ENV}/${randomString()}.${ext}`
     return new Promise((resolve, reject) => {
         client.put(key, file)
             .then(res => {
@@ -126,7 +131,7 @@ export function blobToBase64 (blob) {
 }
 // 生成随机字符串
 function randomString () {
-    return `mall-${uuid.v1()}-${Math.random().toString().replace('.', '')}`
+    return `${uuid.v1()}-${Math.random().toString().replace('.', '')}`
 }
 
 export function createObjectUrl (blob) {

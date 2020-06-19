@@ -157,7 +157,6 @@ export default {
         }
         .info {
             flex: 1;
-            width: 0;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -230,6 +229,7 @@ export default {
             }
             .info {
                 padding: 8px 0 8px 20px;
+                width: 0;
             }
             .middle {
                 margin-top: 12px;

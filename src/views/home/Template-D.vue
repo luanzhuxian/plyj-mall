@@ -2,14 +2,23 @@
     <div :class="[$style.homeTemplateD, $style[skinClassNameMap[skinId]]]">
         <div :class="$style.container">
             <search :class="$style.search" placeholder="搜索商品" />
+            <!-- banner -->
             <banner :class="$style.banner" :data="BANNER" />
+            <!-- 优惠券 -->
             <coupon :class="$style.coupon" :data="COUPON" v-if="isCouponShow" />
+            <!-- 活动 -->
             <activity :class="$style.activity" :data="ACTIVITY" v-if="isActivityShow" />
+            <!-- 直播 -->
             <live :class="$style.live" :data="LIVE" v-if="isLiveShow" />
+            <!-- 单课 -->
             <online-course :class="$style.onlineCourse" :data="COURSE" v-if="isOnlineCourseShow" />
+            <!-- 系列课 -->
             <series-course :class="$style.seriesCourse" :data="SERIES" v-if="isSeriesCourseShow" />
+            <!-- 疫情 -->
             <campaign v-if="isCampaignShow" />
+            <!-- 预约 -->
             <appointment :class="$style.appointment" :data="APPOINTMENT" :slides-per-view="2" v-if="APPOINTMENT.showStatue === 1" />
+            <!-- 秒杀 -->
             <div :class="$style.miaosha" v-if="isMiaoshaShow">
                 <skin-title
                     v-if="isSkinShow"
@@ -20,6 +29,7 @@
                 <div v-else-if="skinId !== null" :class="$style.title" v-text="MIAO_SHA.moduleName" />
                 <miaosha :data="MIAO_SHA" />
             </div>
+            <!-- 组合课 -->
             <div :class="$style.package" v-if="isPackageShow">
                 <skin-title
                     v-if="isSkinShow"
@@ -30,6 +40,7 @@
                 <div v-else-if="skinId !== null" :class="$style.title" v-text="PACKAGE.moduleName" />
                 <package :data="PACKAGE" />
             </div>
+            <!-- 团购 -->
             <div :class="$style.pintuan" v-if="isPintuanShow">
                 <skin-title
                     v-if="isSkinShow"
@@ -40,6 +51,7 @@
                 <div v-else-if="skinId !== null" :class="$style.title" v-text="PIN_TUAN.moduleName" />
                 <pintuan :data="PIN_TUAN" />
             </div>
+            <!-- 预购 -->
             <div :class="$style.yugou" v-if="isYugouShow">
                 <skin-title
                     v-if="isSkinShow"
@@ -50,7 +62,9 @@
                 <div v-else-if="skinId !== null" :class="$style.title" v-text="YU_GOU.moduleName" />
                 <yugou :data="YU_GOU" />
             </div>
+            <!-- 品宣 -->
             <propagate :class="$style.propagate" :data="PROPAGATE" v-if="PROPAGATE.showStatue === 1" />
+            <!-- 商品 -->
             <div :class="$style.hotItem" v-if="POPULAR.showStatue === 1">
                 <skin-title
                     v-if="isSkinShow"
@@ -61,6 +75,7 @@
                 <div v-else-if="skinId !== null" :class="$style.title" v-text="POPULAR.moduleName" />
                 <hot-item :data="POPULAR" />
             </div>
+            <!-- 课程 -->
             <div :class="$style.best" v-if="CLASS.showStatue === 1">
                 <skin-title
                     v-if="isSkinShow"
@@ -71,6 +86,7 @@
                 <div v-else-if="skinId !== null" :class="$style.title" v-text="CLASS.moduleName" />
                 <best :data="CLASS" />
             </div>
+            <!-- 精品推荐 -->
             <div :class="$style.recommend" v-if="RECOMMEND.values && RECOMMEND.values.length">
                 <skin-title
                     v-if="isSkinShow"
@@ -200,13 +216,13 @@ export default {
             return this.data.RECOMMEND || {}
         },
         isLiveShow () {
-            return this.LIVE.values && this.LIVE.values.length
+            return this.LIVE.showStatue === 1 && this.LIVE.values && this.LIVE.values.length
         },
         isOnlineCourseShow () {
-            return this.COURSE.values && this.COURSE.values.length
+            return this.COURSE.showStatue === 1 && this.COURSE.values && this.COURSE.values.length
         },
         isSeriesCourseShow () {
-            return this.SERIES.values && this.SERIES.values.length
+            return this.SERIES.showStatue === 1 && this.SERIES.values && this.SERIES.values.length
         },
         isCampaignShow () {
             return this.parent.isReportShow || this.parent.isBookShow

@@ -36,7 +36,6 @@
                 v-for="(item, i) of activity.models"
                 :key="index + '-' + i"
             >
-                <!-- <div :class="$style.groupName" v-text="item.activityName" /> -->
                 <div :class="$style.discount">
                     <span>组合打包{{ item.discount }}折起</span>
                     <span>|</span>
@@ -57,11 +56,12 @@
                     <span v-else>已结束</span>
                 </div>
                 <div :class="$style.proList">
-                    <SpringPloughingProItem
-                        v-for="(pro, j) of item.products"
+                    <spring-ploughing-pro-item
+                        v-for="(prod, j) of item.products"
                         :key="index + '-' + i + '-' + j"
-                        :data="pro"
+                        :data="prod"
                         color="yellow"
+                        :current-product-status="6"
                     />
                 </div>
                 <div :class="$style.giftList" v-if="item.gifts.length">
@@ -69,7 +69,7 @@
                         更享更多伴手礼
                     </div>
                     <template v-for="(gift, k) of item.gifts">
-                        <SpringPloughingGiftItem
+                        <spring-ploughing-gift-item
                             v-show="k < 3 || item.isShowGiftMore"
                             :key="index + '-' + i + '-' + k"
                             :data="gift"
@@ -187,8 +187,9 @@ export default {
     async activated () {
         try {
             await this.getSpringCombination()
-            const t = await Countdown.getServerTime()
-            console.log(t)
+            await Countdown.getServerTime()
+
+            // 视口滚动到该组合
             if (this.activityId) {
                 this.scrollToTarget()
             }
@@ -240,6 +241,7 @@ export default {
                     for (const group of activity.models) {
                         // 隐藏3个以上的礼品，按钮控制是否显示更多
                         group.isShowGiftMore = false
+
                         // 添加倒计时相关字段
                         group.d = ''
                         group.h = ''
@@ -248,14 +250,18 @@ export default {
                         const activityStartTime = moment(group.activityStartTime).valueOf()
                         const activityEndTime = moment(group.activityEndTime).valueOf()
                         const now = Date.now()
+
                         // 是否开始
                         group.wasStarted = now - activityStartTime >= 0
+
                         // 是否结束
                         group.wasEnded = now - activityEndTime >= 0
+
                         // 未开始倒计时(距离开始)
                         if (!group.wasStarted) {
                             this.setCountdownTime(group, activityStartTime - now)
                         }
+
                         // 开始倒计时(距离结束)
                         if (group.wasStarted && !group.wasEnded) {
                             this.setCountdownTime(group, activityEndTime - now)
@@ -268,10 +274,12 @@ export default {
                 const now = Date.now()
                 this.count.wasStarted = now - lastStartTime >= 0
                 this.count.wasEnded = now - lastEndTime >= 0
-                // // 未开始倒计时(距离开始)
+
+                // 未开始倒计时(距离开始)
                 if (!this.count.wasStarted) {
                     this.setCountdownTime(this.count, lastStartTime - now)
                 }
+
                 // 开始倒计时(距离结束)
                 if (this.count.wasStarted && !this.count.wasEnded) {
                     this.setCountdownTime(this.count, lastEndTime - now)

@@ -89,9 +89,12 @@ export default {
         show (val) {
             if (!val) {
                 this.close()
-                document.documentElement.style.overflow = null
+                document.body.style.overflow = null
+                document.body.style.heigth = null
             } else {
-                document.documentElement.style.overflow = 'hidden'
+                window.scrollTo(0, window.screenTop)
+                document.body.style.height = '100vh'
+                document.body.style.overflow = 'hidden'
                 this.showPicker = true
                 this.$nextTick(() => {
                     this.showMask = true

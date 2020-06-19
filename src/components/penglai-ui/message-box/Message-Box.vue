@@ -82,9 +82,9 @@ export default {
             placeholder: '',
 
             /*
-      * type等于propmt时校验的校验规则，如果为空，则不校验
-      * arrayObject [{ validator: Function, message: String }]
-      * */
+             * type等于propmt时校验的校验规则，如果为空，则不校验
+             * arrayObject [{ validator: Function, message: String }]
+             * */
             rules: []
         }
     },
