@@ -44,7 +44,7 @@
             </div>
 
             <div
-                v-if="hasPhySicalGood"
+                v-if="physicalProducts.length > 0"
                 :class="$style.itemSelector"
             >
                 <pl-fields
@@ -78,8 +78,9 @@
                 @change="scholarshipChange"
             />
 
+            <!--除运费以外的实付款小于等于0, 不支持开发票-->
             <Invoice
-                v-show="goodsAmount > 0"
+                :disabled="totalAmount - freight <= 0"
                 :active-product="activeProduct"
                 :total-amount="totalAmount"
                 :products="products"
@@ -231,9 +232,6 @@ export default {
         },
         hasKnowlegeCourse () {
             return this.form.skus.some(item => [this.orderTypeKeyMap.KNOWLEDGE_COURSE, this.orderTypeKeyMap.SERIES_OF_COURSE].includes(item.goodsType))
-        },
-        hasPhySicalGood () {
-            return this.form.skus.some(item => this.orderTypeKeyMap.PHYSICAL_GOODS === item.goodsType)
         }
     },
     watch: {
@@ -318,6 +316,8 @@ export default {
                     }
                     this.exchangeCodeMap = exchangeCodeMap
                 }
+                // 初始化优惠信息
+                await this.initDiscountModel()
             } catch (e) {
                 throw e
             }
@@ -394,6 +394,46 @@ export default {
                 }))
                 this.CONFIRM_LIST = CONFIRM_LIST
                 return CONFIRM_LIST
+            } catch (e) {
+                throw e
+            }
+        },
+
+        // 在订单页面, 调整订单相关信息后, 设置订单优惠信息
+        setDiscountModel () {
+            const params = {}
+            if (this.form.cartCouponModel && this.form.cartCouponModel.userCouponId) {
+                params.couponModel = this.currentCoupon
+            }
+            if (this.form.scholarshipModel && this.form.scholarshipModel.scholarshipId) {
+                params.scholarshipModel = this.currentRedEnvelope
+            }
+            if (this.exchangeCodeInfo && this.exchangeCodeInfo.id) {
+                params.exchangeCodeModel = this.exchangeCodeInfo
+            }
+            if (Object.keys(params).length) {
+                this.$store.commit('submitOrder/setOrderProducts', {
+                    discountModel: params
+                })
+            }
+        },
+
+        /* 初始化优惠信息, 如果有信息,请求confirm接口; 没有的话, 不做处理 */
+        async initDiscountModel () {
+            try {
+                const { discountModel } = this['submitOrder/orderProducts']
+                if (!discountModel) return
+                const { couponModel, scholarshipModel, exchangeCodeModel } = discountModel
+                await this.$nextTick()
+                if (couponModel) {
+                    this.currentCoupon = couponModel
+                    await this.couponChange(couponModel)
+                }
+                if (scholarshipModel) {
+                    this.currentRedEnvelope = scholarshipModel
+                    await this.scholarshipChange(scholarshipModel)
+                }
+                if (exchangeCodeModel) await this.exchangeCodeChange(exchangeCodeModel)
             } catch (e) {
                 throw e
             }
@@ -502,6 +542,30 @@ export default {
                 companyAddr: data.userAddress
             } : null
         },
+        // 若商品实付款金额,因奖学金/品类券为0,发票中不能给该商品开发票
+        checkInvoiceSelected (form) {
+            if (!form.invoiceInfoModel) return
+            const skus = form.invoiceInfoModel.skus
+            // 需要移除的商品index
+            const indexs = []
+            for (const [index, item] of skus.entries()) {
+                for (const iItem of this.products) {
+                    if (item.goodsId === iItem.goodsId && item.sku1 === iItem.sku1 && item.sku2 === iItem.sku2 && iItem.amount - iItem.postageAmount === 0) {
+                        indexs.push(index)
+                    }
+                }
+            }
+            // 没有需要移除的商品
+            if (!indexs.length) return
+            for (const i of indexs.reverse()) {
+                skus.splice(i, 1)
+            }
+            if (skus.length) {
+                form.invoiceInfoModel.skus = skus
+            } else {
+                form.invoiceInfoModel = null
+            }
+        },
 
         /**
          * 修改学员事件
@@ -565,6 +629,7 @@ export default {
                 this.submiting = true
                 this.setOrderPostscript(this.products, this.form.skus)
                 const form = JSON.parse(JSON.stringify(this.form))
+                this.checkInvoiceSelected(form)
                 if (this.exchangeCodeInfo.id) {
                     form.source = 8
                     form.activityId = this.exchangeCodeInfo.id
@@ -658,10 +723,10 @@ export default {
         }
     },
     beforeRouteLeave (to, from, next) {
-        if (to.name !== 'ApplyInvoice' &&
-            to.name !== 'Address' &&
-            to.name !== 'AddAddress' &&
-            to.name !== 'StudentList') {
+        const customRouteName = ['ApplyInvoice', 'Address', 'AddAddress', 'StudentList']
+        if (customRouteName.includes(to.name)) {
+            this.setDiscountModel()
+        } else {
             this.$store.commit('submitOrder/removeOrderProducts')
             this.$store.commit('submitOrder/removeCurExchangeCode')
             this.$store.commit('submitOrder/removeInvoiceInfo')

@@ -10,7 +10,7 @@
                 icon="icon-invoice"
                 :icon-gap="12"
                 show-right-icon
-                :right-text="invioceType === 0 ? '不需要' : '纸质发票'"
+                :right-text="disabled ? '不支持' : invioceType === 0 ? '不需要' : '纸质发票'"
                 left-text-weight="bold"
             />
         </div>
@@ -42,6 +42,7 @@ export default {
         }
     },
     props: {
+        disabled: Boolean,
         totalAmount: {
             type: Number,
             default: 0
@@ -83,6 +84,7 @@ export default {
     },
     methods: {
         selectInvoice () {
+            if (this.disabled) return
             if (!this.physicalProducts.length && !this.contactInfoModel.name) {
                 this.$warning('请先填写联系人信息')
                 return
@@ -98,8 +100,8 @@ export default {
         need () {
             this.$store.commit('submitOrder/setInvoiceProducts', {
                 products: [
-                    // 只有 支持申请发票 并且 商品实付款不为0 才可被选择申请发票
-                    ...this.products.filter(item => item.amount !== 0 && item.supportInvoice === 1)
+                    // 只有 支持申请发票 并且 商品不含运费实付款不为0 才可被选择申请发票
+                    ...this.products.filter(item => (item.amount - item.postageAmount) !== 0 && item.supportInvoice === 1)
                 ],
                 fromRoute: {
                     name: this.$route.name,
