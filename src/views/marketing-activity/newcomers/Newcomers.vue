@@ -16,12 +16,12 @@
             :start-time="startTime"
             :end-time="endTime"
             :duration="duration"
-            :is-start="isSarted"
+            :is-start="isStarted"
             :is-end="isEnd"
             @end="countdownEnd"
         />
         <div :class="$style.count">
-            已有<i v-text="activityInfo.publishNum" />人领取了新人优惠大礼包
+            已有<i v-text="activityInfo.claimNum" />人领取了新人优惠大礼包
         </div>
 
         <div :class="$style.contentBox" v-if="coupons.length">
@@ -98,8 +98,8 @@
             <span>快来领取新人优惠大礼包，领取成功后，您可进入个人中心中查看</span>
         </div>
 
-        <button v-if="!isSarted" disabled>活动即将开始</button>
-        <button v-else-if="isSarted && !isEnd" @click="akeyToGet">一键领取</button>
+        <button v-if="!isStarted" disabled>活动即将开始</button>
+        <button v-else-if="isStarted && !isEnd" @click="akeyToGet">一键领取</button>
         <button v-else disabled>活动已结束</button>
     </div>
 </template>
@@ -137,7 +137,6 @@ export default {
         return {
             isShowRule: false,
             seeMoreCoupon: false,
-            isShowDlg: true,
             activityInfo: {},
             duration: 0
         }
@@ -172,11 +171,11 @@ export default {
             return moment(this.activityInfo.activityEndTime).valueOf() || 0
         },
         // 是否已经开始
-        isSarted () {
-            return Date.now() - this.startTime > 0
+        isStarted () {
+            return Date.now() - this.startTime > 0 && Number(this.activityInfo.status) !== 0
         },
         isEnd () {
-            return Date.now() - this.endTime > 0
+            return Number(this.activityInfo.status) === 0
         }
     },
 
@@ -213,12 +212,13 @@ export default {
                const startTime = moment(activityInfo.activityStartTime).valueOf() || 0
                const endTime = moment(activityInfo.activityEndTime).valueOf() || 0
                await this.$nextTick()
-               if (!this.isSarted) {
+               if (!this.isStarted) {
                    duration = startTime - Date.now()
                }
-               if (this.isSarted && !this.isEnd) {
+               if (this.isStarted && !this.isEnd) {
                    duration = endTime - Date.now()
                }
+               this.duration = duration
                // 活动已结束
                if (this.isEnd) {
                    await this.$alert({
@@ -229,7 +229,6 @@ export default {
                    })
                     return
                }
-               this.duration = duration
                const { result: isNew } = await isNewUser(activityInfo.id)
                this.isNew = isNew
                if (isNew) {

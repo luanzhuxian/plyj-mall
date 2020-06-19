@@ -1,15 +1,17 @@
 <template>
     <div :class="$style.countdown">
-        <span v-if="!isStart">距活动开始仅剩：</span>
-        <span v-else-if="isStart && !isEnd">距活动结束仅剩：</span>
+        <template v-if="!isEnd">
+            <span v-if="!isStart">距活动开始仅剩：</span>
+            <span v-else>距活动结束仅剩：</span>
+            <span :class="$style.timeItem" v-text="day" />
+            <i>天</i>
+            <span :class="$style.timeItem" v-text="hour" />
+            <i>:</i>
+            <span :class="$style.timeItem" v-text="minute" />
+            <i>:</i>
+            <span :class="$style.timeItem" v-text="second" />
+        </template>
         <span v-else>活动已结束仅</span>
-        <span :class="$style.timeItem" v-text="day" />
-        <i>天</i>
-        <span :class="$style.timeItem" v-text="hour" />
-        <i>:</i>
-        <span :class="$style.timeItem" v-text="minute" />
-        <i>:</i>
-        <span :class="$style.timeItem" v-text="second" />
     </div>
 </template>
 
