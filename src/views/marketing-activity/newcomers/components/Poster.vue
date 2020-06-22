@@ -136,7 +136,7 @@ export default {
                 CTX.textAlign = 'center'
                 createText({
                     ctx: CTX,
-                    text: '长按保存图片/扫码二维码',
+                    text: '长按保存图片/扫描二维码',
                     lineHeight: 32,
                     x: CVS.width / 2,
                     y: 756
