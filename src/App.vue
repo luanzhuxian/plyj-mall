@@ -8,9 +8,9 @@
         <QuickNavbar v-else />
         <NewUserHomePop
             v-if="$route.name === 'Home' && isNewUser"
-            :show.sync="isNewUser"
+            :show.sync="showNewUser"
         />
-        <NewUserHomeBtn v-if="$route.name === 'Home' && isNewUser" />
+        <NewUserHomeBtn v-if="$route.name === 'Home' && isNewUser && !showNewUser" />
     </div>
 </template>
 
@@ -59,6 +59,7 @@ export default {
         return {
             logined: false,
             isNewUser: false,
+            showNewUser: true,
             exclude: [
                 'ShoppingCart',
                 'LiveRoom',
