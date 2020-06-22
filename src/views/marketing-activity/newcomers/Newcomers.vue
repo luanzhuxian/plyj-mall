@@ -278,6 +278,7 @@ export default {
                     text += `<p><i style="color: #FE7700">${ this.totalScholarship }</i>个新人礼品</p>`
                 }
                 this.$toast({ message: text })
+                this.isNew = false
             } catch (e) {
                 throw e
             }

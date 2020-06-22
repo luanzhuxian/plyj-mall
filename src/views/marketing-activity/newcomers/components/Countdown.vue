@@ -11,7 +11,7 @@
             <i>:</i>
             <span :class="$style.timeItem" v-text="second" />
         </template>
-        <span v-else>活动已结束仅</span>
+        <span v-else>活动已结束</span>
     </div>
 </template>
 
@@ -62,7 +62,7 @@ export default {
     methods: {
         start () {
             this.stop()
-            if (this.duration > 0) {
+            if (this.duration > 0 && !this.isEnd) {
                 const COUNTDOWN = new Countdown(this.duration, this.callback)
                 COUNTDOWN.start()
                 this.COUNTDOWN = COUNTDOWN
