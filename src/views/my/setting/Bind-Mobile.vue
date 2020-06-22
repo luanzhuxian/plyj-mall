@@ -99,6 +99,7 @@
 <script>
 import TopText from '../../../components/common/Top-Text.vue'
 import { checkMobileCode, bindMobile, updateMobile } from '../../../apis/base-api'
+import { getGoingInfo, isNewUser } from '../../../apis/newcomers'
 import { mapGetters } from 'vuex'
 import { LOGIN, USER_INFO } from '../../../store/mutation-type'
 import { resetForm } from '../../../assets/js/util'
@@ -152,7 +153,7 @@ export default {
         this.updateForm.oldMobile = this.mobile || ''
     },
     deactivated () {
-    // 重置表单
+        // 重置表单
         resetForm(this.bindForm)
         resetForm(this.updateForm)
         this.step = 1
@@ -202,19 +203,43 @@ export default {
                     }
                 }
                 await this.refreshLogin()
-                this.loading = false
                 await this.$router.replace({ name: 'My' })
             } catch (e) {
+                if (e) throw e
+            } finally {
                 this.loading = false
-                throw e
             }
         },
         async refreshLogin () {
-            const DISPATCH = this.$store.dispatch
-            Cookie.remove('refresh_token')
-            Cookie.remove('token')
-            await DISPATCH(LOGIN)
-            await DISPATCH(USER_INFO)
+            try {
+                const DISPATCH = this.$store.dispatch
+                Cookie.remove('refresh_token')
+                Cookie.remove('token')
+                await DISPATCH(LOGIN)
+                await DISPATCH(USER_INFO)
+                await this.goToNewUserPage()
+            } catch (e) {
+                throw e
+            }
+        },
+
+        /**
+         * 跳转至新人有礼页面
+         */
+        async goToNewUserPage () {
+            try {
+                const { result } = await getGoingInfo()
+                const { result: isNew } = await isNewUser(result.id)
+                if (result && isNew) {
+                    // 有进行中的新人有礼活动，跳转回该页面
+                    this.$router.replace({ name: 'Newcomers', params: { id: result.id } })
+                    // 抛出一个false错误，终止后续操作
+                    /* eslint-disable no-throw-literal */
+                    throw false
+                }
+            } catch (e) {
+                throw e
+            }
         }
     },
     beforeRouteLeave (to, from, next) {

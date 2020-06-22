@@ -10,6 +10,7 @@
         <Poster
             :show-logo="activityInfo.logoShow"
             :logo="activityInfo.logoUrl"
+            :share-url="shareUrl"
             ref="poster"
         />
         <Countdown
@@ -21,7 +22,7 @@
             @end="countdownEnd"
         />
         <div :class="$style.count">
-            已有<i v-text="activityInfo.claimNum" />人领取了新人优惠大礼包
+            <span v-if="activityInfo.claimNumShow">已有<i v-text="activityInfo.claimNum" />人领取了新人优惠大礼包</span>
         </div>
 
         <div :class="$style.contentBox" v-if="coupons.length">
@@ -105,11 +106,9 @@
 </template>
 
 <script>
-/* eslint-disable */
 import moment from 'moment'
 import { mapGetters } from 'vuex'
 import share from '../../../assets/js/wechat/wechat-share'
-import CouponItem from '../../../components/item/Coupon-Item.vue'
 import Coupon from './components/Coupon.vue'
 import Scholarship from './components/Scholarship.vue'
 import Gift from './components/Gift.vue'
@@ -117,10 +116,9 @@ import Countdown from './components/Countdown.vue'
 import Rules from './components/Rules.vue'
 import Poster from './components/Poster.vue'
 import {
-    getNewcomersDetail,
-    getNewUserInfoList,
     akeyToGet,
-    isNewUser
+    isNewUser,
+    getInfoById
 } from '../../../apis/newcomers'
 
 export default {
@@ -138,11 +136,16 @@ export default {
             isShowRule: false,
             seeMoreCoupon: false,
             activityInfo: {},
-            duration: 0
+            duration: 0,
+            shareUrl: ''
         }
     },
     props: {
         shareId: {
+            type: String,
+            default: ''
+        },
+        id: {
             type: String,
             default: ''
         }
@@ -191,46 +194,45 @@ export default {
     },
 
     methods: {
-        async getNewUserInfoList () {
-           try {
-               const { result: activityInfo } = await getNewUserInfoList()
-               // 活动不存在
-               if (!activityInfo) {
-                   this.$alert({
-                       title: '活动不存在',
-                       message: '您可返回商城参与其它活动哦~',
-                       confirmText: '去逛逛'
-                   }).finally(() => {
-                       this.$router.push({ name: 'Home' })
-                   })
-                   return
-               }
-               // 处理活动数据
-               this.activityInfo = activityInfo || {}
-               let duration = 0
-               const startTime = moment(activityInfo.activityStartTime).valueOf() || 0
-               const endTime = moment(activityInfo.activityEndTime).valueOf() || 0
-               await this.$nextTick()
-               if (!this.isStarted) {
-                   duration = startTime - Date.now()
-               }
-               if (this.isStarted && !this.isEnd) {
-                   duration = endTime - Date.now()
-               }
-               this.duration = duration
-               // 活动已结束
-               if (this.isEnd) {
-                   await this.$alert({
-                       title: '新人有礼活动已结束',
-                       message: '您可返回商城参与其它活动哦',
-                       confirmText: '去分享给好友',
-                       useDangersHtml: true
-                   })
-               }
-
-           } catch (e) {
-               throw e
-           }
+        async getNewUserInfo () {
+            try {
+                const { result: activityInfo } = await getInfoById(this.id)
+                // 活动不存在
+                if (!activityInfo) {
+                    this.$alert({
+                        title: '活动不存在',
+                        message: '您可返回商城参与其它活动哦~',
+                        confirmText: '去逛逛'
+                    }).finally(() => {
+                        this.$router.push({ name: 'Home' })
+                    })
+                    return
+                }
+                // 处理活动数据
+                this.activityInfo = activityInfo || {}
+                let duration = 0
+                const startTime = moment(activityInfo.activityStartTime).valueOf() || 0
+                const endTime = moment(activityInfo.activityEndTime).valueOf() || 0
+                await this.$nextTick()
+                if (!this.isStarted) {
+                    duration = startTime - Date.now()
+                }
+                if (this.isStarted && !this.isEnd) {
+                    duration = endTime - Date.now()
+                }
+                this.duration = duration
+                // 活动已结束
+                if (this.isEnd) {
+                    await this.$alert({
+                        title: '新人有礼活动已结束',
+                        message: '您可返回商城参与其它活动哦',
+                        confirmText: '去分享给好友',
+                        useDangersHtml: true
+                    })
+                }
+            } catch (e) {
+                throw e
+            }
         },
         async akeyToGet () {
             try {
@@ -274,9 +276,9 @@ export default {
         share () {
             let shareUrl = ''
             if (this.userId) {
-                shareUrl = `${ this.mallUrl }/newcomers/${ this.userId }?t=${ Date.now() }`
+                shareUrl = `${ this.mallUrl }/newcomers/${ this.id }/${ this.userId }?t=${ Date.now() }`
             } else {
-                shareUrl = `${ this.mallUrl }/newcomers?t=${ Date.now() }`
+                shareUrl = `${ this.mallUrl }/newcomers/${ this.id }?t=${ Date.now() }`
             }
             this.shareUrl = shareUrl
             share({
@@ -291,7 +293,7 @@ export default {
         // 倒计时结束
         async countdownEnd () {
             try {
-                await this.getNewUserInfoList()
+                await this.getNewUserInfo()
             } catch (e) {
                 throw e
             }
@@ -299,7 +301,7 @@ export default {
     },
     beforeRouteEnter (to, from, next) {
         next(async vm => {
-            await vm.getNewUserInfoList()
+            await vm.getNewUserInfo()
             const { result: isNew } = await isNewUser(vm.activityInfo.id)
             vm.isNew = isNew
             if (isNew && vm.mobile && from.name === 'BindMobile') {
@@ -368,7 +370,7 @@ export default {
     text-align: center;
     font-size: 24px;
     color: #fff;
-    > i {
+    i {
         color: #FCF28C;
     }
 }

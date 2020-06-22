@@ -28,6 +28,10 @@ export default {
         logo: {
             type: String,
             default: ''
+        },
+        shareUrl: {
+            type: String,
+            default: ''
         }
     },
     computed: {
@@ -123,7 +127,7 @@ export default {
                 const qrcode = await generateQrcode({
                     size: 500,
                     correctLevel: 3,
-                    text: `${ this.mallUrl }${ this.$route.fullPath }`,
+                    text: this.shareUrl,
                     type: 'canvas'
                 })
                 CTX.drawImage(qrcode, 196, 574, 142, 142)

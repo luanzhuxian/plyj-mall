@@ -3,7 +3,7 @@
     <router-link
         tag="div"
         :class="$style.newUserHomeBtn"
-        :to="{ name: 'Newcomers' }"
+        :to="{ name: 'Newcomers', params: { id } }"
     />
 </template>
 
@@ -11,7 +11,11 @@
 export default {
     name: 'NewUserHomeBtn',
     props: {
-        show: Boolean
+        show: Boolean,
+        id: {
+            type: String,
+            default: ''
+        }
     },
     methods: {
         close () {

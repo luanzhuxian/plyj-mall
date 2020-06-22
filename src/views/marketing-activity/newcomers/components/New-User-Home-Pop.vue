@@ -3,7 +3,7 @@
     <pl-mask :show="show" @close="close">
         <router-link
             tag="img"
-            :to="{ name: 'Newcomers' }"
+            :to="{ name: 'Newcomers', params: { id } }"
             :class="$style.img"
             width="460"
             src="https://mallcdn.youpenglai.com/static/admall/2.11.0/newuser-pop.png"
@@ -16,7 +16,11 @@
 export default {
     name: 'NewUserHomePop',
     props: {
-        show: Boolean
+        show: Boolean,
+        id: {
+            type: String,
+            default: ''
+        }
     },
     methods: {
         close () {

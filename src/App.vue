@@ -6,11 +6,16 @@
 
         <navbar v-if="showNavbar.indexOf($route.name) > -1" />
         <QuickNavbar v-else />
+        <!-- 新人有礼浮窗 -->
         <NewUserHomePop
             v-if="$route.name === 'Home' && isNewUser"
             :show.sync="showNewUser"
+            :id="newUserActiveId"
         />
-        <NewUserHomeBtn v-if="$route.name === 'Home' && isNewUser && !showNewUser" />
+        <NewUserHomeBtn
+            v-if="$route.name === 'Home' && isNewUser && !showNewUser"
+            :id="newUserActiveId"
+        />
     </div>
 </template>
 
@@ -47,7 +52,7 @@ import {
 import { setFirstVisit } from './apis/longmen-festival/lottery'
 
 // 新人有礼
-import { isNewUser, getNewUserInfoList } from './apis/newcomers'
+import { isNewUser, getGoingInfo } from './apis/newcomers'
 export default {
     components: {
         Navbar,
@@ -60,6 +65,8 @@ export default {
             logined: false,
             isNewUser: false,
             showNewUser: true,
+            // 新人有礼活动id
+            newUserActiveId: '',
             exclude: [
                 'ShoppingCart',
                 'LiveRoom',
@@ -131,11 +138,15 @@ export default {
         }),
         // 获取新人有礼数据
         async getNewUserInfo () {
+            if (this.$route.name !== 'Home') {
+                return
+            }
             try {
-                const { result: info } = await getNewUserInfoList()
+                const { result: info } = await getGoingInfo()
                 if (info && info.id) {
                     const { result } = await isNewUser(info.id)
                     this.isNewUser = result
+                    this.newUserActiveId = info.id
                 }
             } catch (e) {
                 throw e
