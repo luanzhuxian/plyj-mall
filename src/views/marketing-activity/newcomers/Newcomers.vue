@@ -283,10 +283,10 @@ export default {
             this.shareUrl = shareUrl
             share({
                 appId: this.appId,
-                title: `${ this.mallName }————新人活动温暖感恩回馈`,
-                desc: `新人优惠大礼包，惊喜大派送，${ this.userName }邀请你参与新人有礼活动`,
+                title: `${ this.activityInfo.activityName }`,
+                desc: `快来成为新会员，即可领取新人优惠大礼包哦`,
                 link: shareUrl,
-                imgUrl: 'https://mallcdn.youpenglai.com/static/admall/2.11.0/newuser-bg.jpg',
+                imgUrl: this.activityInfo.logoUrl || 'https://mallcdn.youpenglai.com/static/admall/2.11.0/newuser-bg.jpg',
                 willHide: ['menuItem:share:timeline']
             })
         },
