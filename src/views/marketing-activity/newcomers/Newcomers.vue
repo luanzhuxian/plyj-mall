@@ -162,7 +162,7 @@ export default {
             return this.coupons.length ? this.coupons.map(item => item.amount).reduce((a, b) => a + b) : 0
         },
         totalScholarship () {
-            return this.scholarships.length ? this.scholarships.map(item => item.scholarshipPrice).reduce((a, b) => a + b) : 0
+            return (this.scholarships.length ? this.scholarships.map(item => item.scholarshipPrice).reduce((a, b) => a + b) : 0).toFixed(2)
         },
         startTime () {
             return moment(this.activityInfo.activityStartTime).valueOf() || 0
@@ -184,11 +184,10 @@ export default {
 
     async activated () {
         try {
-            await this.getNewUserInfoList()
-            this.share()
         } catch (e) {
             throw e
         }
+        this.share()
     },
 
     methods: {
@@ -227,19 +226,8 @@ export default {
                        confirmText: '去分享给好友',
                        useDangersHtml: true
                    })
-                    return
                }
-               const { result: isNew } = await isNewUser(activityInfo.id)
-               this.isNew = isNew
-               if (isNew) {
-                   await this.$alert({
-                       title: '恭喜您成功注册会员',
-                       message: this.isEnd ? `<p>新人有礼活动已结束</p><p>很遗憾！未领取新人优惠大礼包</p>` : `<p>新人优惠大礼包已领取成功</p><p>请在有效期内使用</p><p>快去邀请好友领取吧~~</p>`,
-                       confirmText: '去分享给好友',
-                       useDangersHtml: true
-                   })
-                   await this.$refs.poster.generate()
-               }
+
            } catch (e) {
                throw e
            }
@@ -308,6 +296,26 @@ export default {
                 throw e
             }
         }
+    },
+    beforeRouteEnter (to, from, next) {
+        next(async vm => {
+            await vm.getNewUserInfoList()
+            const { result: isNew } = await isNewUser(vm.activityInfo.id)
+            vm.isNew = isNew
+            if (isNew && vm.mobile && from.name === 'BindMobile') {
+                if (!vm.isEnd) {
+                    // 如果活动没结束，就自动领取礼物
+                    await vm.akeyToGet()
+                }
+                await vm.$alert({
+                    title: '恭喜您成功注册会员',
+                    message: this.isEnd ? `<p>新人有礼活动已结束</p><p>很遗憾！未领取新人优惠大礼包</p>` : `<p>新人优惠大礼包已领取成功</p><p>请在有效期内使用</p><p>快去邀请好友领取吧~~</p>`,
+                    confirmText: '去分享给好友',
+                    useDangersHtml: true
+                })
+                await vm.$refs.poster.generate()
+            }
+        })
     }
 }
 </script>
