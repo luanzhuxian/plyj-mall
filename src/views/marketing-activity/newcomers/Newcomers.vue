@@ -240,7 +240,13 @@ export default {
                 throw e
             }
         },
-        async akeyToGet () {
+
+        /**
+         * 是否提示用户领取成功
+         * @param isTip
+         * @return {Promise<void>}
+         */
+        async akeyToGet (isTip = true) {
             try {
                 // 未绑定手机
                 if (!this.mobile) {
@@ -263,17 +269,19 @@ export default {
                     return
                 }
                 await akeyToGet(this.activityInfo.id, this.shareId)
-                let text = `<p>恭喜你获得新人优惠大礼包</p>`
-                if (this.totalCouponPrice > 0) {
-                    text += `<p>价值<i style="color: #FE7700">${ this.totalCouponPrice }</i>元的优惠券</p>`
+                if (isTip) {
+                    let text = `<p>恭喜你获得新人优惠大礼包</p>`
+                    if (this.totalCouponPrice > 0) {
+                        text += `<p>价值<i style="color: #FE7700">${ this.totalCouponPrice }</i>元的优惠券</p>`
+                    }
+                    if (this.totalScholarship > 0) {
+                        text += `<p>价值<i style="color: #FE7700">${ this.totalScholarship }</i>元的奖学金</p>`
+                    }
+                    if (this.gifts.length > 0) {
+                        text += `<p><i style="color: #FE7700">${ this.totalScholarship }</i>个新人礼品</p>`
+                    }
+                    this.$toast({ message: text })
                 }
-                if (this.totalScholarship > 0) {
-                    text += `<p>价值<i style="color: #FE7700">${ this.totalScholarship }</i>元的奖学金</p>`
-                }
-                if (this.gifts.length > 0) {
-                    text += `<p><i style="color: #FE7700">${ this.totalScholarship }</i>个新人礼品</p>`
-                }
-                this.$toast({ message: text })
                 this.isNew = false
                 this.success = true
             } catch (e) {
@@ -314,7 +322,7 @@ export default {
             if (isNew && vm.mobile && from.name === 'BindMobile') {
                 if (!vm.isEnd) {
                     // 如果活动没结束，就自动领取礼物
-                    await vm.akeyToGet()
+                    await vm.akeyToGet(false)
                 }
                 await vm.$alert({
                     message: '恭喜您成功注册会员',
