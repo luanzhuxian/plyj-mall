@@ -187,18 +187,6 @@ export default {
             return Number(this.activityInfo.status) === 0
         }
     },
-
-    watch: {
-    },
-
-    async activated () {
-        try {
-        } catch (e) {
-            throw e
-        }
-        this.share()
-    },
-
     methods: {
         async getNewUserInfo () {
             try {
@@ -242,11 +230,11 @@ export default {
         },
 
         /**
-         * 是否提示用户领取成功
-         * @param isTip
+         * 领取礼物
+         * @param showTip 是否提示用户领取成功
          * @return {Promise<void>}
          */
-        async akeyToGet (isTip = true) {
+        async akeyToGet (showTip = true) {
             try {
                 // 未绑定手机
                 if (!this.mobile) {
@@ -269,7 +257,7 @@ export default {
                     return
                 }
                 await akeyToGet(this.activityInfo.id, this.shareId)
-                if (isTip) {
+                if (showTip) {
                     let text = `<p>恭喜你获得新人优惠大礼包</p>`
                     if (this.totalCouponPrice > 0) {
                         text += `<p>价值<i style="color: #FE7700">${ this.totalCouponPrice }</i>元的优惠券</p>`
@@ -317,6 +305,7 @@ export default {
     beforeRouteEnter (to, from, next) {
         next(async vm => {
             await vm.getNewUserInfo()
+            await vm.share()
             const { result: isNew } = await isNewUser(vm.activityInfo.id)
             vm.isNew = isNew
             if (isNew && vm.mobile && from.name === 'BindMobile') {
