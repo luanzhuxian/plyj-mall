@@ -239,11 +239,6 @@ export default {
             try {
                 // 未绑定手机
                 if (!this.mobile) {
-                    sessionStorage.setItem('BIND_MOBILE_FROM', {
-                        name: this.$route.name,
-                        params: this.$route.params,
-                        query: this.$route.query
-                    })
                     this.$router.push({ name: 'BindMobile' })
                     return
                 }
