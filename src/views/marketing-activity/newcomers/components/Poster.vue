@@ -32,6 +32,10 @@ export default {
         shareUrl: {
             type: String,
             default: ''
+        },
+        name: {
+            type: String,
+            default: ''
         }
     },
     computed: {
@@ -71,11 +75,11 @@ export default {
                 }
 
                 // 绘制顶部文字
-                CTX.font = `44px Micorsoft Yahei`
+                CTX.font = `40px Micorsoft Yahei`
                 CTX.textAlign = 'center'
                 CTX.textBaseline = 'hanging'
                 CTX.fillStyle = '#fff'
-                CTX.fillText('新人活动温暖感恩回馈', CVS.width / 2, 85)
+                CTX.fillText(this.name, CVS.width / 2, 85)
                 drawRoundRect({
                     ctx: CTX,
                     fillStyle: '#FBEFD7',

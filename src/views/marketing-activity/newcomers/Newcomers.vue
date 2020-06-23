@@ -1,6 +1,6 @@
 <template>
     <div :class="$style.newcomers">
-        <h1>新人活动温暖感恩回馈</h1>
+        <h1 v-text="activityInfo.activityName" />
         <h2>新人优惠大礼包 惊喜派送</h2>
         <Rules
             :start-time="startTime"
@@ -11,6 +11,7 @@
             :show-logo="activityInfo.logoShow"
             :logo="activityInfo.logoUrl"
             :share-url="shareUrl"
+            :name="activityInfo.activityName"
             ref="poster"
         />
         <Countdown
@@ -332,7 +333,7 @@ export default {
     > h1 {
         margin-top: 76px;
         margin-bottom: 24px;
-        font-size: 60px;
+        font-size: 56px;
         text-align: center;
         color: #fff;
         font-weight: normal;
