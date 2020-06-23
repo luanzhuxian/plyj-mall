@@ -22,7 +22,7 @@
                         <img v-imgError :src="item.image + '?x-oss-process=style/thum-middle'" v-img-error alt="">
                     </div>
                     <div :class="$style.content">
-                        <div :class="$style.proName" v-text="item.name" />
+                        <h4 :class="$style.proName" v-text="item.name" />
                         <tags
                             :class="$style.tags"
                             :size="(i === 0 && isOdd) ? 'middle' : 'small'"
@@ -131,7 +131,7 @@ export default {
         height: auto;
         .pro-name {
           margin-bottom: 14px;
-          height: 36px;
+          // height: 36px;
           -webkit-line-clamp: 1;
         }
       }
@@ -160,6 +160,7 @@ export default {
       font-size: 28px;
       font-weight: bold;
       line-height: 36px;
+      color: #000;
       @include elps-wrap(2);
     }
     .tags {

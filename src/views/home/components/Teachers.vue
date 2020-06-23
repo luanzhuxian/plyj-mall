@@ -91,7 +91,7 @@ export default {
     height: 164px;
   }
   .main {
-    color: #333;
+    color: #000;
     line-height: 26px;
     font-weight: bold;
     @include elps();

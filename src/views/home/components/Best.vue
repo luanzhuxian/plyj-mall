@@ -23,7 +23,7 @@
                     </div>
                     <span v-if="item.goodsInfo.productType === 'EXPERIENCE_CLASS'" :class="$style.experience">体验课</span>
                     <div :class="$style.content">
-                        <p :class="$style.proName" v-text="item.goodsInfo.productName" />
+                        <h4 :class="$style.proName" v-text="item.goodsInfo.productName" />
                         <div :class="$style.bottom">
                             <div :class="$style.priceBox">
                                 <div :class="$style.price">
@@ -131,10 +131,9 @@ export default {
       .content {
         height: auto;
         .pro-name {
-          margin-bottom: 14px;
-          height: 36px;
+          height: 72px;
+          line-height: 36px;
           font-size: 28px;
-          -webkit-line-clamp: 1;
         }
       }
     }
@@ -167,10 +166,10 @@ export default {
     box-sizing: border-box;
     height: 186px;
     .pro-name {
-      height: 72px;
+      height: 64px;
       font-weight: bold;
       font-size: 24px;
-      line-height: 36px;
+      line-height: 32px;
       color: #000;
       @include elps-wrap(2);
     }
