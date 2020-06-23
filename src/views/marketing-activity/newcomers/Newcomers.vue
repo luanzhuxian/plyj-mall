@@ -101,8 +101,11 @@
             <span>快来领取新人优惠大礼包，领取成功后，您可进入个人中心中查看</span>
         </div>
 
-        <button v-if="!isStarted" disabled>活动即将开始</button>
-        <button v-else-if="isStarted && !isEnd" @click="akeyToGet">一键领取</button>
+        <template v-if="isStarted && !isEnd">
+            <button v-if="success" @click="akeyToGet">领取成功 分享给好友</button>
+            <button v-else @click="akeyToGet">一键领取</button>
+        </template>
+        <button v-else-if="!isStarted" disabled>活动即将开始</button>
         <button v-else disabled>活动已结束</button>
     </div>
 </template>
@@ -137,6 +140,7 @@ export default {
         return {
             isShowRule: false,
             seeMoreCoupon: false,
+            success: false,
             activityInfo: {},
             duration: 0,
             shareUrl: ''
@@ -158,7 +162,7 @@ export default {
             return this.activityInfo.couponModels || []
         },
         scholarships () {
-            return [...this.activityInfo.scholarships].splice(0, 2)
+            return this.activityInfo.scholarships || []
         },
         gifts () {
             return this.activityInfo.gifts || []
@@ -271,6 +275,7 @@ export default {
                 }
                 this.$toast({ message: text })
                 this.isNew = false
+                this.success = true
             } catch (e) {
                 throw e
             }
