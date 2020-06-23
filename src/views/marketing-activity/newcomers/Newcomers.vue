@@ -313,7 +313,7 @@ export default {
                 await vm.$alert({
                     title: '恭喜您成功注册会员',
                     message: this.isEnd ? `<p>新人有礼活动已结束</p><p>很遗憾！未领取新人优惠大礼包</p>` : `<p>新人优惠大礼包已领取成功</p><p>请在有效期内使用</p><p>快去邀请好友领取吧~~</p>`,
-                    confirmText: '去分享给好友',
+                    confirmText: this.isEnd ? '去逛逛' : '去分享给好友',
                     useDangersHtml: true
                 })
                 await vm.$refs.poster.generate()
