@@ -7,30 +7,27 @@ import MessageBpx from './Message-Box.vue'
 * confirm - 确定框，带有取消和确定两个按钮 用法: vm.$confirm(config)
 * alert - 提示框，仅作为提示弹框 用法: vm.$alert(config)
 * propmt - 带有输入框的弹框 用法: vm.$propmt(config)
-* config - [Object, String] 如果传入string, string将作为title展示
+* config - [Object, String] 如果传入string, string将作为message展示
 *
 * */
 const MessageBoxClass = Vue.extend(MessageBpx)
 const confirm = (config = {}) => new Promise((resolve, reject) => {
     if (typeof config === 'string') {
-        config = { title: config }
+        config = { message: config }
     }
     const Instance = new MessageBoxClass({
         el: document.createElement('div')
     })
     document.body.appendChild(Instance.$el)
-    const { slot = null, cancelText = '取消', confirmText = '确定', title = '', html = '', message = '', icon, closeOnClickMask = true, confirmStyle, cancelStyle, useDangersHtml = false } = config
+    const { slot = null, cancelText = '取消', confirmText = '确定', viceMessage = '', html = '', message = '', icon, closeOnClickMask = true, confirmStyle, cancelStyle, useDangersHtml = false } = config
     if (slot) {
         Instance.$slots.default = [slot]
     }
     Instance.$nextTick(() => {
         Instance.html = html
-        Instance.message = title
+        Instance.message = message
         Instance.useDangersHtml = useDangersHtml
-        Instance.viceMessage = message
-        if (typeof config === 'string') {
-            Instance.title = config
-        }
+        Instance.viceMessage = viceMessage
         Instance.cancelText = cancelText
         Instance.confirmText = confirmText
         Instance.confirmStyle = confirmStyle
@@ -49,23 +46,20 @@ const confirm = (config = {}) => new Promise((resolve, reject) => {
 })
 const alert = (config = {}) => new Promise((resolve, reject) => {
     if (typeof config === 'string') {
-        config = { title: config }
+        config = { message: config }
     }
     const Instance = new MessageBoxClass({
         el: document.createElement('div')
     })
     document.body.appendChild(Instance.$el)
-    const { slot = null, cancelText = '取消', confirmText = '确定', title = '', message = '', icon, confirmStyle, cancelStyle, useDangersHtml = false } = config
+    const { slot = null, cancelText = '取消', confirmText = '确定', viceMessage = '', message = '', icon, confirmStyle, cancelStyle, useDangersHtml = false } = config
     if (slot) {
         Instance.$slots.default = [slot]
     }
     Instance.$nextTick(() => {
-        Instance.message = title
+        Instance.message = message
         Instance.useDangersHtml = useDangersHtml
-        Instance.viceMessage = message
-        if (typeof config === 'string') {
-            Instance.title = config
-        }
+        Instance.viceMessage = viceMessage
         Instance.cancelText = cancelText
         Instance.confirmText = confirmText
         Instance.confirmStyle = confirmStyle
@@ -83,26 +77,23 @@ const alert = (config = {}) => new Promise((resolve, reject) => {
 })
 const propmt = (config = {}) => new Promise((resolve, reject) => {
     if (typeof config === 'string') {
-        config = { title: config }
+        config = { message: config }
     }
     const Instance = new MessageBoxClass({
         el: document.createElement('div')
     })
     document.body.appendChild(Instance.$el)
-    const { slot = null, cancelText = '取消', confirmText = '确定', title = '', message = '', icon = '', placeholder = '请输入', rules = [], value = '', useDangersHtml = false } = config
+    const { slot = null, cancelText = '取消', confirmText = '确定', viceMessage = '', message = '', icon = '', placeholder = '请输入', rules = [], value = '', useDangersHtml = false } = config
     if (slot) {
         Instance.$slots.default = [slot]
     }
     Instance.$nextTick(() => {
-        Instance.message = title
+        Instance.message = message
         Instance.useDangersHtml = useDangersHtml
-        Instance.viceMessage = message
+        Instance.viceMessage = viceMessage
         Instance.placeholder = placeholder
         Instance.propmtValue = value
         Instance.rules = rules
-        if (typeof config === 'string') {
-            Instance.title = config
-        }
         Instance.cancelText = cancelText
         Instance.confirmText = confirmText
         Instance.type = 'propmt'

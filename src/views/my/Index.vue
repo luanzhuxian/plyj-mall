@@ -335,7 +335,7 @@ export default {
         try {
             if (this.roleCode === 'VISITOR') {
                 await this.$confirm({
-                    title: '为了您的账号安全，请绑定手机号',
+                    message: '为了您的账号安全，请绑定手机号',
                     confirmText: '去绑定',
                     closeOnClickMask: false
                 })
