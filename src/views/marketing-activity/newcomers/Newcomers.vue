@@ -163,7 +163,7 @@ export default {
             return this.activityInfo.gifts || []
         },
         totalCouponPrice () {
-            return this.coupons.length ? this.coupons.map(item => item.amount).reduce((a, b) => a + b) : 0
+            return Number((this.coupons.length ? this.coupons.map(item => item.amount).reduce((a, b) => a + b) : 0).toFixed(2))
         },
         totalScholarship () {
             return Number((this.scholarships.length ? this.scholarships.map(item => item.scholarshipPrice).reduce((a, b) => a + b) : 0).toFixed(2))
