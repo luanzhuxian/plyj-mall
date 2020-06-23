@@ -10,7 +10,7 @@
             <campaign v-if="isCampaignShow" />
             <!-- <activity :class="$style.activity" v-if="type === 4 && isNwEventShow" /> -->
             <!-- <d12-activity :class="$style.activity" v-if="type === 4" /> -->
-            <div :class="$style.hotItem" v-if="POPULAR.showStatue === 1">
+            <div :class="$style.popular" v-if="isPopularShow">
                 <skin-title
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
@@ -22,7 +22,7 @@
             </div>
             <appointment :class="$style.appointment" :data="APPOINTMENT" :slides-per-view="2" v-if="APPOINTMENT.showStatue === 1" />
             <propagate :class="$style.propagate" :data="PROPAGATE" v-if="PROPAGATE.showStatue === 1" />
-            <div :class="$style.best" v-if="CLASS.showStatue === 1">
+            <div :class="$style.class" v-if="isClassShow">
                 <skin-title
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
@@ -149,6 +149,12 @@ export default {
         isCampaignShow () {
             return this.parent.isReportShow || this.parent.isBookShow
         },
+        isPopularShow () {
+            return this.POPULAR.showStatue === 1 && this.POPULAR.values && this.POPULAR.values.length
+        },
+        isClassShow () {
+            return this.CLASS.showStatue === 1 && this.CLASS.values && this.CLASS.values.length
+        },
         isSkinShow () {
             return skinClassNameMap.has(this.skinId)
         }
@@ -172,7 +178,7 @@ export default {
     background-color: #fff;
     border-radius: 20px 20px 0 0;
 }
-.hot-item {
+.popular {
     padding: 34px 24px 0;
     background-color: #f4f5f9;
     .title {
@@ -209,7 +215,7 @@ export default {
         }
     }
 }
-.best {
+.class {
     padding: 24px;
     background-color: #f4f5f9;
     .title {

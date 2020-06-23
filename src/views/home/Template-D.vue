@@ -51,7 +51,8 @@
                 <yugou :data="YU_GOU" />
             </div>
             <propagate :class="$style.propagate" :data="PROPAGATE" v-if="PROPAGATE.showStatue === 1" />
-            <div :class="$style.hotItem" v-if="POPULAR.showStatue === 1">
+            <!-- 商品 -->
+            <div :class="$style.popular" v-if="isPopularShow">
                 <skin-title
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
@@ -61,7 +62,8 @@
                 <div v-else-if="skinId !== null" :class="$style.title" v-text="POPULAR.moduleName" />
                 <hot-item :data="POPULAR" />
             </div>
-            <div :class="$style.best" v-if="CLASS.showStatue === 1">
+            <!-- 课程 -->
+            <div :class="$style.class" v-if="isClassShow">
                 <skin-title
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
@@ -259,7 +261,6 @@ export default {
     font-weight: bold;
     &::before {
         position: relative;
-        // top: 2px;
         display: inline-block;
         content: '';
         width: 6px;
@@ -282,8 +283,8 @@ export default {
 .miaosha,
 .pintuan,
 .yugou,
-.hot-item,
-.best,
+.popular,
+.class,
 .recommend {
     padding: 0 24px;
 }

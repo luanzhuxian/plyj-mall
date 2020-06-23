@@ -10,7 +10,7 @@
             <!-- <activity :class="$style.activity" v-if="isNwEventShow" /> -->
             <!-- <d12-activity :class="$style.activity" /> -->
             <appointment :class="$style.appointment" :data="APPOINTMENT" :style-type="2" v-if="APPOINTMENT.showStatue === 1" />
-            <div :class="$style.hotItem" v-if="POPULAR.showStatue === 1">
+            <div :class="$style.popular" v-if="isPopularShow">
                 <skin-title
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
@@ -20,7 +20,7 @@
                 <div v-else-if="skinId !== null" :class="$style.title" v-text="POPULAR.moduleName" />
                 <hot-item :data="POPULAR" />
             </div>
-            <div :class="$style.teachers" v-if="TEACHERS.showStatue === 1">
+            <div :class="$style.teachers" v-if="isTeachersShow">
                 <skin-title
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
@@ -30,7 +30,7 @@
                 <div v-else-if="skinId !== null" :class="$style.title" v-text="TEACHERS.moduleName" />
                 <teachers :data="TEACHERS" />
             </div>
-            <div :class="$style.best" v-if="CLASS.showStatue === 1">
+            <div :class="$style.class" v-if="isClassShow">
                 <skin-title
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
@@ -148,6 +148,15 @@ export default {
         isCampaignShow () {
             return this.parent.isReportShow || this.parent.isBookShow
         },
+        isPopularShow () {
+            return this.POPULAR.showStatue === 1 && this.POPULAR.values && this.POPULAR.values.length
+        },
+        isClassShow () {
+            return this.CLASS.showStatue === 1 && this.CLASS.values && this.CLASS.values.length
+        },
+        isTeachersShow () {
+            return this.TEACHERS.showStatue === 1 && this.TEACHERS.values && this.TEACHERS.values.length
+        },
         isSkinShow () {
             return skinClassNameMap.has(this.skinId)
         }
@@ -214,9 +223,9 @@ export default {
     }
 }
 
-.hot-item,
+.popular,
 .teachers,
-.best,
+.class,
 .recommend {
     padding: 0 20px;
 }
