@@ -47,6 +47,9 @@ export default {
         border-radius: 20px 20px 0 0;
         overflow: hidden;
         background-color: #FFEAE1;
+        &:nth-last-of-type(1) {
+            margin-right: 0;
+        }
         > img {
             display: block;
             width: 292px;

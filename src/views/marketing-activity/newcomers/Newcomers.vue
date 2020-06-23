@@ -33,7 +33,7 @@
                 </div>
                 <div
                     :class="{ [$style.couponList]: true, [$style.more]: seeMoreCoupon, [$style.few]: coupons.length < 4 }"
-                    :style="{ height: coupons.length > 3 ? (seeMoreCoupon ? ((6 * 180 + 5 * 18) / 7.5) + 'vw' : 576 / 7.5 + 'vw') : 'auto' }"
+                    :style="{ height: coupons.length > 3 ? (seeMoreCoupon ? ((coupons.length * 180 + (coupons.length - 1) * 18) / 7.5) + 'vw' : 576 / 7.5 + 'vw') : 'auto' }"
                 >
                     <Coupon
                         v-for="(item, i) of coupons"
@@ -62,12 +62,13 @@
                     新人奖学金 <i class="rmb" v-text="totalScholarship" />
                 </div>
                 <div :class="$style.scholarshipWrap">
-                    <div :class="$style.scholarshipList">
+                    <div :class="{ [$style.scholarshipList]: true, [$style.two]: scholarships.length === 2 }">
                         <Scholarship
                             v-for="(item, i) of scholarships"
                             :key="i"
                             :price="item.scholarshipPrice"
                             :days="item.scholarshipEffectiveTime"
+                            :count="scholarships.length"
                         />
                     </div>
                 </div>
@@ -80,7 +81,7 @@
                     新人礼品 <span class="gray-3 fz-24">注册成为新会员即可获得</span>
                 </div>
                 <div :class="$style.giftWrap">
-                    <div :class="$style.giftList">
+                    <div :class="{ [$style.giftList]: true, [$style.two]: scholarships.length === 2 }">
                         <Gift
                             v-for="(item, i) of gifts"
                             :key="i"
@@ -157,7 +158,7 @@ export default {
             return this.activityInfo.couponModels || []
         },
         scholarships () {
-            return this.activityInfo.scholarships || []
+            return [...this.activityInfo.scholarships].splice(0, 2)
         },
         gifts () {
             return this.activityInfo.gifts || []
@@ -227,7 +228,7 @@ export default {
                     await this.$alert({
                         title: '新人有礼活动已结束',
                         message: '您可返回商城参与其它活动哦',
-                        confirmText: '去分享给好友',
+                        confirmText: '去逛逛',
                         useDangersHtml: true
                     })
                 }
@@ -239,6 +240,11 @@ export default {
             try {
                 // 未绑定手机
                 if (!this.mobile) {
+                    sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
+                        name: this.$route.name,
+                        params: this.$route.params,
+                        query: this.$route.query
+                    }))
                     this.$router.push({ name: 'BindMobile' })
                     return
                 }
@@ -419,6 +425,9 @@ export default {
                     width: max-content;
                     font-size: 0;
                     overflow-y: hidden;
+                    &.two {
+                        margin: 0 auto;
+                    }
                 }
             }
         }

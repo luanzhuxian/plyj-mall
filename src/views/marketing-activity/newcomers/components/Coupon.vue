@@ -1,5 +1,9 @@
 <template>
-    <div :class="$style.coupon">
+    <div
+        :class="{
+            [$style.coupon]: true
+        }"
+    >
         <div
             class="rmb"
             :class="{
