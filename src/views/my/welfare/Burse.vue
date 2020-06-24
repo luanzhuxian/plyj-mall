@@ -6,7 +6,7 @@
             <div :class="$style.content">
                 <div :class="$style.desc">我的奖学金（红包）</div>
                 <div :class="$style.amount">{{ burseMes.waitUseAmount }}</div>
-                <div :class="$style.btn" @cdivck="$router.push({name:'Classify'})">立即使用</div>
+                <div :class="$style.btn" @click="$router.push({ name:'Classify' })">立即使用</div>
             </div>
             <div :class="[$style.content, $style.total]">
                 <div :class="$style.desc">累计获得奖学金</div>
@@ -30,7 +30,7 @@
 
         <!--无奖学金情况-->
         <div :class="$style.burseNone">
-            <div v-if="burseList.length === 0" @click="$router.push({name:'Home'})" :class="$style.goHome">返回首页参加活动</div>
+            <div v-if="burseList.length === 0" @click="$router.push({ name:'Home' })" :class="$style.goHome">返回首页参加活动</div>
         </div>
         <!-- <div :class="$style.burseNone" v-if="burseList.length === 0">
       <img src="https://mallcdn.youpenglai.com/static/admall/f20994d7-316b-43e9-be44-4f78dc6fc295.png" alt="">

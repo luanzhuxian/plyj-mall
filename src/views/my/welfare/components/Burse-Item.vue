@@ -19,7 +19,7 @@
             </div>
         </div>
         <div :class="$style.amount">
-            <div :class="$style.btn"><span v-if="isWatch" @click.stop="$router.push({name:'MyBurseDetail',params:{id:item.id}})">去查看</span></div>
+            <div :class="$style.btn"><span v-if="isWatch" @click.stop="$router.push({ name:'MyBurseDetail', params:{ id: item.id } })">去查看</span></div>
         </div>
         <!--已使用，已过期图标-->
         <template v-if="hasStatusImg">
