@@ -10,18 +10,16 @@
                 </div>
             </div>
             <div :class="$style.desc">
-                <div :class="$style.name">
-                    <template v-if="item.activityType === 'GROUPBUGACTIVITY'">团购奖学金</template>
-                    <template v-if="item.activityType === 'LUCK_DRAW_ACTIVITY'">抽奖奖学金</template>
-                    <template v-if="item.activityType === 'SIGNIN_ACTIVITY'">签到奖学金</template>
+                <div :class="$style.title">
+                    <span :class="$style.name">{{ burseStatus[item.activityType] }}</span>
+                    <span :class="$style.price">{{ item.amount }}</span>
                 </div>
-                <div>全场通用</div>
+                <div>全场商品通用，暂不支持知识课程</div>
                 <div>{{ item.useStartTime }} 领取</div>
             </div>
         </div>
         <div :class="$style.amount">
-            <div>+{{ item.amount }}</div>
-            <div><span v-if="isWatch" @click.stop="$router.push({name:'MyBurseDetail',params:{id:item.id}})">去查看</span></div>
+            <div :class="$style.btn"><span v-if="!isWatch" @click.stop="$router.push({name:'MyBurseDetail',params:{id:item.id}})">去查看</span></div>
         </div>
         <!--已使用，已过期图标-->
         <template v-if="hasStatusImg">
@@ -60,6 +58,16 @@ export default {
         useStatus: {
             type: Number,
             default: 0
+        }
+    },
+    data () {
+        return {
+            burseStatus: {
+                GROUPBUGACTIVITY: '团购奖学金',
+                LUCK_DRAW_ACTIVITY: '抽奖奖学金',
+                SIGNIN_ACTIVITY: '签到奖学金',
+                NEWCOMER: '新人奖学金'
+            }
         }
     },
     methods: {
@@ -142,13 +150,24 @@ export default {
         color: #AAAAAA;
         font-size: 24px;
         font-weight: 300;
+        white-space: nowrap;
         > div {
           margin-top: 10px;
-          &.name {
-            font-size: 28px;
+          &.title {
+            font-size: 30px;
             font-weight: 400;
             color: #373737;
             margin-top: 0;
+            > .price {
+              margin-left: 20px;
+              font-weight: bold;
+              color: #FF4622;
+              &:before {
+                display: inline-block;
+                content: '￥';
+                font-weight: 400;
+              }
+            }
           }
         }
       }
@@ -159,30 +178,20 @@ export default {
       justify-content: flex-end;
       align-content: flex-end;
       width: auto;
-      > div {
-        &:nth-of-type(1) {
-          width: 100%;
-          height: 58px;
-          font-size: 44px;
-          font-weight: 400;
-          color: #FF6533;
-          text-align: right;
-        }
-        &:nth-of-type(2) {
+      > .btn {
+        width: 122px;
+        height: 34px;
+        margin-top: 6px;
+        text-align: right;
+        > span {
+          font-size:20px;
+          display: inline-block;
           width: 122px;
-          height: 34px;
-          margin-top: 6px;
-          text-align: right;
-          > span {
-            font-size:20px;
-            display: inline-block;
-            width: 122px;
-            border-radius: 20px;
-            text-align: center;
-            color: #FFFFFF;
-            line-height: 34px;
-            background:#FE7700;
-          }
+          border-radius: 20px;
+          text-align: center;
+          color: #FFFFFF;
+          line-height: 34px;
+          background:#FE7700;
         }
       }
 
