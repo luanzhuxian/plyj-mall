@@ -290,7 +290,7 @@ export default {
                 title: `${ this.activityInfo.activityName }`,
                 desc: `快来成为新会员，即可领取新人优惠大礼包哦`,
                 link: shareUrl,
-                imgUrl: this.activityInfo.logoUrl || 'https://mallcdn.youpenglai.com/static/admall/2.11.0/newuser-bg.jpg',
+                imgUrl: 'https://mallcdn.youpenglai.com/static/admall/2.11.0/newuser.jpg',
                 willHide: ['menuItem:share:timeline']
             })
         },
@@ -316,12 +316,12 @@ export default {
                 }
                 await vm.$alert({
                     message: '恭喜您成功注册会员',
-                    viceMessage: this.isEnd ? `<p>新人有礼活动已结束</p><p>很遗憾！未领取新人优惠大礼包</p>` : `<p>新人优惠大礼包已领取成功</p><p>请在有效期内使用</p><p>快去邀请好友领取吧~~</p>`,
-                    confirmText: this.isEnd ? '去逛逛' : '去分享给好友',
+                    viceMessage: vm.isEnd ? `<p>新人有礼活动已结束</p><p>很遗憾！未领取新人优惠大礼包</p>` : `<p>新人优惠大礼包已领取成功</p><p>请在有效期内使用</p><p>快去邀请好友领取吧~~</p>`,
+                    confirmText: vm.isEnd ? '去逛逛' : '去分享给好友',
                     useDangersHtml: true
                 })
-                if (this.isEnd) {
-                    this.$router.replace({ name: 'Home' })
+                if (vm.isEnd) {
+                    vm.$router.replace({ name: 'Home' })
                 } else {
                     await vm.$refs.poster.generate()
                 }
