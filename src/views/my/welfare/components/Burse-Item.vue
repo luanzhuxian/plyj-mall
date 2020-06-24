@@ -88,7 +88,7 @@ export default {
     position: relative;
     overflow: hidden;
     background: #FFFFFF;
-    padding: 46px 26px;
+    padding: 38px 34px;
     border-radius: 20px;
     margin-top: 20px;
     > .content {
@@ -99,7 +99,7 @@ export default {
         justify-content: space-between;
         align-items: center;
         > .img {
-            width: 115px;
+            width: 136px;
             > img {
               width: 86px;
               vertical-align: middle;
