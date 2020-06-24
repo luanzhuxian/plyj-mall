@@ -10,7 +10,7 @@
             :no-icon="true"
         >
             <!-- <img style="width: 400px;" slot="icon" src="https://mallcdn.youpenglai.com/static/admall/f20994d7-316b-43e9-be44-4f78dc6fc295.png" alt=""> -->
-            <burse-item @select="select" v-bind="$attrs" :item="item" v-for="(item,index) in burseList" :key="index" />
+            <burse-item @select="select" v-bind="$attrs" :is-edit="isEdit" is-watch :item="item" v-for="(item,index) in burseList" :key="index" />
         </load-more>
         <div :class="$style.btn">
             <span v-if="isEdit" @click="deletes">删除</span>
@@ -31,6 +31,10 @@ export default {
         LoadMore
     },
     props: {
+        isEdit: {
+            type: Boolean,
+            default: false
+        },
         status: {
             type: Number,
             required: true
