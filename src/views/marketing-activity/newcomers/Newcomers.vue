@@ -223,6 +223,7 @@ export default {
                         confirmText: '去逛逛',
                         useDangersHtml: true
                     })
+                    this.$router.replace({ name: 'Home' })
                 }
             } catch (e) {
                 throw e
@@ -319,7 +320,11 @@ export default {
                     confirmText: this.isEnd ? '去逛逛' : '去分享给好友',
                     useDangersHtml: true
                 })
-                await vm.$refs.poster.generate()
+                if (this.isEnd) {
+                    this.$router.replace({ name: 'Home' })
+                } else {
+                    await vm.$refs.poster.generate()
+                }
             }
         })
     }
