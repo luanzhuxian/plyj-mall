@@ -267,7 +267,7 @@ export default {
                         text += `<p>价值<i style="color: #FE7700">${ this.totalScholarship }</i>元的奖学金</p>`
                     }
                     if (this.gifts.length > 0) {
-                        text += `<p><i style="color: #FE7700">${ this.totalScholarship }</i>个新人礼品</p>`
+                        text += `<p><i style="color: #FE7700">${ this.gifts.length }</i>个新人礼品</p>`
                     }
                     this.$toast({ message: text })
                 }
