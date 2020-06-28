@@ -117,7 +117,11 @@ export default {
     async created () {
         try {
             // 疫情战报
-            getReportActivity().then(({ result }) => {
+            getReportActivity().then(({ result = {} }) => {
+                if (!result) {
+                    result = {}
+                }
+
                 const { id = '', status = 0 } = result
 
                 this.isReportShow = result.isReportShow = !!status
@@ -125,8 +129,12 @@ export default {
                 this.setCampaignReport(result)
             })
             // 疫情签到
-            getBookActivity().then(({ result }) => {
-                const { systemTime, status, activityId } = result
+            getBookActivity().then(({ result = {} }) => {
+                if (!result) {
+                    result = {}
+                }
+
+                const { systemTime, status, activityId = '' } = result
                 let { startTime, endTime } = result
                 const isActive = status === 0
 
