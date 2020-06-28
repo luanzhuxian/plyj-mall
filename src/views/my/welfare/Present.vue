@@ -446,8 +446,8 @@ export default {
             }
             .content-button{
               position: absolute;
-              right: 16px;
-              bottom: 16px;
+              right: -12px;
+              bottom: 4px;
             }
           }
         }
