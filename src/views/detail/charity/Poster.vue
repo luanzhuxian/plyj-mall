@@ -22,7 +22,7 @@ const background = 'https://mallcdn.youpenglai.com/static/mall/2.9.0/公益行�
 
 const drawRectWithText = (ctx, x, y, width, height, radius, strokeStyle, fillStyle) => function (text, font, textFillStyle, lineHeight, textAlign) {
     if (radius) {
-        drawRoundRect(ctx, x, y, width, height, radius, strokeStyle, fillStyle)
+        drawRoundRect({ ctx, x, y, width, height, radius, strokeStyle, fillStyle })
     } else {
         ctx.fillStyle = fillStyle
         ctx.fillRect(x, y, width, height)
@@ -158,7 +158,14 @@ export default {
                 ctx.font = '28px Microsoft YaHei UI'
                 ctx.fillStyle = '#333'
                 ctx.textAlign = 'center'
-                createText(ctx, 327, 360, userName, 40, 542, 1)
+                createText({
+                    ctx,
+                    x: 327,
+                    y: 360,
+                    text: userName,
+                    lineHeight: 40,
+                    width: 542
+                })
 
                 ctx.font = 'bold 32px Microsoft YaHei UI'
                 ctx.fillStyle = '#ff8400'
@@ -178,7 +185,14 @@ export default {
                 ctx.font = 'bold 28px Microsoft YaHei UI'
                 ctx.fillStyle = '#333'
                 ctx.textAlign = 'left'
-                createText(ctx, 312, 506, productName, 40, 278, 1)
+                createText({
+                    ctx,
+                    x: 312,
+                    y: 506,
+                    text: productName,
+                    lineHeight: 40,
+                    width: 278
+                })
                 // 商品价格
                 drawRectWithText(ctx, 312, 529, 68, 26, 4, '#fe7700', '#fe7700')('活动价', '20px Microsoft YaHei UI', '#fff', 20, 'center')
                 if (price) {
@@ -186,11 +200,25 @@ export default {
                     ctx.fillStyle = '#fe7700'
                     ctx.fillText('¥', 388, 551)
                     ctx.font = '40px Helvetica'
-                    createText(ctx, 406, 555, String(price), 40, 188, 1)
+                    createText({
+                        ctx,
+                        x: 406,
+                        y: 555,
+                        text: String(price),
+                        lineHeight: 40,
+                        width: 188
+                    })
                 } else {
                     ctx.font = '40px Helvetica'
                     ctx.fillStyle = '#fe7700'
-                    createText(ctx, 406, 555, '免费', 40, 188, 1)
+                    createText({
+                        ctx,
+                        x: 406,
+                        y: 555,
+                        text: '免费',
+                        lineHeight: 40,
+                        width: 188
+                    })
                 }
                 // 商品公益金
                 ctx.font = '24px Microsoft YaHei UI'
@@ -199,11 +227,36 @@ export default {
                 const padding = 10
                 const left = 84
                 const right = textWidth + padding * 2
-                drawRoundRect(ctx, 312, 583, left + right, 34, 8, '#fe582a', '#fff')
-                drawRoundRect(ctx, 312, 583, 80, 34, 8, '#fe582a', '#fe582a')
+                drawRoundRect({
+                    ctx,
+                    x: 312,
+                    y: 583,
+                    width: left + right,
+                    height: 34,
+                    radius: 8,
+                    strokeStyle: '#fe582a',
+                    fillStyle: '#fff'
+                })
+                drawRoundRect({
+                    ctx,
+                    x: 312,
+                    y: 583,
+                    width: 80,
+                    height: 34,
+                    radius: 8,
+                    strokeStyle: '#fe582a',
+                    fillStyle: '#fe582a'
+                })
                 drawRectWithText(ctx, 318, 583, 80, 34, 0, '#fe582a', '#fe582a')('可捐赠', '24px Microsoft YaHei UI', '#fff', 25, 'left')
                 ctx.fillStyle = '#fe582a'
-                createText(ctx, 407, 608, text, 40, 174, 1)
+                createText({
+                    ctx,
+                    x: 407,
+                    y: 608,
+                    text,
+                    lineHeight: 40,
+                    width: 174
+                })
                 ctx.fillText(text, 407, 608)
 
                 // 二维码

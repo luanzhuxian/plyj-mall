@@ -4,6 +4,7 @@
             class="pl-toast"
             :class="{ 'pl-toast-visible': show }"
             v-show="show"
+            :style="{'--animationDuration': animationDuration}"
         >
             <pl-svg
                 v-if="type === 'error'"
@@ -27,8 +28,8 @@
                 width="72"
             />
             <div class="toast-message">
-                <p v-text="message" />
-                <p class="toast-vice-message" v-text="viceMessage" />
+                <p v-html="message" />
+                <p class="toast-vice-message" v-html="viceMessage" />
                 <slot />
             </div>
         </div>
@@ -45,15 +46,18 @@ export default {
             message: '',
             viceMessage: '',
             timer: 0,
-            type: ''
+            type: '',
+            animationDuration: '0.4s'
         }
     },
     methods: {
         close () {
             this.show = false
-        },
-        closed () {
-            document.body.removeChild(this.$el)
+            setTimeout(() => {
+                const el = this.$el
+                this.$destroy()
+                document.body.removeChild(el)
+            }, Number.parseFloat('0.4s') * 1000)
         }
     }
 }
@@ -88,6 +92,7 @@ export default {
             max-width: 100%;
             margin-top: 16px;
             font-size: 32px;
+            line-height: 48px;
             word-break: break-all;
             white-space: pre-wrap;
 
@@ -115,11 +120,11 @@ export default {
         100% { transform: translate(-50%, -50%) scale(0); }
     }
     .show-pl-toast-enter-active {
-        animation: pl-toast-animation .4s;
+        animation: pl-toast-animation var(--animationDuration);
         animation-fill-mode: backwards;
     }
     .show-pl-toast-leave-active {
-        animation: pl-toast-animation-backof .4s;
+        animation: pl-toast-animation-backof var(--animationDuration);
         animation-fill-mode: forwards;
     }
     .show-pl-toast-leave, .show-pl-toast-enter-to {

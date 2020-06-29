@@ -6,12 +6,24 @@
 
         <navbar v-if="showNavbar.indexOf($route.name) > -1" />
         <QuickNavbar v-else />
+        <!-- 新人有礼浮窗 -->
+        <NewUserHomePop
+            v-if="$route.name === 'Home' && isNewUser"
+            :show.sync="showNewUser"
+            :id="newUserActiveId"
+        />
+        <NewUserHomeBtn
+            v-if="$route.name === 'Home' && isNewUser && !showNewUser"
+            :id="newUserActiveId"
+        />
     </div>
 </template>
 
 <script>
 import Navbar from './components/common/Navbar.vue'
 import QuickNavbar from './components/common/Quick-Navbar.vue'
+import NewUserHomePop from './views/marketing-activity/newcomers/components/New-User-Home-Pop.vue'
+import NewUserHomeBtn from './views/marketing-activity/newcomers/components/New-User-Home-Btn.vue'
 import { mapMutations, mapActions } from 'vuex'
 import {
     SET_THEME,
@@ -39,14 +51,22 @@ import {
 } from './apis/home'
 import { setFirstVisit } from './apis/longmen-festival/lottery'
 
+// 新人有礼
+import { isNewUser, getGoingInfo } from './apis/newcomers'
 export default {
     components: {
         Navbar,
-        QuickNavbar
+        QuickNavbar,
+        NewUserHomePop,
+        NewUserHomeBtn
     },
     data () {
         return {
             logined: false,
+            isNewUser: false,
+            showNewUser: true,
+            // 新人有礼活动id
+            newUserActiveId: '',
             exclude: [
                 'ShoppingCart',
                 'LiveRoom',
@@ -91,10 +111,10 @@ export default {
                 await this.getUserInfo()
             }
             this.logined = true
-            await this.getEntryData()
-            await this.getActivityData()
             // 标记一天中首次访问
             setFirstVisit()
+            await this.getEntryData()
+            await this.getNewUserInfo()
         } catch (e) {
             throw e
         }
@@ -116,7 +136,23 @@ export default {
             getMainCenter: GET_ACTIVITY_DATA,
             getSkinId: GET_SKIN_ID
         }),
-        // 获取商城主会场、皮肤数据
+        // 获取新人有礼数据
+        async getNewUserInfo () {
+            if (this.$route.name !== 'Home') {
+                return
+            }
+            try {
+                const { result: info } = await getGoingInfo()
+                if (info && info.id) {
+                    const { result } = await isNewUser(info.id)
+                    this.isNewUser = result
+                    this.newUserActiveId = info.id
+                }
+            } catch (e) {
+                throw e
+            }
+        },
+        // 获取首页、主会场页所需数据
         async getEntryData () {
             try {
                 const list = [

@@ -658,7 +658,14 @@ export default {
             ctx.drawImage(arcAvatar, 32, 32, 128, 128)
             ctx.font = 'bold 48px Microsoft YaHei UI'
             ctx.fillStyle = '#000'
-            createText(ctx, 192, 120, this.userName, 68, 800, 1)
+            createText({
+                ctx,
+                x: 192,
+                y: 120,
+                text: this.userName,
+                lineHeight: 68,
+                width: 800
+            })
             try {
                 // 二维码
                 const qrcode = await generateQrcode({ size: 300, text: this.shareUrl, padding: 15, img, centerPadding: 10, type: 'canvas' })
@@ -682,7 +689,15 @@ export default {
                 ctx.fillStyle = '#000'
 
                 // 商品名称
-                createText(ctx, 49, 978, this.detail.courseName, 80, 620, line)
+                createText({
+                    ctx,
+                    x: 49,
+                    y: 978,
+                    text: this.detail.courseName,
+                    lineHeight: 80,
+                    width: 620,
+                    lineNumber: line
+                })
                 if (this.courseType === 2) {
                     ctx.font = '48px Microsoft YaHei UI'
                     ctx.fillStyle = '#999'
@@ -694,11 +709,23 @@ export default {
                     ctx.fillStyle = '#FE7700'
                     ctx.fillText('¥', 48, 1190 + (76 - 56) / 2)
                     ctx.font = 'bold 88px Microsoft YaHei UI'
-                    createText(ctx, 96, 1170 + (104 - 88) / 2, String(price), 104)
+                    createText({
+                        ctx,
+                        x: 96,
+                        y: 1170 + (104 - 88) / 2,
+                        text: String(price),
+                        lineHeight: 104
+                    })
                 } else {
                     ctx.fillStyle = '#FE7700'
                     ctx.font = 'bold 88px Microsoft YaHei UI'
-                    createText(ctx, 48, 1190 + (76 - 56) / 2, '免费', 104)
+                    createText({
+                        ctx,
+                        x: 48,
+                        y: 1190 + (76 - 56) / 2,
+                        text: '免费',
+                        lineHeight: 104
+                    })
                 }
 
                 // 绘制原价

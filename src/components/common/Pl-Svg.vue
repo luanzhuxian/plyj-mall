@@ -23,7 +23,6 @@
 </template>
 
 <script>
-import { promise } from '../../assets/js/util'
 export default {
     name: 'PlSvg',
     props: {
@@ -58,7 +57,8 @@ export default {
             computedWidth: null,
             computedHeight: null,
             update: true,
-            clonedSvg: {}
+            clonedSvg: {},
+            count: 0
         }
     },
     computed: {
@@ -85,30 +85,22 @@ export default {
             return null
         }
     },
-    mounted () {
-        this.clean()
-    },
-    deactivated () {
-        this.clean()
-    },
-    beforeDestroy () {
-        this.clean()
-    },
     watch: {
         fill: {
             async handler (val) {
-                if (val) this.setFill(val)
+                if (val) this.change(val)
             },
             immediate: true
         },
         async name (val) {
-            /* eslint-disable */
-            if (this.fill && !this.clonedSvg[`${ val }_${ this._uid }`]) {
-                this.setFill(this.fill)
+            if (this.fill && val) {
+                this.change(this.fill)
             } else {
-                this.tempName = this.tempName.replace(this.tempName.split('_')[0], val)
+                this.tempName = val
             }
         }
+    },
+    mounted () {
     },
     methods: {
         clickHandler (e) {
@@ -117,33 +109,44 @@ export default {
         hoverHandler (e) {
             this.$emit('hover', e)
         },
-        async setFill (fill) {
-            if (this.type !== 'svg') return
+        change (fill) {
+            if (!this.name || !fill || this.type !== 'svg') return
+
             /**
-         * 由于使用的是svg精灵，所以
-         * 要使得fill属性生效，必须保证不存在行内fill属性 或者 修改行内fill属性
-         * 如果直接修改行内属性，会改变全局所有的svg颜色
-         * 所以，先复制一份svg，然后修改这个副本的颜色，使用完之后，再删除这个副本，避免副本越来越多
-         */
-            // _uid可以作为每个组件唯一的标识，用来作为图标副本的id，再合适不过了
-            const uid = this._uid
-            const svg = document.querySelector(`#${ this.name }`)
+             * 由于使用的是svg精灵，所以
+             * 要使得fill属性生效，必须保证不存在行内fill属性 或者 修改行内fill属性
+             * 如果直接修改行内属性，会改变全局所有的svg颜色
+             * 所以，先复制一份svg，然后修改这个副本的颜色，使用完之后，再删除这个副本，避免副本越来越多
+             */
+            const svg = document.getElementById(this.name)
             if (!svg) {
-                console.error(`svg ${ this.name } 不存在`)
+                // 如果图标加载失败，再尝试3次
+                if (this.count >= 3) {
+                    console.error(`svg ${ this.name } 不存在`)
+                    return
+                }
+                setTimeout(() => {
+                    this.change(fill)
+                    this.count++
+                }, 1000)
                 return
             }
-            this.tempName = `${ this.name }_${ uid }`
-            const clonedSvg = this.clonedSvg[this.tempName] || svg.cloneNode(true)
-            await promise.timeout(100)
-            svg.parentNode.appendChild(clonedSvg)
+            // 补全颜色值,用颜色作为新生成的图标id，这样，就可以保证相同颜色的图标可以复用
+            let fillStr = String(fill).replace(/#/g, '')
+            fillStr = fillStr.padEnd(6, fillStr)
+            this.tempName = `${ this.name }-${ fillStr }`
+            // 如果图标已经缓存，则不再生成新的图标
+            if (window[this.tempName]) return
+            // 标记已经生成的图标
+            window[this.tempName] = true
+            const clonedSvg = svg.cloneNode(true)
+            clonedSvg.setAttribute('id', this.tempName)
             this.svgParent = svg.parentNode
             this.clonedSvg[this.tempName] = clonedSvg
-
             // 给克隆后的图标填充颜色
             try {
                 const fills = clonedSvg.querySelectorAll('[fill]')
                 const colors = clonedSvg.querySelectorAll('[color]')
-                clonedSvg.setAttribute('id', this.tempName)
                 clonedSvg.setAttribute('fill', fill)
                 for (const fillEle of fills) {
                     if (fillEle.getAttribute('fill') !== 'none') {
@@ -156,14 +159,16 @@ export default {
             } catch (e) {
                 console.error(`svg ${ this.name } 不存在`)
             }
+            svg.parentNode.appendChild(clonedSvg)
         },
         clean () {
             if (this.type !== 'svg') return
             if (this.svgParent) {
                 for (const k of Object.keys(this.clonedSvg)) {
                     try {
-                        this.svgParent.appendChild(this.clonedSvg[k])
-                    } catch (e) {}
+                        this.svgParent.removeChild(this.clonedSvg[k])
+                    } catch (e) {
+                    }
                 }
             }
             this.clonedSvg = {}
@@ -173,6 +178,6 @@ export default {
 </script>
 
 <style module lang="scss">
-  .pl-svg {
-  }
+    .pl-svg {
+    }
 </style>

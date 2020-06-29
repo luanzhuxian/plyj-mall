@@ -286,14 +286,27 @@ export default {
                 }
                 mallNameStartX = (cvs.width - 44 - 20 - mallNameWidth) / 2
                 ctx.drawImage(logo, mallNameStartX, 212, 44, 44)
-                createText(ctx, mallNameStartX + 44 + 20, 218, mallName, 50)
+                createText({
+                    ctx,
+                    x: mallNameStartX + 44 + 20,
+                    y: 218,
+                    text: mallName,
+                    lineHeight: 50
+                })
 
                 /* ********** 绘制用户姓名 ********** */
                 // 绘制用户姓名，先计算出用户姓名截取以后的宽度，之后用
                 ctx.font = '24px bold'
                 ctx.fillStyle = '#fff'
                 ctx.textBaseline = 'top'
-                let nameWidth = createText(ctx, 200, 438, userName, 34, 120, 1)
+                let nameWidth = createText({
+                    ctx,
+                    x: 200,
+                    y: 438,
+                    text: userName,
+                    lineHeight: 34,
+                    width: 120
+                })
                 // 12是这句话与名字的间距
                 const textWidth = ctx.measureText('最爱雅集 邀您助力').width + 12
 
@@ -310,7 +323,15 @@ export default {
                  * @type {number}
                  */
                 const rectX = (606 - rectWidth) / 2 + 10
-                drawRoundRect(ctx, rectX, 416, rectWidth, 64, 12, '#FF9810', '#FF9810')
+                drawRoundRect({
+                    ctx,
+                    x: rectX,
+                    y: 416,
+                    width: rectWidth,
+                    height: 64,
+                    radius: 12,
+                    fillStyle: '#FF9810'
+                })
 
                 // 绘制头像
                 if (avatar) {
@@ -318,13 +339,34 @@ export default {
                     avatar = await cutArcImage(avatar)
                     ctx.drawImage(avatar, rectX + 24, 426, 44, 44)
                 } else {
-                    drawRoundRect(ctx, rectX + 24, 426, 44, 44, 22, '#fff', '#fff')
+                    drawRoundRect({
+                        ctx,
+                        x: rectX + 24,
+                        y: 426,
+                        width: 44,
+                        height: 44,
+                        radius: 22,
+                        fillStyle: '#fff'
+                    })
                 }
                 ctx.font = '24px bold'
                 ctx.fillStyle = '#fff'
                 ctx.textBaseline = 'top'
-                nameWidth = createText(ctx, rectX + 24 + 44 + 12, 438, userName, 34, 120, 1)
-                nameWidth = createText(ctx, rectX + 24 + 44 + 12 + nameWidth, 438, '最爱雅集 邀您助力', 34)
+                nameWidth = createText({
+                    ctx,
+                    x: rectX + 24 + 44 + 12,
+                    y: 438,
+                    text: userName,
+                    lineHeight: 34,
+                    width: 120
+                })
+                nameWidth = createText({
+                    ctx,
+                    x: rectX + 24 + 44 + 12 + nameWidth,
+                    y: 438,
+                    text: '最爱雅集 邀您助力',
+                    lineHeight: 34
+                })
 
                 // 绘制用户姓名
                 // ctx.font = '24px bold'

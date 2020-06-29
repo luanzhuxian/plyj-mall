@@ -206,23 +206,21 @@ export default {
                 window.addEventListener('scroll', this.scrollHandler, { passive: true })
             })
         },
-        getData () {
-            return new Promise(async (resolve, reject) => {
-                try {
-                    this.$emit('update:loading', true)
-                    this.pending = true
-                    const { result } = await this.requestMethods(this.options)
-                    if (result.records.length === 0) {
-                        this.allLoaded = true
-                    }
-                    resolve(result.records)
-                    this.total = result.total
-                } catch (e) {
-                    reject(e)
-                } finally {
-                    this.loaded()
+        async getData () {
+            try {
+                this.$emit('update:loading', true)
+                this.pending = true
+                const { result } = await this.requestMethods(this.options)
+                if (result.records.length === 0) {
+                    this.allLoaded = true
                 }
-            })
+                this.total = result.total
+                return result.records
+            } catch (e) {
+                throw e
+            } finally {
+                this.loaded()
+            }
         },
         async loadMore () {
             this.options.current++

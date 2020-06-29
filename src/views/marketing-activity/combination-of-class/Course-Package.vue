@@ -15,8 +15,8 @@
                 </template>
                 <span v-else>活动已结束</span>
             </div>
-            <div :class="$style.topRight" @click="showRules = true">活动规则</div>
-            <div :class="$style.topRight" @click="createPoster">活动海报</div>
+            <div :class="[$style.label, $style.rule]" @click="showRules = true">活动规则</div>
+            <div :class="$style.label" @click="createPoster">活动海报</div>
         </div>
         <div
             :id="'activity-' + index"
@@ -55,15 +55,23 @@
                     </template>
                     <span v-else>已结束</span>
                 </div>
-                <div :class="$style.proList">
-                    <spring-ploughing-pro-item
-                        v-for="(prod, j) of item.products"
-                        :key="index + '-' + i + '-' + j"
-                        :data="prod"
-                        color="yellow"
-                        :current-product-status="6"
-                    />
+                <div :class="$style.proList" :style="{ 'max-height': item.maxHeight }">
+                    <ul :ref="'prod-list-' + index">
+                        <SpringPloughingProItem
+                            :class="$style.proListItem"
+                            v-for="(pro, j) of item.products"
+                            :key="index + '-' + i + '-' + j"
+                            :data="pro"
+                            color="yellow"
+                        />
+                    </ul>
                 </div>
+                <template v-if="item.products.length > 3">
+                    <div :class="[$style.showMore, item.isShowProdMore ? $style.expanded : '']" @click="showMore(item, index)">
+                        <span>{{ item.isShowProdMore ? '收起' : '查看更多' }}</span>
+                        <pl-svg name="icon-right" fill="#663A15" width="24" />
+                    </div>
+                </template>
                 <div :class="$style.giftList" v-if="item.gifts.length">
                     <div :class="$style.title">
                         更享更多伴手礼
@@ -142,6 +150,8 @@ import Countdown from '../../../assets/js/Countdown'
 import share from '../../../assets/js/wechat/wechat-share'
 import { SET_SHARE_ID } from '../../../store/mutation-type'
 
+const MAX_HEIGHT = 700
+
 export default {
     name: 'SpringPloughing',
     components: {
@@ -212,6 +222,13 @@ export default {
                 window.scrollTo(0, top)
             }
         },
+        showMore (item, index) {
+            const list = this.$refs[`prod-list-${ index }`][0]
+            if (list) {
+                item.isShowProdMore = !item.isShowProdMore
+                item.maxHeight = item.isShowProdMore ? `${ list.offsetHeight / 7.5 }vw` : `${ MAX_HEIGHT / 7.5 }vw`
+            }
+        },
         // batchType 1: 组合课 2: 春耘
         async getSpringCombination () {
             const getLatestEndTime = (data = []) => {
@@ -239,6 +256,9 @@ export default {
                 for (const activity of result.records) {
                     activity.models.sort((a, b) => moment(a.activityStartTime).valueOf() - moment(b.activityStartTime).valueOf())
                     for (const group of activity.models) {
+                        group.maxHeight = `${ MAX_HEIGHT / 7.5 }vw`
+                        // 隐藏3个以上的商品，按钮控制是否显示更多
+                        group.isShowProdMore = false
                         // 隐藏3个以上的礼品，按钮控制是否显示更多
                         group.isShowGiftMore = false
 
@@ -382,7 +402,14 @@ export default {
             ctx.font = '24px Microsoft YaHei UI'
             ctx.fillStyle = '#fff'
             ctx.textBaseline = 'hanging'
-            createText(ctx, 100, 32, `${ this.userName } 邀您参加组合聚惠学`, 34, 510, 1)
+            createText({
+                ctx,
+                x: 200,
+                y: 32,
+                text: `${ this.userName } 邀您参加组合聚惠学`,
+                lineHeight: 34,
+                width: 510
+            })
             ctx.drawImage(BG, 0, 88, 638, 1046)
             const QR = await generateQrcode({ size: 200, text: this.shareUrl, type: 'canvas' })
             ctx.drawImage(QR, 204, 730, 238, 238)
@@ -427,7 +454,7 @@ export default {
     height: 560px;
     background: url('https://mallcdn.youpenglai.com/static/mall/2.8.0/package-bg.jpg') no-repeat center top;
     background-size: 100% auto;
-    > .top-right {
+    > .label {
         position: absolute;
         right: 0;
         bottom: -16px;
@@ -438,7 +465,7 @@ export default {
         line-height: 50px;
         background-color: #ea7635;
         border-radius: 40px 0 0 40px;
-        &:nth-of-type(2) {
+        &.rule {
             bottom: 50px;
         }
     }
@@ -558,6 +585,34 @@ export default {
 }
 .pro-list {
     margin-top: 32px;
+    overflow: hidden;
+    transition: max-height .3s linear;
+}
+.pro-list-item {
+    &:nth-of-type(1) {
+        margin-top: 0;
+    }
+}
+.show-more {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 28px;
+    font-size: 26px;
+    line-height: 34px;
+    color: #663A15;
+    &.expanded {
+        > svg {
+            transform: rotate(-90deg);
+        }
+    }
+    > span {
+        margin-right: 6px;
+    }
+    > svg {
+        transform: rotate(90deg);
+        transition: transform .3s linear;
+    }
 }
 .gift-list {
     padding: 0 14px;
@@ -614,7 +669,7 @@ export default {
     }
 }
 
-.closeMore{
+.close-more{
   text-align: center;
 }
 .more {

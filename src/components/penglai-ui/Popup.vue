@@ -66,7 +66,9 @@ export default {
         closeOnClickModal: {
             type: Boolean,
             default: true
-        }
+        },
+        // 是否将元素放入body中
+        appendBody: Boolean
     },
     watch: {
         show: {
@@ -115,6 +117,9 @@ export default {
     beforeDestroy () {
         this.close()
         this.unlockBody()
+    },
+    mounted () {
+        if (this.appendBody) document.body.appendChild(this.$el)
     },
     methods: {
         lockBody () {
