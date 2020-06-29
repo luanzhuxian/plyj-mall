@@ -12,7 +12,6 @@
 
 <script>
 import { loadImage, cutArcImage, drawRoundRect, createText, generateQrcode } from '../../../../assets/js/util'
-import { createObjectUrl } from '../../../../assets/js/upload-image'
 import { mapGetters } from 'vuex'
 export default {
     name: 'Rules',
@@ -153,10 +152,8 @@ export default {
                     y: 794
                 })
 
-                CVS.toBlob(bold => {
-                    this.poster = createObjectUrl(bold)
-                    this.loading = false
-                })
+                this.poster = CVS.toDataURL('image/jpeg', 0.9)
+                this.loading = false
                 this.show = true
             } catch (e) {
                 throw e
