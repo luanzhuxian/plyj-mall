@@ -114,6 +114,7 @@ export default {
             // 标记一天中首次访问
             setFirstVisit()
             await this.getEntryData()
+            await this.getActivityData()
             await this.getNewUserInfo()
         } catch (e) {
             throw e
@@ -176,11 +177,16 @@ export default {
         // 获取首页、主会场页所需活动数据
         async getActivityData () {
             try {
-                const activityList = [
+                const list = [
+                    // 直播
                     getLiveInfo(),
+                    // 年味
                     getNianweiInfo(),
+                    // 龙门节公益棕
                     getDragonGateCharityInfo(),
+                    // 龙门节粽粽有礼
                     getDragonGateSignInfo(),
+                    // 龙门节抽奖
                     getDragonGatePlayInfo()
                 ]
 
@@ -190,7 +196,7 @@ export default {
                     { result: charity },
                     { result: sign },
                     { result: play }
-                ] = await Promise.all(activityList.map(p => p.catch(e => {
+                ] = await Promise.all(list.map(p => p.catch(e => {
                     console.error(e)
                     return { result: {} }
                 })))
