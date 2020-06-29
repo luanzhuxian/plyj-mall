@@ -98,7 +98,7 @@
 
         <div :class="$style.notice">
             <pl-svg name="icon-speaker-97a9a" fill="#fff" width="20" />
-            <span>快来领取新人优惠大礼包，领取成功后，您可进入个人中心中查看</span>
+            <span>快来领取新人优惠大礼包，领取成功后，您可进入个人中心查看</span>
         </div>
 
         <template v-if="isStarted && !isEnd">
