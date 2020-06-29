@@ -42,7 +42,7 @@
                                     <p :class="{'detail-coupon': true,'color6': !activeId, 'color-c':activeId}">
                                         {{ item.giftBrief }}
                                     </p>
-                                    <p :class="{'detail-date': true,'color6': !activeId, 'color-c':activeId}">有效期:{{ item.useStartTime | dateFormat('YYYY-MM-DD') }}-{{ item.useEndTime | dateFormat('YYYY-MM-DD') }}</p>
+                                    <p :class="{'detail-date': true,'color6': !activeId, 'color-c':activeId}">有效期:{{ item.useStartTime | dateFormat('YYYY.MM.DD') }}-{{ item.useEndTime | dateFormat('YYYY.MM.DD') }}</p>
                                     <p
                                         v-if="item.activityName"
                                         :class="{'detail-coupon': true,'color-EB5': !activeId,'color-c': activeId }"
@@ -104,7 +104,7 @@
                     </div>
                     <div class="desc">{{ activeItem.giftBrief }}</div>
                     <div class="date">
-                        有效期:{{ activeItem.useStartTime | dateFormat('YYYY-MM-DD') }}-{{ activeItem.useEndTime | dateFormat('YYYY-MM-DD') }}
+                        有效期:{{ activeItem.useStartTime | dateFormat('YYYY.MM.DD') }}-{{ activeItem.useEndTime | dateFormat('YYYY.MM.DD') }}
                     </div>
                     <div class="activity-name" v-if="activeItem.activityName">
                         来源：{{ activeItem.activityName }}
