@@ -909,6 +909,7 @@ export default {
                     return item
                 })
             } catch (e) {
+                this.couponList = []
                 throw e
             }
         },
