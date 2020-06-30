@@ -98,9 +98,10 @@ export default {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 436px;
+        width: max-content;
         height: 72px;
         margin: 378px auto 0;
+        padding: 0 20px;
         text-align: center;
         font-size: 24px;
         background: linear-gradient(180deg, #F67D3E, #FB621C) no-repeat;
@@ -113,7 +114,7 @@ export default {
             margin: 0 4px;
         }
         > .timeItem {
-            width: 36px;
+            padding: 0 4px;
             line-height: 38px;
             color: #DF5B2F;
             background-color: #FBEFD7;
