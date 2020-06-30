@@ -3,15 +3,15 @@
 
         <!--抬头-->
         <div :class="$style.burseTitle">
-            <ul>
-                <li>我的奖学金（红包）</li>
-                <li>{{ burseMes.waitUseAmount }}</li>
-                <li @click="$router.push({name:'Classify'})">立即使用</li>
-            </ul>
-            <ul>
-                <li>累计获得奖学金</li>
-                <li>{{ burseMes.cumulativeAmount }}</li>
-            </ul>
+            <div :class="$style.content">
+                <div :class="$style.desc">我的奖学金（红包）</div>
+                <div :class="$style.amount">{{ burseMes.waitUseAmount }}</div>
+                <div :class="$style.btn" @click="$router.push({ name:'Classify' })">立即使用</div>
+            </div>
+            <div :class="[$style.content, $style.total]">
+                <div :class="$style.desc">累计获得奖学金</div>
+                <div :class="[$style.amount, $style.totalAmount]">{{ burseMes.cumulativeAmount }}</div>
+            </div>
         </div>
 
         <!--奖学金列表-->
@@ -30,7 +30,7 @@
 
         <!--无奖学金情况-->
         <div :class="$style.burseNone">
-            <div v-if="burseList.length === 0" @click="$router.push({name:'Home'})" :class="$style.goHome">返回首页参加活动</div>
+            <div v-if="burseList.length === 0" @click="$router.push({ name:'Home' })" :class="$style.goHome">返回首页参加活动</div>
         </div>
         <!-- <div :class="$style.burseNone" v-if="burseList.length === 0">
       <img src="https://mallcdn.youpenglai.com/static/admall/f20994d7-316b-43e9-be44-4f78dc6fc295.png" alt="">
@@ -106,19 +106,19 @@ export default {
     background: url(https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/1575270325759.png) 0/cover no-repeat;
     border-radius: 20px;
     padding: 34px;
-    > ul {
-      > li:nth-of-type(1) {
+    > .content {
+      > .desc {
         font-size: 24px;
         font-weight: 400;
         color: #FFE7DF;
       }
-      > li:nth-of-type(2) {
+      > .amount {
         font-size: 56px;
         font-weight: bold;
         color: #FFFFFF;
         padding: 2vw 0;
       }
-      > li:nth-of-type(3) {
+      > .btn {
         font-size: 28px;
         color: #FA7135;
         border-radius: 8px;
@@ -129,10 +129,12 @@ export default {
         width: 182px;
       }
     }
-    > ul:nth-last-of-type(1) >li:nth-last-of-type(1) {
-      font-weight: normal;
-      color: #FFE7DF;
-      text-align: right;
+    > .total {
+      > .total-amount {
+        font-weight: normal;
+        color: #FFE7DF;
+        text-align: right;
+      }
     }
   }
 

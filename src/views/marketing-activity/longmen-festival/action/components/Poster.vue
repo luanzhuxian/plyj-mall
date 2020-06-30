@@ -98,7 +98,14 @@ export default {
                 ctx.font = '28px Microsoft YaHei UI'
                 ctx.fillStyle = '#333'
                 ctx.textAlign = 'center'
-                createText(ctx, 327, 460, userName, 40, 542, 1)
+                createText({
+                    ctx,
+                    x: 327,
+                    y: 460,
+                    text: userName,
+                    lineHeight: 40,
+                    width: 542
+                })
 
                 ctx.font = 'bold 32px Microsoft YaHei UI'
                 ctx.fillStyle = '#ff8400'

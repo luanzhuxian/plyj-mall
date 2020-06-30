@@ -104,19 +104,24 @@ export default {
 
     // 转存微信头像到ali-oss，以便提高生成海报的速度
     [type.SAVE_WX_AVATAR]: async ({ commit }, url) => {
-        const img = await loadImage(url)
-        const cvs = document.createElement('canvas')
-        cvs.width = img.naturalWidth
-        cvs.heigt = img.naturalHeight
-        const ctx = cvs.getContext('2d')
-        ctx.drawImage(img, 0, 0)
-        cvs.toBlob(async blob => {
-            const res = await upload(blob)
-            userInfoSettings({ headImgUrl: res.url })
-                .then(() => {
-                    commit(type.SET_AVATAR, res.url)
-                })
-        }, 'image/jpeg')
+        if (url.indexOf('mallcdn.youpenglai.com') > -1) {
+            return
+        }
+        try {
+            const img = await loadImage(url)
+            const cvs = document.createElement('canvas')
+            cvs.width = img.naturalWidth
+            cvs.heigt = img.naturalHeight
+            const ctx = cvs.getContext('2d')
+            ctx.drawImage(img, 0, 0)
+            cvs.toBlob(async blob => {
+                const res = await upload(blob)
+                await userInfoSettings({ headImgUrl: res.url })
+                commit(type.SET_AVATAR, res.url)
+            }, 'image/jpeg')
+        } catch (e) {
+            console.error(`转存微信头像失败：${ e.message }`)
+        }
     },
     [type.USER_INFO]: ({ commit, dispatch, getters }) => new Promise(async (resolve, reject) => {
         try {
@@ -124,10 +129,10 @@ export default {
             commit(type.USER_INFO, result)
             await dispatch(type.ADDRESS_LIST)
             localStorage.setItem('refresh_count', 0)
-
+            // 替换微信头像文件地址
+            dispatch(type.SAVE_WX_AVATAR, result.img)
             // 如果用户头像是微信那边的，那就转存至ali-oss
             if (result.img.indexOf('qlogo') > -1) {
-                dispatch(type.SAVE_WX_AVATAR, result.img)
             }
             resolve(result)
         } catch (e) {

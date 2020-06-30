@@ -77,14 +77,49 @@ export default {
                 CTX.font = '28px Microsoft YaHei'
                 CTX.fillStyle = '#fff'
                 CTX.textBaseline = 'hanging'
-                createText(CTX, 148, 350, TEXT1, 40, 434, 1)
-                createText(CTX, 148, 390, TEXT2, 40, 434, 1)
+                createText({
+                    ctx: CTX,
+                    x: 148,
+                    y: 350,
+                    text: TEXT1,
+                    lineHeight: 40,
+                    width: 434
+                })
+                createText({
+                    ctx: CTX,
+                    x: 148,
+                    y: 390,
+                    text: TEXT2,
+                    lineHeight: 40,
+                    width: 434
+                })
                 CTX.fillStyle = '#000'
-                createText(CTX, 144, 806, TEXT3, 40, 280, 1)
+                createText({
+                    ctx: CTX,
+                    x: 144,
+                    y: 806,
+                    text: TEXT3,
+                    lineHeight: 40,
+                    width: 280
+                })
                 CTX.font = '23px Microsoft YaHei'
-                createText(CTX, 144, 846, TEXT4, 40, 320, 1)
+                createText({
+                    ctx: CTX,
+                    x: 144,
+                    y: 846,
+                    text: TEXT4,
+                    lineHeight: 40,
+                    width: 320
+                })
                 CTX.font = '20px Microsoft YaHei'
-                createText(CTX, 44, 902, TEXT5, 28, 400, 1)
+                createText({
+                    ctx: CTX,
+                    x: 44,
+                    y: 902,
+                    text: TEXT5,
+                    lineHeight: 28,
+                    width: 400
+                })
 
                 const qrcode = await generateQrcode({ size: 300, text: `${ this.mallUrl }/fight-epidemic/sign-in/${ this.id }?t=${ Date.now() }`, type: 'canvas' })
                 CTX.drawImage(qrcode, 462, 806, 124, 124)

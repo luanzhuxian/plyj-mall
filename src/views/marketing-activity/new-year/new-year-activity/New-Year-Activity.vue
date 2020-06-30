@@ -761,7 +761,15 @@ export default {
                 canvas.height = bgImg.height
                 const ctx = canvas.getContext('2d')
                 ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height)
-                drawRoundRect(ctx, canvas.width / 2 - 100, canvas.height / 2 + 200, 200, 200, 2, '#FE613F', '#FE613F')
+                drawRoundRect({
+                    ctx,
+                    x: canvas.width / 2 - 100,
+                    y: canvas.height / 2 + 200,
+                    width: 200,
+                    height: 200,
+                    radius: 2,
+                    fillStyle: '#FE613F'
+                })
                 ctx.drawImage(this.qrcode, canvas.width / 2 - 100, canvas.height / 2 + 200, 200, 200)
                 const sharePoster = canvas.toDataURL('image/jpeg', 0.7)
                 this.sharePoster = sharePoster
@@ -810,26 +818,63 @@ export default {
                 let avatar = this.avatar || default_avatar
                 avatar = await this.loadImage(avatar)
                 avatar = await cutArcImage(avatar)
-                drawRoundRect(ctx, 50, 810, 60, 60, 30, '#FE613F', '#FE613F')
+                drawRoundRect({
+                    ctx,
+                    x: 50,
+                    y: 810,
+                    width: 60,
+                    height: 60,
+                    radius: 30,
+                    fillStyle: '#FE613F'
+                })
                 ctx.drawImage(avatar, 50, 810, 60, 60)
 
                 // 绘制年味描述
                 ctx.font = '20px bold'
                 ctx.fillStyle = '#000'
                 ctx.textBaseline = 'hanging'
-                createText(ctx, 118, 820, desc, 34, 138, 1)
-                createText(ctx, 118, 850, '我心中的年味', 34, 138, 1)
-
+                createText({
+                    ctx,
+                    x: 118,
+                    y: 820,
+                    text: desc,
+                    lineHeight: 34,
+                    width: 138
+                })
+                createText({
+                    ctx,
+                    x: 118,
+                    y: 850,
+                    text: '我心中的年味',
+                    lineHeight: 34,
+                    width: 138
+                })
                 // 绘制二维码
-                drawRoundRect(ctx, 242, 800, 80, 80, 2, '#FE613F', '#FFF')
+                drawRoundRect({
+                    ctx,
+                    x: 242,
+                    y: 800,
+                    width: 80,
+                    height: 80,
+                    radius: 2,
+                    strokeStyle: '#FE613F',
+                    fillStyle: '#FFF'
+                })
                 ctx.drawImage(this.qrcode, 242, 800, 80, 80)
 
                 // 绘制二维码旁的文字
                 ctx.font = '20px bold'
                 ctx.fillStyle = '#000'
                 ctx.textBaseline = 'hanging'
-                createText(ctx, 332, 800, '长按识别保存图片分享给好友，一起参与活动', 24, 136, 3)
-
+                createText({
+                    ctx,
+                    x: 332,
+                    y: 800,
+                    text: '长按识别保存图片分享给好友，一起参与活动',
+                    lineHeight: 24,
+                    width: 136,
+                    lineNumber: 3
+                })
                 const sharePoster = canvas.toDataURL('image/jpeg', 0.7)
                 this.newYearPoster = sharePoster
                 this.isShowNewYearPoster = true

@@ -272,7 +272,7 @@ export function cutImageCenter (img, ratio = 1) {
  */
 export function cutArcImage (img) {
     const centerCanvas = cutImageCenter(img)
-    const canvas = cutImageCenter(img)
+    const canvas = document.createElement('canvas')
     const w = canvas.width = centerCanvas.width
     const h = canvas.height = centerCanvas.height
     const ctx = canvas.getContext('2d')
@@ -295,12 +295,12 @@ export function setTimeoutSync (duration) {
  * @param ctx {CanvasRenderingContext2D} 2d context
  * @param x {Number} 文本开始的x坐标
  * @param y {Number} 文本开始的y坐标
- * @param width {Number} 每行文本的最大宽度
+ * @param width {Number} 每行文本的最大宽度, 如果为0或者不传，文字不限制长度
  * @param text {String} 文本
  * @param lineHeight {Number} 行高
  * @param lineNumber {Number} 行数（超过行数时，以...结尾）
  */
-export function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
+export function createText ({ctx, x, y, text, lineHeight, width= 0, lineNumber = 1}) {
     // 填充商品名称
     let charArr = []
     const strArr = []
@@ -311,7 +311,7 @@ export function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
         const char = text[i]
         charArr.push(char)
         txtWidth += ctx.measureText(char).width
-        if (lineCount === lineNumber - 1 && txtWidth + ellipsisWidth >= width) {
+        if (lineCount === lineNumber - 1 && width > 0 && txtWidth + ellipsisWidth >= width) {
             // 最后一行的文字
             charArr.push('...')
             strArr.push(charArr.join(''))
@@ -319,7 +319,7 @@ export function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
         }
 
         // 文本换行
-        if (txtWidth >= width || i === text.length - 1) {
+        if (width > 0 && txtWidth >= width || i === text.length - 1) {
             lineCount++
             strArr.push(charArr.join(''))
             txtWidth = 0
@@ -335,7 +335,7 @@ export function createText (ctx, x, y, text, lineHeight, width, lineNumber) {
 /**
  * 绘制圆角矩形
  */
-export function drawRoundRect (ctx, x, y, width, height, radius, strokeStyle, fillStyle) {
+export function drawRoundRect ({ ctx, x, y, width, height, radius, strokeStyle, fillStyle }) {
     ctx.beginPath()
     ctx.arc(x + radius, y + radius, radius, Math.PI, Math.PI * 3 / 2)
     ctx.lineTo(width - radius + x, y)
@@ -345,7 +345,7 @@ export function drawRoundRect (ctx, x, y, width, height, radius, strokeStyle, fi
     ctx.lineTo(radius + x, height + y)
     ctx.arc(radius + x, height - radius + y, radius, Math.PI * 1 / 2, Math.PI)
     ctx.closePath()
-    ctx.strokeStyle = strokeStyle
+    ctx.strokeStyle = strokeStyle || fillStyle
     ctx.fillStyle = fillStyle
     ctx.stroke()
     ctx.fill()

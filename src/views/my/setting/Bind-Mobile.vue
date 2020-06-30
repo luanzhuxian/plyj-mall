@@ -152,7 +152,7 @@ export default {
         this.updateForm.oldMobile = this.mobile || ''
     },
     deactivated () {
-    // 重置表单
+        // 重置表单
         resetForm(this.bindForm)
         resetForm(this.updateForm)
         this.step = 1
@@ -202,19 +202,23 @@ export default {
                     }
                 }
                 await this.refreshLogin()
-                this.loading = false
                 await this.$router.replace({ name: 'My' })
             } catch (e) {
+                if (e) throw e
+            } finally {
                 this.loading = false
-                throw e
             }
         },
         async refreshLogin () {
-            const DISPATCH = this.$store.dispatch
-            Cookie.remove('refresh_token')
-            Cookie.remove('token')
-            await DISPATCH(LOGIN)
-            await DISPATCH(USER_INFO)
+            try {
+                const DISPATCH = this.$store.dispatch
+                Cookie.remove('refresh_token')
+                Cookie.remove('token')
+                await DISPATCH(LOGIN)
+                await DISPATCH(USER_INFO)
+            } catch (e) {
+                throw e
+            }
         }
     },
     beforeRouteLeave (to, from, next) {

@@ -9,6 +9,7 @@
                     <template v-if="detail.activityType === 'GROUPBUGACTIVITY'">团购奖学金</template>
                     <template v-if="detail.activityType === 'LUCK_DRAW_ACTIVITY'">抽奖奖学金</template>
                     <template v-if="detail.activityType === 'SIGNIN_ACTIVITY'">签到奖学金</template>
+                    <template v-if="detail.activityType === 'NEWCOMER'">新人奖学金</template>
                 </span>
             </li>
             <li><span>奖学金金额</span><span>{{ detail.amount }} 元</span></li>

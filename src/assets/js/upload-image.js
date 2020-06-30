@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Compressor from 'compressorjs'
 import { getSTS } from '../../apis/base-api'
 import store from '../../store'
@@ -6,6 +7,8 @@ const ENV = VUE_APP_MODEL === 'production' ? 'pro' : 'dev'
 const OSS = require('ali-oss')
 const REGION = 'oss-accelerate'
 const BUCKET = 'penglai-weimall'
+const DOMAIN = 'https://mallcdn.youpenglai.com'
+const PATH = `img/mall/${ ENV }`
 // STS有效时间，10分钟
 const STSLIFETIME = 600000
 Compressor.setDefaults({
@@ -63,7 +66,6 @@ export const compress = function (file, size, fileType) {
     })
 }
 const getClient = async function () {
-    /* eslint-disable */
     const sts = JSON.parse(localStorage.getItem('sts')) || {}
     let credentials = null
 
@@ -95,11 +97,11 @@ export const upload = async function (file) {
     // 使用商城id分开存储
     const mallId = store.getters.mallId
     const client = await getClient()
-    const key = mallId ? `img/mall/${ENV}/${mallId}/${randomString()}.${ext}` : `img/admall/${ENV}/${randomString()}.${ext}`
+    const key = mallId ? `${ PATH }/${ mallId }/${ randomString() }.${ ext }` : `${ PATH }/${ randomString() }.${ ext }`
     return new Promise((resolve, reject) => {
         client.put(key, file)
             .then(res => {
-                res.url = `https://mallcdn.youpenglai.com/${ res.name }`
+                res.url = `${ DOMAIN }/${ res.name }`
                 resolve(res)
             })
             .catch(e => {
@@ -108,71 +110,72 @@ export const upload = async function (file) {
     })
 }
 const compressImage = function (file) {
-    /* eslint-disable */
-  return new Promise((resolve, reject) => {
-    new Compressor(file, {
-      success (result) {
-        resolve(result)
-      },
-      error (error) {
-        reject(error)
-      }
+    return new Promise((resolve, reject) => {
+        new Compressor(file, {
+            success (result) {
+                resolve(result)
+            },
+            error (error) {
+                reject(error)
+            }
+        })
     })
-  })
 }
 export function blobToBase64 (blob) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = function () {
-      resolve(reader.result.split(',')[1])
-    }
-    reader.readAsDataURL(blob)
-  })
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = function () {
+            resolve(reader.result.split(',')[1])
+        }
+        reader.readAsDataURL(blob)
+    })
 }
 // 生成随机字符串
 function randomString () {
-    return `${uuid.v1()}-${Math.random().toString().replace('.', '')}`
+    return `${ uuid.v1() }-${ Math.random().toString()
+        .replace('.', '') }`
 }
 
 export function createObjectUrl (blob) {
-  let url
-  if (window.createObjectURL) { // basic
-    url = window.createObjectURL(blob)
-  } else if (window.URL) { // mozilla(firefox)
-    url = window.URL.createObjectURL(blob)
-  } else if (window.webkitURL) { // webkit or chrome
-    url = window.webkitURL.createObjectURL(blob)
-  }
-  return url
+    let url
+    if (window.createObjectURL) { // basic
+        url = window.createObjectURL(blob)
+    } else if (window.URL) { // mozilla(firefox)
+        url = window.URL.createObjectURL(blob)
+    } else if (window.webkitURL) { // webkit or chrome
+        url = window.webkitURL.createObjectURL(blob)
+    }
+    return url
 }
 
 export function revokeObjectURL (URL) {
-  window.URL.revokeObjectURL(URL)
+    window.URL.revokeObjectURL(URL)
 }
+
 /**
  * 删除图片接口
  * @param key 图片名称 {Array}
  * @returns {Promise<void>}
  */
 export async function deleteImage (key) {
-  let client = await getClient()
-  // 单独删除咱不可用，所以需传入key的数组
-  // if (typeof key === 'string') {
-  //   try {
-  //     await client.delete(key)
-  //   } catch (e) {
-  //     throw e
-  //   }
-  // }
-  // 批量删除
-  if (Array.isArray(key)) {
-    try {
-      await client.deleteMulti(key)
-      console.warn(`image is deleted !`)
-    } catch (e) {
-      throw e
+    const client = await getClient()
+    // 单独删除咱不可用，所以需传入key的数组
+    // if (typeof key === 'string') {
+    //   try {
+    //     await client.delete(key)
+    //   } catch (e) {
+    //     throw e
+    //   }
+    // }
+    // 批量删除
+    if (Array.isArray(key)) {
+        try {
+            await client.deleteMulti(key)
+            console.warn(`image is deleted !`)
+        } catch (e) {
+            throw e
+        }
+    } else {
+        throw new Error('key 必须是数组！')
     }
-  } else {
-    throw new Error('key 必须是数组！')
-  }
 }

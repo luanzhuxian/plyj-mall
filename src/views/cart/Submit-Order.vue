@@ -448,6 +448,7 @@ export default {
                 if (exchangeCodeInfo.id)exchangeCodeInfo.isDefault = true
                 this.exchangeCodeInfo = exchangeCodeInfo
             } catch (e) {
+                this.couponList = []
                 throw e
             }
         },

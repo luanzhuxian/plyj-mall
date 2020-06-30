@@ -100,6 +100,8 @@ export default {
             }
         }
     },
+    mounted () {
+    },
     methods: {
         clickHandler (e) {
             this.$emit('click', e)
