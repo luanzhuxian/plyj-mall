@@ -196,7 +196,9 @@
                         <img v-imgError :src="detail.coverImg + '?x-oss-process=style/thum-middle'" alt="">
                         <div :class="$style.topRight">
                             <div :class="$style.title" v-text="detail.name" />
-                            <div :class="$style.time" v-text="detail.liveStartTime + '~' + detail.liveEndTime" />
+                            <div :class="$style.time">
+                                {{ detail.liveStartTime | dateFormat('YYYY.MM.DD HH:mm:ss') }} ~ {{ detail.liveEndTime | dateFormat('YYYY.MM.DD HH:mm:ss') }}
+                            </div>
                             <div :class="$style.price" v-text="detail.paidAmount" />
                             <div v-if="detail.paidAmount" :class="$style.liveTip">
                                 <p>该直播为付费项目，不支持退换，</p>
