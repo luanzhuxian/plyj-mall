@@ -987,13 +987,13 @@ export default {
                             goodsType: this.detail.liveType === 'live' ? 'LIVE_GOODS' : 'VIDEO_GOODS',
                             productCustomInfo: '',
                             sku1: '',
-                            sku2: ''
+                            sku2: '',
+                            // 留言
+                            orderPostscript: ''
                         }
                     ],
                     // 地址信息
                     userAddress: null,
-                    // 留言
-                    orderPostscript: '',
                     // 奖学金
                     scholarshipModel: null,
                     // 优惠券
