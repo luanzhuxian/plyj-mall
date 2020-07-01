@@ -83,7 +83,7 @@
                     暂未开启，敬请期待
                 </button>
                 <button v-else-if="item.wasEnded" :class="$style.buy + ' ' + $style.ended">
-                    暂未开启，敬请期待
+                    已结束
                 </button>
                 <div :class="$style.corner + ' ' + $style.topLeft" />
                 <div :class="$style.corner + ' ' + $style.topRight" />
