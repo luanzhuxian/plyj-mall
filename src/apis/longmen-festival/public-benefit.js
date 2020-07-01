@@ -18,4 +18,4 @@ export const getPublicBenefitStatistics = activityId => axios.get(`/apis/v2/comm
  * @param {string} activityId
  * @param {string} productId
  */
-export const getPublicBenefitList = ({ activityId, productId = '' }) => axios.get(`/apis/v1/commonweal/${ activityId }/list?productId=${ productId }`)
+export const getPublicBenefitList = ({ activityId, productId = '' }) => axios.get(`/apis/v2/commonweal/${ activityId }/list?productId=${ productId }`)
