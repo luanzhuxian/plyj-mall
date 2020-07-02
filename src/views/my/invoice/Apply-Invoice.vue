@@ -3,7 +3,7 @@
         <div :class="$style.tips">
             <div :class="$style.top">
                 <pl-svg :class="$style.warning" name="icon-warning2" />
-                <p v-text="type === 1 ? '自营产品订单完成后24小时内开具，点击“我的订单”查看。' : '发票将会与商品同时邮寄，单商品仅支持一次开票服务，请确保填写开票信息真实有效。'" />
+                <p>实体商品发票将会与商品同时邮寄，虚拟、课程自提商品发票到店自取，单商品仅支持一次开票服务，请确保填写开票信息真实有效。</p>
             </div>
             <button
                 @click="showInvioceIntro = true"
@@ -208,7 +208,7 @@
             <div :class="$style.invioceIntroContent">
                 <p><strong>第一条：</strong>发票金额不含优惠券和其余优惠支付部分。 </p>
                 <p><strong>第二条：</strong>第三方卖家销售的商品／服务的发票由卖家自行出具、提供，发票类型和内容由卖家根据实际商品、服务情况决定。 </p>
-                <p><strong>第三条：</strong>实体商品发票将会与商品同时邮寄，虚拟、课程自提商品发票到店自取，单商品仅支持一次开票服务，请确保填写开票信息真实有效</p>
+                <p><strong>第三条：</strong>实体商品发票将会与商品同时邮寄，虚拟、课程自提商品发票到店自取，单商品仅支持一次开票服务，请确保填写开票信息真实有效。</p>
             </div>
         </pl-popup>
 
