@@ -96,7 +96,7 @@ export default {
                 this.$emit('update:currentRedEnvelope', {})
             } else {
                 coupon.scholarship = 1
-                const currentRedEnvelope = this.currentRedEnvelope && this.currentRedEnvelope.id ? this.currentRedEnvelope : this.redEnvelopeList[0] || {}
+                const currentRedEnvelope = this.currentRedEnvelope && this.currentRedEnvelope.id ? this.currentRedEnvelope : {}
                 this.$emit('update:currentRedEnvelope', currentRedEnvelope)
             }
         }
