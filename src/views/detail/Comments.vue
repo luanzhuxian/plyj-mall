@@ -26,7 +26,9 @@
 
                     <!-- 时间  规格 -->
                     <div :class="$style.itemSku">
-                        <span v-text="item.createTimeText" />
+                        <span>
+                            {{ item.createTime | dateFormat('YYYY.MM.DD') }}
+                        </span>
                         <span>
                             <i v-text="item.attribute" />
                             “<i v-text="item.skuCode1Name" />”
