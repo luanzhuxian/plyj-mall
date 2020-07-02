@@ -95,10 +95,10 @@
                 </pl-button>
                 <!--知识课程 + 订单完成 支持 去学习-->
                 <pl-button
-                    v-if="orderType === orderTypeKeyMap.KNOWLEDGE_COURSE && (orderStatus === orderStatuskeyMap.FINISHED)"
+                    v-if="[orderTypeKeyMap.KNOWLEDGE_COURSE, orderTypeKeyMap.SERIES_OF_COURSE].includes(orderType) && (orderStatus === orderStatuskeyMap.FINISHED)"
                     type="warning"
                     round
-                    @click="$router.push({ name: 'Courses', params: { courseType: '1' } })"
+                    @click="$router.push({ name: 'Courses', params: { courseType: orderTypeKeyMap.KNOWLEDGE_COURSE === orderType ? '1' : '2' } })"
                 >
                     去学习
                 </pl-button>
