@@ -704,7 +704,8 @@ export default {
                         tip = '退款完成'
                     }
                     if (redeemCodeModels.length) {
-                        if (result.status === this.orderStatuskeyMap.WAIT_RECEIVE || result.status === this.orderStatuskeyMap.FINISHED) {
+                        // 待收货 / 未评价的已完成状态，显示有效期信息
+                        if (result.status === this.orderStatuskeyMap.WAIT_RECEIVE || (result.status === this.orderStatuskeyMap.FINISHED && this.isCommentBtnShow)) {
                             const { expirationStartTime, expirationEndTime } = redeemCodeModels[0]
                             // 虚拟商品/正式课/体验课 使用有效期
                             if ([this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS].includes(result.orderType)) {
