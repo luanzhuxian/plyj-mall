@@ -286,7 +286,7 @@
         </template>
 
         <!-- 联系人信息 -->
-        <div :class="[$style.panel, $style.contact]" v-if="!receiverModel.address">
+        <div :class="[$style.panel, $style.contact]" v-if="receiverModel.address">
             <pl-fields
                 size="middle"
                 text="联系人信息"
