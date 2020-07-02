@@ -306,7 +306,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['selectedAddress', 'userId', 'submitOrder/invoiceProducts', 'submitOrder/invoiceFromRoute']),
+        ...mapGetters(['selectedAddress', 'userId', 'orderTypeKeyMap', 'submitOrder/invoiceProducts', 'submitOrder/invoiceFromRoute']),
         realName () {
             return this.selectedAddress.realName
         },
@@ -342,6 +342,8 @@ export default {
             return
           }
           this.checkedList = [...APPLY_INVOICE]
+          // 根据开具发票的第一个商品决定，第一个实体-默认邮寄 + 虚拟-自提
+          this.receiveInfo.mailingMethod = this.checkedList && this.checkedList[0] && this.checkedList[0].goodsType === this.orderTypeKeyMap.PHYSICAL_GOODS ? 1 : 0
           this.applyInvoice = APPLY_INVOICE
           // 设置默认邮寄信息
           this.receiveInfo.mobile = this.mobile || this.receiveMobile
