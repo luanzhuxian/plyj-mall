@@ -286,7 +286,7 @@
         </template>
 
         <!-- 联系人信息 -->
-        <div :class="[$style.panel, $style.contact]" v-if="receiverModel.address">
+        <div :class="[$style.panel, $style.contact]" v-if="detail.orderType !== orderTypeKeyMap.PHYSICAL_GOODS && receiverModel.name && receiverModel.mobile">
             <pl-fields
                 size="middle"
                 text="联系人信息"
@@ -297,7 +297,9 @@
             >
                 <div :class="$style.contactDetail">
                     <span class="fz-28" v-text="receiverModel.name" />
-                    <span class="fz-28" v-text="receiverModel.mobile" />
+                    <span class="fz-28">
+                        {{ receiverModel.mobile | formatAccount }}
+                    </span>
                 </div>
             </pl-fields>
         </div>

@@ -305,8 +305,14 @@ export default {
                 }
                 const { result: orderBatchNumber } = await submitOrder(form)
                 await this.requestPayData(orderBatchNumber)
+                // 在订单提交的过程中若切换页面，手动关闭订单
+                this.$once('hook:beforeRouteLeave', async () => {
+                    if (this.submiting) await this.handlepayError(orderBatchNumber)
+                })
             } catch (e) {
                 throw e
+            } finally {
+                this.submiting = false
             }
         },
         async requestPayData (orderBatchNumber) {
