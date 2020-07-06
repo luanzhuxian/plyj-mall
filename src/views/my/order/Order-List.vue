@@ -106,6 +106,8 @@ export default {
             },
             $refresh: null,
             loading: false,
+            // 是否正在取消
+            cancelling: false,
             payloading: false,
             // 当前正在支付的订单id
             currentPayId: '',
@@ -335,6 +337,9 @@ export default {
         },
         async cancelOrder (index) {
             try {
+                if (this.cancelling) return
+                // 取消订单时，会弹出一个选择原因弹框，当前页面仅可产生或者即将产生一个
+                this.cancelling = true
                 const detail = this.orderList[index]
                 // 5春耘订单 6组合课订单
                 const isCombinedOrder = [5, 6].includes(detail.skuSource)
@@ -351,6 +356,8 @@ export default {
                 }
             } catch (e) {
                 throw e
+            } finally {
+                this.cancelling = false
             }
         },
         // 删除订单
