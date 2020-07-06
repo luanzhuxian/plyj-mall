@@ -28,7 +28,7 @@ export default [
         }
     },
     {
-        path: '/my/orders/comment/:orderId',
+        path: '/my/orders/comment/:orderId/:productImg',
         name: 'CommentOrder',
         component: () => import('../views/my/order/Comment.vue'),
         props: true,
