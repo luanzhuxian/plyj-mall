@@ -116,7 +116,7 @@
                     v-if="isCommentBtnShow"
                     round
                     plain
-                    @click="$router.push({ name: 'OrderDetail', params: { orderId: orderId } })"
+                    @click="$router.push({ name: 'CommentOrder', params: { orderId: orderId, productImg: goodsImages } })"
                 >
                     去评价
                 </pl-button>
