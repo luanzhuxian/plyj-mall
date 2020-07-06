@@ -72,7 +72,7 @@
                     <div
                         v-if="item.products.length > 3"
                         :class="[$style.showMore, item.isProductsExpanded ? $style.expanded : '']"
-                        @click="showMoreProducts(item, index)"
+                        @click="showMoreProducts(item)"
                     >
                         <span>{{ item.isProductsExpanded ? '收起' : '查看更多' }}</span>
                         <pl-svg name="icon-right" fill="#663A15" width="24" />
@@ -97,7 +97,7 @@
                     <div
                         v-if="item.gifts.length > 3"
                         :class="[$style.showMore, item.isGiftsExpanded ? $style.expanded : '']"
-                        @click="showMoreGifts(item, index)"
+                        @click="showMoreGifts(item)"
                     >
                         <span>{{ item.isGiftsExpanded ? '收起' : '查看更多' }}</span>
                         <pl-svg name="icon-right" fill="#663A15" width="24" />
@@ -170,8 +170,11 @@ import Countdown from '../../../assets/js/Countdown'
 import share from '../../../assets/js/wechat/wechat-share'
 import { SET_SHARE_ID } from '../../../store/mutation-type'
 
-const PRODUCTS_MAX_HEIGHT = 700
-const GIFTS_MAX_HEIGHT = 400
+const PRODUCT_HEIGHT = 220
+const GIFT_HEIGHT = 120
+const MARGIN = 20
+const PRODUCTS_MAX_HEIGHT = PRODUCT_HEIGHT * 3 + MARGIN * 2
+const GIFTS_MAX_HEIGHT = GIFT_HEIGHT * 3 + MARGIN * 2
 
 export default {
     name: 'SpringPloughing',
@@ -244,18 +247,12 @@ export default {
             }
         },
         showMoreProducts (item, index) {
-            const list = this.$refs[`product-list-${ index }`][0]
-            if (list) {
-                item.isProductsExpanded = !item.isProductsExpanded
-                item.productsMaxHeight = item.isProductsExpanded ? `${ list.offsetHeight / 7.5 }vw` : `${ PRODUCTS_MAX_HEIGHT / 7.5 }vw`
-            }
+            item.isProductsExpanded = !item.isProductsExpanded
+            item.productsMaxHeight = item.isProductsExpanded ? item.productsClientHeight : `${ PRODUCTS_MAX_HEIGHT / 7.5 }vw`
         },
         showMoreGifts (item, index) {
-            const list = this.$refs[`gift-list-${ index }`][0]
-            if (list) {
-                item.isGiftsExpanded = !item.isGiftsExpanded
-                item.giftsMaxHeight = item.isGiftsExpanded ? `${ list.offsetHeight / 7.5 }vw` : `${ GIFTS_MAX_HEIGHT / 7.5 }vw`
-            }
+            item.isGiftsExpanded = !item.isGiftsExpanded
+            item.giftsMaxHeight = item.isGiftsExpanded ? item.giftsClientHeight : `${ GIFTS_MAX_HEIGHT / 7.5 }vw`
         },
         // batchType 1: 组合课 2: 春耘
         async getSpringCombination () {
@@ -284,12 +281,16 @@ export default {
                 for (const activity of result.records) {
                     activity.models.sort((a, b) => moment(a.activityStartTime).valueOf() - moment(b.activityStartTime).valueOf())
                     for (const group of activity.models) {
+                        const { products = [], gifts = [] } = group
+
                         // 隐藏3个以上的商品，按钮控制是否显示更多
                         group.isProductsExpanded = false
                         group.productsMaxHeight = `${ PRODUCTS_MAX_HEIGHT / 7.5 }vw`
+                        group.productsClientHeight = `${ (PRODUCT_HEIGHT * products.length + MARGIN * (products.length - 1)) / 7.5 }vw`
                         // 隐藏3个以上的礼品，按钮控制是否显示更多
                         group.isGiftsExpanded = false
                         group.giftsMaxHeight = `${ GIFTS_MAX_HEIGHT / 7.5 }vw`
+                        group.giftsClientHeight = `${ (GIFT_HEIGHT * gifts.length + MARGIN * (gifts.length - 1)) / 7.5 }vw`
 
                         // 添加倒计时相关字段
                         group.d = ''
@@ -613,6 +614,7 @@ export default {
     }
 }
 .product-list {
+    box-sizing: border-box;
     margin-top: 32px;
     overflow: hidden;
     transition: max-height .3s linear;
@@ -640,6 +642,7 @@ export default {
         }
     }
     &-list {
+        box-sizing: border-box;
         overflow: hidden;
         transition: max-height .3s linear;
     }
