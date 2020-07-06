@@ -135,7 +135,6 @@
         </div>
 
         <div :class="$style.receiveInfo">
-            <div :class="$style.title">收票信息：</div>
             <pl-form>
                 <pl-form-item label="收票方式">
                     <pl-radio v-model="receiveInfo.mailingMethod" align="flex-start" inline :label="0">自提</pl-radio>
