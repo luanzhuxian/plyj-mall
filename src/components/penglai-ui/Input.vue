@@ -180,7 +180,7 @@ export default {
             const { value } = this
             // 是否包含emoji表情
             return hasUnicode(value)
-                ? toArray(value).length
+                ? toArray(value).reduce((pre, item) => pre + item.length, 0)
                 : value.length
         }
     },
