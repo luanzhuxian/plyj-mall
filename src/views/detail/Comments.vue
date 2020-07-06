@@ -172,7 +172,6 @@ export default {
             try {
                 // 已经是当前状态 / 正在加载中 不允许继续请求
                 if (this.form.status === status || this.loading) return
-                this.list = []
                 this.imgs = []
                 this.imgsMap = {}
                 this.reset()
