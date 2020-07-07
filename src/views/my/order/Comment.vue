@@ -54,6 +54,18 @@ import { submitComment } from '../../../apis/comment'
 import { resetForm } from '../../../assets/js/util'
 import { mapGetters, mapMutations } from 'vuex'
 
+// eslint-disable-next-line func-style
+function getProductImg () {
+    return sessionStorage.getItem('commentProductImg') || ''
+}
+// eslint-disable-next-line func-style
+function switchProductImg (productImg) {
+    if (productImg) {
+        return sessionStorage.setItem('commentProductImg', productImg)
+    }
+    sessionStorage.removeItem('commentProductImg')
+}
+
 export default {
     name: 'Comment',
     components: {
@@ -94,12 +106,14 @@ export default {
     },
     activated () {
         this.form.orderId = this.orderId
-        this.productImg = this.$route.params.productImg || ''
+        this.productImg = this.$route.params.productImg || getProductImg() || ''
+        switchProductImg(this.productImg)
     },
     deactivated () {
         resetForm(this.form, {
             score: 5
         })
+        switchProductImg()
         this.images = []
     },
     methods: {
