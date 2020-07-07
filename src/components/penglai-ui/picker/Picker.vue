@@ -90,7 +90,7 @@ export default {
             if (!val) {
                 this.close()
                 document.body.style.overflow = null
-                document.body.style.heigth = null
+                document.body.style.height = null
             } else {
                 window.scrollTo(0, window.screenTop)
                 document.body.style.height = '100vh'
