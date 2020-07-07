@@ -88,7 +88,7 @@
                     <pl-button
                         v-if="
                             detail.orderSource === skuSourceKeyMap.NORMAL &&
-                                ((orderStatuskeyMap.WAIT_SHIP && detail.amount) || ([orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status) && (detail.amount - detail.freight) > 0)) &&
+                                ((orderStatuskeyMap.WAIT_SHIP === detail.status && detail.amount) || ([orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status) && (detail.amount - detail.freight) > 0)) &&
                                 detail.supportAfterSales &&
                                 detail.aftersaleStatus === aftersaleStatusKeyMap.NO_AFTER_SALES
                                 && [orderStatuskeyMap.WAIT_SHIP, orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status)"
