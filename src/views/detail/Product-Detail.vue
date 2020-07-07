@@ -74,7 +74,7 @@
                     <BookingPrice :detail="detail" v-else-if="activeProduct === 4 && preActivity !== 0" />
                     <!-- 公益棕信息 -->
                     <CharityPrice :detail="detail" :charity-members="charityMembers" v-else-if="productActive === 7 && preActivity !== 0" />
-                    <!-- 加个 润笔 购买数量，关注人数 登信息 -->
+                    <!-- 价格 润笔 购买数量，关注人数 登信息 -->
                     <info-header :detail="detail" v-else />
                     <!-- 开售倒计时 -->
                     <count-down
@@ -360,7 +360,7 @@ import DetailBanner from '../../components/detail/Banner.vue'
 import DetailInfoBox from '../../components/detail/Info-Box.vue'
 import DetailTitle from '../../components/detail/Title.vue'
 import DetailDesc from '../../components/detail/Desc.vue'
-import DetailInfo from '../../components/detail/Detail.vue'
+import DetailInfo from './components/Detail.vue'
 import BuyNow from '../../components/detail/Buy-Now.vue'
 import Tags from '../../components/detail/Tags.vue'
 import UsefulLife from '../../components/detail/Useful-Life.vue'
