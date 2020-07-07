@@ -387,7 +387,7 @@ export default {
 
         // 改变规格
         async specChanged (option, revert, limiting, limit) {
-            if (limiting && option.count > limit) {
+            /* if (limiting && option.count > limit) {
                 if (limiting === limit) {
                     return this.$warning(`您至多购买${ limit }件`)
                 }
@@ -395,7 +395,7 @@ export default {
                     return this.$warning(`您已购买${ limiting }件，已达购买上限`)
                 }
                 return this.$warning(`您已购买${ limiting - limit }件，您还可以购买${ limit }件`)
-            }
+            } */
             try {
                 // 请求修改
                 this.updating = true

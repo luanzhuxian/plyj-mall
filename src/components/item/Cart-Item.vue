@@ -205,7 +205,7 @@ export default {
      * @return {Promise<void>}
      */
         async countChange (count, next) {
-            const { limiting } = this
+            /* const { limiting } = this
             const { limit } = this
             if (limiting && count > this.data.cartProductCount) {
                 try {
@@ -222,7 +222,7 @@ export default {
                 } catch (e) {
                     throw e
                 }
-            }
+            } */
             this.loading = true
             try {
                 const { result } = await updateCartProductCount({

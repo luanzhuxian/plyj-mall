@@ -868,9 +868,10 @@ export default {
             if (!this.hasBind()) {
                 return
             }
-            if (!this.checkLimit(selected, limiting, limit)) {
+
+            /* if (!this.checkLimit(selected, limiting, limit)) {
                 return
-            }
+            } */
             this.currentModel = selected
             const { skuCode1, count, skuCode2, price } = selected
 

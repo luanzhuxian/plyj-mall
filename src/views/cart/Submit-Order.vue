@@ -350,6 +350,9 @@ export default {
                 this.products = skus
                 this.customList = skus.filter(item => item.skuCustoms.length)
             } catch (e) {
+                setTimeout(() => {
+                    this.$router.go(-1)
+                }, 2000)
                 throw e
             }
         },

@@ -279,9 +279,9 @@ export default {
                     await this.addToCart(options)
                 }
                 if (this.clickBuyNow) {
-                    if (!this.checkLimit(options, limiting, limit)) {
+                    /* if (!this.checkLimit(options, limiting, limit)) {
                         return
-                    }
+                    } */
                     await this.submit(options)
                 }
             } catch (e) {
