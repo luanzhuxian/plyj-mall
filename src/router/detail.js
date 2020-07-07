@@ -19,6 +19,15 @@ export default [
         }
     },
     {
+        path: '/detail/image-text/:productId/:brokerId?',
+        name: 'ImageTextDetail',
+        component: () => import('../views/detail/Image-Text-Detail.vue'),
+        props: true,
+        meta: {
+            title: '知识专栏详情'
+        }
+    },
+    {
         path: '/detail/comments/detail',
         name: 'CommentDetail',
         component: () => import('../views/detail/Comment-Detail.vue'),

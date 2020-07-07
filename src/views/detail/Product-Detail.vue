@@ -138,30 +138,20 @@
                     :detail="detail.activityProductModel.activityBrief"
                     :class="$style.rule"
                 />
-
-                <div :class="$style.detailOrComment">
-                    <div :class="$style.tabs">
-                        <div :class="{ [$style.activeTab]: tab === 2 }" @click="tab = 2">
-                            商品详情
-                        </div>
-                        <div :class="{ [$style.activeTab]: tab === 1 }" @click="tab = 1">
-                            雅客评论({{ detail.assessmentCount }})
-                        </div>
-                    </div>
-
-                    <div>
-                        <Comments
-                            v-show="tab === 1"
-                            :show="tab === 1"
-                            :product-id="productId"
-                        />
-                        <DetailInfo
-                            v-show="tab === 2"
-                            :content="detail.detail || '暂无详情'"
-                        />
-                    </div>
-                </div>
-
+                <Tabs
+                    :tabs="[{ label: '商品详情', value: 2 }, { label: `雅客评论(${ detail.assessmentCount })`, value: 1 }]"
+                    v-model="tab"
+                >
+                    <Comments
+                        v-show="tab === 1"
+                        :show="tab === 1"
+                        :product-id="productId"
+                    />
+                    <DetailInfo
+                        v-show="tab === 2"
+                        :content="detail.detail || '暂无详情'"
+                    />
+                </Tabs>
                 <!-- 使用说明 -->
                 <Instructions
                     v-if="productType === 'FORMAL_CLASS' || productType === 'EXPERIENCE_CLASS' || productType === 'VIRTUAL_GOODS'"
@@ -400,6 +390,7 @@ import CountdownBar from './charity/Countdown-Bar.vue'
 import CharityRule from './charity/Rule.vue'
 import CharityPoster from './charity/Poster.vue'
 import Skeleton from './components/Skeleton.vue'
+import Tabs from './components/Tabs.vue'
 import Barrage from '../marketing-activity/longmen-festival/action/components/Barrage'
 import CharityPrice from './charity/Charity-Price'
 import {
@@ -497,7 +488,8 @@ export default {
         CharityPoster,
         Skeleton,
         Barrage,
-        CharityPrice
+        CharityPrice,
+        Tabs
     },
     data () {
         return {
@@ -1236,29 +1228,6 @@ export default {
     border-radius: 10px;
     &:disabled {
       color: rgba(255, 255, 255, .4);
-    }
-  }
-  .detailOrComment {
-    margin-top: 20px;
-    background-color: #fff;
-  }
-  .tabs {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    border-bottom: 1px solid #e7e7e7;
-    > div {
-      width: max-content;
-      font-size: 26px;
-      color: #999;
-      height: 90px;
-      line-height: 90px;
-      box-sizing: border-box;
-      font-weight: bold;
-      &.activeTab {
-        color: #000;
-        border-bottom: 2px solid #000;
-      }
     }
   }
   .buttomTip {

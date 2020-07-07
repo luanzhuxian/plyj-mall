@@ -146,33 +146,25 @@
                 :detail="detail.activityBrief"
             />
 
-            <!-- 课程详情 -->
-            <div :class="$style.detailOrComment">
-                <div :class="$style.tabs">
-                    <div :class="{ [$style.activeTab]: tab === 1 }" @click="tab = 1">
-                        课程介绍
-                    </div>
-                    <div :class="{ [$style.activeTab]: tab === 2 }" @click="tab = 2" v-if="courseType === 2">
-                        目录
-                    </div>
-                </div>
-                <div>
-                    <detail-info v-show="tab === 1" :content="detail.details || '暂无详情'" />
-                    <serise-courses
-                        v-show="tab === 2"
-                        :data="videoList"
-                        :course-id="detail.id"
-                        :order-id="detail.orderId"
-                        :is-present="isPresent"
-                        :is-buy="!!detail.isBuy"
-                        :is-finish="!detail.haveNoVideo"
-                        :status="Number(detail.status)"
-                        :is-open-sale="detail.isOpenSale"
-                        :course-status="detail.courseStatus"
-                        @preview="previewCourse"
-                    />
-                </div>
-            </div>
+            <Tabs
+                :tabs="[{ label: '课程介绍', value: 1 }, { label: '目录', value: 2, hidden: courseType === 1 }]"
+                v-model="tab"
+            >
+                <detail-info v-show="tab === 1" :content="detail.details || '暂无详情'" />
+                <serise-courses
+                    v-show="tab === 2"
+                    :data="videoList"
+                    :course-id="detail.id"
+                    :order-id="detail.orderId"
+                    :is-present="isPresent"
+                    :is-buy="!!detail.isBuy"
+                    :is-finish="!detail.haveNoVideo"
+                    :status="Number(detail.status)"
+                    :is-open-sale="detail.isOpenSale"
+                    :course-status="detail.courseStatus"
+                    @preview="previewCourse"
+                />
+            </Tabs>
 
             <!-- 订购须知 -->
             <instructions v-if="detail.payNotice" title="订购须知" :content="detail.payNotice" />
@@ -310,6 +302,7 @@ import Skeleton from './components/Skeleton.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import Barrage from '../marketing-activity/longmen-festival/action/components/Barrage'
 import VideoPlayer from './components/Video-Player'
+import Tabs from './components/Tabs.vue'
 import { getCourseDetail } from '../../apis/product'
 import {
     generateQrcode,
@@ -346,7 +339,8 @@ export default {
         CharityPoster,
         Skeleton,
         Barrage,
-        VideoPlayer
+        VideoPlayer,
+        Tabs
     },
     data () {
         return {
@@ -849,30 +843,6 @@ export default {
 
 .rule,
 .slide-courses,
-.detail-or-comment {
-    margin-top: 20px;
-}
-
-.tabs {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    background-color: #fff;
-    border-bottom: 1px solid #e7e7e7;
-    > div {
-        width: max-content;
-        font-size: 26px;
-        color: #999;
-        height: 90px;
-        line-height: 90px;
-        box-sizing: border-box;
-        font-weight: bold;
-        &.active-tab {
-            color: #000;
-            border-bottom: 2px solid #000;
-        }
-    }
-}
 .bottom {
     position: fixed;
     bottom: 0;
