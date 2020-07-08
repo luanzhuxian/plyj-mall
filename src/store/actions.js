@@ -70,15 +70,17 @@ export default {
                 commit(type.SET_OPENID, { mallDomain, openId: result.OPEN_ID })
                 return result.OPEN_ID
             }
-            location.replace(getWeixinURL(appSecret, appId, componentAppid, search))
+            // delete search.code
+            // location.href = getWeixinURL(appSecret, appId, componentAppid, search)
             /* eslint-disable no-throw-literal */
-            throw false
+            // 手动抛出一个错误，让后续操作停下
+            return false
         } catch (e) {
             if (e) {
                 MessageBox.confirm('微信登录失败，是否重试？')
                     .then(() => {
                         delete search.code
-                        location.replace(getWeixinURL(appSecret, appId, componentAppid, search))
+                        location.href = getWeixinURL(appSecret, appId, componentAppid, search)
                     })
                     .catch(() => {
                         window.wx.closeWindow()
@@ -93,9 +95,11 @@ export default {
             if (OPEN_ID) {
                 const loginInfo = await login(OPEN_ID)
                 commit(type.SET_TOKEN, loginInfo.result)
-                await dispatch(type.USER_INFO)
                 return loginInfo
             }
+            const search = Qs.parse(location.search.substring(1)) || {}
+            const { appSecret, componentAppid, appid } = state.mallInfo
+            location.replace(getWeixinURL(appSecret, appid, componentAppid, search))
             return null
         } catch (e) {
             throw e
@@ -136,10 +140,10 @@ export default {
             }
             resolve(result)
         } catch (e) {
-        /*
-        * 获取用户信息失败,可能原因： token失效
-        * 所以不要第一时间抛错， 尝试刷新一次token，如果刷新失败，再抛错
-        * */
+            /*
+            * 获取用户信息失败,可能原因： token失效
+            * 所以不要第一时间抛错， 尝试刷新一次token，如果刷新失败，再抛错
+            * */
             try {
                 await dispatch(type.REFRESH_TOKEN)
                 resolve(e)

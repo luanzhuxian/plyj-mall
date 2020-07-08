@@ -27,7 +27,6 @@ import NewUserHomeBtn from './views/marketing-activity/newcomers/components/New-
 import { mapMutations, mapActions } from 'vuex'
 import {
     SET_THEME,
-    USER_INFO,
     GET_MALL_INFO,
     LOGIN,
     GET_ACTIVITY_DATA,
@@ -37,7 +36,8 @@ import {
     SET_NW_EVENT,
     SET_DRAGON_GATE_CHARITY,
     SET_DRAGON_GATE_SIGN,
-    SET_DRAGON_GATE_PLAY
+    SET_DRAGON_GATE_PLAY,
+    USER_INFO
 } from './store/mutation-type'
 
 import Cookie from './assets/js/storage-cookie'
@@ -50,7 +50,6 @@ import {
     getDragonGatePlayInfo
 } from './apis/home'
 import { setFirstVisit } from './apis/longmen-festival/lottery'
-
 // 新人有礼
 import { isNewUser, getGoingInfo } from './apis/newcomers'
 export default {
@@ -106,10 +105,10 @@ export default {
             await this.getMallInfo()
             // 如果以及登录，且商城没切换，就不用重新登录
             if (!token) {
-                await this.login()
-            } else {
-                await this.getUserInfo()
+                const SUCCESS = await this.login()
+                if (!SUCCESS) return
             }
+            await this.getUserInfo()
             this.logined = true
             // 标记一天中首次访问
             setFirstVisit()
@@ -133,9 +132,9 @@ export default {
         ...mapActions({
             getMallInfo: GET_MALL_INFO,
             login: LOGIN,
-            getUserInfo: USER_INFO,
             getMainCenter: GET_ACTIVITY_DATA,
-            getSkinId: GET_SKIN_ID
+            getSkinId: GET_SKIN_ID,
+            getUserInfo: USER_INFO
         }),
         // 获取新人有礼数据
         async getNewUserInfo () {
