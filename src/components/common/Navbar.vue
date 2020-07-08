@@ -192,23 +192,23 @@ export default {
     padding: 8px 0 4px;
     height: 88px;
     font-size: 18px;
-    color: #666666;
+    color: #666;
     > .icon {
         width: 71px;
         height: 62px;
         &.active {
-            color: #F2B036;
+            color: #f2b036;
         }
     }
 }
 .alert-message {
-    background-color: #d2524c;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
     position: absolute;
     top: 10px;
-    right: 60px;
+    right: 40px;
+    width: 10px;
+    height: 10px;
+    background-color: #d2524c;
+    border-radius: 50%;
 }
 .icon-d12 {
     box-sizing: content-box;
