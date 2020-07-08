@@ -1,13 +1,9 @@
 <template>
-    <nav :class="[$style.navbar, $style[skinClassNameMap[skinId]]]">
-        <!-- 首次进入商城，请求未返回时，skinId 为 null，此时不显示图标，避免接口返回后切换皮肤图标，视觉体验不好 -->
+    <!-- 首次进入商城，请求未返回时，skinId 为 null，此时不显示图标，避免接口返回后切换皮肤图标，视觉体验不好 -->
+    <nav :class="[$style.navbar, $style[skinClassNameMap[skinId]]]" v-if="skinId !== null">
+
         <!-- 首页 -->
-        <router-link
-            v-if="skinId !== null"
-            :class="[$style.route, homeActive ? $style.active : '']"
-            tag="div"
-            :to="{ name: 'Home' }"
-        >
+        <router-link :class="[$style.route, homeActive ? $style.active : '']" tag="div" :to="{ name: 'Home' }">
             <img
                 v-if="isSkinShow"
                 v-imgError
@@ -23,12 +19,7 @@
         </router-link>
 
         <!-- 分类 -->
-        <router-link
-            v-if="skinId !== null"
-            :class="[$style.route, classifyActive ? $style.active : '']"
-            tag="div"
-            :to="{ name: 'Classify' }"
-        >
+        <router-link :class="[$style.route, classifyActive ? $style.active : '']" tag="div" :to="{ name: 'Classify' }">
             <img
                 v-if="isSkinShow"
                 v-imgError
@@ -68,12 +59,7 @@
         </router-link>
 
         <!-- 购物车 -->
-        <router-link
-            v-if="skinId !== null"
-            :class="[$style.route, shoppingCartActive ? $style.active : '']"
-            tag="div"
-            :to="{ name: 'ShoppingCart' }"
-        >
+        <router-link :class="[$style.route, shoppingCartActive ? $style.active : '']" tag="div" :to="{ name: 'ShoppingCart' }">
             <img
                 v-if="isSkinShow"
                 v-imgError
@@ -89,12 +75,7 @@
         </router-link>
 
         <!-- 我的 -->
-        <router-link
-            v-if="skinId !== null"
-            :class="[$style.route, myActive ? $style.active : '']"
-            tag="div"
-            :to="{ name: 'My' }"
-        >
+        <router-link :class="[$style.route, myActive ? $style.active : '']" tag="div" :to="{ name: 'My' }">
             <img
                 v-if="isSkinShow"
                 v-imgError
