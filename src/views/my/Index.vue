@@ -63,32 +63,36 @@
             <!-- 我的订单 -->
             <div :class="$style.panel">
                 <div :class="$style.orderStatus">
-                    <router-link :to="{ name: 'Orders', params: { status: 'WAIT_PAY' } }">
-                        <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/wait (2).png" :style="{ width: 72 / 7.5 + 'vw', height: 90 / 7.5 + 'vw' }" alt="">
+                    <router-link :to="{ name: 'Orders', params: { status: 'WAIT_PAY' } }" :class="$style.orderLink">
+                        <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/待付款.png" :style="{ width: 50 / 7.5 + 'vw' }" alt="">
+                        <i :class="$style.text">待付款</i>
                         <span
                             :class="{ [$style.badge]: true, [$style.oval]: count.waitPayment > 99 }"
                             v-if="count.waitPayment"
                             v-text="count.waitPayment > 99 ? '99+' : count.waitPayment"
                         />
                     </router-link>
-                    <router-link :to="{ name: 'Orders', params: { status: 'WAIT_SHIP' } }">
-                        <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/wait.png" :style="{ width: 72 / 7.5 + 'vw', height: 90 / 7.5 + 'vw' }" alt="">
+                    <router-link :to="{ name: 'Orders', params: { status: 'WAIT_SHIP' } }" :class="$style.orderLink">
+                        <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/待发货.png" :style="{ width: 45 / 7.5 + 'vw' }" alt="">
+                        <i :class="$style.text">待发货</i>
                         <span
                             :class="{ [$style.badge]: true, [$style.oval]: count.waitDelivery > 99 }"
                             v-if="count.waitDelivery"
                             v-text="count.waitDelivery > 99 ? '99+' : count.waitDelivery"
                         />
                     </router-link>
-                    <router-link :to="{ name: 'Orders', params: { status: 'WAIT_RECEIVE' } }">
-                        <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/wait (1).png" :style="{ width: 72 / 7.5 + 'vw', height: 88 / 7.5 + 'vw' }" alt="">
+                    <router-link :to="{ name: 'Orders', params: { status: 'WAIT_RECEIVE' } }" :class="$style.orderLink">
+                        <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/待收货.png" :style="{ width: 50 / 7.5 + 'vw' }" alt="">
+                        <i :class="$style.text">待收货</i>
                         <span
                             :class="{ [$style.badge]: true, [$style.oval]: count.waitCollect > 99 }"
                             v-if="count.waitCollect"
                             v-text="count.waitCollect > 99 ? '99+' : count.waitCollect"
                         />
                     </router-link>
-                    <router-link :to="{ name: 'RefundList', params: { status: 'ALL_ORDER' } }">
-                        <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/after.png" :style="{ width: 108 / 7.5 + 'vw', height: 88 / 7.5 + 'vw' }" alt="">
+                    <router-link :to="{ name: 'RefundList', params: { status: 'ALL_ORDER' } }" :class="$style.orderLink">
+                        <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/退款.png" :style="{ width: 45 / 7.5 + 'vw' }" alt="">
+                        <i :class="$style.text">退款/售后</i>
                         <span
                             :class="{ [$style.badge]: true, [$style.badgeAfterSale]: true, [$style.oval]: count.afterSale > 99 }"
                             v-if="count.afterSale"
@@ -98,8 +102,9 @@
                     <div :class="$style.segmentation">
                         <img src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/my/my-segmentation.png" alt="">
                     </div>
-                    <router-link :to="{ name: 'Orders', params: { status: 'ALL_ORDER' } }">
-                        <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/myorder.png" :style="{ width: 96 / 7.5 + 'vw', height: 90 / 7.5 + 'vw' }" alt="">
+                    <router-link :to="{ name: 'Orders', params: { status: 'ALL_ORDER' } }" :class="$style.orderLink">
+                        <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/全部订单.png" :style="{ width: 40 / 7.5 + 'vw' }" alt="">
+                        <i :class="$style.text">全部订单</i>
                     </router-link>
                 </div>
                 <div v-if="newFreight.length > 0" :class="$style.newLogistics">
@@ -134,53 +139,28 @@
             <div :class="$style.panel">
                 <div :class="$style.welfare">
                     <router-link :to="{ name: 'MyCoupon'}" :class="$style.welfareItem">
-                        <div
-                            :class="$style.icon"
-                            style="background-image: url(https://mallcdn.youpenglai.com/static/mall/icons/2.10.0/coupon.png)"
-                        />
-                        <div>
-                            <h5>我的卡券</h5>
-                            <!-- <span>福利多多帮你省钱</span> -->
-                        </div>
+                        <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/我的卡券.png" alt="">
+                        <i :class="$style.text">我的卡券</i>
                     </router-link>
                     <router-link :to="{ name: 'MyPresent'}" :class="$style.welfareItem">
-                        <div
-                            :class="$style.icon"
-                            style="background-image: url(https://mallcdn.youpenglai.com/static/mall/icons/2.10.0/gift.png)"
-                        />
-                        <div>
-                            <h5>我的礼品</h5>
-                            <!-- <span>到店核销领礼品</span> -->
-                        </div>
+                        <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/我的礼品.png" alt="">
+                        <i :class="$style.text">我的礼品</i>
                     </router-link>
                     <router-link :to="{ name: 'MyBurse'}" :class="$style.welfareItem">
-                        <div
-                            :class="$style.icon"
-                            style="background-image: url(https://mallcdn.youpenglai.com/static/mall/my/a3fb1993-79ef-4533-bd1a-de1cd98226e9.png)"
-                        />
-                        <div>
-                            <h5>我的奖学金</h5>
-                            <!-- <span>和优惠券叠加使用</span> -->
-                        </div>
+                        <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/我的奖学金.png" alt="">
+                        <i :class="$style.text">我的奖学金</i>
                     </router-link>
                     <router-link :to="{ name: 'LiveLibrary'}" :class="$style.welfareItem">
-                        <div
-                            :class="$style.icon"
-                            style="background-image: url(https://mallcdn.youpenglai.com/static/mall/icons/olds/live.png)"
-                        />
-                        <div>
-                            <h5>我的视频</h5>
-                            <!-- <span>到店核销领礼品</span> -->
-                        </div>
+                        <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/我的视频.png" alt="">
+                        <i :class="$style.text">我的视频</i>
                     </router-link>
                     <router-link :to="{ name: 'MyRedemption', params: {status: 'ALL'}}" :class="$style.welfareItem">
-                        <div
-                            :class="$style.icon"
-                            style="background-image: url(https://mallcdn.youpenglai.com/static/mall/my/兑换码-1.png)"
-                        />
-                        <div>
-                            <h5>我的兑换码</h5>
-                        </div>
+                        <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/我的兑换码.png" alt="">
+                        <i :class="$style.text">我的兑换码</i>
+                    </router-link>
+                    <router-link :to="{ name: 'MyRedemption', params: {status: 'ALL'}}" :class="$style.welfareItem">
+                        <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/我的资料.png" alt="">
+                        <i :class="$style.text">我的资料</i>
                     </router-link>
                 </div>
             </div>
@@ -194,19 +174,24 @@
             </router-link>
             <!-- helper -->
             <div :class="[$style.panel, $style.helper]" v-if="isHelperModuleShow && lockStatus">
-                <router-link to="" @click.native="toHelperManagementPage">
-                    <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/helper (2).png" style="width: 16vw; height: 15.33vw" alt="">
+                <a @click.native="toHelperManagementPage" :class="$style.helperLink">
+                    <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/Help管理.png" alt="">
+                    <i :class="$style.text">Helper管理</i>
+                </a>
+                <router-link :to="{ name: 'HelperPoster' }" :class="$style.helperLink">
+                    <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/Help邀请.png" alt="">
+                    <i :class="$style.text">Helper邀请</i>
                 </router-link>
-                <router-link :to="{ name: 'HelperPoster' }">
-                    <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/helper (3).png" style="width: 16vw; height: 15.33vw" alt="">
+                <router-link :to="{ name: 'ShopPoster'}" :class="$style.helperLink">
+                    <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/店铺海报.png" alt="">
+                    <i :class="$style.text">店铺海报</i>
                 </router-link>
-                <router-link :to="{ name: 'ShopPoster'}">
-                    <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/helper (1).png" style="width: 13vw;" alt="">
-                </router-link>
-                <router-link :to="{ name: 'ShopQrcode'}">
-                    <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/helper.png" style="width: 16vw; height: 15.33vw" alt="">
+                <router-link :to="{ name: 'ShopQrcode'}" :class="$style.helperLink">
+                    <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/店铺二维码.png" alt="">
+                    <i :class="$style.text">店铺二维码</i>
                 </router-link>
             </div>
+            <!-- 猜你喜欢 -->
             <you-like :class="$style.recommend" :is-my="true" />
             <modal
                 ref="modal"
@@ -224,6 +209,7 @@
             </modal>
         </div>
 
+        <!-- 骨架屏 -->
         <div :class="$style.skeleton" v-else>
             <div :class="[$style.skeleton1, $style.panel]">
                 <div :class="$style.itemSmall" v-for="(item, index) of 5" :key="index">
@@ -458,9 +444,8 @@ export default {
                 case LOCAL:
                     destination = 'http://localhost:5000/h5/home'
                     break
-
-        // default:
-        //   break
+                default:
+                  break
             }
             window.location.href = destination
         }
@@ -652,11 +637,20 @@ export default {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    a {
+    .order-link {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: space-between;
         position: relative;
-        font-size: 20px;
+        font-size: 24px;
+        color: #2e2e2e;
         &:nth-last-of-type(1) .badge {
             right: -14px;
+        }
+        > .text {
+            display: inline-block;
+            margin-top: 22px;
         }
     }
     svg {
@@ -748,61 +742,21 @@ export default {
     flex-wrap: wrap;
     justify-content: left;
     position: relative;
-    padding-bottom: 20px;
-    .segmentation {
-        width: 2px;
-        height: 86px;
-        background: rgba(238, 238, 238, 1);
-        opacity: 1;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        margin: auto;
-    }
-
+    padding: 0 28px 34px 28px;
     .welfareItem {
+        width: 25%;
         display: inline-flex;
         flex-direction: column;
+        justify-content: flex-end;
         align-items: center;
-        flex: 1;
-        min-width: 33%;
-        max-width: 33%;
-        margin-top: 20px;
+        margin-top: 34px;
         > .icon {
-            width: 72px;
-            height: 72px;
-            border-radius: 50%;
-            background: #fefadb no-repeat center center;
-            background-size: 60px;
+            width: 50px;
         }
-        &:nth-of-type(3) {
-            > .icon {
-                width: 129px;
-                height: 72px;
-                border-radius: 0;
-                background-size: auto 72px;
-                background-color: transparent;
-            }
-        }
-        > div {
-            margin-top: 20px;
-            text-align: center;
-            > h5 {
-                height: 44px;
-                font-size: 24px;
-                line-height: 44px;
-                color: #333;
-            }
-            > span {
-                height: 34px;
-                font-size: 24px;
-                font-weight: 400;
-                line-height: 34px;
-                color: #999;
-                opacity: 1;
-            }
+        > .text {
+            margin-top: 24px;
+            font-size: 24px;
+            color: #333;
         }
     }
 }
@@ -814,8 +768,19 @@ export default {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    > svg {
-        height: 114px;
+    > .helperLink {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        > .text {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+        > img {
+            width: 50px;
+        }
     }
 }
 /* helper ends */
