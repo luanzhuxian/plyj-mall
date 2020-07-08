@@ -37,7 +37,7 @@
         <!-- 中间的活动button -->
         <router-link
             v-if="isActivityAuth"
-            :class="$style.route"
+            :class="[$style.route, $style.mainCenter]"
             tag="div"
             :to="{ name: 'Activity' }"
         >
@@ -193,6 +193,10 @@ export default {
     height: 88px;
     font-size: 18px;
     color: #666;
+    &.main-center {
+        padding: 0;
+        justify-content: center;
+    }
     > .icon {
         width: 71px;
         height: 62px;
@@ -222,7 +226,7 @@ export default {
 }
 .icon-dragon-gate {
     position: relative;
-    top: -22px;
+    top: -20px;
     display: block;
     width: 125px !important;
     height: 104px !important;
