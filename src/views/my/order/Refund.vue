@@ -7,19 +7,20 @@
                 :count="count"
                 :option="skuCode2Name ? `${skuCode1Name},${skuCode2Name}` : skuCode1Name"
                 :product-id="productId"
+                :order-type="orderType"
                 hide-price
-                route-name="Product"
             />
         </section>
 
         <section :class="$style.content">
             <div :class="$style.panel">
+                <!--实体商品一直有退款退货两种状态；虚拟只支持仅退款-->
                 <router-link
-                    v-if="orderType === 'PHYSICAL' && orderStatus !== 'WAIT_SHIP'"
+                    v-if="orderType === orderTypeKeyMap.PHYSICAL_GOODS"
                     :class="$style.item"
                     tag="div"
                     replace
-                    :to="{ name: 'RefundApply', params: { orderId, refundType: '1', type: 'APPLY' } }"
+                    :to="{ name: 'RefundApply', params: { orderId, orderStatus, refundType: '1', type: 'APPLY' } }"
                 >
                     <div :class="$style.itemLeft">
                         <div :class="$style.itemTitle">
@@ -42,7 +43,7 @@
                     :class="$style.item"
                     tag="div"
                     replace
-                    :to="{ name: 'RefundApply', params: { orderId, refundType: '2', type: 'APPLY' } }"
+                    :to="{ name: 'RefundApply', params: { orderId, orderStatus, refundType: '2', type: 'APPLY' } }"
                 >
                     <div :class="$style.itemLeft">
                         <div :class="$style.itemTitle">
@@ -81,7 +82,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['refundGoodsInfo'])
+        ...mapGetters(['refundGoodsInfo', 'orderTypeKeyMap', 'orderStatusMap'])
     },
     data () {
         return {

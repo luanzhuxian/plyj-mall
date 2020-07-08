@@ -10,9 +10,10 @@
         </div>
         <!-- 核销码 -->
         <!--paymentMethod 0-线上 1-线下 -->
+        <!--非售后打款阶段 + 有核销码信息 + (订单待确认/已完成 || 线下付尾款+待付尾款阶段)-->
         <div
             :class="$style.qrcodeBox"
-            v-if="redeemCodeModels.length > 0 && ([orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status) || (detail.paymentMethod === 1 && orderStatuskeyMap.WAIT_PAY_TAIL_MONEY === detail.status))"
+            v-if="!isRefundsFinalStage && redeemCodeModels.length > 0 && ([orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status) || (detail.paymentMethod === 1 && orderStatuskeyMap.WAIT_PAY_TAIL_MONEY === detail.status))"
         >
             <img v-imgError :src="qrImg" alt="" v-imger:QR="qrImg" :style="{ opacity: isAllCodeUseless ? 0.4 : 1 }">
             <div :class="{[$style.codeListBox]: true, [$style.collapse]: collapseQrCode}">
@@ -86,12 +87,7 @@
                 <div :class="$style.buttons">
                     <!--普通订单 + 发货前实际支付大于0/发货后除运费外支付大于0 + 支持售后 + 无售后 + 订单状态为待发货/待收货 支持 申请退款-->
                     <pl-button
-                        v-if="
-                            detail.orderSource === skuSourceKeyMap.NORMAL &&
-                                ((orderStatuskeyMap.WAIT_SHIP === detail.status && detail.amount) || ([orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status) && (detail.amount - detail.freight) > 0)) &&
-                                detail.supportAfterSales &&
-                                detail.aftersaleStatus === aftersaleStatusKeyMap.NO_AFTER_SALES
-                                && [orderStatuskeyMap.WAIT_SHIP, orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status)"
+                        v-if="supportApplyRefund"
                         plain
                         round
                         @click="applyRefund"
@@ -407,22 +403,16 @@
             </pl-button>
             <!-- 支持 实付款大于0 + 订单创建后未取消 + 可申请发票 + 未申请过发票 + 无售后 支持 申请发票-->
             <pl-button
-                v-if="
-                    detail.orderSource === skuSourceKeyMap.NORMAL &&
-                        (detail.amount - detail.freight) > 0 &&
-                        [orderStatuskeyMap.WAIT_SHIP, orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status) &&
-                        detail.aftersaleStatus === aftersaleStatusKeyMap.NO_AFTER_SALES &&
-                        detail.supportInvoice &&
-                        !detail.invoiceId"
+                v-if="supportApplyInvoice"
                 round
                 plain
                 @click="applyInvoice"
             >
                 申请发票
             </pl-button>
-            <!--实体订单 + 待收货 支持 确认收货-->
+            <!--实体订单 + 待收货 + 非售后打款阶段 支持 确认收货-->
             <pl-button
-                v-if="detail.orderType === orderTypeKeyMap.PHYSICAL_GOODS && (detail.status === orderStatuskeyMap.WAIT_RECEIVE)"
+                v-if="detail.orderType === orderTypeKeyMap.PHYSICAL_GOODS && (detail.status === orderStatuskeyMap.WAIT_RECEIVE) && !isRefundsFinalStage"
                 round
                 type="warning"
                 @click="confirmReceipt"
@@ -552,6 +542,8 @@ export default {
             isPickerShow: false,
             // 订单详情
             detail: {},
+            // 退款中/退款成功 已经进入 微信打款阶段，不可再 确认收货/核销
+            isRefundsFinalStage: false,
             // 商品详情
             goodsModel: {},
             // 订单最后一次交易记录
@@ -627,6 +619,53 @@ export default {
               this.detail.aftersaleStatus === this.aftersaleStatusKeyMap.NO_AFTER_SALES &&
               !this.detail.commented &&
               [this.orderTypeKeyMap.PHYSICAL_GOODS, this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS].includes(this.detail.orderType)
+        },
+        // 是否支持申请发票
+        supportApplyInvoice () {
+            /*
+            * 普通商品
+            * 商品本身支持发票
+            * 未开具过发票
+            * 除运费外的实付款大于0
+            * 待发货/待收货/订单已完成
+            * 商品不在售后中
+            * */
+            return this.detail.orderSource === this.skuSourceKeyMap.NORMAL &&
+              this.detail.supportInvoice &&
+              !this.detail.invoiceId &&
+            (this.detail.amount - this.detail.freight) > 0 &&
+            [this.orderStatuskeyMap.WAIT_SHIP, this.orderStatuskeyMap.WAIT_RECEIVE, this.orderStatuskeyMap.FINISHED].includes(this.detail.status) &&
+              this.detail.aftersaleStatus === this.aftersaleStatusKeyMap.NO_AFTER_SALES
+        },
+        physicaSupportApplyRefund () {
+            // 实体商品 + (未发货前，运费可退 || 待确认/已完成 除运费外的金额大于0 ) 可售后
+            return this.orderTypeKeyMap.PHYSICAL_GOODS === this.detail.orderType &&
+            (
+                (this.orderStatuskeyMap.WAIT_SHIP === this.detail.status && this.detail.amount) ||
+              ([this.orderStatuskeyMap.WAIT_RECEIVE, this.orderStatuskeyMap.FINISHED].includes(this.detail.status) && (this.detail.amount - this.detail.freight) > 0)
+            )
+        },
+        virtualSupportApplyRefund () {
+            // 虚拟商品/正式课/体验课 + 实付款 + (待发货(其实没有该状态) || 待核销，核销码均未使用)  可售后
+            return [this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.FORMAL_CLASS].includes(this.detail.orderType) &&
+              this.detail.amount &&
+              (
+                  this.orderStatuskeyMap.WAIT_SHIP === this.detail.status ||
+                (this.orderStatuskeyMap.WAIT_RECEIVE === this.detail.status && this.redeemCodeModels.length === this.usefulCodeNumber)
+              )
+        },
+        // 是否支持申请售后
+        supportApplyRefund () {
+            /*
+            * 普通商品
+            * 商品支持售后
+            * 没有正在进行中/已完成的售后
+            * 待发货，可退运费 / （实体订单待确认/已完成 除运费外可退  || 虚拟/正式课/体验课，全部均未核销 可退）
+            * */
+            return this.detail.orderSource === this.skuSourceKeyMap.NORMAL &&
+              this.detail.supportAfterSales &&
+              this.detail.aftersaleStatus === this.aftersaleStatusKeyMap.NO_AFTER_SALES &&
+              (this.physicaSupportApplyRefund || this.virtualSupportApplyRefund)
         }
     },
     async activated () {
@@ -669,6 +708,8 @@ export default {
                 result.combinationSpecialPrice = (result.goodsPrice || 0) - (result.freight || 0) - (result.amount || 0)
                 this.detail = result
                 goodsModel.sellingPrice = filter.formatAmount(goodsModel.sellingPrice)
+                // // orderRefundsModel.businessStatus 退换货状态 1:待退货 2:待收货 3:退货完成 4:待退款 5:退款中 6:退款成功 7:退款失败
+                this.isRefundsFinalStage = result.orderRefundsModel && [5, 6].includes(result.orderRefundsModel.businessStatus)
                 // 商品详情
                 this.goodsModel = goodsModel
                 // 支付信息

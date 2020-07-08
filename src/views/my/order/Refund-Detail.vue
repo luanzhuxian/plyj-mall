@@ -7,10 +7,9 @@
                 :tip="suggestionMap[refundStatus]"
             />
         </div>
-
-        <!--实体订单,退款退货1 显示 退货物流 + 退货信息-->
+        <!--实体订单,退换货状态 1:待退货 2:待收货 3:退货完成 4:待退款 5:退款中 6:退款成功 显示 退货物流 + 退货信息-->
         <section
-            v-if="refundType === 1"
+            v-if="needReturnProduct && [1, 2, 3, 4, 5, 6].includes(refundStatus)"
             :class="[$style.panel, $style.expressPanel]"
         >
             <!--售后状态 非待退货1 显示退货物流信息-->
@@ -33,9 +32,9 @@
             </div>
         </section>
 
-        <!--实体订单,退款退货 + 待退货 填写物流信息-->
+        <!--实体订单,退款退货 + 待退货 填写物流信息, 由后台决定，待退货状态则显示-->
         <section
-            v-if="refundType === 1 && refundStatus === 1"
+            v-if="refundStatus === 1"
             :class="[$style.panel, $style.expressInfoPanel]"
         >
             <pl-fields
@@ -59,6 +58,7 @@
         <!--退款金额-详情 + 退款进度-->
         <section :class="[$style.panel, $style.amountPanel]">
             <div :class="$style.top">
+                <!--应退金额-->
                 <div :class="$style.item">
                     <span :class="[$style.itemLeft, $style.bold]"> 应退金额：</span>
                     <span :class="$style.itemRight">
@@ -67,20 +67,22 @@
                         </div>
                     </span>
                 </div>
+                <!--实退金额-->
                 <div :class="[$style.item, $style.larger]">
                     <span :class="[$style.itemLeft, $style.bold]"> 实退金额：</span>
                     <span v-if="refundDetail.refundsAmount" :class="[$style.itemRight, $style.price]">
                         ￥{{ refundDetail.refundsAmount | formatAmount }}
                     </span>
                 </div>
-                <!--退款成功6/退款失败7 将不显示 不退还金额 内容-->
-                <div v-if="~[6, 7].indexOf(refundStatus)" :class="$style.tips">
+                <!--退款成功6/退款失败7 将不显示 不退还金额 内容, 即在钱到手后不再显示不退部分的信息-->
+                <div v-if="![6, 7].includes(refundStatus)" :class="$style.tips">
                     <!--实体订单 + 发货后 + 运费不为0  运费不可退-->
-                    {{ refundType === 1 && refundDetail.orderStatus === orderDetails.status && !orderDetails.freight? `运费${orderDetails.freight | formatAmount}不可退，` : '' }}
-                    {{ orderDetails.couponAmount ? `优惠${orderDetails.couponAmount | formatAmount}元不可退，` : '' }}
-                    {{ orderDetails.scholarship ? `红包(奖学金)${orderDetails.scholarship | formatAmount}元不可退，` : '' }}
+                    <template v-if="needReturnProduct && orderDetails.freight">运费{{ orderDetails.freight | formatAmount }}不可退</template>
+                    <template v-if="orderDetails.couponAmount">优惠{{ orderDetails.couponAmount | formatAmount }}元不可退，</template>
+                    <template v-if="orderDetails.scholarship">红包(奖学金){{ orderDetails.scholarship | formatAmount }}元不可退，</template>
                     如有疑问，请联系商家协商
                 </div>
+                <!-- 4:待退款 5:退款中 6:退款成功-->
                 <div v-if="[4, 5, 6].includes(refundStatus)" :class="$style.tips">
                     <div>退款返还您的实际付款金额，优惠劵、红包(奖学金)将不予退回</div>
                     <div>退款到帐时间，请查看您的付款账户</div>
@@ -122,9 +124,9 @@
                 <pl-list title="订单编号：" :content="orderDetails.id" />
                 <pl-list title="服务类型：" :content="refundTypeMap[refundType]" />
                 <pl-list
-                    v-if="refundType === 1"
+                    v-if="orderDetails.orderType === orderTypeKeyMap.PHYSICAL_GOODS"
                     title="货物状态："
-                    :content="[3, 4, 5, 6].includes(refundStatus)? '已收到货' : '未收到货'"
+                    :content="orderStatuskeyMap.FINISHED === orderDetails.status? '已收到货' : '未收到货'"
                 />
                 <pl-list
                     v-if="refundDetail.reasonForReturn"
@@ -160,13 +162,14 @@
         </div>
 
         <!--退款退货1 + 待退货1 填写物流信息 后确认按钮-->
-        <div v-if="refundType === 1 && refundStatus === 1" :class="$style.footerSubmit">
+        <div v-if="refundStatus === 1" :class="$style.footerSubmit">
             <pl-button size="larger" type="warning" :loading="loading" :disabled="loading" @click="submit">
                 提交申请
             </pl-button>
         </div>
 
         <div v-else :class="$style.footer">
+            <!--6:退款成功 7:退款失败 可删除-->
             <pl-button
                 v-if="[6, 7].includes(refundStatus)"
                 round
@@ -182,18 +185,24 @@
             >
                 联系我们
             </pl-button>
-            <!--退款退货 订单 待退货之前 + 仅退款 订单 待退款之前 可 更改退单-->
+            <!--1:待退货 2:待收货 3:退货完成 4:待退款 可 更改退单-->
             <pl-button
-                v-if="(refundType === 1 && refundStatus === 1) && (refundType === 2 && [1, 2, 3, 4].includes(refundStatus))"
+                v-if="[1, 2, 3, 4].includes(refundStatus)"
                 round
                 plain
-                @click="$router.push({ name: 'RefundApply', params: { orderId: orderDetails.id, orderProductRId: orderDetails.goodId, refundType: refundType, type: 'MODIFY', refundId: refundDetail.id } })"
+                @click="$router.push({ name: 'RefundApply',
+                                       params: { orderId: orderDetails.id,
+                                                 orderStatus: orderDetails.status,
+                                                 refundId: refundDetail.id,
+                                                 refundType: refundType,
+                                                 type: 'MODIFY'
+                                       } })"
             >
                 更改退单
             </pl-button>
-            <!--商家确认之前，即在 退款中5/退款成功6/退款失败7 支持 取消申请 -->
+            <!--商家确认之前，即在 1:待退货 2:待收货 3:退货完成 4:待退款 支持 取消申请 -->
             <pl-button
-                v-if="~[5, 6, 7].indexOf(refundStatus)"
+                v-if="[1, 2, 3, 4].includes(refundStatus)"
                 round
                 plain
                 @click="cancelApplication"
@@ -312,7 +321,11 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['refundTypeMap', 'refundStatusMap', 'orderStatuskeyMap', 'orderActionMap'])
+        ...mapGetters(['refundTypeMap', 'refundStatusMap', 'orderStatuskeyMap', 'orderStatuskeyMap', 'orderTypeKeyMap', 'orderActionMap']),
+        // 卖家已将货物寄出
+        needReturnProduct () {
+            return this.orderDetails.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS && [this.orderStatuskeyMap.WAIT_RECEIVE, this.orderStatuskeyMap.FINISHED].includes(this.orderDetails.status)
+        }
     },
     activated () {
         this.getDetail()

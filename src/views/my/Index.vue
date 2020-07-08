@@ -87,7 +87,7 @@
                             v-text="count.waitReceive > 99 ? '99+' : count.waitReceive"
                         />
                     </router-link>
-                    <router-link :to="{ name: 'RefundList', params: { status: 'ALL_ORDERS' } }">
+                    <router-link :to="{ name: 'RefundList', params: { status: 'ALL' } }">
                         <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/after.png" :style="{ width: 108 / 7.5 + 'vw', height: 88 / 7.5 + 'vw' }" alt="">
                         <span
                             :class="{ [$style.badge]: true, [$style.badgeAfterSale]: true, [$style.oval]: count.afterSale > 99 }"
