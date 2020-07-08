@@ -16,7 +16,6 @@
             <div :class="$style.panel">
                 <!--实体商品一直有退款退货两种状态；虚拟只支持仅退款-->
                 <router-link
-                    v-if="orderType === orderTypeKeyMap.PHYSICAL_GOODS"
                     :class="$style.item"
                     tag="div"
                     replace
@@ -24,12 +23,12 @@
                 >
                     <div :class="$style.itemLeft">
                         <div :class="$style.itemTitle">
-                            退款退货
+                            仅退款(无需退货)
                         </div>
                         <div>
-                            已收到货，需要退换所收到的商品，商家收到商品后
+                            未收到货（包含未签收），请您先联系商家协商
                             <br>
-                            可退款；
+                            商家同意后可直接退款；
                         </div>
                     </div>
                     <pl-svg
@@ -40,6 +39,7 @@
                     />
                 </router-link>
                 <router-link
+                    v-if="orderType === orderTypeKeyMap.PHYSICAL_GOODS"
                     :class="$style.item"
                     tag="div"
                     replace
@@ -47,12 +47,12 @@
                 >
                     <div :class="$style.itemLeft">
                         <div :class="$style.itemTitle">
-                            仅退款(无需退货)
+                            退款退货
                         </div>
                         <div>
-                            未收到货（包含未签收），请您先联系商家协商
+                            已收到货，需要退换所收到的商品，商家收到商品后
                             <br>
-                            商家同意后可直接退款；
+                            可退款；
                         </div>
                     </div>
                     <pl-svg
