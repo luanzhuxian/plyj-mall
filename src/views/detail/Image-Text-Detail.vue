@@ -178,6 +178,9 @@ export default {
     },
     data () {
         return {
+            loaded: false,
+            loading: false,
+            courseType: 1,
             detail: {},
             banners: [],
             tabs: [
@@ -191,8 +194,6 @@ export default {
                 }
             ],
             tab: 2,
-            loaded: false,
-            loading: false,
             showContact: false,
             haibao: '',
             creating: false,
@@ -212,7 +213,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['appId', 'userName', 'avatar', 'mobile', 'mallUrl', 'userId', 'agentUser']),
+        ...mapGetters(['appId', 'userName', 'avatar', 'mobile', 'mallUrl', 'userId', 'agentUser', 'courseTypeMap']),
 
         // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去 5 从春耘活动进入 6 从组合课活动进入 7 公益棕活动进入
         productActive () {
@@ -343,17 +344,24 @@ export default {
                     .catch(() => {})
                 return
             }
-            this.$router.push({
-                name: 'SubmitImageText',
+            this.$store.commit('submitOrder/setOrderProducts', {
                 params: {
-                    productId: this.productId,
-                    count: 1
-                },
-                query: {
-                    productActive: this.productActive,
+                    activeProduct: this.productActive,
+                    preActivity: this.detail.preActivity,
                     activityId: this.activityId
-                }
+                },
+                products: [
+                    {
+                        productId: this.productId,
+                        count: 1,
+                        skuCode1: '',
+                        skuCode2: '',
+                        price: this.detail.sellingPrice,
+                        productType: this.courseTypeMap[this.courseType]
+                    }
+                ]
             })
+            this.$router.push({ name: 'SubmitOrder' })
         },
         openFIle () {},
         // 生成分享
