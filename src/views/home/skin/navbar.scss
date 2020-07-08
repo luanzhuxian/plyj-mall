@@ -14,7 +14,6 @@
 .skin-dragon-boat,
 .skin-campaign {
     .route {
-        box-sizing: border-box;
         padding: 0 0 4px;
         &.active > .tab-name {
             color: #c81819;
@@ -26,9 +25,7 @@
     }
     .tab-name {
         line-height: 18px;
-        font-size: 18px;
         color: #242424;
-        text-align: center;
     }
 }
 
