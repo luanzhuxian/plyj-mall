@@ -24,7 +24,7 @@ export default [
         component: () => import('../views/detail/Image-Text-Detail.vue'),
         props: true,
         meta: {
-            title: '知识专栏详情'
+            title: '图文资料详情'
         }
     },
     {
