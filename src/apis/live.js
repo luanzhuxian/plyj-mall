@@ -134,6 +134,12 @@ export const liveSignUp = data => Instance.post('/apis/v1/mall/live/c_live_signU
 //查询直播是否开始
 export const isLiveStart = stream => Instance.get(`/apis/v1/mall/live/room/tatus?stream=${ stream }`)
 
+// 查询签到记录
+export const getSignInList = params => Instance.get('https://api.polyv.net/live/v3/channel/chat/get-checkins',{ params })
+
+// 查询提问记录
+export const getQuestionList = channelId => Instance.get(`/apis/v1/mall/live/chat/${channelId}/getQuestion`)
+
 /**
  * 暖场开关
  * @param data {Object} 请求参数

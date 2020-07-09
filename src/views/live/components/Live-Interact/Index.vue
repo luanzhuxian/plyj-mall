@@ -16,11 +16,11 @@
                 <Answer v-bind="$attrs" />
 
                 <!-- 提问 -->
-                <Questions v-bind="$attrs" />
+                <Questions ref="questions" v-bind="$attrs" @close="close" />
             </div>
 
             <div :class="$style.close">
-                <PlSvg @click="$emit('update:show', false)" name="icon-close" width="40" fill="#666666" />
+                <PlSvg @click="close" name="icon-close" width="40" fill="#666666" />
             </div>
         </div>
     </transition>
@@ -49,11 +49,15 @@ export default {
         async init () {
             try {
                 await this.$nextTick()
-                const { notice, signIn, lottery } = this.$refs
+                const { notice, signIn, lottery, questions } = this.$refs
                 notice.init()
                 signIn.init()
                 lottery.init()
+                questions.init()
             } catch (e) { throw e }
+        },
+        close () {
+            this.$emit('update:show', false)
         }
     }
 }
