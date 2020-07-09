@@ -263,7 +263,7 @@
                 <pl-fields
                     size="middle"
                     :text="`学员信息${i + 1}`"
-                    :right-text="i < redeemCodeModels.length && redeemCodeModels[i].code ? `核销码：${localSeparator(redeemCodeModels[i].code,' ', 4)}`: ''"
+                    :right-text="!isRefundsFinalStage && i < redeemCodeModels.length && redeemCodeModels[i].code ? `核销码：${localSeparator(redeemCodeModels[i].code,' ', 4)}`: ''"
                     icon="icon-name-card"
                     title-color="#F2B036"
                     :icon-width="40"
