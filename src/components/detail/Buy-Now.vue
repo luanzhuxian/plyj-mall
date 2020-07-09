@@ -1,19 +1,19 @@
 <template>
     <div :class="$style.buyNow">
-        <div :class="$style.phone">
-            <router-link :class="$style.link" :to="{ name: 'Home' }">
+        <div :class="$style.icons">
+            <router-link :class="$style.link + ' ' + $style.home" :to="{ name: 'Home' }">
                 <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/首页选中.png" alt="">
                 <i :class="$style.text">首页</i>
             </router-link>
-            <a v-if="servicePhoneModels.length === 1" :class="$style.link" :href="'tel:' + servicePhoneModels[0].contactWay">
+            <a v-if="servicePhoneModels.length === 1" :class="$style.link + ' ' + $style.contact" :href="'tel:' + servicePhoneModels[0].contactWay">
                 <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/联系我们.png" alt="">
                 <i :class="$style.text">联系我们</i>
             </a>
-            <a v-else :class="$style.link + ' ' + $style.callUs" @click="showContact = true">
+            <a v-else :class="$style.link + ' ' + $style.contact" @click="showContact = true">
                 <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/联系我们.png" alt="">
                 <i :class="$style.text">联系我们</i>
             </a>
-            <router-link :class="$style.link + ' ' + $style.toCart" :to="{ name: 'ShoppingCart' }">
+            <router-link :class="$style.link + ' ' + $style.cart" :to="{ name: 'ShoppingCart' }">
                 <i v-if="cartCount > 99" :class="$style.cartCount">99+</i>
                 <i v-else-if="cartCount > 0" :class="$style.cartCount" v-text="cartCount" />
                 <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/购物车选中.png" alt="">
@@ -427,32 +427,44 @@ export default {
         border-top: 1px solid #e7e7e7;
         z-index: 11;
 
-        .phone {
+        .icons {
             display: flex;
-            justify-content: space-around;
-            width: 258px;
-            text-align: center;
+            justify-content: space-between;
+            flex: 1;
+            width: 0;
+            height: 100%;
+            padding: 0 40px;
 
             > .link {
+                position: relative;
                 display: inline-flex;
                 flex-direction: column;
                 align-items: center;
-                justify-content: flex-end;
-                position: relative;
-                flex: 1;
-                > .icon {
+                justify-content: space-between;
+                height: 100%;
+                box-sizing: border-box;
+                padding: 16px 0 14px;
+                font-size: 18px;
+                line-height: 24px;
+                color: #F2B036;
+
+                &.home > .icon {
                     width: 50px;
+                    height: 46px;
                 }
-                > .text {
-                    margin-top: 2px;
-                    font-size: 20px;
-                    color: #F2B036;
+                &.contact > .icon {
+                    width: 46px;
+                    height: 46px;
+                }
+                &.cart > .icon {
+                    width: 44px;
+                    height: 45px;
                 }
 
-                .cartCount {
+                .cart-count {
                     position: absolute;
-                    right: -6px;
-                    top: -8px;
+                    right: -20px;
+                    top: -5px;
                     height: 36px;
                     min-width: 36px;
                     padding: 0 5px;
@@ -463,15 +475,16 @@ export default {
                     font-size: 24px;
                     border: 2px solid #fff;
                     box-sizing: border-box;
+                    text-align: center;
                 }
             }
         }
     }
 
     .buttons {
-        flex: 1;
         display: flex;
-        margin: 0 16px;
+        margin-right: 20px;
+        width: 420px;
         border-radius: 10px;
         overflow: hidden;
 
