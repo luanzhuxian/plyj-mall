@@ -66,37 +66,43 @@
 
             <!-- 底部购买 -->
             <div :class="$style.bottom" v-if="!~[5, 6].indexOf(productActive)">
-                <div :class="$style.content">
-                    <router-link :class="$style.link" :to="{ name: 'Home' }">
-                        <img src="https://mallcdn.youpenglai.com/static/mall/icons/navbar/home-active.png" style="width: 6.66vw; height: 6.18vw;">
-                        <div>首页</div>
+                <div :class="$style.icons">
+                    <router-link :class="$style.link + ' ' + $style.home" :to="{ name: 'Home' }">
+                        <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/首页选中.png" alt="">
+                        <i :class="$style.text">首页</i>
                     </router-link>
-                    <a :class="[$style.link, $style.contact]" @click="showContact = true">
-                        <img src="https://mallcdn.youpenglai.com/static/mall/icons/navbar/contact.png" style="width: 6.13vw; height: 6.13vw;">
-                        <div>联系我们</div>
+                    <a v-if="servicePhoneModels.length === 1" :class="$style.link + ' ' + $style.contact" :href="'tel:' + servicePhoneModels[0].contactWay">
+                        <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/联系我们.png" alt="">
+                        <i :class="$style.text">联系我们</i>
                     </a>
-                    <router-link :class="$style.link" :to="{ name: 'ShoppingCart' }">
-                        <img src="https://mallcdn.youpenglai.com/static/mall/icons/navbar/shopping-cart-active.png" style="width: 5.84vw; height: 6vw;">
-                        <div>购物车</div>
+                    <a v-else :class="$style.link + ' ' + $style.contact" @click="showContact = true">
+                        <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/联系我们.png" alt="">
+                        <i :class="$style.text">联系我们</i>
+                    </a>
+                    <router-link :class="$style.link + ' ' + $style.cart" :to="{ name: 'ShoppingCart' }">
+                        <i v-if="cartCount > 99" :class="$style.cartCount">99+</i>
+                        <i v-else-if="cartCount > 0" :class="$style.cartCount" v-text="cartCount" />
+                        <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/购物车选中.png" alt="">
+                        <i :class="$style.text">购物车</i>
                     </router-link>
-                    <div :class="$style.buttonWrapper">
-                        <button
-                            v-if="false"
-                            :class="$style.button + ' ' + $style.yellow"
-                            :disabled="Number(detail.status) === 2 || loading"
-                            @click="openFIle"
-                        >
-                            查看资料
-                        </button>
-                        <button
-                            v-else
-                            :class="$style.button + ' ' + $style.orange"
-                            :disabled="Number(detail.status) === 2 || loading"
-                            @click="submit"
-                        >
-                            立即订购
-                        </button>
-                    </div>
+                </div>
+                <div :class="$style.buttons">
+                    <button
+                        v-if="false"
+                        :class="$style.button + ' ' + $style.yellow"
+                        :disabled="Number(detail.status) === 2 || loading"
+                        @click="openFIle"
+                    >
+                        查看资料
+                    </button>
+                    <button
+                        v-else
+                        :class="$style.button + ' ' + $style.orange"
+                        :disabled="Number(detail.status) === 2 || loading"
+                        @click="submit"
+                    >
+                        立即订购
+                    </button>
                 </div>
             </div>
 
@@ -201,7 +207,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['appId', 'userName', 'avatar', 'mobile', 'mallUrl', 'userId', 'agentUser', 'courseTypeMap']),
+        ...mapGetters(['appId', 'userName', 'avatar', 'mobile', 'mallUrl', 'userId', 'agentUser', 'courseTypeMap', 'servicePhoneModels', 'cartCount']),
 
         // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去 5 从春耘活动进入 6 从组合课活动进入 7 公益棕活动进入
         productActive () {
@@ -559,35 +565,66 @@ export default {
     position: fixed;
     bottom: 0;
     left: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
+    height: 110px;
     background-color: #fff;
-    > .content {
+    border-top: 1px solid #e7e7e7;
+    .icons {
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        padding: 0 16px 0 24px;
-        height: 110px;
-        border-top: 1px solid #e7e7e7;
+        flex: 1;
+        width: 0;
+        height: 100%;
+        padding: 0 40px;
     }
     .link {
-        display: flex;
+        position: relative;
+        display: inline-flex;
         flex-direction: column;
-        justify-content: space-between;
         align-items: center;
+        justify-content: space-between;
         height: 100%;
         box-sizing: border-box;
         padding: 16px 0 14px;
         font-size: 18px;
         line-height: 24px;
         color: #F2B036;
-        &.contact {
-            margin: 0 33px;
+        &.home > .icon {
+            width: 50px;
+            height: 46px;
+        }
+        &.contact > .icon {
+            width: 46px;
+            height: 46px;
+        }
+        &.cart > .icon {
+            width: 44px;
+            height: 45px;
+        }
+        .cart-count {
+            position: absolute;
+            right: -20px;
+            top: -5px;
+            height: 36px;
+            min-width: 36px;
+            padding: 0 5px;
+            line-height: 32px;
+            color: #fff;
+            background-color: #FE7700;
+            border-radius: 18px;
+            font-size: 24px;
+            border: 2px solid #fff;
+            box-sizing: border-box;
+            text-align: center;
         }
     }
-    .button-wrapper {
+   .buttons {
         display: flex;
-        margin-left: auto;
-        width: 420px;
+        margin-right: 20px;
+        width: 440px;
         border-radius: 10px;
         overflow: hidden;
     }
