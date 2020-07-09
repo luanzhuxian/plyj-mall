@@ -117,7 +117,7 @@
                     <!--退货中 支持 寄件运单号显示-->
                     <pl-button
                         :class="$style.large"
-                        v-if="detail.orderSource === skuSourceKeyMap.NORMAL && detail.aftersaleStatus === aftersaleStatusKeyMap.PROCESSINGE"
+                        v-if="detail.orderSource === skuSourceKeyMap.NORMAL && detail.orderRefundsModel && detail.orderRefundsModel.businessStatus === 1"
                         type="warning"
                         plain
                         round
