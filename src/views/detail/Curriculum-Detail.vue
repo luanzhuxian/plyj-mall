@@ -941,7 +941,7 @@ export default {
     .buttons {
         display: flex;
         margin-right: 20px;
-        width: 440px;
+        width: 420px;
         border-radius: 10px;
         overflow: hidden;
     }
