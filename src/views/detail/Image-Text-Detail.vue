@@ -60,21 +60,7 @@
             <div :class="$style.detailOrComment">
                 <Tabs :tabs="tabs" v-model="tab">
                     <detail-info v-show="tab === 1" :content="detail.details || '暂无详情'" />
-                    <section v-show="tab === 2">
-                        <ul :class="$style.imageTextList">
-                            <li :class="$style.imageTextListItem" v-for="(item, index) of 6" :key="index">
-                                <pl-svg name="icon-pdf-887fd" width="40" />
-                                <p>
-                                    <i>舞蹈考级教程说明</i>
-                                    <span>.pdf</span>
-                                </p>
-                                <button :class="$style.imageTextListButton">
-                                    <span v-if="true">购买后可查看</span>
-                                    <span v-else :class="$style.highlight">打开资料</span>
-                                </button>
-                            </li>
-                        </ul>
-                    </section>
+                    <image-text-list v-show="tab === 2" />
                 </Tabs>
             </div>
 
@@ -150,6 +136,7 @@ import DetailInfo from './components/Detail.vue'
 import Contact from '../../components/common/Contact.vue'
 import Field from '../../components/detail/Field.vue'
 import Tabs from './components/Tabs.vue'
+import ImageTextList from './components/Image-Text-List.vue'
 import Skeleton from './components/Skeleton.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import { getCourseDetail } from '../../apis/product'
@@ -174,6 +161,7 @@ export default {
         Contact,
         Field,
         Tabs,
+        ImageTextList,
         Skeleton
     },
     data () {
@@ -566,41 +554,6 @@ export default {
 }
 .detail-or-comment {
     margin-top: 20px;
-}
-.image-text-list {
-    padding: 0 30px;
-    background-color: #fff;
-    &-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 10px;
-        height: 120px;
-        line-height: 32px;
-        font-size: 24px;
-        color: #666666;
-        border-bottom: 2px solid #F0F0F0;
-        &:nth-last-child(1) {
-            border-bottom: none;
-        }
-        > p {
-            display: flex;
-            flex: 1;
-            width: 0;
-            padding: 0 14px;
-            @include elps();
-            > i {
-                @include elps();
-            }
-        }
-    }
-    &-button {
-        margin-left: auto;
-        color: #666666;
-        &.highlight {
-            color: #F2B036;
-        }
-    }
 }
 .bottom {
     position: fixed;

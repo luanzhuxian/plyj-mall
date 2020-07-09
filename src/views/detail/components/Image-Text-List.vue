@@ -1,0 +1,72 @@
+<template>
+    <ul :class="$style.imageTextList">
+        <li :class="$style.imageTextListItem" v-for="(item, index) of 6" :key="index">
+            <pl-svg name="icon-pdf-887fd" width="40" />
+            <p>
+                <i>舞蹈考级教程说明</i>
+                <span>.pdf</span>
+            </p>
+            <button :class="$style.imageTextListButton">
+                <span v-if="true">购买后可查看</span>
+                <span v-else :class="$style.highlight">打开资料</span>
+            </button>
+        </li>
+    </ul>
+</template>
+
+<script>
+export default {
+    name: 'ImageTextList',
+    props: {
+        data: {
+            type: Array,
+            default: () => []
+        }
+    },
+    data () {
+        return {}
+    },
+    methods: {
+
+    }
+}
+</script>
+
+<style module lang="scss">
+.image-text-list {
+    padding: 0 30px;
+    background-color: #fff;
+    &-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 10px;
+        height: 120px;
+        line-height: 32px;
+        font-size: 24px;
+        color: #666666;
+        border-bottom: 2px solid #F0F0F0;
+        &:nth-last-child(1) {
+            border-bottom: none;
+        }
+        > p {
+            display: flex;
+            flex: 1;
+            width: 0;
+            padding: 0 14px;
+            @include elps();
+            > i {
+                @include elps();
+            }
+        }
+    }
+    &-button {
+        margin-left: auto;
+        color: #666666;
+        &.highlight {
+            color: #F2B036;
+        }
+    }
+}
+
+</style>
