@@ -171,9 +171,15 @@
                     />
                     <pl-button :disabled="allowedSpeak" :class="$style.sendBtn">发送</pl-button>
                 </form>
-                <pl-button :disabled="allowedSpeak" type="text" :class="$style.sendFlower" @click="sendFlower">
-                    <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/flower.png" width="37" />
-                </pl-button>
+
+                <div :class="$style.liveBtn">
+                    <pl-button :disabled="allowedSpeak" type="text" :class="$style.sendFlower" @click="sendFlower">
+                        <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/flower.png" width="37" />
+                    </pl-button>
+                    <pl-button :class="$style.interact" @click="showInteract = true">
+                        <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/互动.png" alt="">
+                    </pl-button>
+                </div>
 
                 <!--<transition name="fade">
           <div v-if="showEmoticon" :class="$style.emoticon">
@@ -230,6 +236,18 @@
         <LivePassword :activity-id="activityId" ref="livePassword" />
         <!-- 报名 -->
         <LiveSignUp :info="detail" :activity-id="activityId" ref="LiveSignUp" />
+        <!-- 直播互动 -->
+        <LiveInteract
+            :show.sync="showInteract"
+            :live-sdk="liveSdk"
+            :sign-str="signStr"
+            :app-id="appId"
+            :channel-id="channelId"
+            :user-name="userName"
+            :user-id="userId"
+            :socket="socket"
+            ref="LiveInteract"
+        />
 
     </div>
 </template>
@@ -244,6 +262,7 @@ import LivePassword from './components/Live-Password'
 import LiveMask from './components/Live-Mask'
 import LiveSignUp from './components/Live-Sign-Up'
 import LiveGoods from './components/Live-goods'
+import LiveInteract from './components/Live-Interact/Index'
 import {
     getRoomStatus,
     getActiveCompleteInfo,
@@ -284,7 +303,8 @@ export default {
         LivePassword,
         CouponItem,
         PaidPlayer,
-        LiveGoods
+        LiveGoods,
+        LiveInteract
     },
     props: {
         id: {
@@ -294,6 +314,8 @@ export default {
     },
     data () {
         return {
+            liveSdk: null,
+            showInteract: false,
             showEmoticon: false,
             needPay: false,
             showPoster: false,
@@ -318,6 +340,8 @@ export default {
             isGive: false,
             // 是否禁言
             allowedSpeak: false,
+            // 频道签名
+            signStr: '',
 
             /**
              * 聊天信息记录
@@ -402,7 +426,7 @@ export default {
             // 根据直播状态获取播放时所需数据
             await this.handleByLiveType()
             // 初始化播放器
-            this.init()
+            await this.init()
         } catch (e) {
             if (e) {
                 throw e
@@ -410,6 +434,12 @@ export default {
         }
     },
     methods: {
+        // 直播互动
+        async interactInit () {
+            try {
+                await this.$refs.LiveInteract.init()
+            } catch (e) { throw e }
+        },
         // 报名
         async signUp () {
             try {
@@ -677,9 +707,13 @@ export default {
         //         throw e
         //     }
         // },
-        init () {
-            this.initSocket()
-            this.initPlayer()
+        async init () {
+            try {
+                this.initSocket()
+                await this.initPlayer()
+                // 直播互动
+                await this.interactInit()
+            } catch (e) { throw e }
         },
         async initPlayer () {
             // 默认在线直播
@@ -719,6 +753,7 @@ export default {
                         this.setComeInConut(1)
                     })
                 })
+                this.signStr = signStr
                 this.liveSdk = liveSdk
             }
         },
@@ -770,7 +805,11 @@ export default {
             socket.emit('message', JSON.stringify({
                 EVENT: 'LOGIN',
                 // 登录用户信息，不可为空
-                values: [userName, avatar, userId || openId],
+                values: [
+                    userName,
+                    avatar,
+                    userId || openId
+                ],
                 // 当前房间号
                 roomId: channelId,
                 // 用户类型，可为空,teacher（教师）、assistant（助教）、manager（管理员）、slice（云课堂学员）
@@ -1091,7 +1130,7 @@ export default {
                 try {
                     await wechatPay(CREDENTIAL)
                     await this.handleByLiveType()
-                    this.init()
+                    await this.init()
                     this.$success('付款成功立即观看')
                     this.needPay = false
                     await this.setComeInConut(1)
@@ -1326,7 +1365,7 @@ export default {
     position: relative;
     display: inline-flex;
     align-items: center;
-    width: 606px;
+    width: 480px;
     height: 74px;
     padding: 0 140px 0 16px;
     line-height: 74px;
@@ -1358,23 +1397,34 @@ export default {
     background-color: #f2b036;
 }
 
-.send-flower {
-    display: inline-flex;
+.live-btn {
+    display: flex;
     align-items: center;
-    justify-content: center;
-    width: 72px;
-    height: 72px;
-    line-height: 72px;
-    margin-left: 24px !important;
-    text-align: center;
-    border-radius: 36px;
-    background: linear-gradient(180deg, #ee7f62, #eb5a36);
-    &:disabled {
-        background: #ccc !important;
-        opacity: .5 !important;
+    width: 222px;
+    > .interact {
+        width: 72px;
+        height: 72px;
+        margin-left: 18px;
+        background-color: #fff;
     }
-    > span {
+    > .send-flower {
         display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 72px;
+        height: 72px;
+        line-height: 72px;
+        margin-left: 42px !important;
+        text-align: center;
+        border-radius: 36px;
+        background: linear-gradient(180deg, #ee7f62, #eb5a36);
+        &:disabled {
+            background: #ccc !important;
+            opacity: .5 !important;
+        }
+        > span {
+            display: inline-flex;
+        }
     }
 }
 
