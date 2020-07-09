@@ -75,7 +75,7 @@ export const modifyRefund = params => axios.post(`/apis/v1/refund/refund/custome
 export const refundOrderSummary = () => axios.get(`/apis/v1/refund/refund/consumer/selectRefundCountTotal`)
 
 // 售后提交物流信息
-export const submitExpressInfo = params => axios.post(`/apis/v1/refund/refund/consumer/shipModify`, params)
+export const submitExpressInfo = params => axios.post(`/apis/v2/order/refunds/return/goods`, params)
 
 // 取消售后申请
 // export const cancelRefundApplication = params => axios.post(`/apis/v1/refund/refund/admin/cancel`, params)
