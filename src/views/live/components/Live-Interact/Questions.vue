@@ -10,8 +10,12 @@
             </div>
 
             <div :class="$style.contents" ref="contents">
-                <div v-for="(item,index) in data" :key="index" :class="{ [$style.message]: true, [$style.right]: item.user.userType !== 'teacher' }">
-                    <img :src="item.user.userType !== 'teacher' ? avatar : 'https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/老师.png'" alt="">
+                <div
+                    v-for="(item,index) in data"
+                    :key="index"
+                    :class="{ [$style.message]: true, [$style.right]: item.user.userType !== 'teacher' && item.user.userId === userId }"
+                >
+                    <img :src="item.user.userType !== 'teacher' ? item.user.pic : 'https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/老师.png'" alt="">
                     <div :class="$style.content">
                         <div :class="$style.val">{{ item.content }}</div>
                     </div>
@@ -63,131 +67,21 @@ export default {
         return {
             show: false,
             message: '',
-            data: [
-                {
-                    id: 'ee83ea70-43be-11e8-ad5a-cf5b830e2a70',
-                    user: {
-                        nick: '小明',
-                        pic: '//livestatic.videocc.net/v_109/assets/wimages/missing_face.png',
-                        userId: '1524134770059',
-                        userType: 'student'
-                    },
-                    s_userId: null,
-                    event: 'S_QUESTION',
-                    content: '十万个为什么',
-                    time: 1524134795927
-                },
-                {
-                    id: 'be852840-ddef-11e8-8732-3d35cdd2dfa4',
-                    user: {
-                        nick: '讲师',
-                        pic: '//livestatic.videocc.net/uploaded/images/webapp/avatar/default-teacher.png',
-                        userId: 'd217e5a2e2bf37aee61f42cf2059ebc6',
-                        userType: 'teacher'
-                    },
-                    content: '是吗',
-                    time: 1541088239812,
-                    s_userId: '1541086126963',
-                    event: 'T_ANSWER'
-                },
-                {
-                    id: 'ee83ea70-43be-11e8-ad5a-cf5b830e2a70',
-                    user: {
-                        nick: '小明',
-                        pic: '//livestatic.videocc.net/v_109/assets/wimages/missing_face.png',
-                        userId: '1524134770059',
-                        userType: 'student'
-                    },
-                    s_userId: null,
-                    event: 'S_QUESTION',
-                    content: '十万个为什么',
-                    time: 1524134795927
-                },
-                {
-                    id: 'ee83ea70-43be-11e8-ad5a-cf5b830e2a70',
-                    user: {
-                        nick: '小明',
-                        pic: '//livestatic.videocc.net/v_109/assets/wimages/missing_face.png',
-                        userId: '1524134770059',
-                        userType: 'student'
-                    },
-                    s_userId: null,
-                    event: 'S_QUESTION',
-                    content: '十万个为什么',
-                    time: 1524134795927
-                },
-                {
-                    id: 'ee83ea70-43be-11e8-ad5a-cf5b830e2a70',
-                    user: {
-                        nick: '小明',
-                        pic: '//livestatic.videocc.net/v_109/assets/wimages/missing_face.png',
-                        userId: '1524134770059',
-                        userType: 'student'
-                    },
-                    s_userId: null,
-                    event: 'S_QUESTION',
-                    content: '十万个为什么',
-                    time: 1524134795927
-                },
-                {
-                    id: 'be852840-ddef-11e8-8732-3d35cdd2dfa4',
-                    user: {
-                        nick: '讲师',
-                        pic: '//livestatic.videocc.net/uploaded/images/webapp/avatar/default-teacher.png',
-                        userId: 'd217e5a2e2bf37aee61f42cf2059ebc6',
-                        userType: 'teacher'
-                    },
-                    content: '是吗',
-                    time: 1541088239812,
-                    s_userId: '1541086126963',
-                    event: 'T_ANSWER'
-                },
-                {
-                    id: 'be852840-ddef-11e8-8732-3d35cdd2dfa4',
-                    user: {
-                        nick: '讲师',
-                        pic: '//livestatic.videocc.net/uploaded/images/webapp/avatar/default-teacher.png',
-                        userId: 'd217e5a2e2bf37aee61f42cf2059ebc6',
-                        userType: 'teacher'
-                    },
-                    content: '是吗',
-                    time: 1541088239812,
-                    s_userId: '1541086126963',
-                    event: 'T_ANSWER'
-                },
-                {
-                    id: 'be852840-ddef-11e8-8732-3d35cdd2dfa4',
-                    user: {
-                        nick: '讲师',
-                        pic: '//livestatic.videocc.net/uploaded/images/webapp/avatar/default-teacher.png',
-                        userId: 'd217e5a2e2bf37aee61f42cf2059ebc6',
-                        userType: 'teacher'
-                    },
-                    content: '是吗',
-                    time: 1541088239812,
-                    s_userId: '1541086126963',
-                    event: 'T_ANSWER'
-                }
-
-            ]
+            data: []
         }
     },
     methods: {
         async init () {
             try {
-                const { EVENTS: { SEND_MESSAGE, T_ANSWER } } = window.PolyvLiveSdk
-                this.liveSdk.on(SEND_MESSAGE, (event, data) => {
-                    console.log(data)
-                })
+                const { EVENTS: { T_ANSWER } } = window.PolyvLiveSdk
                 this.liveSdk.on(T_ANSWER, this.receive)
                 await this.getQuestions()
             } catch (e) { throw e }
         },
         async getQuestions () {
             try {
-                debugger
-                const data = await getQuestionList(this.channelId)
-                console.log(data)
+                const { result: { data } } = await getQuestionList(this.channelId)
+                this.data = (data && data.reverse()) || []
                 await this.scroll()
             } catch (e) { throw e }
         },
