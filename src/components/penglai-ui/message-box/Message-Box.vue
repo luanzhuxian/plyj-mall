@@ -38,7 +38,7 @@
                             />
                         </template>
                         <input
-                            v-if="type === 'propmt'"
+                            v-if="type === 'propmt' && hasDefaultInput"
                             ref="input"
                             class="propmt-input"
                             v-model="propmtValue"
@@ -52,12 +52,13 @@
                     <div class="buttons">
                         <button
                             @click="handleCancel"
-                            v-if="type === 'confirm' || type === 'propmt'"
+                            v-if="hasCancelButton"
                             class="message-box-cancel"
                             v-text="cancelText"
                             :style="cancelStyle"
                         />
                         <button
+                            v-if="hasConfirmButton"
                             @click="handleConfirm"
                             class="message-box-confirm"
                             v-text="confirmText"
@@ -78,6 +79,9 @@ export default {
             show: false,
             showMask: false,
             showBox: false,
+            hasCancelButton: true,
+            hasConfirmButton: true,
+            hasDefaultInput: true,
             propmtValue: '',
             placeholder: '',
 
@@ -143,7 +147,7 @@ export default {
                     this.showBox = true
                     if (this.type === 'propmt') {
                         this.$nextTick(() => {
-                            this.$refs.input.focus()
+                            this.$refs.input && this.$refs.input.focus()
                         })
                     }
                 }, 200)
@@ -167,7 +171,15 @@ export default {
         },
         async handleConfirm () {
             try {
-                if (this.type === 'propmt' && !this.validate()) return
+                if (this.type === 'propmt') {
+                    if (this.hasDefaultInput && !this.validate()) {
+                        return
+                    }
+                    // 用于插槽校验
+                    if (!this.hasDefaultInput && !this.customValidate()) {
+                        return
+                    }
+                }
                 await this.$emit('confirm', this.propmtValue)
                 this.show = false
             } catch (e) {
@@ -204,7 +216,7 @@ export default {
 </script>
 
 <style lang="scss">
-  .message-box {
+.message-box {
     position: fixed;
     top: 0;
     left: 0;
@@ -212,13 +224,13 @@ export default {
     height: 100%;
     background-color: rgba(0, 0, 0, .65);
     z-index: 9999;
-  }
-  /*.icon {
+}
+/*.icon {
     width: 180px;
     height: 180px;
     margin-bottom: 24px;
   }*/
-  .message-box-content {
+.message-box-content {
     position: relative;
     top: calc(30vh);
     width: 540px;
@@ -228,58 +240,59 @@ export default {
     border-radius: 10px;
     overflow: hidden;
     .message {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100px;
-      max-width: 80vw;
-      padding: 40px 30px;
-      color: #2E2E2E;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100px;
+        max-width: 80vw;
+        padding: 40px 30px;
+        color: #2e2e2e;
     }
     .vice-message {
-      margin-top: 22px;
-      font-size: 28px;
-      line-height: 40px;
-      color: #b4b4b4;
-      white-space: pre-wrap;
-      word-break: break-all;
+        margin-top: 22px;
+        font-size: 28px;
+        line-height: 40px;
+        color: #b4b4b4;
+        white-space: pre-wrap;
+        word-break: break-all;
     }
     .main-message {
-      white-space: pre-wrap;
-      word-break: break-all;
-      font-size: 32px;
-      line-height: 44px;
-      font-weight: bold;
-      color: #000;
-      box-sizing: border-box;
+        white-space: pre-wrap;
+        word-break: break-all;
+        font-size: 32px;
+        line-height: 44px;
+        font-weight: bold;
+        color: #000;
+        box-sizing: border-box;
     }
     .propmt-input {
-      width: 80%;
-      height: 80px;
-      font-size: 28px;
-      text-align: center;
+        width: 80%;
+        height: 80px;
+        font-size: 28px;
+        text-align: center;
     }
-  }
-  .buttons {
+}
+.buttons {
     display: flex;
-    border-top: 1px solid #D3D1D2;
+    border-top: 1px solid #d3d1d2;
     button {
-      flex: 1;
-      border: none;
-      height: 100px;
-      font-size: 34px;
-      font-weight: 500;
-      background-color: #fff;
-      &.message-box-confirm {
-        color: #F2B036;
-      }
-      &.message-box-cancel {
-        position: relative;
-        color: #666;
-        font-weight: normal;
-        border-right: 1px solid #D3D1D2;
-      }
+        flex: 1;
+        border: none;
+        height: 100px;
+        font-size: 34px;
+        font-weight: 500;
+        background-color: #fff;
+        &.message-box-confirm {
+            color: #f2b036;
+        }
+        &.message-box-cancel {
+            position: relative;
+            color: #666;
+            font-weight: normal;
+            border-right: 1px solid #d3d1d2;
+        }
     }
-  }
+}
+
 </style>

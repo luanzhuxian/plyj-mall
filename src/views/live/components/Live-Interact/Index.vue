@@ -13,7 +13,7 @@
             </div>
             <div :class="$style.row">
                 <!-- 答题 -->
-                <Answer v-bind="$attrs" />
+                <Answer ref="answer" v-bind="$attrs" />
 
                 <!-- 提问 -->
                 <Questions ref="questions" v-bind="$attrs" @close="close" />
@@ -49,10 +49,12 @@ export default {
         async init () {
             try {
                 await this.$nextTick()
-                const { notice, signIn, lottery, questions } = this.$refs
+                const { notice, signIn, lottery, answer, questions } = this.$refs
+
                 notice.init()
                 signIn.init()
                 lottery.init()
+                answer.init()
                 questions.init()
             } catch (e) { throw e }
         },
