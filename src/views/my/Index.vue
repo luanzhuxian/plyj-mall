@@ -183,8 +183,13 @@
                         </div>
                     </router-link>
                     <router-link :to="{ name: 'MyImageText' }" :class="$style.welfareItem">
-                        <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/我的资料.png" alt="">
-                        <i :class="$style.text">我的资料</i>
+                        <div
+                            :class="$style.icon"
+                            style="background-image: url(https://mallcdn.youpenglai.com/static/mall/my/兑换码-1.png)"
+                        />
+                        <div>
+                            <h5>我的资料</h5>
+                        </div>
                     </router-link>
                 </div>
             </div>
