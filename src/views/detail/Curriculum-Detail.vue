@@ -192,12 +192,6 @@
                         <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/联系我们.png" alt="">
                         <i :class="$style.text">联系我们</i>
                     </a>
-                    <router-link :class="$style.link + ' ' + $style.cart" :to="{ name: 'ShoppingCart' }">
-                        <i v-if="cartCount > 99" :class="$style.cartCount">99+</i>
-                        <i v-else-if="cartCount > 0" :class="$style.cartCount" v-text="cartCount" />
-                        <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/购物车选中.png" alt="">
-                        <i :class="$style.text">购物车</i>
-                    </router-link>
                 </div>
                 <div :class="$style.buttons">
                     <template v-if="canLearn">
@@ -402,7 +396,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['appId', 'userName', 'avatar', 'mobile', 'mallUrl', 'userId', 'agentUser', 'servicePhoneModels', 'cartCount']),
+        ...mapGetters(['appId', 'userName', 'avatar', 'mobile', 'mallUrl', 'userId', 'agentUser', 'servicePhoneModels']),
 
         // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去 5 从春耘活动进入 6 从组合课活动进入 7 公益棕活动进入
         productActive () {
@@ -917,31 +911,11 @@ export default {
             width: 46px;
             height: 46px;
         }
-        &.cart > .icon {
-            width: 44px;
-            height: 45px;
-        }
-        .cart-count {
-            position: absolute;
-            right: -20px;
-            top: -5px;
-            height: 36px;
-            min-width: 36px;
-            padding: 0 5px;
-            line-height: 32px;
-            color: #fff;
-            background-color: #FE7700;
-            border-radius: 18px;
-            font-size: 24px;
-            border: 2px solid #fff;
-            box-sizing: border-box;
-            text-align: center;
-        }
     }
     .buttons {
         display: flex;
         margin-right: 20px;
-        width: 420px;
+        width: 496px;
         border-radius: 10px;
         overflow: hidden;
     }
