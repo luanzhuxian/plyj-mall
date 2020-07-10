@@ -126,7 +126,7 @@ export default [
         path: '/my/course',
         alias: '/lived/library',
         name: 'CourseLibrary',
-        component: () => import('../views/my/video-course/Index.vue'),
+        component: () => import('../views/my/course-lib/Index.vue'),
         redirect: '/my/course/live',
         meta: {
             title: '视频库'
@@ -135,7 +135,7 @@ export default [
             {
                 path: 'live',
                 name: 'MyLive',
-                component: () => import('../views/my/video-course/Live.vue'),
+                component: () => import('../views/my/course-lib/video-course/Live.vue'),
                 meta: {
                     title: '直播课'
                 }
@@ -144,7 +144,7 @@ export default [
                 alias: 'courses/:courseType',
                 path: 'video/:courseType',
                 name: 'VideoCourses',
-                component: () => import('../views/my/video-course/Courses.vue'),
+                component: () => import('../views/my/course-lib/video-course/Courses.vue'),
                 redirect: '/my/course/video/:courseType/single-course-learning/1',
                 meta: {
                     // 单课，系列课
@@ -154,7 +154,7 @@ export default [
                     {
                         path: 'single-course-learning/:learnStatus',
                         name: 'CourseLearning',
-                        component: () => import('../views/my/video-course/Course-Learning.vue'),
+                        component: () => import('../views/my/course-lib/video-course/Course-Learning.vue'),
                         meta: {
                             title: '课程学习'
                         }
@@ -164,7 +164,7 @@ export default [
             {
                 path: 'image-text',
                 name: 'MyImageText',
-                component: () => import('../views/my/image-text/Index.vue'),
+                component: () => import('../views/my/course-lib/image-text/Index.vue'),
                 meta: {
                     title: '我的资料'
                 }
@@ -176,7 +176,7 @@ export default [
         path: '/my/video/watch/:courseId',
         name: 'CourseWatch',
         props: true,
-        component: () => import('../views/my/video-course/Course-Watch.vue'),
+        component: () => import('../views/my/course-lib/video-course/Course-Watch.vue'),
         meta: {
             title: '观看课程'
         }

@@ -22,9 +22,9 @@ import {
     setCourseProgress,
     setStudyCount,
     setStudyTime
-} from '../../../apis/live-library'
-import { getVideoMesById as getCourseDetail } from '../../../apis/live'
-import PaidPlayer from '../../../components/common/Paid-Player.vue'
+} from '../../../../apis/live-library'
+import { getVideoMesById as getCourseDetail } from '../../../../apis/live'
+import PaidPlayer from '../../../../components/common/Paid-Player.vue'
 export default {
     name: 'CourseWatch',
     components: {

@@ -14,9 +14,9 @@
                     <div :class="{ [$style.tabFocus]: isSeriesCourse }">系列课</div>
                     <div :class="{ [$style.line]: true, [$style.lineFocus]: isSeriesCourse }" />
                 </div>
-                <div :class="$style.tabs" @click="$router.push({ name: 'MyImageText', params: { courseType: '2' } })">
-                    <div :class="{ [$style.tabFocus]: isSeriesCourse }">我的资料</div>
-                    <div :class="{ [$style.line]: true, [$style.lineFocus]: isSeriesCourse }" />
+                <div :class="$style.tabs" @click="$router.push({ name: 'MyImageText' })">
+                    <div :class="{ [$style.tabFocus]: $route.name === 'MyImageText' }">我的资料</div>
+                    <div :class="{ [$style.line]: true, [$style.lineFocus]: $route.name === 'MyImageText' }" />
                 </div>
             </div>
             <div v-if="!isLiveCourse" :class="$style.studyTabs">
