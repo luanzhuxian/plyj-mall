@@ -599,7 +599,7 @@ export default {
         },
         // 生成分享
         async createShare () {
-            const { courseName, lecturer, courseImg } = this.detail
+            const { courseName, courseBrief, courseImg } = this.detail
             try {
                 let shareUrl = ''
                 if (this.userId) {
@@ -612,8 +612,8 @@ export default {
                 share({
                     appId: this.appId,
                     title: courseName,
-                    link: this.shareUrl,
-                    desc: lecturer,
+                    link: shareUrl,
+                    desc: courseBrief,
                     imgUrl: courseImg
                 })
             } catch (error) {

@@ -66,6 +66,10 @@
                     />
                 </Tabs>
             </div>
+            <!-- 使用说明 -->
+            <Instructions
+                :content="detail.payNotice"
+            />
 
             <!-- 底部购买 -->
             <div :class="$style.bottom" v-if="!~[5, 6].indexOf(productActive)">
@@ -95,17 +99,9 @@
                     <button
                         v-if="distanceStart > 0 && isOpenSale"
                         :class="$style.button + ' ' + $style.orange"
-                        disabled
+                        :disabled="Number(detail.status) === 2 || loading || isNotStarted"
                     >
-                        {{ Number(detail.status) === 2 ? '立即订购' : '即将开售' }}
-                    </button>
-                    <button
-                        v-else
-                        :class="$style.button + ' ' + $style.orange"
-                        :disabled="Number(detail.status) === 2 || loading"
-                        @click="submit"
-                    >
-                        立即订购
+                        {{ (isNotStarted && Number(detail.status) !== 2) ? '即将开售' : '立即订购' }}
                     </button>
                 </div>
             </div>
@@ -145,6 +141,7 @@ import DetailDesc from '../../components/detail/Desc.vue'
 import DetailInfo from './components/Detail.vue'
 import Contact from '../../components/common/Contact.vue'
 import Field from '../../components/detail/Field.vue'
+import Instructions from '../../components/detail/Instructions.vue'
 import Tabs from './components/Tabs.vue'
 import ImageTextList from './components/Image-Text-List.vue'
 import Skeleton from './components/Skeleton.vue'
@@ -172,7 +169,8 @@ export default {
         Field,
         Tabs,
         ImageTextList,
-        Skeleton
+        Skeleton,
+        Instructions
     },
     data () {
         return {
@@ -227,6 +225,10 @@ export default {
         // 距离开售的世界
         distanceStart () {
             return moment(this.detail.regularSaleTime).valueOf() - Date.now()
+        },
+        // 是否未开始销售
+        isNotStarted () {
+            return this.distanceStart > 0 && this.isOpenSale
         }
     },
     watch: {
@@ -371,22 +373,22 @@ export default {
         openFIle () {},
         // 生成分享
         async createShare () {
-            const { courseName, lecturer, courseImg } = this.detail
+            const { graphicName, graphicBrief, graphicMainImg } = this.detail
             try {
                 let shareUrl = ''
                 if (this.userId) {
-                    shareUrl = `${ this.mallUrl }/detail/curriculum/${ this.productId }/${ this.userId }?noCache=${ Date.now() }`
+                    shareUrl = `${ this.mallUrl }/detail/image-text/${ this.productId }/${ this.userId }?noCache=${ Date.now() }`
                 } else {
-                    shareUrl = `${ this.mallUrl }/detail/curriculum/${ this.productId }?noCache=${ Date.now() }`
+                    shareUrl = `${ this.mallUrl }/detail/image-text/${ this.productId }?noCache=${ Date.now() }`
                 }
                 // TODO: 以后可能需要自定义分享链接，现在直接使用当前连接
                 this.shareUrl = shareUrl
                 share({
                     appId: this.appId,
-                    title: courseName,
-                    link: this.shareUrl,
-                    desc: lecturer,
-                    imgUrl: courseImg
+                    title: graphicName,
+                    link: shareUrl,
+                    desc: graphicBrief,
+                    imgUrl: graphicMainImg
                 })
             } catch (error) {
                 throw error
@@ -398,7 +400,7 @@ export default {
                 return
             }
 
-            let img = await loadImage(this.detail.courseImg)
+            let img = await loadImage(this.detail.graphicMainImg)
             if (!img) {
                 this.$error('图片加载错误')
                 return
@@ -466,7 +468,7 @@ export default {
                     ctx,
                     x: 49,
                     y: 978,
-                    text: this.detail.courseName,
+                    text: this.detail.graphicName,
                     lineHeight: 80,
                     width: 620,
                     lineNumber: line
@@ -527,7 +529,7 @@ export default {
 
 <style module lang="scss">
 .image-text-detail {
-    padding-bottom: 190px;
+    padding-bottom: 210px;
 }
 .banner-wrapper {
     position: relative;
