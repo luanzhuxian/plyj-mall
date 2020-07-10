@@ -73,15 +73,15 @@ export default {
     methods: {
         async init () {
             try {
+                await this.getQuestions()
                 const { EVENTS: { T_ANSWER } } = window.PolyvLiveSdk
                 this.liveSdk.on(T_ANSWER, this.receive)
-                await this.getQuestions()
             } catch (e) { throw e }
         },
         async getQuestions () {
             try {
                 const { result: { data } } = await getQuestionList(this.channelId)
-                this.data = (data && data.reverse()) || []
+                this.data = ((data && data.reverse()) || []).map(item => Object.freeze(item))
                 await this.scroll()
             } catch (e) { throw e }
         },
@@ -111,19 +111,28 @@ export default {
                 this.socket.emit('message', JSON.stringify(data))
                 this.message = ''
                 this.data.push(data)
-
                 await this.scroll()
             } catch (e) { throw e }
         },
-        showQuestions () {
-            this.show = true
-            this.$emit('close')
+        async showQuestions () {
+            try {
+                this.$emit('close')
+                const isShow = this.show === true
+                this.show = true
+                if (!isShow) {
+                    await this.getQuestions()
+                }
+            } catch (e) { throw e }
         },
         close () {
             this.show = false
         },
         async scroll () {
             try {
+                if (!this.show) {
+                    return
+                }
+
                 await this.$nextTick()
                 const { contents } = this.$refs
                 contents.scrollBy(0, contents.scrollHeight)
