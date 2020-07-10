@@ -1,5 +1,5 @@
 <template>
-    <div :class="$style.notice" @click="showInfo">
+    <div :class="[$style.lump, $style.notice]" @click="showInfo">
         <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/公告.png" alt="">
         <span :class="$style.title">公告</span>
         <div v-if="message" :class="$style.tip" />
@@ -9,6 +9,7 @@
 <script>
 export default {
     name: 'Notice',
+    inheritAttrs: false,
     props: {
         liveSdk: {
             type: Object,
@@ -30,15 +31,28 @@ export default {
         },
         showInfo () {
             if (!this.message) {
-                this.$alert('暂无公告')
+                this.$alert({
+                    useDangersHtml: true,
+                    message: this.createNodeTemplate('主播暂未发布任何公告~')
+                })
                 return
             }
 
             this.$alert({
                 confirmText: '我知道了',
                 useDangersHtml: true,
-                message: this.message
+                message: this.createNodeTemplate(this.message)
             })
+        },
+        createNodeTemplate (message) {
+            const { warnInfo, title, content } = this.$style
+
+            return `<div class=${ warnInfo }>
+                        <div class=${ title }>直播公告</div>
+                        <div class=${ content }>
+                            <div>${ message }</div>
+                        </div>
+                    </div>`
         }
     }
 }
@@ -46,18 +60,10 @@ export default {
 
 <style lang='scss' module>
 
+@import './common.scss';
+
 .notice {
     position: relative;
-    > .icon {
-        width: 102px;
-        height: 102px;
-    }
-    > .title {
-        display: block;
-        margin-top: 16px;
-        text-align: center;
-        font-size: 24px;
-    }
     > .tip {
         position: absolute;
         top: 0;

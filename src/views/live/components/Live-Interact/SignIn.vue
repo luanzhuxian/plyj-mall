@@ -1,5 +1,5 @@
 <template>
-    <div :class="$style.signIn" @click="showInfo">
+    <div :class="[$style.lump, $style.signIn]" @click="showInfo">
         <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/签到.png" alt="">
         <span :class="$style.title">签到</span>
     </div>
@@ -8,6 +8,7 @@
 <script>
 export default {
     name: 'SignIn',
+    inheritAttrs: false,
     props: {
         liveSdk: {
             type: Object,
@@ -64,15 +65,24 @@ export default {
         async showInfo () {
             try {
                 if (!this.checkinId) {
-                    this.$alert('主播暂未发起签到~')
+                    this.$alert({
+                        useDangersHtml: true,
+                        message: this.createNodeTemplate('主播暂未发起签到~')
+                    })
                     return
                 }
 
-                await this.$alert('主播邀请您签到')
                 if (this.isStop) {
                     this.$alert('签到已经结束')
                     return
                 }
+
+                await this.$alert({
+                    useDangersHtml: true,
+                    message: this.createNodeTemplate('主播邀请您签到~'),
+                    confirmText: '立即签到'
+
+                })
 
                 const { channelId, checkinId, userName, userId, socket } = this
                 socket.emit('message', JSON.stringify({
@@ -86,23 +96,23 @@ export default {
                 }))
                 this.$success('签到成功')
             } catch (e) { throw e }
+        },
+        createNodeTemplate (message) {
+            const { warnInfo, title, content } = this.$style
+
+            return `<div class=${ warnInfo }>
+                        <div class=${ title }>签到</div>
+                        <div class=${ content }>
+                            <div>${ message }</div>
+                        </div>
+                    </div>`
         }
     }
 }
 </script>
 
 <style lang='scss' module>
-.sign-in {
-    > .icon {
-        width: 102px;
-        height: 102px;
-    }
-    > .title {
-        display: block;
-        margin-top: 16px;
-        text-align: center;
-        font-size: 24px;
-    }
-}
+
+@import './common.scss';
 
 </style>

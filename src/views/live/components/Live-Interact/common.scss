@@ -1,0 +1,31 @@
+.warnInfo {
+    white-space: nowrap;
+    > .title {
+        font-size: 34px;
+        font-weight: bold;
+        text-align: center;
+        color: #000;
+    }
+    > .content {
+        display: flex;
+        justify-content: center;
+        margin-top: 34px;
+        white-space: pre-wrap;
+        text-align: left;
+        font-size: 26px;
+        color: #666;
+    }
+}
+
+.lump {
+    > .icon {
+        width: 102px;
+        height: 102px;
+    }
+    > .title {
+        display: block;
+        margin-top: 16px;
+        text-align: center;
+        font-size: 24px;
+    }
+}

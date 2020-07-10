@@ -1,5 +1,5 @@
 <template>
-    <div :class="$style.questions" @click="showQuestions">
+    <div :class="[$style.lump, $style.questions]" @click="showQuestions">
         <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/提问.png" alt="">
         <span :class="$style.title">提问</span>
 
@@ -41,6 +41,7 @@ import { mapGetters } from 'vuex'
 import { getQuestionList } from './../../../../apis/live'
 export default {
     name: 'Questions',
+    inheritAttrs: false,
     props: {
         liveSdk: {
             type: Object,
@@ -73,7 +74,6 @@ export default {
     methods: {
         async init () {
             try {
-                await this.getQuestions()
                 const { EVENTS: { T_ANSWER } } = window.PolyvLiveSdk
                 this.liveSdk.on(T_ANSWER, this.receive)
             } catch (e) { throw e }
@@ -147,17 +147,9 @@ export default {
 
 <style lang='scss' module>
 
+@import './common.scss';
+
 .questions {
-    > .icon {
-        width: 102px;
-        height: 102px;
-    }
-    > .title {
-        display: block;
-        margin-top: 16px;
-        text-align: center;
-        font-size: 24px;
-    }
     > .chat {
         position: fixed;
         left: 0;

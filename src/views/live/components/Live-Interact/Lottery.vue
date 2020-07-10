@@ -1,5 +1,5 @@
 <template>
-    <div :class="$style.lottery" @click="getLotteryInfo">
+    <div :class="[$style.lump, $style.lottery]" @click="getLotteryInfo">
         <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/抽奖.png" alt="">
         <span :class="$style.title">抽奖</span>
         <div :class="$style.container">
@@ -41,6 +41,7 @@
 <script>
 export default {
     name: 'Lottery',
+    inheritAttrs: false,
     props: {
         liveSdk: {
             type: Object,
@@ -113,17 +114,9 @@ export default {
 
 <style lang='scss' module>
 
+@import './common.scss';
+
 .lottery {
-    > .icon {
-        width: 102px;
-        height: 102px;
-    }
-    > .title {
-        display: block;
-        margin-top: 16px;
-        text-align: center;
-        font-size: 24px;
-    }
     > .container {
         display: flex;
         align-items: center;
