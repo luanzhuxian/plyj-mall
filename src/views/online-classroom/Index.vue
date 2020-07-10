@@ -29,7 +29,7 @@
             <span>查看></span>
         </div>
         <keep-alive>
-            <router-view />
+            <router-view v-if="loaded" />
         </keep-alive>
         <!--赠课弹框-->
         <send-live
@@ -60,14 +60,16 @@ export default {
             tabs: [
                 { name: '互动直播', routerName: 'InteractiveLive', id: 0 },
                 { name: '精选单课', routerName: 'OnlineClassroom', id: 1 },
-                { name: '系列精品课', routerName: 'seriesOfCourses', id: 2 }
+                { name: '系列精品课', routerName: 'seriesOfCourses', id: 2 },
+                { name: '图文资料', routerName: 'ImageTextList', id: 3 }
             ],
             unaccalimedSendCount: 0,
             isShowSendLiveDialog: false,
             onlineClassCoursesCatrgory: {
                 seriesCoursesCatrgory: [],
                 coursesCatrgory: []
-            }
+            },
+            loaded: false
         }
     },
     async created () {
@@ -86,9 +88,12 @@ export default {
                 if (result.length) {
                     this.onlineClassCoursesCatrgory.seriesCoursesCatrgory = result.find(item => Number(item.type) === 2) || { childs: [] }
                     this.onlineClassCoursesCatrgory.coursesCatrgory = result.find(item => Number(item.type) === 1) || { childs: [] }
+                    this.onlineClassCoursesCatrgory.imageTextCatrgory = result.find(item => Number(item.type) === 3) || { childs: [] }
                 }
             } catch (e) {
                 throw e
+            } finally {
+                this.loaded = true
             }
         },
         async tabChange (item) {

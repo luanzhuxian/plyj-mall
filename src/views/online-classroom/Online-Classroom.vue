@@ -32,7 +32,7 @@
                         <div :class="$style.img">
                             <img :src="item.courseImg + '?x-oss-process=style/thum-small'" alt="">
                             <!-- 不是 订单或者赠课 才显示倒计时-->
-                            <div v-if="!(item.orderId || item.isGive) && item.regularSaleTime" :class="$style.countDown">
+                            <div v-if="!(item.orderId || item.isGive) && item.isOpenSale" :class="$style.countDown">
                                 <count-down
                                     :endtime="item.regularSaleTime"
                                     theme="black"
@@ -154,7 +154,7 @@ export default {
         addAtrToItem (list) {
             const currentTimeStamp = Number(moment().valueOf()) + this.duration
             for (const item of list) {
-                item.isNotStart = Number(moment(item.regularSaleTime).valueOf()) > currentTimeStamp
+                item.isNotStart = item.isOpenSale && Number(moment(item.regularSaleTime).valueOf()) > currentTimeStamp
             }
             return list
         },

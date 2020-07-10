@@ -34,6 +34,15 @@ export default [
                     // 互动直播
                     title: '云课堂'
                 }
+            },
+            {
+                path: 'image-text',
+                name: 'ImageTextList',
+                component: () => import('../views/online-classroom/Image-Text-List.vue'),
+                meta: {
+                    // 互动直播
+                    title: '云课堂'
+                }
             }
         ]
     }

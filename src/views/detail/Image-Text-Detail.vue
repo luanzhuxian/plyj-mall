@@ -97,9 +97,9 @@
                         查看资料
                     </button>
                     <button
-                        v-if="distanceStart > 0 && isOpenSale"
                         :class="$style.button + ' ' + $style.orange"
                         :disabled="Number(detail.status) === 2 || loading || isNotStarted"
+                        @click="submit"
                     >
                         {{ (isNotStarted && Number(detail.status) !== 2) ? '即将开售' : '立即订购' }}
                     </button>

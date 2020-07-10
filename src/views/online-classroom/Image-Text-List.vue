@@ -1,5 +1,5 @@
 <template>
-    <div :class="$style.onlineClassroom">
+    <div :class="$style.imageTextList">
         <CategorySelector
             :category="category"
             @change="classifyChanged"
@@ -24,7 +24,7 @@
                         @click.capture="study(item)"
                     >
                         <div :class="$style.img">
-                            <img :src="item.courseImg + '?x-oss-process=style/thum-small'" alt="">
+                            <img :src="item.graphicMainImg + '?x-oss-process=style/thum-small'" alt="">
                             <div v-if="!(item.orderId || item.isGive) && item.isOpenSale" :class="$style.countDown">
                                 <count-down
                                     prefix="距抢课开始仅剩"
@@ -37,15 +37,15 @@
                         <div :class="$style.desc">
                             <div :class="$style.left">
                                 <div :class="$style.title">
-                                    {{ item.courseName }}
+                                    {{ item.graphicName }}
                                 </div>
                                 <div :class="$style.saleInfo" v-if="Number(item.showSales) === 1">
                                     <span v-if="item.orderCount">已有{{ item.orderCount }}人订阅</span>
                                     <span v-else>正在热销中</span>
                                 </div>
-                                <div :class="$style.courseCount">
+                                <!--<div :class="$style.courseCount">
                                     <span>包含{{ item.courseCount }}节课程</span>
-                                </div>
+                                </div>-->
                             </div>
                             <div :class="$style.right">
                                 <div :class="$style.priceContent">
@@ -78,14 +78,14 @@
 </template>
 <script>
 import { getServerTime } from '../../apis/base-api'
-import { getCourse } from '../../apis/online-classroom.js'
+import { getImageTextList } from '../../apis/online-classroom'
 import LoadMore from '../../components/common/Load-More.vue'
 import CountDown from '../../components/product/Courses-Count-Down.vue'
 import moment from 'moment'
 import CategorySelector from './components/Category-Selector.vue'
 
 export default {
-    name: 'SeriesOfCourses',
+    name: 'ImageTextList',
     components: {
         LoadMore,
         CountDown,
@@ -95,7 +95,7 @@ export default {
         onlineClassCoursesCatrgory: {
             from: 'onlineClassCoursesCatrgory',
             default: () => ({
-                seriesCoursesCatrgory: {}
+                imageTextCatrgory: {}
             })
         }
     },
@@ -103,11 +103,17 @@ export default {
         return {
             form: {
                 categoryId: '',
-                courseType: 2,
+                subCategoryId: '',
                 current: 1,
-                size: 10
+                size: 10,
+                // 非必传
+                status: 1,
+                // 非必传
+                createTime: '',
+                // 非必传
+                graphicName: ''
             },
-            requestMethods: getCourse,
+            requestMethods: getImageTextList,
             loading: false,
             $refresh: null,
             courseList: [],
@@ -117,6 +123,7 @@ export default {
     },
     async mounted () {
         try {
+            this.form.categoryId = this.parentCategory
             this.$refresh = this.$refs.loadMore.refresh
             await this.getServerTime()
             if (!this.courseList.length) {
@@ -128,17 +135,18 @@ export default {
     },
     computed: {
         category () {
-            return this.onlineClassCoursesCatrgory.seriesCoursesCatrgory.childs || []
+            return this.onlineClassCoursesCatrgory.imageTextCatrgory.childs || []
         },
-        rootCategory () {
-            return this.onlineClassCoursesCatrgory.seriesCoursesCatrgory.id || ''
+        // 父级分类
+        parentCategory () {
+            return this.onlineClassCoursesCatrgory.imageTextCatrgory.id || ''
         }
     },
     methods: {
         async classifyChanged (item) {
             try {
                 this.form.current = 1
-                this.form.categoryId = item.id
+                this.form.subCategoryId = item.id
                 this.$refresh()
             } catch (e) {
                 throw e
@@ -168,13 +176,13 @@ export default {
             return list
         },
         study (item) {
-            this.$router.push({ name: 'Curriculum', params: { productId: item.id } })
+            this.$router.push({ name: 'ImageTextDetail', params: { productId: item.id } })
         }
     }
 }
 </script>
 <style lang="scss" module>
-    .online-classroom {
+    .image-text-list {
         /*padding: 14vw 20px 20px;*/
         padding: 20px;
         min-height: 50vh;

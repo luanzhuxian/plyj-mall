@@ -11,3 +11,17 @@ export const getSendLiveList = isNotice => axios.get(`/apis/v1/mall/live/activit
 
 // 查询视频课程列表 单课/系列课
 export const searchCourse = params => axios.get('/apis/v1/knowledgeCourse/search', { params })
+
+/**
+ * 获取图文列表
+ * @param params {Object}
+ * @property params.graphicName {string}
+ * @property params.categoryId {string}
+ * @property params.subCategoryId {string}
+ * @property params.status {number} 1 上架 2 下架
+ * @property params.createTime {string}
+ * @property params.current {number}
+ * @property params.size {number}
+ * @return {*}
+ */
+export const getImageTextList = params => axios.get('/apis/v1/graphic/findList', { params })
