@@ -82,9 +82,6 @@
                             </div>
                             <div v-if="Number(detail.showSales) === 1">
                                 <span v-if="detail.sale === 0">正在热销中</span>
-                                <!-- <template v-else-if="detail.sale > 0 && detail.sale < 10">
-                                <span v-text="detail.sale" />人关注
-                            </template> -->
                                 <template v-else>
                                     <span v-text="detail.sale" />人订阅
                                 </template>

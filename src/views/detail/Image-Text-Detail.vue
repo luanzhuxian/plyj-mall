@@ -17,6 +17,16 @@
                     <p>分享海报</p>
                 </div>
                 <banner :banners="banners" />
+
+                <!-- 倒计时 -->
+                <count-down
+                    v-if="isCountdownShow"
+                    :class="[$style.countDownBar, $style.regular]"
+                    :endtime="detail.regularSaleTime"
+                    theme="orange"
+                    prefix="距抢课开始仅剩"
+                    @done="refresh"
+                />
             </div>
 
             <info-box>
@@ -30,9 +40,6 @@
                             </div>
                             <div v-if="Number(detail.showSales) === 1">
                                 <span v-if="detail.sale === 0">正在热销中</span>
-                                <!-- <template v-else-if="detail.sale > 0 && detail.sale < 10">
-                                    <span v-text="detail.sale" />人关注
-                                </template> -->
                                 <template v-else>
                                     <span v-text="detail.sale" />人订阅
                                 </template>
@@ -60,16 +67,12 @@
             <div :class="$style.detailOrComment">
                 <Tabs :tabs="tabs" v-model="tab">
                     <detail-info v-show="tab === 1" :content="detail.details || '暂无详情'" />
-                    <image-text-list
-                        v-show="tab === 2"
-                        :data="detail.graphicPdfs || []"
-                    />
+                    <image-text-list v-show="tab === 2" :data="detail.graphicPdfs || []" />
                 </Tabs>
             </div>
+
             <!-- 使用说明 -->
-            <Instructions
-                :content="detail.payNotice"
-            />
+            <Instructions :content="detail.payNotice" />
 
             <!-- 底部购买 -->
             <div :class="$style.bottom" v-if="!~[5, 6].indexOf(productActive)">
@@ -143,6 +146,7 @@ import Contact from '../../components/common/Contact.vue'
 import Field from '../../components/detail/Field.vue'
 import Instructions from '../../components/detail/Instructions.vue'
 import Tabs from './components/Tabs.vue'
+import CountDown from '../../components/product/Courses-Count-Down.vue'
 import ImageTextList from './components/Image-Text-List.vue'
 import Skeleton from './components/Skeleton.vue'
 import share from '../../assets/js/wechat/wechat-share'
@@ -168,6 +172,7 @@ export default {
         Contact,
         Field,
         Tabs,
+        CountDown,
         ImageTextList,
         Skeleton,
         Instructions
@@ -176,7 +181,6 @@ export default {
         return {
             loaded: false,
             loading: false,
-            courseType: 1,
             detail: {},
             banners: [],
             tabs: [
@@ -209,7 +213,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['appId', 'userName', 'avatar', 'mobile', 'mallUrl', 'userId', 'agentUser', 'courseTypeMap', 'servicePhoneModels', 'cartCount']),
+        ...mapGetters(['appId', 'userName', 'avatar', 'mobile', 'mallUrl', 'userId', 'agentUser', 'courseTypeMap', 'servicePhoneModels']),
 
         // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去 5 从春耘活动进入 6 从组合课活动进入 7 公益棕活动进入
         productActive () {
@@ -218,11 +222,21 @@ export default {
         activityId () {
             return this.$route.query.activityId || ''
         },
+        isCountdownShow () {
+            const {
+                isOpenSale = 0,
+                regularSaleTime,
+                status,
+                dataStatus,
+                isGive
+            } = this.detail
+            return status === 1 && dataStatus === 1 && !isGive && isOpenSale === 1 && regularSaleTime
+        },
         // 是否定时开售
         isOpenSale () {
             return Boolean(this.detail.isOpenSale)
         },
-        // 距离开售的世界
+        // 距离开售的时间
         distanceStart () {
             return moment(this.detail.regularSaleTime).valueOf() - Date.now()
         },
@@ -276,43 +290,37 @@ export default {
         },
 
         /**
-         * 获取商品详
+         * 获取商品详情
          * @returns {Object} result - 商品详情
          * @property {String} result.id
-         * @property {String} result.orderId
-         * @property {String} result.courseName
-         * @property {String} result.courseImg
-         * @property {String} result.liveIds - 课程相关视频id，系列课是多个id用逗号拼接
-         * @property {String} result.courseBrief
-         * @property {String} result.lecturer
-         * @property {String} result.details
-         * @property {Number} result.sale
-         * @property {Number} result.views
-         * @property {Number} result.vodNumber - 点播量
-         * @property {Number} result.watchTime
-         * @property {Number} result.targetGroups
+         * @property {String} result.graphicName
+         * @property {String} result.graphicMainImg
+         * @property {Array} result.graphicImgs
+         * @property {Array} result.graphicPdfs
+         * @property {String} result.graphicBrief
+         * @property {String} result.author
+         * @property {String} result.category1
+         * @property {String} result.category1Name
+         * @property {String} result.category2
+         * @property {String} result.category2Name
+         * @property {String} result.payNotice - 购买须知
+         * @property {Number} result.targetGroups - 观看对象
          * @property {Array} result.tagIds
-         * @property {Number} result.courseType - 课程类型 (1 单课 2 系列课)
          * @property {Number} result.priceType - 价格类型 (0 免费 1 付费)
          * @property {Number} result.originalPrice - 原价
          * @property {Number} result.sellingPrice - 售价
-         * @property {Number} result.validityType - 有效期类型 (0 不限制有效期 1 限制有效期)
-         * @property {Number} result.validity - 有效期 / 天
-         * @property {String} result.validityDate - 免费课截止日期
-         * @property {Boolean} result.isBuy - 是否已购买
-         * @property {String} result.learnProgress - 学习进度
-         * @property {String} result.payNotice - 购买须知
+         * @property {Number} result.orderCount - 订购量
          * @property {String} result.status - 状态 (1 上架 2 下架)
+         * @property {String} result.statusText - 状态
+         * @property {Number} result.dataStatus - 数据状态 0：删除 1：正常
+         * @property {String} result.dataStatusText - 数据状态
+         * @property {Boolean} result.isGive - 是否赠送
          * @property {Boolean} result.isOpenSale - 是否开启定时开售 (0 不开启 1 开启)
-         * @property {Number} result.courseStatus - 开售状态 (1 已开售 2 未开售 0 默认值啥也不是)
+         * @property {Boolean} result.isShow - 是否c端展示（0：不展示 1：展示）
+         * @property {Number} result.showSales - 是否展示销量（1-展示，0-隐藏）
+         * @property {String} result.entId - 机构ID
          * @property {String} result.regularSaleTime - 定时开售时间
-         * @property {Boolean} result.supportWatch - 是否支持试看 (单课程才有)
-         * @property {String} result.supportWatchUrl - 试看地址
-         * @property {Array} result.relatedCoursesModels - 单课的相关课程列表
-         * @property {Array} result.videoLibEntities - 课程关联的视频资源列表
-         * @property {Boolean} result.haveNoVideo - 系列课是否有课程未关联视频
-         * @property {Number} result.totalLiveNumber - 系列课课程总数
-         * @property {Number} result.learnedNumber - 系列课已经学习课程数
+         * @property {Object} result.themeModel - 主题
          */
         async getDetail () {
             try {
@@ -534,6 +542,16 @@ export default {
 .banner-wrapper {
     position: relative;
 }
+.count-down-bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    &.regular {
+        height: 80px !important;
+    }
+}
 .price-box-wrapper {
     display: flex;
     align-items: center;
@@ -612,26 +630,6 @@ export default {
         &.contact > .icon {
             width: 46px;
             height: 46px;
-        }
-        &.cart > .icon {
-            width: 44px;
-            height: 45px;
-        }
-        .cart-count {
-            position: absolute;
-            right: -20px;
-            top: -5px;
-            height: 36px;
-            min-width: 36px;
-            padding: 0 5px;
-            line-height: 32px;
-            color: #fff;
-            background-color: #FE7700;
-            border-radius: 18px;
-            font-size: 24px;
-            border: 2px solid #fff;
-            box-sizing: border-box;
-            text-align: center;
         }
     }
    .buttons {
