@@ -158,10 +158,6 @@
                         <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/我的兑换码.png" alt="">
                         <i :class="$style.text">我的兑换码</i>
                     </router-link>
-                    <router-link :to="{ name: 'MyRedemption', params: {status: 'ALL'}}" :class="$style.welfareItem">
-                        <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/我的资料.png" alt="">
-                        <i :class="$style.text">我的资料</i>
-                    </router-link>
                 </div>
             </div>
             <router-link
