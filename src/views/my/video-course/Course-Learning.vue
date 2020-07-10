@@ -21,8 +21,8 @@
 </template>
 
 <script>
-import StudyItem from './components/Study-Item'
-import LoadMore from './../../../components/common/Load-More.vue'
+import StudyItem from '../../live/live-library/components/Study-Item'
+import LoadMore from '../../../components/common/Load-More.vue'
 import { getCourseList } from '../../../apis/live-library'
 export default {
     name: 'CourseLearning',

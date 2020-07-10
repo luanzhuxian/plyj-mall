@@ -163,7 +163,7 @@
                             <!-- <span>和优惠券叠加使用</span> -->
                         </div>
                     </router-link>
-                    <router-link :to="{ name: 'LiveLibrary'}" :class="$style.welfareItem">
+                    <router-link :to="{ name: 'CourseLibrary'}" :class="$style.welfareItem">
                         <div
                             :class="$style.icon"
                             style="background-image: url(https://mallcdn.youpenglai.com/static/mall/icons/olds/live.png)"

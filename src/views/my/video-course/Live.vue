@@ -20,10 +20,10 @@
 
 <script>
 import { getLibraryList } from '../../../apis/live-library'
-import LoadMore from './../../../components/common/Load-More.vue'
-import LiveItem from './components/Live-Item'
+import LoadMore from '../../../components/common/Load-More.vue'
+import LiveItem from '../../live/live-library/components/Live-Item'
 export default {
-    name: 'LiveLibrary',
+    name: 'CourseLibrary',
     components: {
         LoadMore,
         LiveItem

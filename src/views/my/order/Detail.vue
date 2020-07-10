@@ -435,7 +435,7 @@
                 v-if="(detail.orderType === orderTypeKeyMap.KNOWLEDGE_COURSE || detail.orderType === orderTypeKeyMap.SERIES_OF_COURSE) && (detail.status === orderStatuskeyMap.FINISHED)"
                 type="warning"
                 round
-                @click="$router.push({ name: 'Courses', params: { courseType: detail.orderType === orderTypeKeyMap.KNOWLEDGE_COURSE? '1' : '2' } })"
+                @click="$router.push({ name: 'VideoCourses', params: { courseType: detail.orderType === orderTypeKeyMap.KNOWLEDGE_COURSE? '1' : '2' } })"
             >
                 去学习
             </pl-button>

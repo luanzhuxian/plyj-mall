@@ -89,8 +89,8 @@ const routeNameMap = {
     EXPERIENCE_CLASS: 'Product',
     KNOWLEDGE_COURSE: 'Curriculum',
     SERIES_OF_COURSE: 'Curriculum',
-    LIVE_GOODS: 'LiveLibrary',
-    VIDEO_GOODS: 'LiveLibrary'
+    LIVE_GOODS: 'CourseLibrary',
+    VIDEO_GOODS: 'CourseLibrary'
 }
 export default {
     name: 'OrderItem',

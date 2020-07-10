@@ -6,12 +6,16 @@
                     <div :class="{ [$style.tabFocus]: isLiveCourse }">直播课</div>
                     <div :class="{ [$style.line]: true, [$style.lineFocus]: isLiveCourse }" />
                 </div>
-                <div :class="$style.tabs" @click="$router.push({ name: 'Courses', params: { courseType: '1' } })">
+                <div :class="$style.tabs" @click="$router.push({ name: 'VideoCourses', params: { courseType: '1' } })">
                     <div :class="{ [$style.tabFocus]: isSingleCourse }">单课</div>
                     <div :class="{ [$style.line]: true, [$style.lineFocus]: isSingleCourse }" />
                 </div>
-                <div :class="$style.tabs" @click="$router.push({ name: 'Courses', params: { courseType: '2' } })">
+                <div :class="$style.tabs" @click="$router.push({ name: 'VideoCourses', params: { courseType: '2' } })">
                     <div :class="{ [$style.tabFocus]: isSeriesCourse }">系列课</div>
+                    <div :class="{ [$style.line]: true, [$style.lineFocus]: isSeriesCourse }" />
+                </div>
+                <div :class="$style.tabs" @click="$router.push({ name: 'MyImageText', params: { courseType: '2' } })">
+                    <div :class="{ [$style.tabFocus]: isSeriesCourse }">我的资料</div>
                     <div :class="{ [$style.line]: true, [$style.lineFocus]: isSeriesCourse }" />
                 </div>
             </div>
@@ -32,9 +36,9 @@
 </template>
 
 <script>
-import { getCourseStudyNum } from './../../../apis/live-library'
+import { getCourseStudyNum } from '../../../apis/live-library'
 export default {
-    name: 'LiveLibrary',
+    name: 'CourseLibrary',
     data () {
         return {
             tabs: [

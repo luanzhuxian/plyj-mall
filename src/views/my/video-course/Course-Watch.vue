@@ -23,7 +23,7 @@ import {
     setStudyCount,
     setStudyTime
 } from '../../../apis/live-library'
-import { getVideoMesById as getCourseDetail } from './../../../apis/live'
+import { getVideoMesById as getCourseDetail } from '../../../apis/live'
 import PaidPlayer from '../../../components/common/Paid-Player.vue'
 export default {
     name: 'CourseWatch',
@@ -103,7 +103,7 @@ export default {
                         if (window.history.length > 1) {
                             this.$router.go(-1)
                         } else {
-                            this.$router.replace({ name: 'Courses', params: { courseType: '1' } })
+                            this.$router.replace({ name: 'VideoCourses', params: { courseType: '1' } })
                         }
                     })
                     return
