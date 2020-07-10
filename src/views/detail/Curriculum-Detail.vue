@@ -46,12 +46,10 @@
 
             <info-box>
                 <div :class="$style.priceBoxWrapper">
-                    <!-- 公益活动 -->
+                    <!-- 公益活动进入 -->
                     <div :class="$style.priceBox" v-if="productActive === 7">
-                        <template>
-                            <div v-if="detail.priceType === 1" :class="$style.price" v-text="detail.sellingPrice" />
-                            <div v-else :class="$style.free">免费</div>
-                        </template>
+                        <div v-if="detail.priceType === 1" :class="$style.price" v-text="detail.sellingPrice" />
+                        <div v-else :class="$style.free">免费</div>
                         <div :class="$style.original">
                             <div v-if="detail.priceType === 1" class="mr-30">
                                 <template v-if="isPresent">
@@ -63,6 +61,7 @@
                             </div>
                         </div>
                     </div>
+                    <!-- 非公益活动进入 -->
                     <div :class="$style.priceBox" v-else>
                         <template v-if="isPresent">
                             <div :class="$style.free">赠课</div>
@@ -72,14 +71,14 @@
                             <div v-else :class="$style.free">免费</div>
                         </template>
                         <div :class="$style.original">
-                            <div v-if="detail.priceType === 1 && (isPresent || detail.originalPrice && detail.originalPrice !== detail.sellingPrice)" class="mr-30">
-                                <template v-if="isPresent">
+                            <template v-if="detail.priceType === 1">
+                                <div v-if="isPresent" class="mr-30">
                                     售价：<del v-text="detail.sellingPrice" />
-                                </template>
-                                <template v-else-if="detail.originalPrice && detail.originalPrice !== detail.sellingPrice">
+                                </div>
+                                <div v-else-if="detail.originalPrice && detail.originalPrice !== detail.sellingPrice" class="mr-30">
                                     原价：<del v-text="detail.originalPrice" />
-                                </template>
-                            </div>
+                                </div>
+                            </template>
                             <div v-if="Number(detail.showSales) === 1">
                                 <span v-if="detail.sale === 0">正在热销中</span>
                                 <template v-else>
@@ -628,10 +627,6 @@ export default {
                 this.$error('图片加载错误')
                 return
             }
-            // if (this.haibao) {
-            //     this.showHaibao = true
-            //     return
-            // }
             this.creating = true
 
             // 截取头像
@@ -679,7 +674,6 @@ export default {
                 ctx.drawImage(qrcode, 750, 978, 320, 320)
 
                 // 填充商品名称
-                // let str = this.detail.courseName
                 const line = ((type !== 1 && this.preActivity === 2) || this.courseType === 2) ? 1 : 2
                 const { sellingPrice: price, originalPrice, totalLiveNumber } = this.detail
                 ctx.textBaseline = 'top'
@@ -794,7 +788,7 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 1;
+    z-index: 10;
     &.regular {
         height: 80px !important;
     }

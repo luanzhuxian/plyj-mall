@@ -7,8 +7,8 @@
                 <span>.pdf</span>
             </p>
             <button :class="$style.imageTextListButton">
-                <span v-if="true">购买后可查看</span>
-                <span v-else :class="$style.highlight">打开资料</span>
+                <span v-if="isBought" :class="$style.highlight">打开资料</span>
+                <span v-else>购买后可查看</span>
             </button>
         </li>
     </ul>
@@ -21,7 +21,8 @@ export default {
         data: {
             type: Array,
             default: () => []
-        }
+        },
+        isBought: Boolean
     },
     data () {
         return {}

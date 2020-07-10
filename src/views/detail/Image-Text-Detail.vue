@@ -32,12 +32,22 @@
             <info-box>
                 <div :class="$style.priceBoxWrapper">
                     <div :class="$style.priceBox">
-                        <div v-if="detail.priceType === 1" :class="$style.price" v-text="detail.sellingPrice" />
-                        <div v-else :class="$style.free">免费</div>
+                        <template v-if="detail.isGive">
+                            <div :class="$style.free">赠课</div>
+                        </template>
+                        <template v-else>
+                            <div v-if="detail.priceType === 1" :class="$style.price" v-text="detail.sellingPrice" />
+                            <div v-else :class="$style.free">免费</div>
+                        </template>
                         <div :class="$style.original">
-                            <div v-if="detail.priceType === 1 && (detail.originalPrice && detail.originalPrice !== detail.sellingPrice)" class="mr-30">
-                                原价：<del v-text="detail.originalPrice" />
-                            </div>
+                            <template v-if="detail.priceType === 1">
+                                <div v-if="detail.isGive" class="mr-30">
+                                    售价：<del v-text="detail.sellingPrice" />
+                                </div>
+                                <div v-else-if="detail.originalPrice && detail.originalPrice !== detail.sellingPrice" class="mr-30">
+                                    原价：<del v-text="detail.originalPrice" />
+                                </div>
+                            </template>
                             <div v-if="Number(detail.showSales) === 1">
                                 <span v-if="detail.sale === 0">正在热销中</span>
                                 <template v-else>
@@ -67,7 +77,7 @@
             <div :class="$style.detailOrComment">
                 <Tabs :tabs="tabs" v-model="tab">
                     <detail-info v-show="tab === 1" :content="detail.details || '暂无详情'" />
-                    <image-text-list v-show="tab === 2" :data="detail.graphicPdfs || []" />
+                    <image-text-list v-show="tab === 2" :data="detail.graphicPdfs || []" :is-bought="isBought" />
                 </Tabs>
             </div>
 
@@ -92,26 +102,27 @@
                 </div>
                 <div :class="$style.buttons">
                     <button
-                        v-if="false"
+                        v-if="isBought"
                         :class="$style.button + ' ' + $style.yellow"
-                        :disabled="Number(detail.status) === 2 || loading"
-                        @click="openFIle"
+                        :disabled="loading"
+                        @click="openFile"
                     >
                         查看资料
                     </button>
                     <button
+                        v-else
                         :class="$style.button + ' ' + $style.orange"
-                        :disabled="Number(detail.status) === 2 || loading || isNotStarted"
+                        :disabled="loading || !isNormal || isNotStarted"
                         @click="submit"
                     >
-                        {{ (isNotStarted && Number(detail.status) !== 2) ? '即将开售' : '立即订购' }}
+                        {{ (isNormal && isNotStarted) ? '即将开售' : '立即订购' }}
                     </button>
                 </div>
             </div>
 
             <div
                 :class="$style.buttomTip"
-                v-if="Number(detail.status) === 2 && !~[5, 6].indexOf(productActive) && !detail.isBuy"
+                v-if="Number(detail.status) === 2 && !~[5, 6].indexOf(productActive) && !isBuy"
             >
                 该图文资料已下架
             </div>
@@ -213,7 +224,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['appId', 'userName', 'avatar', 'mobile', 'mallUrl', 'userId', 'agentUser', 'courseTypeMap', 'servicePhoneModels']),
+        ...mapGetters(['appId', 'userName', 'avatar', 'mobile', 'mallUrl', 'userId', 'agentUser', 'servicePhoneModels']),
 
         // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去 5 从春耘活动进入 6 从组合课活动进入 7 公益棕活动进入
         productActive () {
@@ -223,14 +234,15 @@ export default {
             return this.$route.query.activityId || ''
         },
         isCountdownShow () {
-            const {
-                isOpenSale = 0,
-                regularSaleTime,
-                status,
-                dataStatus,
-                isGive
-            } = this.detail
-            return status === 1 && dataStatus === 1 && !isGive && isOpenSale === 1 && regularSaleTime
+            return this.isNormal && !this.isBought && this.isNotStarted
+        },
+        // 商品状态是否正常
+        isNormal () {
+            return Number(this.detail.status) === 1 && Number(this.detail.dataStatus) === 1
+        },
+        // 已买
+        isBought () {
+            return !!this.detail.isGive
         },
         // 是否定时开售
         isOpenSale () {
@@ -242,7 +254,7 @@ export default {
         },
         // 是否未开始销售
         isNotStarted () {
-            return this.distanceStart > 0 && this.isOpenSale
+            return this.distanceStart > 0 && this.isOpenSale === 1
         }
     },
     watch: {
@@ -340,6 +352,7 @@ export default {
                     pdf.name = pdf.name.replace('.pdf', '')
                 }
                 this.detail = result
+
                 return result
             } catch (e) {
                 throw e
@@ -372,13 +385,14 @@ export default {
                         skuCode1: '',
                         skuCode2: '',
                         price: this.detail.sellingPrice,
-                        productType: this.courseTypeMap[this.courseType]
+                        // TODO:
+                        productType: ''
                     }
                 ]
             })
             this.$router.push({ name: 'SubmitOrder' })
         },
-        openFIle () {},
+        openFile () {},
         // 生成分享
         async createShare () {
             const { graphicName, graphicBrief, graphicMainImg } = this.detail
@@ -413,10 +427,6 @@ export default {
                 this.$error('图片加载错误')
                 return
             }
-            // if (this.haibao) {
-            //     this.showHaibao = true
-            //     return
-            // }
             this.creating = true
 
             // 截取头像
@@ -464,7 +474,6 @@ export default {
                 ctx.drawImage(qrcode, 750, 978, 320, 320)
 
                 // 填充商品名称
-                // let str = this.detail.courseName
                 const line = type !== 1 && this.preActivity === 2 ? 1 : 2
                 const { sellingPrice: price, originalPrice } = this.detail
                 ctx.textBaseline = 'top'
@@ -547,7 +556,7 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 1;
+    z-index: 10;
     &.regular {
         height: 80px !important;
     }
