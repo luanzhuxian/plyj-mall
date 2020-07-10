@@ -1,9 +1,9 @@
 <template>
     <ul :class="$style.imageTextList">
-        <li :class="$style.imageTextListItem" v-for="(item, index) of 6" :key="index">
+        <li :class="$style.imageTextListItem" v-for="(item, index) of data" :key="index">
             <pl-svg name="icon-pdf-887fd" width="40" />
             <p>
-                <i>舞蹈考级教程说明</i>
+                <i v-text="item.name" />
                 <span>.pdf</span>
             </p>
             <button :class="$style.imageTextListButton">

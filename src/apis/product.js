@@ -64,3 +64,10 @@ export const getRedeemCodeList = productId => axios.get(`/apis/v1/exchange/me/li
  * @return {*}
  */
 export const submitOrderAndPay = (courseId, params) => axios.post(`/apis/v1/mall/live/order/create/course/order/${ courseId }`, params)
+
+/**
+ * 获取图文详情
+ * @param id {string}
+ * @returns {Promise<AxiosResponse<Object>>}
+ */
+export const getImageTextDetail = id => axios.get(`/apis/v1/graphic/find/${ id }`)

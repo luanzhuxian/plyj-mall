@@ -41,18 +41,18 @@
                     </div>
                 </div>
 
-                <!-- 课程名称 -->
-                <detail-title :product-name="detail.courseName" />
-                <!-- 课程描述 -->
-                <detail-desc v-text="detail.courseBrief" />
+                <!-- 名称 -->
+                <detail-title :product-name="detail.graphicName" />
+                <!-- 描述 -->
+                <detail-desc v-text="detail.graphicBrief" />
 
                 <field
-                    v-if="detail.lecturer"
+                    v-if="detail.author"
                     :class="$style.field"
                     size="small"
                     icon="icon-teacher-d2398"
                     label="作者："
-                    :content="detail.lecturer"
+                    :content="detail.author"
                 />
             </info-box>
 
@@ -60,7 +60,10 @@
             <div :class="$style.detailOrComment">
                 <Tabs :tabs="tabs" v-model="tab">
                     <detail-info v-show="tab === 1" :content="detail.details || '暂无详情'" />
-                    <image-text-list v-show="tab === 2" />
+                    <image-text-list
+                        v-show="tab === 2"
+                        :data="detail.graphicPdfs || []"
+                    />
                 </Tabs>
             </div>
 
@@ -79,12 +82,6 @@
                         <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/联系我们.png" alt="">
                         <i :class="$style.text">联系我们</i>
                     </a>
-                    <router-link :class="$style.link + ' ' + $style.cart" :to="{ name: 'ShoppingCart' }">
-                        <i v-if="cartCount > 99" :class="$style.cartCount">99+</i>
-                        <i v-else-if="cartCount > 0" :class="$style.cartCount" v-text="cartCount" />
-                        <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/购物车选中.png" alt="">
-                        <i :class="$style.text">购物车</i>
-                    </router-link>
                 </div>
                 <div :class="$style.buttons">
                     <button
@@ -94,6 +91,13 @@
                         @click="openFIle"
                     >
                         查看资料
+                    </button>
+                    <button
+                        v-if="distanceStart > 0 && isOpenSale"
+                        :class="$style.button + ' ' + $style.orange"
+                        disabled
+                    >
+                        {{ Number(detail.status) === 2 ? '立即订购' : '即将开售' }}
                     </button>
                     <button
                         v-else
@@ -106,12 +110,12 @@
                 </div>
             </div>
 
-            <!-- <div
+            <div
                 :class="$style.buttomTip"
                 v-if="Number(detail.status) === 2 && !~[5, 6].indexOf(productActive) && !detail.isBuy"
             >
                 该图文资料已下架
-            </div> -->
+            </div>
 
             <contact :show.sync="showContact" />
 
@@ -145,7 +149,7 @@ import Tabs from './components/Tabs.vue'
 import ImageTextList from './components/Image-Text-List.vue'
 import Skeleton from './components/Skeleton.vue'
 import share from '../../assets/js/wechat/wechat-share'
-import { getCourseDetail } from '../../apis/product'
+import { getImageTextDetail } from '../../apis/product'
 import {
     generateQrcode,
     cutImageCenter,
@@ -153,7 +157,7 @@ import {
     loadImage,
     createText
 } from '../../assets/js/util'
-
+import moment from 'moment'
 const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
 
 export default {
@@ -211,10 +215,18 @@ export default {
 
         // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去 5 从春耘活动进入 6 从组合课活动进入 7 公益棕活动进入
         productActive () {
-            return (this.$route.query && Number(this.$route.query.currentProductStatus)) || 1
+            return 1
         },
         activityId () {
-            return this.$route.query.activityId
+            return this.$route.query.activityId || ''
+        },
+        // 是否定时开售
+        isOpenSale () {
+            return Boolean(this.detail.isOpenSale)
+        },
+        // 距离开售的世界
+        distanceStart () {
+            return moment(this.detail.regularSaleTime).valueOf() - Date.now()
         }
     },
     watch: {
@@ -303,22 +315,21 @@ export default {
         async getDetail () {
             try {
                 // 此步是为了兼容处理，当当前产品的活动结束，重新刷新产品详情页面，当作普通商品
-                const { result } = await getCourseDetail(this.productId, { productStatus: this.productActive })
+                const { result } = await getImageTextDetail(this.productId)
                 if (!result) {
                     this.$error('该课程异常')
                     this.$router.go(-1)
                     return
                 }
 
-                const {
-                    courseImg,
-                    courseMainImg
-                } = result
+                const { graphicImgs, graphicMainImg } = result
 
-                // this.tab = courseType
-                this.banners = courseImg ? (courseMainImg.splice(0, 1, courseImg) && courseMainImg) : courseMainImg
+                this.banners = graphicMainImg ? (graphicImgs.splice(0, 1, graphicMainImg) && graphicImgs) : graphicImgs
+                // 删除文件名的后缀
+                for (const pdf of result.graphicPdfs) {
+                    pdf.name = pdf.name.replace('.pdf', '')
+                }
                 this.detail = result
-
                 return result
             } catch (e) {
                 throw e
@@ -578,7 +589,7 @@ export default {
         flex: 1;
         width: 0;
         height: 100%;
-        padding: 0 40px;
+        padding: 0 38px;
     }
     .link {
         position: relative;
@@ -624,7 +635,7 @@ export default {
    .buttons {
         display: flex;
         margin-right: 20px;
-        width: 420px;
+        width: 496px;
         border-radius: 10px;
         overflow: hidden;
     }
