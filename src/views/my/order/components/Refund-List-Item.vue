@@ -13,7 +13,7 @@
             </div>
             <p
                 :class="$style.status"
-                v-text="orderStatusMap[orderStatus]"
+                v-text="orderStatusDesc"
             />
         </div>
         <OrderItem
@@ -35,9 +35,9 @@
                     :class="$style.reundType"
                     v-text="refundTypeMap[refundType]"
                 />
-                <!--退款中/退款成功 不支持取消申请-->
+                <!--商家确认之前，即在 1:待退货 2:待收货 3:退货完成 4:待退款 支持 取消申请 -->
                 <pl-button
-                    v-if="~[5, 6].indexOf(refundStatus)"
+                    v-if="[1, 2, 3, 4].includes(refundStatus)"
                     round
                     plain
                     @click="doOperation('cancelApplication')"
@@ -152,7 +152,12 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['orderTypeMap', 'orderStatusMap', 'refundTypeMap'])
+        ...mapGetters(['orderTypeMap', 'orderTypeKeyMap', 'orderStatusMap', 'orderStatuskeyMap', 'refundTypeMap']),
+        orderStatusDesc () {
+            return [this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS].includes(this.orderType) &&
+                this.orderStatuskeyMap.WAIT_RECEIVE === this.orderStatus
+                ? this.orderStatusMap[this.orderStatuskeyMap.WAIT_RECEIVE_OF_VIRTUAL] : this.orderStatusMap[this.orderStatus]
+        }
     },
     methods: {
     // 取消订单

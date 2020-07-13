@@ -160,7 +160,9 @@
 <script>
 import OrderItem from '../../../components/item/Order-Item.vue'
 import {
+    getRefundOrderDetail,
     applyRefund,
+    modifyRefund,
     getMap as getRefundReasonMap,
     getMaxRefund
 } from '../../../apis/order-manager'
@@ -255,6 +257,30 @@ export default {
     async created () {
         this.form.type = String(this.refundType)
         this.form.orderId = this.orderId
+        if (this.type === 'MODIFY') {
+            const { result } = await getRefundOrderDetail(this.refundId)
+            const {
+                serviceType: type,
+                reasonForReturn,
+                urls,
+                content,
+                refundableAmount
+            } = result
+            this.form = {
+                // 原订单id
+                orderId: this.orderId,
+                // 售后类型 1-仅退款 2-退款退货
+                type,
+                // 退款原因
+                reasonForReturn,
+                // 售后图片信息
+                images: urls || [],
+                // 售后描述
+                content,
+                // 申请退款金额
+                amount: refundableAmount / 100
+            }
+        }
         try {
             // 获取退款原因字典
             ({ result: this.refundReasonList } = await getRefundReasonMap(this.refundReasonCode));
@@ -264,7 +290,7 @@ export default {
             this.form.amount = this.maxRefundAmount
         } catch (e) {
             setTimeout(() => {
-                this.$router.replace({ name: 'OrderDetail', params: { id: this.orderId } })
+                // this.$router.replace({ name: 'OrderDetail', params: { id: this.orderId } })
             }, 2000)
             throw e
         }
@@ -319,7 +345,14 @@ export default {
                 this.loading = true
                 const form = JSON.parse(JSON.stringify(this.form))
                 form.amount = form.amount * 100
-                const { result: refundId } = await applyRefund(form)
+                let refundId = this.refundId
+                if (this.type === 'MODIFY') {
+                    form.id = this.refundId
+                    await modifyRefund(form)
+                } else {
+                    const { result } = await applyRefund(form)
+                    refundId = result
+                }
                 if (refundId) {
                     this.$warning('申请成功')
                     setTimeout(() => {

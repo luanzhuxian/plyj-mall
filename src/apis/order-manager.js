@@ -63,7 +63,7 @@ export const getMap = code => axios.get(`/apis/v1/systemctl/sysdictionary/detail
 // export const applyRefund = params => axios.post(`/apis/v1/refund/refund/customer/apply`, params)
 
 // 更改退单
-export const modifyRefund = params => axios.post(`/apis/v1/refund/refund/customer/modifyRefund`, params)
+export const modifyRefund = params => axios.post(`/apis/v2/order/refunds/update/refund`, params)
 
 // 售后列表查询
 // export const getRefundOrderList = params => axios.post(`/apis/v1/refund/refund/consumer/selectRefund`, params)
@@ -232,7 +232,7 @@ export const getRefundOrderDetail = id => axios.get(`/apis/v2/order/refunds/deta
  * @param {Object} id - 售后单id
  * @return {*}
  */
-export const cancelRefundApplication = id => axios.post(`/apis/v2/order/refunds/cancel?id=${ id }`)
+export const cancelRefundApplication = id => axios.get(`/apis/v2/order/refunds/cancel?id=${ id }`)
 
 /**
  * 删除售后

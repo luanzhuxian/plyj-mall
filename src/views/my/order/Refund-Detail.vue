@@ -78,7 +78,7 @@
                 <div v-if="![6, 7].includes(refundStatus)" :class="$style.tips">
                     <!--实体订单 + 发货后 + 运费不为0  运费不可退-->
                     <template v-if="needReturnProduct && orderDetails.freight">运费{{ orderDetails.freight | formatAmount }}不可退</template>
-                    <template v-if="orderDetails.couponAmount">优惠{{ orderDetails.couponAmount | formatAmount }}元不可退，</template>
+                    <template v-if="orderDetails.couponAmount">优惠劵{{ orderDetails.couponAmount | formatAmount }}元不可退，</template>
                     <template v-if="orderDetails.scholarship">红包(奖学金){{ orderDetails.scholarship | formatAmount }}元不可退，</template>
                     如有疑问，请联系商家协商
                 </div>
@@ -190,13 +190,7 @@
                 v-if="[1, 2, 3, 4].includes(refundStatus)"
                 round
                 plain
-                @click="$router.push({ name: 'RefundApply',
-                                       params: { orderId: orderDetails.id,
-                                                 orderStatus: orderDetails.status,
-                                                 refundId: refundDetail.id,
-                                                 refundType: refundType,
-                                                 type: 'MODIFY'
-                                       } })"
+                @click="modifyRefund"
             >
                 更改退单
             </pl-button>
@@ -381,6 +375,16 @@ export default {
             this.form.expressName = selected[0]
             this.isPickerShow = false
         },
+        modifyRefund () {
+            this.$store.commit('setRefundGoods', this.orderDetails.goodsModel)
+            this.$router.push({ name: 'RefundApply',
+                params: { orderId: this.orderDetails.id,
+                    orderStatus: this.orderDetails.status,
+                    refundId: this.refundDetail.id,
+                    refundType: this.refundType,
+                    type: 'MODIFY'
+                } })
+        },
         async cancelApplication () {
             try {
                 const { id } = this
@@ -409,7 +413,7 @@ export default {
         },
         async submit () {
             try {
-                if (!this.form.expressName) return this.$warning('请选择物流公司')
+                if (!this.form.expressName) return this.$warning('请选择快递公司')
                 if (!this.form.expressNo.trim()) return this.$warning('请输入快递单号')
                 if (!isExpressNumber(this.form.expressNo)) return this.$warning('请输入正确的快递单号')
                 this.loading = true
@@ -555,6 +559,9 @@ export default {
     .img-list-wrapper {
       padding-top: 22px;
       margin-top: 4px;
+      > span {
+        min-width: 120px!important;
+      }
     }
     .img-list {
       display: inline-flex;
