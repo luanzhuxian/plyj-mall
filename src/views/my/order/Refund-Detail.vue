@@ -495,9 +495,10 @@ export default {
   .express-info-panel {
     padding-left: 28px;
     .express-no {
+      margin-left: -16px;
       font-size: 28px;
       font-family: PingFangSC-Semibold;
-      font-weight: 600;
+      font-weight: 400;
       color: #333333;
       line-height: 40px;
     }
