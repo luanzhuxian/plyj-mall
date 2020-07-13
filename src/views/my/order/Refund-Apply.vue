@@ -65,7 +65,7 @@
                             type="textarea"
                             placeholder="请填写您的原因"
                             :min-rows="8"
-                            :maxlength="500"
+                            :maxlength="100"
                             v-model="form.content"
                         />
                     </div>
