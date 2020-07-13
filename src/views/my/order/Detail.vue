@@ -96,7 +96,7 @@
                     </pl-button>
                     <!--实际支付大于0 + 支持售后 支持 申请退款-->
                     <pl-button
-                        v-if="detail.orderSource === skuSourceKeyMap.NORMAL && detail.aftersaleStatus === aftersaleStatusKeyMap.PROCESSING"
+                        v-if="detail.orderSource === skuSourceKeyMap.NORMAL && detail.aftersaleStatus === aftersaleStatusKeyMap.PROCESSING && !(orderRefundsInfo.auditStatus === 2 && orderRefundsInfo.businessStatus === 1)"
                         plain
                         round
                         @click="$router.push({ name: 'RefundDetail', params: { id: detail.refundId } })"

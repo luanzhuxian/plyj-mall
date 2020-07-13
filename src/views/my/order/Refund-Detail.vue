@@ -34,7 +34,7 @@
 
         <!--实体订单,退款退货 + 待退货 填写物流信息, 由后台决定，待退货状态则显示-->
         <section
-            v-if="refundStatus === 1"
+            v-if="refundDetail.auditStatus === 2 && refundStatus === 1"
             :class="[$style.panel, $style.expressInfoPanel]"
         >
             <pl-fields
@@ -136,7 +136,7 @@
                 <pl-list title="申请件数：" :content="`${orderDetails.count}件`" />
                 <pl-list title="申请时间：" :content="refundDetail.createTime" />
             </div>
-            <div :class="[$style.infoList, $style.borderTop]" v-if="refundDetail.urls.length || refundDetail.content">
+            <div :class="[$style.infoList, $style.borderTop]" v-if="refundDetail.urls || refundDetail.content">
                 <pl-list
                     v-if="refundDetail.content"
                     title="问题描述："
@@ -162,7 +162,7 @@
         </div>
 
         <!--退款退货1 + 待退货1 填写物流信息 后确认按钮-->
-        <div v-if="refundStatus === 1" :class="$style.footerSubmit">
+        <div v-if="refundDetail.auditStatus === 2 && refundStatus === 1" :class="$style.footerSubmit">
             <pl-button size="larger" type="warning" :loading="loading" :disabled="loading" @click="submit">
                 提交申请
             </pl-button>
