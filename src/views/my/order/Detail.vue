@@ -114,10 +114,10 @@
                     >
                         退款完成
                     </pl-button>
-                    <!--退货中 支持 寄件运单号显示-->
+                    <!--退货中，且审核通过 支持 寄件运单号显示-->
                     <pl-button
                         :class="$style.large"
-                        v-if="detail.orderSource === skuSourceKeyMap.NORMAL && detail.orderRefundsModel && detail.orderRefundsModel.businessStatus === 1"
+                        v-if="detail.orderSource === skuSourceKeyMap.NORMAL && detail.orderRefundsModel && detail.orderRefundsModel.businessStatus === 1 && orderRefundsInfo.auditStatus === 2"
                         type="warning"
                         plain
                         round
@@ -544,6 +544,8 @@ export default {
             detail: {},
             // 退款中/退款成功 已经进入 微信打款阶段，不可再 确认收货/核销
             isRefundsFinalStage: false,
+            // 退换货详情
+            orderRefundsInfo: {},
             // 商品详情
             goodsModel: {},
             // 订单最后一次交易记录
@@ -710,6 +712,7 @@ export default {
                 goodsModel.sellingPrice = filter.formatAmount(goodsModel.sellingPrice)
                 // // orderRefundsModel.businessStatus 退换货状态 1:待退货 2:待收货 3:退货完成 4:待退款 5:退款中 6:退款成功 7:退款失败
                 this.isRefundsFinalStage = result.orderRefundsModel && [5, 6].includes(result.orderRefundsModel.businessStatus)
+                this.orderRefundsInfo = result.orderRefundsModel || {}
                 // 商品详情
                 this.goodsModel = goodsModel
                 // 支付信息
