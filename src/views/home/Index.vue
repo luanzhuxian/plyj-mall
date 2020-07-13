@@ -1,7 +1,5 @@
 <template>
     <div :class="$style.home">
-        <a style="display: block; font-size: 20px;" href="https://mallcdn.youpenglai.com/pdf/admall/dev/1057573777392603136/6ff363e0-c277-11ea-b9d8-e535c6131d39-173376ee91e.pdf" target="_blank">打开资料</a>
-
         <template v-if="allLoaded">
             <template-b
                 v-if="~[3, 4].indexOf(type)"

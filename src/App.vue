@@ -1,5 +1,6 @@
 <template>
     <div id="app">
+        <a style="display: block; font-size: 20px;" href="https://mallcdn.youpenglai.com/pdf/admall/dev/1057573777392603136/6ff363e0-c277-11ea-b9d8-e535c6131d39-173376ee91e.pdf" target="_blank">打开资料</a>
         <keep-alive :exclude="exclude">
             <router-view v-if="logined" />
         </keep-alive>
