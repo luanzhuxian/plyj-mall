@@ -100,11 +100,11 @@
             <div :class="$style.popupContentWrapper">
                 <pl-radio-group v-model="temporaryRefundType">
                     <pl-radio
-                        v-for="k of Object.keys(refundTypeMap)"
+                        v-for="k of Object.keys(localRefundTypeMap)"
                         :label="k"
                         :key="k"
                     >
-                        <div :class="$style.popupItem" v-text="refundTypeMap[k]" />
+                        <div :class="$style.popupItem" v-text="localRefundTypeMap[k]" />
                     </pl-radio>
                 </pl-radio-group>
                 <pl-button class="mt-22" size="large" type="warning" @click="changetRefundType">
@@ -245,6 +245,16 @@ export default {
     },
     computed: {
         ...mapGetters(['refundTypeMap', 'refundGoodsInfo', 'orderTypeKeyMap', 'orderStatuskeyMap']),
+        localRefundTypeMap () {
+            // 只有实体商品 可 退款退货
+            const refundTypeMap = {
+                1: '仅退款'
+            }
+            if (this.refundGoodsInfo.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS) {
+                refundTypeMap[2] = '退款退货'
+            }
+            return refundTypeMap
+        },
         refundReasonCode () {
             if (this.refundGoodsInfo.orderType !== this.orderTypeKeyMap.PHYSICAL_GOODS) return 'REASONREFUNDVIRTURALANDCLASS'
             if (this.orderStatus === this.orderStatuskeyMap.WAIT_SHIP) return 'REASONBUYERPAID'
