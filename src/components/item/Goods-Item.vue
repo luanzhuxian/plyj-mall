@@ -119,7 +119,9 @@ export default {
     },
     methods: {
         async handleClick () {
-            if (this.productType === 'KNOWLEDGE_COURSE') {
+            if (this.productType === 'GRAPHIC_DATA') {
+                this.$router.push({ name: 'ImageTextDetail', params: { productId: this.id } })
+            } else if (this.productType === 'KNOWLEDGE_COURSE') {
                 this.$router.push({ name: 'Curriculum', params: { productId: this.id } })
             } else {
                 this.$router.push({ name: 'Product', params: { productId: this.id } })
