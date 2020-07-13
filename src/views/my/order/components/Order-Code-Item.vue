@@ -122,7 +122,15 @@ export default {
                 ctx.fillText(`${ this.mobile }`, 475, 1070)
                 ctx.font = '33px Microsoft YaHei'
                 ctx.fillStyle = '#333'
-                createText(ctx, 330, 1250, `${ this.goodsModel.name }`, 50, 500, 2)
+                createText({
+                    ctx,
+                    x: 330,
+                    y: 1250,
+                    text: `${ this.goodsModel.name }`,
+                    lineHeight: 50,
+                    width: 500,
+                    lineNumber: 2
+                })
                 ctx.font = '33px Microsoft YaHei'
                 ctx.fillStyle = '#333'
                 ctx.textAlign = 'right'
@@ -169,12 +177,6 @@ export default {
         background: #FE7700;
         border-radius: 4px;
       }
-    }
-
-    &:nth-last-of-type(1) {
-      border-bottom: none;
-      margin: 0;
-      padding: 0;
     }
 
     .code-box {
