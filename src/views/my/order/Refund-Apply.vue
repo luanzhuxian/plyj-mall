@@ -313,17 +313,15 @@ export default {
             this.showRefundReason = false
         },
         onInput (e) {
-            if (Number.isNaN(Number(e.target.innerText))) {
-                document.getElementById('edit').innerText = '0'
-                this.form.amount = 0
-            } else {
-                this.form.amount = Number(e.target.innerText)
-                if (this.form.amount > this.maxRefundAmount) {
-                    this.form.amount = this.maxRefundAmount
-                    document.getElementById('edit').innerText = this.maxRefundAmount
-                    this.$warning(`最大退款金额为${ this.maxRefundAmount }`)
-                }
+            let amount = Number(e.target.innerText)
+            if (Number.isNaN(amount)) {
+                amount = 0
             }
+            if (amount > this.maxRefundAmount) {
+                amount = this.maxRefundAmount
+                this.$warning(`最大退款金额为${ this.maxRefundAmount }`)
+            }
+            this.form.amount = Math.floor(amount * 100) / 100
             e.target.innerText = this.form.amount
         },
         checkData () {
