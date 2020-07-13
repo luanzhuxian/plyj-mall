@@ -114,10 +114,10 @@
                     >
                         退款完成
                     </pl-button>
-                    <!--退货中，且审核通过 支持 寄件运单号显示-->
+                    <!--非活动商品 + 售后申请成功 + 待退货 寄件运单号显示-->
                     <pl-button
                         :class="$style.large"
-                        v-if="detail.orderSource === skuSourceKeyMap.NORMAL && detail.orderRefundsModel && detail.orderRefundsModel.businessStatus === 1 && orderRefundsInfo.auditStatus === 2"
+                        v-if="detail.orderSource === skuSourceKeyMap.NORMAL && orderRefundsInfo.auditStatus === 2 && orderRefundsInfo.businessStatus === 1"
                         type="warning"
                         plain
                         round

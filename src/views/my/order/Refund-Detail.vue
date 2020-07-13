@@ -185,9 +185,10 @@
             >
                 联系我们
             </pl-button>
-            <!--1:待退货 2:待收货 3:退货完成 4:待退款 可 更改退单-->
+            <!--auditStatus 0 取消售后 1 待审核 2 审核通过 3 退款驳回 -->
+            <!--在售后单 待审核状态 才可修改退单-->
             <pl-button
-                v-if="[1, 2, 3, 4].includes(refundStatus)"
+                v-if="refundDetail.auditStatus === 1"
                 round
                 plain
                 @click="modifyRefund"
