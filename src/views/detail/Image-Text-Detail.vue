@@ -254,7 +254,7 @@ export default {
         },
         // 是否未开始销售
         isNotStarted () {
-            return this.distanceStart > 0 && this.isOpenSale === 1
+            return this.distanceStart > 0 && this.isOpenSale
         }
     },
     watch: {
