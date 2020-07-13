@@ -3,8 +3,8 @@
     <div v-else :class="$style.refundDetail">
         <div :class="$style.title">
             <top-text
-                :title="refundStatusMap[refundStatus]"
-                :tip="suggestionMap[refundStatus]"
+                :title="auditStatusMap[refundDetail.auditStatus] || refundStatusMap[refundStatus]"
+                :tip="auditStatusSuggestionMap[refundDetail.auditStatus] || suggestionMap[refundStatus]"
             />
         </div>
         <!--实体订单,退换货状态 1:待退货 2:待收货 3:退货完成 4:待退款 5:退款中 6:退款成功 显示 退货物流 + 退货信息-->
@@ -311,6 +311,21 @@ export default {
                 6: '您的退款申请已受理完成',
                 // 退款失败
                 7: '退款已关闭,如有问题请尽快与商家协商'
+            },
+            // auditStatus 0 取消售后 1 待审核 2 审核通过 3 退款驳回
+            auditStatusMap: {
+                0: '售后关闭',
+                1: '待审核',
+                // 审核通过显示业务状态
+                2: '',
+                3: '售后驳回'
+            },
+            auditStatusSuggestionMap: {
+                0: '您的售后申请已取消，如有问题请联系客服；',
+                1: '请耐心等待商家审核，如有问题请联系客服',
+                // 审核通过显示业务状态
+                2: '',
+                3: '您的售后申请被驳回，如有问题请联系客服；'
             },
             expressMap: []
         }
