@@ -27,7 +27,7 @@
                         <span :class="$style.name" v-text="`退货信息：${adressInfo.realName}`" />
                         <span :class="$style.phone" v-text="adressInfo.mobile" />
                     </div>
-                    <div :class="$style.sub" v-text="adressInfo.addressPrefix" />
+                    <div :class="$style.sub" v-text="adressInfo.addressPrefix + adressInfo.agencyAddress" />
                 </div>
             </div>
         </section>
