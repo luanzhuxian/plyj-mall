@@ -204,8 +204,9 @@ export default {
                     value: 2
                 }
             ],
-            tab: 2,
+            tab: 1,
             showContact: false,
+            // 海报
             haibao: '',
             creating: false,
             showHaibao: false,
@@ -242,7 +243,7 @@ export default {
         },
         // 已买
         isBought () {
-            return !!this.detail.isGive
+            return !!this.detail.isGive && !!this.detail.orderId
         },
         // 是否定时开售
         isOpenSale () {
@@ -352,6 +353,8 @@ export default {
                     pdf.name = pdf.name.replace('.pdf', '')
                 }
                 this.detail = result
+                // 根据是否已购买展示不同的tab
+                this.tab = result.orderId ? 2 : 1
 
                 return result
             } catch (e) {
@@ -385,7 +388,6 @@ export default {
                         skuCode1: '',
                         skuCode2: '',
                         price: this.detail.sellingPrice,
-                        // TODO:
                         productType: ''
                     }
                 ]

@@ -7,7 +7,7 @@
                 <span>.pdf</span>
             </p>
             <button :class="$style.imageTextListButton">
-                <span v-if="isBought" :class="$style.highlight">打开资料</span>
+                <a v-if="isBought" :class="$style.highlight" :href="item.url">打开资料</a>
                 <span v-else>购买后可查看</span>
             </button>
         </li>
@@ -54,7 +54,7 @@ export default {
             display: flex;
             flex: 1;
             width: 0;
-            padding: 0 14px;
+            padding: 0 20px;
             @include elps();
             > i {
                 @include elps();
@@ -64,7 +64,8 @@ export default {
     &-button {
         margin-left: auto;
         color: #666666;
-        &.highlight {
+        > a.highlight {
+            text-decoration: none;
             color: #F2B036;
         }
     }
