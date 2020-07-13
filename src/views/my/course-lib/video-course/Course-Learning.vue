@@ -1,9 +1,8 @@
 <template>
-    <div>
+    <div :class="$style.courseLearning">
         <load-more
             ref="loadMore"
             :form="form"
-            :class="$style.courseLearning"
             :request-methods="getCourseList"
             @refresh="refreshList"
             @more="refreshList"
@@ -11,7 +10,11 @@
             :no-icon="false"
             icon="icon-course-7ffcc"
         >
-            <study-item v-for="(item,index) in list" :key="index" :item="item" />
+            <study-item
+                v-for="(item,index) in list"
+                :key="index"
+                :item="item"
+            />
         </load-more>
         <!--无数据情况-->
         <div v-if="loading" :class="$style.none">

@@ -387,8 +387,8 @@ export default {
                         count: 1,
                         skuCode1: '',
                         skuCode2: '',
-                        price: this.detail.sellingPrice,
-                        productType: ''
+                        price: this.detail.sellingPrice || 0,
+                        productType: 'GRAPHIC_DATA'
                     }
                 ]
             })

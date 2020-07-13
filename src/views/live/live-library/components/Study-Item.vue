@@ -9,19 +9,19 @@
         </div>
         <div :class="$style.content">
             <div :class="$style.description">
-                <div>{{ item.courseName }}</div>
-                <div>{{ item.category2Name }}</div>
+                <div v-if="item.courseName" :class="$style.name" v-text="item.courseName" />
+                <div v-if="item.category2Name" :class="$style.category" v-text="item.category2Name" />
             </div>
             <div :class="$style.learn">
-                <div v-show="item.lecturer">主讲人：{{ item.lecturer }}</div>
-                <div>
-                    <!-- 单课程学习进度 -->
-                    <span v-if="courseType === '1'">已学习{{ (item.recordModels && item.recordModels[0] && item.recordModels[0].learnProgress) || 0 }}%</span>
-                    <!-- 系列课学习进度 -->
-                    <span v-else>已学习{{ item.learnedNumber || 0 }}节/{{ item.totalLiveNumber || 1 }}节课</span>
-                </div>
-                <div v-if="$route.params.learnStatus !== '3'">
-                    去学习
+                <div :class="$style.lecturer" v-if="item.lecturer">主讲人：{{ item.lecturer }}</div>
+                <div :class="$style.bottom">
+                    <div :class="$style.studyProgress" v-if="item.recordModels">
+                        <!-- 单课程学习进度 -->
+                        <span v-if="courseType === '1'">已学习{{ (item.recordModels && item.recordModels[0] && item.recordModels[0].learnProgress) || 0 }}%</span>
+                        <!-- 系列课学习进度 -->
+                        <span v-else>已学习{{ item.learnedNumber || 0 }}节/{{ item.totalLiveNumber || 1 }}节课</span>
+                    </div>
+                    <pl-button v-if="$route.params.learnStatus !== '3'" size="small" type="warning">去学习</pl-button>
                 </div>
             </div>
         </div>
@@ -149,23 +149,21 @@ export default {
         }
     }
     > .content {
-        display: flex;
-        flex-wrap: wrap;
-        align-content: space-between;
-        width: calc(100% - 304px);
+        display: inline-flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex: 1;
+        padding-left: 24px;
         > .description {
             width: 100%;
             font-size: 24px;
             color: #666;
-            > div:nth-of-type(1) {
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                font-size: 32px;
-                font-weight: 800;
+            > .name {
+                font-size: 28px;
                 color: #373737;
+                @include elps-wrap(1);
             }
-            > div:nth-of-type(2) {
+            > .category {
                 display: inline-block;
                 margin: 14px 0;
                 padding: 0 14px;
@@ -177,31 +175,26 @@ export default {
         }
         > .learn {
             display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
+            flex-direction: column;
             align-items: center;
             width: 100%;
-            > div:nth-of-type(1) {
+            > .lecturer {
                 width: 100%;
-                margin-bottom: 4px;
+                margin-bottom: 8px;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 font-size: 24px;
                 white-space: nowrap;
                 color: #666;
             }
-            > div:nth-of-type(2) {
+            .bottom {
+                width: 100%;
+                display: inline-flex;
+                justify-content: space-between;
+            }
+            .study-progress {
                 font-size: 28px;
                 color: #f2b036;
-            }
-            > div:nth-of-type(3) {
-                font-size: 26px;
-                text-align: center;
-                background-color: #f2b036;
-                color: #fff;
-                width: 120px;
-                line-height: 48px;
-                border-radius: 8px;
             }
         }
     }

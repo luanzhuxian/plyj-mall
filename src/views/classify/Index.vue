@@ -118,7 +118,7 @@ import SubClassify from '../../components/item/Sub-Classify.vue'
 import LoadMore from '../../components/common/Load-More.vue'
 import { getCategoryTree, getProduct, getCourseCategoryTree } from '../../apis/classify'
 import { getActivityProduct } from '../../apis/broker'
-import { getCourse } from '../../apis/online-classroom'
+import { getCourse, getImageTextList } from '../../apis/online-classroom'
 import { mapGetters } from 'vuex'
 import share from '../../assets/js/wechat/wechat-share'
 
@@ -207,11 +207,16 @@ export default {
         },
         // 切换主分类
         classifyClick (classify) {
-            if (this.loading) return
-            if (classify && classify.categoryType) {
+            console.log(classify, getImageTextList)
+            if (this.loading || !classify) return
+            if (classify.categoryType === 1 || classify.categoryType === 2) {
                 // 点击知识课程
                 this.currentClassify = classify
                 this.requestMethods = getCourse
+            } else if (classify.categoryType === 3) {
+                // 点击知识课程
+                this.currentClassify = classify
+                this.requestMethods = getImageTextList
             } else {
                 // 点击正常商品分类
                 this.requestMethods = getProduct

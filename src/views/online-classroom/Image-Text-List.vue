@@ -105,13 +105,7 @@ export default {
                 categoryId: '',
                 subCategoryId: '',
                 current: 1,
-                size: 10,
-                // 非必传
-                status: 1,
-                // 非必传
-                createTime: '',
-                // 非必传
-                graphicName: ''
+                size: 10
             },
             requestMethods: getImageTextList,
             loading: false,
