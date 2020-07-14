@@ -331,7 +331,7 @@ export default {
                 amount = this.maxRefundAmount
                 this.$warning(`最大退款金额为${ this.maxRefundAmount }`)
             }
-            this.form.amount = Math.floor(amount * 100) / 100
+            this.form.amount = Math.floor(Math.round(amount * 100)) / 100
             e.target.innerText = this.form.amount
         },
         checkData () {
@@ -352,7 +352,7 @@ export default {
             try {
                 this.loading = true
                 const form = JSON.parse(JSON.stringify(this.form))
-                form.amount = form.amount * 100
+                form.amount = Math.round(form.amount * 100)
                 let refundId = this.refundId
                 if (this.type === 'MODIFY') {
                     form.id = this.refundId

@@ -64,7 +64,7 @@
                 <!--待退货 支持去填写 寄件运单号(根据后台返回的退换货状态，1-为待退货)-->
                 <pl-button
                     :class="$style.large"
-                    v-if="refundStatus === 1"
+                    v-if="auditStatus === 2 && refundStatus === 1"
                     type="warning"
                     plain
                     round
@@ -156,7 +156,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['orderTypeMap', 'orderTypeKeyMap', 'auditStatusMap', 'orderStatusMap', 'orderStatuskeyMap', 'refundTypeMap'])
+        ...mapGetters(['orderTypeMap', 'orderTypeKeyMap', 'auditStatusMap', 'refundStatusMap', 'orderStatusMap', 'orderStatuskeyMap', 'refundTypeMap'])
     },
     methods: {
     // 取消订单
