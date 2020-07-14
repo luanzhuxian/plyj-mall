@@ -17,7 +17,7 @@
             />
         </load-more>
         <!--无数据情况-->
-        <div v-if="loading" :class="$style.none">
+        <div v-if="noContent" :class="$style.none">
             <div @click="goLearning" :class="$style.goLearning">去学习课程</div>
         </div>
     </div>
@@ -38,7 +38,7 @@ export default {
         return {
             getMyImageText,
             list: [],
-            loading: false,
+            noContent: false,
             form: {
                 current: 1,
                 size: 10
@@ -56,7 +56,10 @@ export default {
     methods: {
         refreshList (list) {
             this.list = list
-            this.loading = list.length === 0
+            this.noContent = list.length === 0
+        },
+        goLearning () {
+            this.$router.push({ name: 'ImageTextList' })
         }
     }
 }
