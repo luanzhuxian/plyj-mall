@@ -1,5 +1,5 @@
 <template>
-    <div :class="$style.studyItem" @click="target(item)">
+    <div :class="$style.studyItem" @click.capture="target(item)">
         <div :class="$style.img">
             <div :class="$style.give" v-if="item.transactionId === 0">送课</div>
             <div :class="$style.validity" v-if="item.validityType === 1">
@@ -71,6 +71,11 @@ export default {
                         return this.$warning('您不是该课程的适用用户')
                     }
                 }
+                // 图文资料
+                if (item.orderType === 5) {
+                    this.$router.push({ name: 'ImageTextDetail', params: { productId: item.courseId } })
+                    return
+                }
                 if (this.courseType === '1') {
                     this.$router.push({
                         name: 'CourseWatch',
@@ -83,9 +88,9 @@ export default {
                             progress: item.learnProgress
                         }
                     })
-                } else {
-                    this.$router.push({ name: 'Curriculum', params: { productId: item.courseId } })
+                    return
                 }
+                this.$router.push({ name: 'Curriculum', params: { productId: item.courseId } })
             } catch (e) { throw e }
         }
     },
