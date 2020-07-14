@@ -1,5 +1,9 @@
 <template>
-    <div :class="$style.imageTextList">
+    <div
+        :class="{
+            [$style.onlineClassroom]: true
+        }"
+    >
         <CategorySelector
             :category="category"
             @change="classifyChanged"
@@ -11,9 +15,11 @@
             :loading.sync="loading"
             @refresh="refreshHandler"
             no-content-tip="此分类下还没有课程"
+            :class="$style.content"
         >
             <template>
                 <ul :class="$style.courseList">
+                    <!--只有实际购买的人不显示已购角标-->
                     <li
                         v-for="(item, index) of courseList"
                         :key="index"
@@ -25,49 +31,36 @@
                     >
                         <div :class="$style.img">
                             <img :src="item.graphicMainImg + '?x-oss-process=style/thum-small'" alt="">
+                            <!-- 不是 订单或者赠课 才显示倒计时-->
                             <div v-if="!(item.orderId || item.isGive) && item.isOpenSale" :class="$style.countDown">
                                 <count-down
-                                    prefix="距抢课开始仅剩"
                                     :endtime="item.regularSaleTime"
-                                    theme="orange"
+                                    theme="black"
                                     @done="$refresh"
                                 />
                             </div>
                         </div>
                         <div :class="$style.desc">
-                            <div :class="$style.left">
-                                <div :class="$style.title">
-                                    {{ item.graphicName }}
-                                </div>
-                                <div :class="$style.saleInfo" v-if="Number(item.showSales) === 1">
-                                    <span v-if="item.orderCount">已有{{ item.orderCount }}人订阅</span>
-                                    <span v-else>正在热销中</span>
-                                </div>
-                                <!--<div :class="$style.courseCount">
-                                    <span>包含{{ item.courseCount }}节课程</span>
-                                </div>-->
+                            <div :class="$style.title" v-text="item.graphicName" />
+                            <div :class="[$style.text1, item.lecturer? '' : $style.noLecturer]">
+                                <span v-if="item.author">主讲人： {{ item.author }}</span>
                             </div>
-                            <div :class="$style.right">
-                                <div :class="$style.priceContent">
-                                    <template v-if="item.priceType === 1">
+                            <div :class="$style.bottom">
+                                <template>
+                                    <span v-if="item.priceType === 1" :class="$style.priceZoom">
                                         <span :class="$style.price" v-text="item.sellingPrice" />
-                                        <del v-if="item.originalPrice && (item.originalPrice > item.sellingPrice)"
-                                             :class="$style.original" v-text="item.originalPrice" class="rmb" />
-                                    </template>
+                                        <del v-if="item.originalPrice && (item.originalPrice > item.sellingPrice)" :class="$style.original" v-text="item.originalPrice" class="rmb" />
+                                    </span>
                                     <span v-else :class="$style.free">免费</span>
-                                </div>
-                                <div :class="$style.btns">
+                                </template>
+                                <template>
                                     <!--实际购买的人 & 赠课并观看的人 显示 学习中-->
-                                    <pl-button v-if="(!item.isGive && item.orderId) || (item.isGive && item.isWatch)" type="warning">
-                                        去学习
-                                    </pl-button>
+                                    <pl-button v-if="(!item.isGive && item.orderId) || (item.isGive && item.isWatch)" type="warning">去学习</pl-button>
                                     <!--赠课的人优先显示 已赠课 -->
                                     <pl-button v-else-if="item.isGive" type="warning">赠课</pl-button>
-                                    <pl-button v-else-if="item.isNotStart" type="primary" :class="$style.notStart">
-                                        即将开售
-                                    </pl-button>
+                                    <pl-button v-else-if="item.isNotStart" type="primary" :class="$style.notStart">即将开售</pl-button>
                                     <pl-button v-else type="primary">立即订购</pl-button>
-                                </div>
+                                </template>
                             </div>
                         </div>
                     </li>
@@ -176,17 +169,24 @@ export default {
 }
 </script>
 <style lang="scss" module>
-    .image-text-list {
+    .online-classroom {
         /*padding: 14vw 20px 20px;*/
-        padding: 20px;
+        position: relative;
         min-height: 50vh;
         background-color: #fff;
+        > .content {
+            padding: 0 20px 20px 20px;
+        }
     }
-
+    .course-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
     .course-item {
         position: relative;
+        width: calc(50% - 15px);
         margin-bottom: 32px;
-
         &.had-buy:before {
             content: '已购';
             position: absolute;
@@ -194,21 +194,20 @@ export default {
             top: 0;
             left: 0;
             width: 100px;
-            border-radius: 20px 0px 20px 0px;
-            background: #F2B036;
+            border-radius: 20px 0 20px 0;
+            background: #fe7700;
             line-height: 42px;
             text-align: center;
             font-size: 24px;
             color: #fff;
         }
-
         > .img {
             position: relative;
-            width: 100%;
-            height: 474px;
-            border-radius: 20px 20px 0px 0px;
+            width: 340px;
+            height: 228px;
+            margin-bottom: 16px;
+            border-radius: 20px;
             overflow: hidden;
-
             .count-down {
                 position: absolute;
                 left: 0;
@@ -217,7 +216,6 @@ export default {
                 height: 52px;
                 border-radius: 0 0 12px 12px;
             }
-
             img {
                 width: 100%;
                 height: 100%;
@@ -225,76 +223,54 @@ export default {
             }
         }
     }
-
-    .desc {
+    .bottom {
+        min-height: 82px;
+        margin-top: 18px;
         display: flex;
         justify-content: space-between;
-        padding: 20px 24px;
-        border-radius: 0px 0px 20px 20px;
-        background-color: #F8F8F8;
-
-        .left {
-            max-width: 70%;
-            font-size: 26px;
-            color: #828282;
-
-            .title {
-                margin-bottom: 4px;
-                font-size: 30px;
-                font-weight: bold;
-                color: #222;
-                @include elps();
-            }
-
-            .sale-info {
-                margin: 8px 0;
+        align-items: flex-end;
+        .price-zoom {
+            max-width: 200px;
+        }
+        .price {
+            font-size: 32px;
+            color: #fe7700;
+            font-weight: bold;
+            &:before {
+                content: '¥';
+                margin-right: 4px;
+                font-size: 20px;
+                vertical-align: 3px;
             }
         }
-
-        .right {
-            margin-top: 20px;
-
-            .priceContent {
-                text-align: right;
-            }
-
-            .price {
-                font-size: 48px;
-                color: #FE7700;
-
-                &:before {
-                    content: '¥';
-                    margin-right: 4px;
-                    font-size: 20px;
-                    vertical-align: 3px;
-                }
-            }
-
-            .original {
-                display: block;
-                font-size: 30px;
-                color: #999;
-            }
-
-            .free {
-                font-size: 30px;
-                color: #FE7700;
-            }
-
-            .btns {
-                margin-top: 20px;
-                text-align: right;
-
-                button {
-                    width: 150px;
-                    line-height: 58px;
-                    font-size: 30px;
-                }
-
-                .not-start {
-                    background-color: rgba(254, 119, 0, 0.3);
-                }
-            }
+        .original {
+            display: block;
+            font-size: 20px;
+            color: #999;
         }
+        .free {
+            font-size: 28px;
+            color: #fe7700;
+        }
+        .not-start {
+            background-color: rgba(254,119,0,.3);
+        }
+    }
+    .title {
+        width: 340px;
+        margin-bottom: 4px;
+        font-size: 24px;
+        color: #000;
+        font-weight: bold;
+        @include elps();
+    }
+    .noLecturer {
+        margin-bottom: 45px;
+    }
+    .text1 {
+        width: 340px;
+        font-size: 22px;
+        color: #666;
+        @include elps();
     }
 </style>
