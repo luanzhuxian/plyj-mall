@@ -101,7 +101,7 @@
                         round
                         @click="$router.push({ name: 'RefundDetail', params: { id: detail.refundId } })"
                     >
-                        退款中
+                        售后中
                     </pl-button>
                     <!--售后完成 支持 退款完成显示-->
                     <pl-button

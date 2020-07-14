@@ -98,7 +98,7 @@
             :show.sync="showRefundType"
         >
             <div :class="$style.popupContentWrapper">
-                <pl-radio-group v-model="temporaryRefundType">
+                <pl-radio-group v-model="temporaryRefundKeyType">
                     <pl-radio
                         v-for="k of Object.keys(localRefundTypeMap)"
                         :label="k"
@@ -208,7 +208,7 @@ export default {
             // 是否显示 选择退款原因 弹框
             showRefundReason: false,
             // 临时存储售后类型
-            temporaryRefundType: '',
+            temporaryRefundKeyType: 1,
             // 临时退款原因
             temporaryRefundReason: '',
             // 退款原因列表
@@ -307,11 +307,11 @@ export default {
     },
     methods: {
         chooseRefundType () {
-            this.temporaryRefundType = this.form.type
+            this.temporaryRefundKeyType = String(this.form.type)
             this.showRefundType = true
         },
         changetRefundType () {
-            this.form.type = this.temporaryRefundType
+            this.form.type = this.temporaryRefundKeyType
             this.showRefundType = false
         },
         chooseRefundReason () {
