@@ -13,7 +13,7 @@
                 <div v-if="item.category2Name" :class="$style.category" v-text="item.category2Name" />
             </div>
             <div :class="$style.learn">
-                <div :class="$style.lecturer" v-if="item.lecturer">主讲人：{{ item.lecturer }}</div>
+                <div :class="$style.lecturer" v-if="item.lecturer">{{ item.orderType === 5 ? '作者' : '主讲人' }}：{{ item.lecturer }}</div>
                 <div :class="$style.bottom">
                     <div :class="$style.studyProgress" v-if="item.recordModels">
                         <!-- 单课程学习进度 -->
