@@ -32,7 +32,7 @@
                     @click="showGoodsType = true"
                 />-->
                 <pl-fields
-                    :text="refundGoodsInfo.orderType === orderTypeKeyMap.PHYSICAL_GOODS ? '退货原因：' : '退款原因'"
+                    :text="refundGoodsInfo.orderType === orderTypeKeyMap.PHYSICAL_GOODS ? '退货原因：' : '退款原因：'"
                     :right-text="form.reasonForReturn ? form.reasonForReturn : '请选择'"
                     show-right-icon
                     @click="chooseRefundReason"
@@ -137,7 +137,7 @@
         <!--选择退款原因-->
         <pl-popup
             :show.sync="showRefundReason"
-            :title="refundGoodsInfo.orderType === orderTypeKeyMap.PHYSICAL_GOODS ? '退货原因：' : '退款原因'"
+            :title="refundGoodsInfo.orderType === orderTypeKeyMap.PHYSICAL_GOODS ? '退货原因' : '退款原因'"
         >
             <div :class="$style.popupContentWrapper">
                 <pl-radio-group v-model="temporaryRefundReason">
