@@ -13,9 +13,9 @@
 </template>
 
 <script>
-import pdfjs from 'pdfjs-dist'
+import pdfjsLib from 'pdfjs-dist'
 
-pdfjs.GlobalWorkerOptions.workerSrc = 'https://mallcdn.youpenglai.com/cdn/pdf/pdf.worker.min.js'
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://mallcdn.youpenglai.com/cdn/pdf/pdf.worker.min.js'
 
 export default {
     name: 'PdfPreviewer',
@@ -98,7 +98,7 @@ export default {
         },
         async loadPdf (url) {
             try {
-                const loadingTask = pdfjs.getDocument(url)
+                const loadingTask = pdfjsLib.getDocument(url)
                 const file = await loadingTask.promise
                 return file
             } catch (error) {

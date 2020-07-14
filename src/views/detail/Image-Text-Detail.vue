@@ -82,7 +82,7 @@
             </div>
 
             <!-- 使用说明 -->
-            <Instructions :content="detail.payNotice" />
+            <Instructions title="订购须知" :content="detail.payNotice" />
 
             <!-- 底部购买 -->
             <div :class="$style.bottom" v-if="!~[5, 6].indexOf(productActive)">
@@ -302,8 +302,8 @@ export default {
                 this.loaded = false
                 this.loading = true
                 await this.getDetail()
-                this.createShare()
                 this.loaded = true
+                this.createShare()
             } catch (error) {
                 throw error
             } finally {
