@@ -59,7 +59,7 @@
 
             <!--知识课程暂时不支持使用优惠券-->
             <Coupon
-                v-if="activeProduct === 1 && goodsAmount > 0 && !hasKnowlegeCourse && !exchangeCodeInfo.id"
+                v-if="couponList.length > 0 && activeProduct === 1 && goodsAmount > 0 && !hasKnowlegeCourse && !exchangeCodeInfo.id"
                 :active-product="activeProduct"
                 :coupon.sync="currentCoupon"
                 :coupon-list="couponList"
