@@ -37,6 +37,7 @@ import {
     SET_DRAGON_GATE_CHARITY,
     SET_DRAGON_GATE_SIGN,
     SET_DRAGON_GATE_PLAY,
+    SET_MALL_QRCODE_INFO,
     USER_INFO
 } from './store/mutation-type'
 
@@ -47,7 +48,8 @@ import {
     getNianweiInfo,
     getDragonGateCharityInfo,
     getDragonGateSignInfo,
-    getDragonGatePlayInfo
+    getDragonGatePlayInfo,
+    getMallQRCodeInfo
 } from './apis/home'
 import { setFirstVisit } from './apis/longmen-festival/lottery'
 // 新人有礼
@@ -127,7 +129,8 @@ export default {
             setNwEvent: SET_NW_EVENT,
             setDragonGateCharity: SET_DRAGON_GATE_CHARITY,
             setDragonGateSign: SET_DRAGON_GATE_SIGN,
-            setDragonGatePlay: SET_DRAGON_GATE_PLAY
+            setDragonGatePlay: SET_DRAGON_GATE_PLAY,
+            setMallQRCodeInfo: SET_MALL_QRCODE_INFO
         }),
         ...mapActions({
             getMallInfo: GET_MALL_INFO,
@@ -158,17 +161,19 @@ export default {
                 const list = [
                     // 待领优惠券
                     getMyCouponInfo(),
+                    getMallQRCodeInfo(),
                     // 获取主会场数据
                     this.getMainCenter(),
                     // 获取皮肤id
                     this.getSkinId()
                 ]
 
-                const [{ result: coupon }] = await Promise.all(list.map(p => p.catch(e => {
+                const [{ result: coupon }, { result: qrcode }] = await Promise.all(list.map(p => p.catch(e => {
                     console.error(e)
                     return { result: {} }
                 })))
                 this.setCouponInfo(coupon)
+                this.setMallQRCodeInfo(qrcode)
             } catch (error) {
                 throw error
             }
