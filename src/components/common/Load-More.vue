@@ -236,7 +236,6 @@ export default {
             this.$nextTick(() => {
                 this.$nextTick(() => {
                     this.pullLoading.style.transition = 'transform .5s ease-in-out'
-                    this.$emit('update:loading', false)
                     this.top = this.defaultTop
                     this.offsetHeight = this.$el.offsetHeight
 
