@@ -92,7 +92,8 @@ export default {
             KNOWLEDGE_COURSE: 'KNOWLEDGE_COURSE',
             SERIES_OF_COURSE: 'SERIES_OF_COURSE',
             LIVE_GOODS: 'LIVE_GOODS',
-            VIDEO_GOODS: 'VIDEO_GOODS'
+            VIDEO_GOODS: 'VIDEO_GOODS',
+            GRAPHIC_DATA: 'GRAPHIC_DATA'
         },
         // 课程类
         courseTypeMap: {
