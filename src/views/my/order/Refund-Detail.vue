@@ -385,9 +385,12 @@ export default {
             this.isPickerShow = false
         },
         modifyRefund () {
-            this.$store.commit('setRefundGoods', this.orderDetails.goodsModel)
+            const goodsModel = JSON.parse(JSON.stringify(this.orderDetails.goodsModel))
+            goodsModel.orderType = this.orderDetails.orderType
+            this.$store.commit('setRefundGoods', goodsModel)
             this.$router.push({ name: 'RefundApply',
-                params: { orderId: this.orderDetails.id,
+                params: {
+                    orderId: this.orderDetails.id,
                     orderStatus: this.orderDetails.status,
                     refundId: this.refundDetail.id,
                     refundType: this.refundType,
