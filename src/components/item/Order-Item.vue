@@ -90,7 +90,8 @@ const routeNameMap = {
     KNOWLEDGE_COURSE: 'Curriculum',
     SERIES_OF_COURSE: 'Curriculum',
     LIVE_GOODS: 'CourseLibrary',
-    VIDEO_GOODS: 'CourseLibrary'
+    VIDEO_GOODS: 'CourseLibrary',
+    GRAPHIC_DATA: 'ImageTextDetail'
 }
 export default {
     name: 'OrderItem',
