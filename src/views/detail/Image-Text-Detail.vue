@@ -140,7 +140,7 @@
             </pl-mask>
 
             <!-- pdf预览 -->
-            <pdf-previewer :show.sync="isPreviewerShow" :url="pdfUrl" :scale="1.2" />
+            <pdf-previewer :show.sync="isPreviewerShow" :url="pdfUrl" />
         </template>
 
         <!-- 骨架屏 -->
