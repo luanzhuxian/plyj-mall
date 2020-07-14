@@ -137,7 +137,7 @@
         <!--选择退款原因-->
         <pl-popup
             :show.sync="showRefundReason"
-            title="退款原因"
+            :title="refundGoodsInfo.orderType === orderTypeKeyMap.PHYSICAL_GOODS ? '退货原因：' : '退款原因'"
         >
             <div :class="$style.popupContentWrapper">
                 <pl-radio-group v-model="temporaryRefundReason">
