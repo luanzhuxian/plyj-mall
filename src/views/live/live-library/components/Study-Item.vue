@@ -21,7 +21,12 @@
                         <!-- 系列课学习进度 -->
                         <span v-else>已学习{{ item.learnedNumber || 0 }}节/{{ item.totalLiveNumber || 1 }}节课</span>
                     </div>
-                    <pl-button v-if="$route.params.learnStatus !== '3'" size="small" type="warning">去学习</pl-button>
+                    <pl-button
+                        v-if="$route.params.learnStatus !== '3'"
+                        size="small"
+                        type="warning"
+                        v-text="item.orderType === 5 ? '查看资料' : '去学习'"
+                    />
                 </div>
             </div>
         </div>
@@ -195,9 +200,10 @@ export default {
             .bottom {
                 width: 100%;
                 display: inline-flex;
-                justify-content: space-between;
+                justify-content: flex-end;
             }
             .study-progress {
+                flex: 1;
                 font-size: 28px;
                 color: #f2b036;
             }
