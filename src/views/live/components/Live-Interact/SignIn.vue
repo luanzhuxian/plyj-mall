@@ -95,6 +95,7 @@ export default {
                     }
                 }))
                 this.$success('签到成功')
+                this.checkinId = ''
             } catch (e) { throw e }
         },
         createNodeTemplate (message) {

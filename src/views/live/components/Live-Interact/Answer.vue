@@ -119,11 +119,18 @@ export default {
             this.clear()
         },
         getResult (data) {
-            const { itemType, type, name, questionId, answer: rightAnswers } = data.content
+            if (['V', 'S'].includes(data.content.type)) {
+                return
+            }
+
+            const answer = this.answers.get(data.content.questionId)
+            if (!answer) {
+                return
+            }
+
+            const { itemType, type, name, answer: rightAnswers } = data.content
             const isQuick = itemType === 1
             const isMultiple = type === 'C'
-            const answer = this.answers.get(questionId)
-
             this.$propmt({
                 hasCancelButton: false,
                 hasDefaultInput: false,

@@ -2,7 +2,7 @@
     <div :class="[$style.lump, $style.lottery]" @click="getLotteryInfo">
         <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/抽奖.png" alt="">
         <span :class="$style.title">抽奖</span>
-        <div :class="$style.container">
+        <div @click.stop :class="$style.container">
             <div :class="$style.mask" v-show="showMask" />
 
             <!-- 抽奖 -->
@@ -104,7 +104,10 @@ export default {
                 this.isEnd = true
                 return
             }
-            this.$alert('主播暂未发起抽奖~')
+            this.$alert({
+                message: '抽奖',
+                viceMessage: '主播暂未发起抽奖~'
+            })
         }
     }
 }

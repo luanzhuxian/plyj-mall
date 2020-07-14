@@ -217,6 +217,8 @@ export default {
 
 <style lang="scss">
 .message-box {
+    display: flex;
+    align-items: center;
     position: fixed;
     top: 0;
     left: 0;
@@ -232,7 +234,6 @@ export default {
   }*/
 .message-box-content {
     position: relative;
-    top: calc(30vh);
     width: 540px;
     margin: 0 auto;
     background-color: #fff;

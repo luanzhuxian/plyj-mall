@@ -3,7 +3,7 @@
         <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/提问.png" alt="">
         <span :class="$style.title">提问</span>
 
-        <div :class="{ [$style.chat]: true, [$style.show]: show }">
+        <div @click.stop :class="{ [$style.chat]: true, [$style.show]: show }">
             <div :class="$style.head">
                 <span>提问</span>
                 <PlSvg @click.stop="close" name="icon-close" width="26" fill="#999999" />
