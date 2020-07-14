@@ -81,7 +81,8 @@ export default {
             KNOWLEDGE_COURSE: '知识课程',
             SERIES_OF_COURSE: '系列课程',
             LIVE_GOODS: '直播',
-            VIDEO_GOODS: '录播'
+            VIDEO_GOODS: '录播',
+            GRAPHIC_DATA: '图文资料'
         },
         // 订单类型关键字
         orderTypeKeyMap: {
