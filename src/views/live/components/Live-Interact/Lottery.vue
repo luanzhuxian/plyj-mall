@@ -21,13 +21,11 @@
                 </div>
 
                 <div :class="$style.content">
-                    <div v-if="isWin" :class="$style.win">
-                        <p>请等待主播联系你</p>
-                        <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/未中奖.png" alt="">
-                    </div>
-                    <div v-else :class="$style.lose">
-                        <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/未中奖.png" alt="">
-                    </div>
+                    <template v-if="isWin">
+                        <p :class="$style.tip">请等待主播联系你</p>
+                        <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/中奖.png" alt="">
+                    </template>
+                    <img v-else src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/未中奖.png" alt="">
                 </div>
 
                 <div :class="$style.btn" @click.stop="confirm">
@@ -184,15 +182,15 @@ export default {
             > .content {
                 padding: 20px 44px;
                 box-sizing: border-box;
-                > .lose,
-                .win {
+                > .tip {
                     font-size: 26px;
                     text-align: center;
                     color: #666;
-                    > img {
-                        width: 276px;
-                        height: 250px;
-                    }
+                }
+                > img {
+                    margin-top: 40px;
+                    width: 190px;
+                    height: 190px;
                 }
             }
             > .btn {
