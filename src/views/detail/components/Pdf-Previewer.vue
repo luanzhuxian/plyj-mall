@@ -1,13 +1,12 @@
 <template>
-
     <transition name="fade">
         <div :class="$style.previewer" v-show="show">
-            <pl-svg name="icon-shibai" width="65" :class="$style.close" @click.stop="close" />
+            <pl-svg name="icon-shibai" width="40" :class="$style.close" @click.stop="close" />
             <pl-svg v-show="!isLoaded" name="icon-btn-loading" width="99" fill="#fff" class="rotate" />
             <canvas v-show="isLoaded" id="canvas" ref="canvas" :class="$style.canvas" />
             <div :class="$style.previewerBtnGroup">
-                <pl-svg name="icon-left" width="55" :class="$style.left" @click.stop="renderPdf(current - 1)" />
-                <pl-svg name="icon-left" width="55" :class="$style.right" @click.stop="renderPdf(current + 1)" />
+                <pl-svg name="icon-left" width="25" :class="$style.left" @click.stop="renderPdf(current - 1)" />
+                <pl-svg name="icon-left" width="25" :class="$style.right" @click.stop="renderPdf(current + 1)" />
             </div>
         </div>
     </transition>
@@ -161,8 +160,7 @@ export default {
         justify-content: center;
         align-items: center;
         width: 100%;
-        height: 110px;
-        font-size: 50px;
+        height: 80px;
         background-color: #ededed;
         z-index: 1;
         > .right {
