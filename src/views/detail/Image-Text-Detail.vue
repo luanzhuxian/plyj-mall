@@ -139,17 +139,8 @@
                 </div>
             </pl-mask>
 
-            <transition name="fade">
-                <div :class="$style.previewer" v-if="previewer.show">
-                    <pl-svg name="icon-shibai" width="65" :class="$style.close" @click.stop="closePdf" />
-                    <pl-svg v-show="!previewer.isLoaded" name="icon-btn-loading" width="99" fill="#fff" class="rotate" />
-                    <canvas v-show="previewer.isLoaded" id="canvas" ref="canvas" :class="$style.canvas" />
-                    <div :class="$style.previewerBtnGroup">
-                        <pl-svg name="icon-left" width="55" :class="$style.left" @click.stop="renderPdf(previewer.current - 1)" />
-                        <pl-svg name="icon-left" width="55" :class="$style.right" @click.stop="renderPdf(previewer.current + 1)" />
-                    </div>
-                </div>
-            </transition>
+            <!-- pdf预览 -->
+            <pdf-previewer :show.sync="isPreviewerShow" :url="pdfUrl" :scale="1.2" />
         </template>
 
         <!-- 骨架屏 -->
@@ -171,6 +162,7 @@ import Instructions from '../../components/detail/Instructions.vue'
 import Tabs from './components/Tabs.vue'
 import CountDown from '../../components/product/Courses-Count-Down.vue'
 import ImageTextList from './components/Image-Text-List.vue'
+import PdfPreviewer from './components/Pdf-Previewer.vue'
 import Skeleton from './components/Skeleton.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import { getImageTextDetail } from '../../apis/product'
@@ -182,9 +174,6 @@ import {
     createText
 } from '../../assets/js/util'
 import moment from 'moment'
-import pdfjs from 'pdfjs-dist'
-
-pdfjs.GlobalWorkerOptions.workerSrc = 'https://mallcdn.youpenglai.com/cdn/pdf/pdf.worker.min.js'
 
 const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
 
@@ -201,6 +190,7 @@ export default {
         Tabs,
         CountDown,
         ImageTextList,
+        PdfPreviewer,
         Skeleton,
         Instructions
     },
@@ -228,16 +218,9 @@ export default {
             showHaibao: false,
             // 分享链接
             shareUrl: '',
-            previewer: {
-                file: null,
-                show: false,
-                isLoaded: false,
-                isRendering: false,
-                totle: 0,
-                current: 1,
-                scale: 1.2,
-                cacheMap: new Map()
-            }
+            // pdf预览
+            isPreviewerShow: false,
+            pdfUrl: ''
         }
     },
     props: {
@@ -309,7 +292,6 @@ export default {
         this.showContact = false
         this.showHaibao = false
         this.haibao = ''
-        this.closePdf()
     },
     async mounted () {
         this.$store.commit(SET_SHARE_ID, this.brokerId)
@@ -569,90 +551,15 @@ export default {
             }
         },
         async previewPdf (index) {
-            const { previewer } = this
             const { graphicPdfs = [] } = this.detail
             const pdf = graphicPdfs[index]
-            let file
 
             if (!pdf || !pdf.url) {
                 return false
             }
 
-            // const url = `/pdf${ pdf.url.split('pdf')[1] }`
-
-            try {
-                previewer.show = true
-
-                file = previewer.cacheMap.get(index.toString())
-                if (!file) {
-                    file = await this.loadPdf(pdf.url)
-                    previewer.cacheMap.set(index.toString(), file)
-                    console.log(file)
-                }
-
-                previewer.file = file
-                previewer.totle = file.numPages
-                previewer.current = 1
-                await this.renderPdf(previewer.current)
-                await this.$nextTick()
-                previewer.isLoaded = true
-            } catch (error) {
-                throw error
-            }
-        },
-        async loadPdf (url) {
-            try {
-                const loadingTask = pdfjs.getDocument(url)
-                const file = await loadingTask.promise
-                return file
-            } catch (error) {
-                throw error
-            }
-        },
-        async renderPdf (pageNumber) {
-            const { previewer } = this
-
-            try {
-                if (previewer.isRendering) {
-                    return false
-                }
-                if (!previewer.isLoaded) {
-                    return false
-                }
-                if (pageNumber < 1 || pageNumber > previewer.totle) {
-                    return false
-                }
-
-                previewer.isRendering = true
-
-                const page = await previewer.file.getPage(pageNumber)
-                const viewport = page.getViewport({ scale: previewer.scale })
-                const canvas = this.$refs.canvas
-                const context = canvas.getContext('2d')
-
-                canvas.height = viewport.height
-                canvas.width = viewport.width
-
-                const renderContext = {
-                    canvasContext: context,
-                    viewport
-                }
-                const renderingTask = page.render(renderContext)
-                await renderingTask.promise
-                previewer.current = pageNumber
-            } catch (error) {
-                throw error
-            } finally {
-                previewer.isRendering = false
-            }
-        },
-        closePdf () {
-            this.previewer.file = null
-            this.previewer.show = false
-            this.previewer.loaded = false
-            this.previewer.isRendering = false
-            this.previewer.totle = 0
-            this.previewer.current = 1
+            this.pdfUrl = pdf.url
+            this.isPreviewerShow = true
         }
     }
 }
@@ -847,44 +754,6 @@ export default {
         content: '';
         border: 14px solid transparent;
         border-top-color: rgba(0, 0, 0, .7);
-    }
-}
-
-.previewer {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    width: 100%;
-    height: 100vh;
-    z-index: 999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(58, 58, 58, .9);
-    &-btn-group {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        height: 150px;
-        font-size: 50px;
-        background-color: #ededed;
-        z-index: 1;
-        > .right {
-            margin-left: 50px;
-            transform: rotate(180deg);
-        }
-    }
-    > .close {
-        position: absolute;
-        top: 30px;
-        left: 30px;
-        z-index: 1;
     }
 }
 
