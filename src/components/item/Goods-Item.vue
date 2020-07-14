@@ -123,8 +123,6 @@ export default {
                 this.$router.push({ name: 'ImageTextDetail', params: { productId: this.id } })
             } else if (this.productType === 'KNOWLEDGE_COURSE') {
                 this.$router.push({ name: 'Curriculum', params: { productId: this.id } })
-            } else if (this.productType === 'GRAPHIC_DATA') {
-                this.$router.push({ name: 'ImageTextDetail', params: { productId: this.id } })
             } else {
                 this.$router.push({ name: 'Product', params: { productId: this.id } })
             }
@@ -208,4 +206,5 @@ export default {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
   }
+
 </style>
