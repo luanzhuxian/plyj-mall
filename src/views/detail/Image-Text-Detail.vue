@@ -252,7 +252,7 @@ export default {
         },
         // 已买
         isBought () {
-            return !!this.detail.isGive && !!this.detail.orderId
+            return !!this.detail.isGive || !!this.detail.orderId
         },
         // 是否定时开售
         isOpenSale () {
