@@ -191,11 +191,9 @@ export default {
             > .lecturer {
                 width: 100%;
                 margin-bottom: 8px;
-                overflow: hidden;
-                text-overflow: ellipsis;
                 font-size: 24px;
-                white-space: nowrap;
                 color: #666;
+                @include elps-wrap(1);
             }
             .bottom {
                 width: 100%;
