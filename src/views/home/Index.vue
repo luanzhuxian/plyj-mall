@@ -79,7 +79,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['mallId', 'serverTime', 'agentUser', 'userId', 'isActivityAuth', 'skinId', 'mallDomain', 'MallQRCodeInfo']),
+        ...mapGetters(['mallId', 'serverTime', 'agentUser', 'userId', 'isActivityAuth', 'skinId', 'mallDomain', 'mallQRCodeInfo']),
         allLoaded () {
             // let result
             // if (this.type === 3) {
@@ -97,7 +97,7 @@ export default {
             // return result
             return this.loaded &&
                 this.skinId !== null &&
-                this.MallQRCodeInfo !== null
+                this.mallQRCodeInfo !== null
         }
     },
     watch: {

@@ -134,7 +134,7 @@ export default {
         payload.isHomeDisplay = array.includes('1')
         payload.isDetailDisplay = array.includes('2')
         payload.isLiveDisplay = array.includes('3')
-        state.MallQRCodeInfo = payload
+        state.mallQRCodeInfo = payload
     },
     [type.SET_CURRENT_TIME] (state, payload) {
         state.currentTime = payload

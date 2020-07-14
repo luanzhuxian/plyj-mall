@@ -24,9 +24,9 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['MallQRCodeInfo']),
+        ...mapGetters(['mallQRCodeInfo']),
         isQRCodeBtnShow () {
-            return this.MallQRCodeInfo && this.MallQRCodeInfo.isHomeDisplay
+            return this.mallQRCodeInfo && this.mallQRCodeInfo.isHomeDisplay
         }
     },
     methods: {

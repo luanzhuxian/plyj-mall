@@ -66,7 +66,7 @@ export default {
     dragonGatePlay: state => state.dragonGatePlay,
     campaignReport: state => state.campaignReport,
     campaignBook: state => state.campaignBook,
-    MallQRCodeInfo: state => state.MallQRCodeInfo,
+    mallQRCodeInfo: state => state.mallQRCodeInfo,
     // 服务器时间
     // 服务器时间
     currentTime: state => state.currentTime,

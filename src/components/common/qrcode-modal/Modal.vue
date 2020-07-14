@@ -2,8 +2,8 @@
     <transition name="fade">
         <div class="qrcode-modal-mask" v-if="show">
             <div class="qrcode-modal-modal">
-                <h4 v-if="MallQRCodeInfo.name">{{ MallQRCodeInfo.name }}</h4>
-                <p v-if="MallQRCodeInfo.description">{{ MallQRCodeInfo.description }}</p>
+                <h4 v-if="mallQRCodeInfo.name">{{ mallQRCodeInfo.name }}</h4>
+                <p v-if="mallQRCodeInfo.description">{{ mallQRCodeInfo.description }}</p>
                 <pl-svg
                     name="icon-close"
                     width="26"
@@ -13,7 +13,7 @@
                     @transitionend="onTransitionend"
                 />
                 <div class="qrcode-modal-img-wrapper">
-                    <img v-imgError :src="MallQRCodeInfo.qrCodeImgUrl" alt="">
+                    <img v-imgError :src="mallQRCodeInfo.qrCodeImgUrl" alt="">
                 </div>
                 <p class="qrcode-modal-bottom">关注有礼</p>
             </div>
@@ -27,11 +27,11 @@ export default {
     data () {
         return {
             show: false,
-            MallQRCodeInfo: {}
+            mallQRCodeInfo: {}
         }
     },
     created () {
-        this.MallQRCodeInfo = this.$store.state.MallQRCodeInfo || {}
+        this.mallQRCodeInfo = this.$store.state.mallQRCodeInfo || {}
     },
     methods: {
         close () {
