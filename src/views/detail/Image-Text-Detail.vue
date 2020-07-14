@@ -105,7 +105,7 @@
                         v-if="isBought"
                         :class="$style.button + ' ' + $style.yellow"
                         :disabled="loading"
-                        @click="preview"
+                        @click="previewPdf"
                     >
                         查看资料
                     </button>
