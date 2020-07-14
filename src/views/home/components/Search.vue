@@ -8,7 +8,7 @@
             <pl-svg name="icon-search" fill="#ccc" width="30" />
             <input type="text" :placeholder="placeholder">
         </router-link>
-        <button v-if="isQRCodeBtnShow" :class="$style.qrcodeBtn" @click="showQRCode">进入公众号</button>
+        <button v-if="isQRCodeBtnShow" :class="$style.qrcodeBtn" @click.stop="showQRCode">进入公众号</button>
     </div>
 </template>
 
