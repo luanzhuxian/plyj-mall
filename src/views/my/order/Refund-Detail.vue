@@ -313,13 +313,6 @@ export default {
                 7: '退款已关闭,如有问题请尽快与商家协商'
             },
             // auditStatus 0 取消售后 1 待审核 2 审核通过 3 退款驳回
-            auditStatusMap: {
-                0: '售后关闭',
-                1: '待审核',
-                // 审核通过显示业务状态
-                2: '',
-                3: '售后驳回'
-            },
             auditStatusSuggestionMap: {
                 0: '您的售后申请已取消，如有问题请联系客服；',
                 1: '请耐心等待商家审核，如有问题请联系客服',
@@ -331,7 +324,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['refundTypeMap', 'refundStatusMap', 'orderStatuskeyMap', 'orderStatuskeyMap', 'orderTypeKeyMap', 'orderActionMap']),
+        ...mapGetters(['refundTypeMap', 'refundStatusMap', 'orderStatuskeyMap', 'auditStatusMap', 'orderStatuskeyMap', 'orderTypeKeyMap', 'orderActionMap']),
         // 卖家已将货物寄出
         needReturnProduct () {
             return this.orderDetails.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS && [this.orderStatuskeyMap.WAIT_RECEIVE, this.orderStatuskeyMap.FINISHED].includes(this.orderDetails.status)

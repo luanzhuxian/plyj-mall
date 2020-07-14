@@ -274,7 +274,7 @@ export default {
                 reasonForReturn,
                 urls,
                 content,
-                refundableAmount
+                refundsAmount
             } = result
             this.form = {
                 // 原订单id
@@ -288,7 +288,7 @@ export default {
                 // 售后描述
                 content,
                 // 申请退款金额
-                amount: refundableAmount / 100
+                amount: refundsAmount / 100
             }
         }
         try {
@@ -297,7 +297,7 @@ export default {
             // 获取最大可退金额
             ({ result: this.maxRefundAmount } = await getMaxRefund(this.orderId, this.form.type))
             this.maxRefundAmount /= 100
-            this.form.amount = this.maxRefundAmount
+            this.form.amount = this.form.amount || this.maxRefundAmount
         } catch (e) {
             setTimeout(() => {
                 // this.$router.replace({ name: 'OrderDetail', params: { id: this.orderId } })

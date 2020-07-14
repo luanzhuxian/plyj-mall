@@ -37,6 +37,7 @@
                             :order-status="item.orderStatus"
                             :refund-type="item.type"
                             :refund-status="item.businessStatus"
+                            :audit-status="item.status"
                             :goods-images="item.goodsImage"
                             :goods-name="item.goodsName"
                             :sku-name="item.skuName"

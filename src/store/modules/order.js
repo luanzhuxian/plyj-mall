@@ -99,6 +99,13 @@ export default {
             1: 'KNOWLEDGE_COURSE',
             2: 'SERIES_OF_COURSE'
         },
+        auditStatusMap: {
+            0: '售后关闭',
+            1: '待审核',
+            // 审核通过显示业务状态
+            2: '',
+            3: '售后驳回'
+        },
         // 售后状态 退款退货时，可能有以下所有状态；仅退款时，无1，2，3状态
         refundStatusMap: {
             1: '待退货',
@@ -190,6 +197,7 @@ export default {
         orderTypeMap: state => state.orderTypeMap,
         orderTypeKeyMap: state => state.orderTypeKeyMap,
         refundStatusMap: state => state.refundStatusMap,
+        auditStatusMap: state => state.auditStatusMap,
         refundTypeMap: state => state.refundTypeMap,
         aftersaleStatusKeyMap: state => state.aftersaleStatusKeyMap,
         aftersaleStatusMap: state => state.aftersaleStatusMap,

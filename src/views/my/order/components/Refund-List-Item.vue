@@ -13,7 +13,7 @@
             </div>
             <p
                 :class="$style.status"
-                v-text="orderStatusDesc"
+                v-text="auditStatusMap[auditStatus] || refundStatusMap[refundStatus]"
             />
         </div>
         <OrderItem
@@ -110,6 +110,10 @@ export default {
             type: Number,
             default: 0
         },
+        auditStatus: {
+            type: Number,
+            default: 0
+        },
         // 退换货状态 1:待退货 2:待收货 3:退货完成 4:待退款 5:退款中 6:退款成功 7:退款失败
         refundStatus: {
             type: Number,
@@ -152,12 +156,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['orderTypeMap', 'orderTypeKeyMap', 'orderStatusMap', 'orderStatuskeyMap', 'refundTypeMap']),
-        orderStatusDesc () {
-            return [this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS].includes(this.orderType) &&
-                this.orderStatuskeyMap.WAIT_RECEIVE === this.orderStatus
-                ? this.orderStatusMap[this.orderStatuskeyMap.WAIT_RECEIVE_OF_VIRTUAL] : this.orderStatusMap[this.orderStatus]
-        }
+        ...mapGetters(['orderTypeMap', 'orderTypeKeyMap', 'auditStatusMap', 'orderStatusMap', 'orderStatuskeyMap', 'refundTypeMap'])
     },
     methods: {
     // 取消订单
