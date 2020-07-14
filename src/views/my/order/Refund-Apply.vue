@@ -336,7 +336,8 @@ export default {
         },
         checkData () {
             if (!this.form.reasonForReturn) {
-                this.$warning('请选择退款原因')
+                const desc = this.refundGoodsInfo.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS ? '退货原因' : '退款原因'
+                this.$warning(`请选择${ desc }`)
                 return false
             }
             if (!this.form.amount) {
