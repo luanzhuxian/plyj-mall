@@ -2,7 +2,7 @@
     <transition name="fade">
         <div :class="$style.previewer" v-if="show">
             <pl-svg name="icon-shibai" width="40" :class="$style.close" @click.stop="close" />
-            <pl-svg v-show="!isLoaded" name="icon-btn-loading" width="99" fill="#fff" class="rotate" />
+            <pl-svg v-show="!isLoaded" name="icon-btn-loading" width="50" fill="#fff" class="rotate" />
             <canvas v-show="isLoaded" ref="canvas" :class="$style.canvas" />
             <div :class="$style.previewerBtnGroup">
                 <pl-svg name="icon-left" width="25" :class="$style.left" @click.stop="prev" />
