@@ -7,7 +7,7 @@
                 <span>.pdf</span>
             </p>
             <button :class="$style.imageTextListButton">
-                <a v-if="isBought" :class="$style.highlight" :href="item.url">打开资料</a>
+                <span v-if="isBought" :class="$style.highlight" @click="handleClick(index)">打开资料</span>
                 <span v-else>购买后可查看</span>
             </button>
         </li>
@@ -28,7 +28,9 @@ export default {
         return {}
     },
     methods: {
-
+        handleClick (index) {
+            this.$emit('preview', index)
+        }
     }
 }
 </script>
@@ -45,8 +47,8 @@ export default {
         height: 120px;
         line-height: 32px;
         font-size: 24px;
-        color: #666666;
-        border-bottom: 2px solid #F0F0F0;
+        color: #666;
+        border-bottom: 2px solid #f0f0f0;
         &:nth-last-child(1) {
             border-bottom: none;
         }
@@ -63,10 +65,10 @@ export default {
     }
     &-button {
         margin-left: auto;
-        color: #666666;
-        > a.highlight {
+        color: #666;
+        > .highlight {
             text-decoration: none;
-            color: #F2B036;
+            color: #f2b036;
         }
     }
 }

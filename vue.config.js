@@ -34,7 +34,8 @@ const externals =
           compressorjs: 'Compressor',
           'vue-lazyload': 'VueLazyload',
           qs: 'Qs',
-          'vue-clipboard2': 'VueClipboard'
+          'vue-clipboard2': 'VueClipboard',
+          'pdfjs-dist': 'pdfjsLib'
       }
       : {}
 module.exports = {
