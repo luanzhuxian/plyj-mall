@@ -24,7 +24,9 @@
                      :src="img"
                      ref="img"
                 >
-                <pl-svg v-if="img.indexOf('video/') > -1" @click="play(img)" :class="$style.playBtn" name="icon-play" fill="#fff" />
+                <div v-if="img.indexOf('video/') > -1" :class="$style.playBtnWapper">
+                    <pl-svg @click="play(img)" :class="$style.playBtn" name="icon-play" fill="#fff" />
+                </div>
             </swiperSlide>
         </swiper>
         <div v-show="banners.length > 1" :class="'swiper-pagination ' + $style.pagination" />
@@ -155,6 +157,14 @@ export default {
   .skeleton {
     height: 502px;
     @include skeAnimation(#eee)
+  }
+  .playBtnWapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.4);
   }
   .play-btn {
     position: absolute;
