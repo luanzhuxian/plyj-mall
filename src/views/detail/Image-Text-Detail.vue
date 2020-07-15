@@ -115,7 +115,7 @@
 
             <div
                 :class="$style.buttomTip"
-                v-if="Number(detail.status) === 2 && !~[5, 6].indexOf(productActive) && !isBuy"
+                v-if="Number(detail.status) === 2 && !~[5, 6].indexOf(productActive) && !isBought"
             >
                 该图文资料已下架
             </div>
