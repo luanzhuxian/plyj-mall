@@ -6,6 +6,7 @@
             <canvas v-show="isLoaded" ref="canvas" :class="$style.canvas" />
             <div :class="$style.previewerBtnGroup">
                 <pl-svg name="icon-left" width="25" :class="$style.left" @click.stop="prev" />
+                <span>{{ current }}</span>
                 <pl-svg name="icon-left" width="25" :class="$style.right" @click.stop="next" />
             </div>
         </div>
@@ -203,8 +204,11 @@ export default {
         height: 80px;
         background-color: #ededed;
         z-index: 1;
+        > span {
+            margin: 0 25px;
+            font-size: 32px;
+        }
         > .right {
-            margin-left: 50px;
             transform: rotate(180deg);
         }
     }
