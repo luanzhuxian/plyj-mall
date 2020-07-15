@@ -59,8 +59,7 @@ export default {
             isWin: false,
             prize: '',
             form: {},
-            rules: {},
-            collectInfo: []
+            rules: {}
         }
     },
     methods: {
@@ -80,17 +79,14 @@ export default {
             this.hasLotteryResult = false
         },
         end (event, data) {
+            debugger
             this.isStart = false
             this.isEnd = true
             this.showMask = true
             this.hasLotteryResult = true
 
-            const { data: winnerList, prize, collectInfo } = data
+            const { data: winnerList, prize } = data
 
-            this.collectInfo = JSON.parse(collectInfo).map(item => {
-                item.value = ''
-                return item
-            })
             this.isWin = winnerList.some(item => item.userId === this.userId)
             this.prize = prize
         },

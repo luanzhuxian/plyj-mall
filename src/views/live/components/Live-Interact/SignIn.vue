@@ -42,8 +42,7 @@ export default {
     data () {
         return {
             // 签到 ID
-            checkinId: '',
-            isStop: false
+            checkinId: ''
         }
     },
     methods: {
@@ -58,7 +57,7 @@ export default {
                     this.showInfo()
                 })
                 this.liveSdk.on(STOP_SIGN_IN, (event, data) => {
-                    this.isStop = true
+                    this.checkinId = ''
                 })
             } catch (e) { throw e }
         },
@@ -69,11 +68,6 @@ export default {
                         useDangersHtml: true,
                         message: this.createNodeTemplate('主播暂未发起签到~')
                     })
-                    return
-                }
-
-                if (this.isStop) {
-                    this.$alert('签到已经结束')
                     return
                 }
 

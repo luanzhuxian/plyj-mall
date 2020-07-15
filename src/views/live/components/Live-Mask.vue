@@ -88,7 +88,7 @@ export default {
 
 <style lang='scss' module>
 
-  .live-mask {
+.live-mask {
     position: absolute;
     left: 0;
     top: 0;
@@ -97,64 +97,63 @@ export default {
     height: 100%;
     overflow: hidden;
     > img {
-      width: 100%;
-      height: 100%;
-      vertical-align: top;
+        width: 100%;
+        height: 100%;
+        vertical-align: top;
     }
     > .countdown {
-      display: flex;
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      height: 20%;
-      padding: 0 28px;
-      box-sizing: border-box;
-      background: url('https://mallcdn.youpenglai.com/static/mall/2.5.0/live/组 919@2x.png') top/100% no-repeat;
-      > .waiting {
-        width: 100%;
-        font-size: 36px;
-        text-align: center;
-        color: #FFFFFF;
-      }
-      > .time {
         display: flex;
+        position: absolute;
+        left: 0;
+        bottom: 0;
         align-items: center;
-        font-size: 26px;
-        color: #FFFFFF;
-        > div:nth-of-type(2) {
-          display: flex;
-          margin-left: 20px;
-          font-size: 26px;
-          font-weight: bold;
-          > span {
-            padding: 0 8px;
-            line-height: 40px;
-          }
-          > i {
-            display: inline-block;
-            min-width: 28px;
-            padding: 0 8px;
-            border-radius: 6px;
-            line-height: 40px;
+        justify-content: space-between;
+        width: 100%;
+        height: 20%;
+        padding: 0 28px;
+        box-sizing: border-box;
+        background: url('https://mallcdn.youpenglai.com/static/mall/2.5.0/live/组 919@2x.png') top/100% no-repeat;
+        > .waiting {
+            width: 100%;
+            font-size: 36px;
             text-align: center;
-            font-family: auto;
-            color: #E95338;
-            background: #FFFFFF;
-          }
+            color: #fff;
         }
-      }
-      > .description {
-        padding: 0 20px;
-        border-radius: 8px;
-        line-height: 44px;
-        font-size: 24px;
-        color: #E95338;
-        background: #FFFFFF;
-      }
+        > .time {
+            display: flex;
+            align-items: center;
+            font-size: 26px;
+            color: #fff;
+            > div:nth-of-type(2) {
+                display: flex;
+                margin-left: 20px;
+                font-size: 26px;
+                font-weight: bold;
+                > span {
+                    padding: 0 8px;
+                    line-height: 40px;
+                }
+                > i {
+                    display: inline-block;
+                    min-width: 28px;
+                    padding: 0 8px;
+                    border-radius: 6px;
+                    line-height: 40px;
+                    text-align: center;
+                    font-family: auto;
+                    color: #e95338;
+                    background: #fff;
+                }
+            }
+        }
+        > .description {
+            padding: 0 20px;
+            border-radius: 8px;
+            line-height: 44px;
+            font-size: 24px;
+            color: #fff;
+        }
     }
-  }
+}
 
 </style>
