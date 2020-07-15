@@ -6,14 +6,7 @@
                 <!-- 海报按钮 -->
                 <div :class="$style.haibao">
                     <pl-svg :key="1" v-show="creating" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
-                    <pl-svg
-                        :key="2"
-                        v-show="!creating"
-                        name="icon-poster-512b1"
-                        fill="#fff"
-                        width="35"
-                        @click="createPoster"
-                    />
+                    <pl-svg :key="2" v-show="!creating" name="icon-poster-512b1" fill="#fff" width="35" @click="createPoster" />
                     <p>分享海报</p>
                 </div>
                 <banner :banners="banners" />
@@ -292,6 +285,8 @@ export default {
         this.showContact = false
         this.showHaibao = false
         this.haibao = ''
+        this.isPreviewerShow = false
+        this.pdfUrl = ''
     },
     async mounted () {
         this.$store.commit(SET_SHARE_ID, this.brokerId)
