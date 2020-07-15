@@ -161,7 +161,7 @@
             </div>
 
             <div v-if="tab === 1" :class="$style.sendMessage">
-                <form :class="$style.inputBox" @submit.prevent="messageConfirm">
+                <form :class="{ [$style.inputBox]: true, [$style.interact]: detail.liveType === 'live'}" @submit.prevent="messageConfirm">
                     <pl-input
                         v-model.trim="message"
                         placeholder=" 进来了说点什么呗~"
@@ -172,11 +172,11 @@
                     <pl-button :disabled="allowedSpeak" :class="$style.sendBtn">发送</pl-button>
                 </form>
 
-                <div :class="$style.liveBtn">
+                <div :class="{ [$style.liveBtn]: true, [$style.interactBtn]: detail.liveType === 'live'}">
                     <pl-button :disabled="allowedSpeak" type="text" :class="$style.sendFlower" @click="sendFlower">
                         <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/flower.png" width="37" />
                     </pl-button>
-                    <pl-button :class="$style.interact" @click="showInteract = true">
+                    <pl-button v-if="detail.liveType === 'live'" :class="$style.interact" @click="showInteract = true">
                         <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/互动.png" alt="">
                     </pl-button>
                 </div>
@@ -238,6 +238,7 @@
         <LiveSignUp :info="detail" :activity-id="activityId" ref="LiveSignUp" />
         <!-- 直播互动 -->
         <LiveInteract
+            v-if="detail.liveType === 'live'"
             :show.sync="showInteract"
             :live-sdk="liveSdk"
             :sign-str="signStr"
@@ -437,6 +438,7 @@ export default {
         // 直播互动
         async interactInit () {
             try {
+                if (this.detail.liveType !== 'live') return
                 await this.$refs.LiveInteract.init()
             } catch (e) { throw e }
         },
@@ -1365,7 +1367,7 @@ export default {
     position: relative;
     display: inline-flex;
     align-items: center;
-    width: 480px;
+    width: 606px;
     height: 74px;
     padding: 0 140px 0 16px;
     line-height: 74px;
@@ -1380,6 +1382,9 @@ export default {
         font-size: 26px;
         line-height: 36px;
         background-color: transparent;
+    }
+    &.interact {
+        width: 480px;
     }
 }
 
@@ -1400,7 +1405,9 @@ export default {
 .live-btn {
     display: flex;
     align-items: center;
-    width: 222px;
+    &.interact-btn {
+        width: 222px;
+    }
     > .interact {
         width: 72px;
         height: 72px;
