@@ -74,6 +74,8 @@ export default {
     methods: {
         async init () {
             try {
+                await this.$nextTick()
+                console.log('提问初始化')
                 const { EVENTS: { T_ANSWER } } = window.PolyvLiveSdk
                 this.liveSdk.on(T_ANSWER, this.receive)
             } catch (e) { throw e }

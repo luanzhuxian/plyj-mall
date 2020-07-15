@@ -22,12 +22,16 @@ export default {
         }
     },
     methods: {
-        init () {
-            const { EVENTS: { BULLETIN } } = window.PolyvLiveSdk
-            this.liveSdk.on(BULLETIN, (event, data) => {
-                this.message = data.content
-                this.showInfo()
-            })
+        async init () {
+            try {
+                await this.$nextTick()
+                console.log('公告初始化')
+                const { EVENTS: { BULLETIN } } = window.PolyvLiveSdk
+                this.liveSdk.on(BULLETIN, (event, data) => {
+                    this.message = data.content
+                    this.showInfo()
+                })
+            } catch (e) { throw e }
         },
         showInfo () {
             if (!this.message) {

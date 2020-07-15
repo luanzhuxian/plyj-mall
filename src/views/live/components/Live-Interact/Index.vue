@@ -50,7 +50,7 @@ export default {
             try {
                 await this.$nextTick()
                 const { notice, signIn, lottery, answer, questions } = this.$refs
-
+                console.log('直播互动初始化')
                 notice.init()
                 signIn.init()
                 lottery.init()

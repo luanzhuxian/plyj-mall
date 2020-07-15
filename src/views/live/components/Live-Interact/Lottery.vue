@@ -66,6 +66,7 @@ export default {
         async init () {
             try {
                 await this.$nextTick()
+                console.log('抽奖初始化')
                 const { EVENTS: { LOTTERY_START, LOTTERY_END } } = window.PolyvLiveSdk
 
                 this.liveSdk.on(LOTTERY_START, this.start)

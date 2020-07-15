@@ -43,10 +43,14 @@ export default {
         }
     },
     methods: {
-        init () {
-            const { EVENTS: { GET_TEST_QUESTION_CONTENT, GET_TEST_QUESTION_RESULT } } = window.PolyvLiveSdk
-            this.liveSdk.on(GET_TEST_QUESTION_CONTENT, (event, data) => this.showData(data))
-            this.liveSdk.on(GET_TEST_QUESTION_RESULT, (event, data) => this.getResult(data))
+        async init () {
+            try {
+                await this.$nextTick()
+                console.log('答题初始化')
+                const { EVENTS: { GET_TEST_QUESTION_CONTENT, GET_TEST_QUESTION_RESULT } } = window.PolyvLiveSdk
+                this.liveSdk.on(GET_TEST_QUESTION_CONTENT, (event, data) => this.showData(data))
+                this.liveSdk.on(GET_TEST_QUESTION_RESULT, (event, data) => this.getResult(data))
+            } catch (e) { throw e }
         },
         getOptions (data) {
             let index = 1

@@ -49,6 +49,7 @@ export default {
         async init () {
             try {
                 await this.$nextTick()
+                console.log('签到初始化')
                 const { EVENTS: { SIGN_IN, STOP_SIGN_IN } } = window.PolyvLiveSdk
 
                 this.liveSdk.on(SIGN_IN, (event, data) => {
