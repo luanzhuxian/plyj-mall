@@ -675,7 +675,7 @@ export default {
 
                 // 填充商品名称
                 const line = ((type !== 1 && this.preActivity === 2) || this.courseType === 2) ? 1 : 2
-                const { sellingPrice: price, originalPrice, totalLiveNumber } = this.detail
+                const { sellingPrice, originalPrice, totalLiveNumber } = this.detail
                 ctx.textBaseline = 'top'
                 ctx.font = '56px Microsoft YaHei UI'
                 ctx.fillStyle = '#000'
@@ -697,7 +697,7 @@ export default {
                 }
 
                 // 填充价钱
-                if (price) {
+                if (sellingPrice) {
                     ctx.fillStyle = '#FE7700'
                     ctx.fillText('¥', 48, 1190 + (76 - 56) / 2)
                     ctx.font = 'bold 88px Microsoft YaHei UI'
@@ -705,7 +705,7 @@ export default {
                         ctx,
                         x: 96,
                         y: 1170 + (104 - 88) / 2,
-                        text: String(price),
+                        text: String(sellingPrice),
                         lineHeight: 104
                     })
                 } else {
@@ -721,8 +721,8 @@ export default {
                 }
 
                 // 绘制原价
-                if (originalPrice && originalPrice !== price) {
-                    const priceWidth = ctx.measureText(price).width
+                if (originalPrice && originalPrice !== sellingPrice) {
+                    const priceWidth = ctx.measureText(sellingPrice).width
                     ctx.fillStyle = '#999'
                     ctx.font = '56px Microsoft YaHei UI'
                     ctx.fillText(`¥${ originalPrice }`, 96 + priceWidth + 44, 1190 + (80 - 56) / 2)
