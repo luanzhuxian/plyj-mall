@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import { markImageTextStudy } from '../../../apis/product'
 export default {
     name: 'ImageTextList',
     props: {
@@ -22,14 +23,26 @@ export default {
             type: Array,
             default: () => []
         },
+        productId: {
+            type: String,
+            default: ''
+        },
+        isStudy: Boolean,
         isBought: Boolean
     },
     data () {
         return {}
     },
     methods: {
-        handleClick (index) {
+        async handleClick (index) {
             this.$emit('preview', index)
+            if (!this.isStudy) {
+                try {
+                    await markImageTextStudy(this.productId)
+                } catch (e) {
+                    throw e
+                }
+            }
         }
     }
 }

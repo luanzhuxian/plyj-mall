@@ -69,8 +69,18 @@
             <!-- 课程详情 -->
             <div :class="$style.detailOrComment">
                 <Tabs :tabs="tabs" v-model="tab">
-                    <detail-info v-show="tab === 1" :content="detail.details || '暂无详情'" />
-                    <image-text-list v-show="tab === 2" :data="detail.graphicPdfs || []" :is-bought="isBought" @preview="previewPdf" />
+                    <detail-info
+                        v-show="tab === 1"
+                        :content="detail.details || '暂无详情'"
+                    />
+                    <image-text-list
+                        v-show="tab === 2"
+                        :data="detail.graphicPdfs || []"
+                        :is-bought="isBought"
+                        :is-study="Boolean(detail.isStudy)"
+                        :product-id="detail.id"
+                        @preview="previewPdf"
+                    />
                 </Tabs>
             </div>
 
@@ -497,11 +507,12 @@ export default {
                 })
 
                 // 填充价钱
+                let priceWidth = 0
                 if (sellingPrice) {
                     ctx.fillStyle = '#FE7700'
                     ctx.fillText('¥', 48, 1190 + (76 - 56) / 2)
                     ctx.font = 'bold 88px Microsoft YaHei UI'
-                    createText({
+                    priceWidth = createText({
                         ctx,
                         x: 96,
                         y: 1170 + (104 - 88) / 2,
@@ -511,7 +522,7 @@ export default {
                 } else {
                     ctx.fillStyle = '#FE7700'
                     ctx.font = 'bold 88px Microsoft YaHei UI'
-                    createText({
+                    priceWidth = createText({
                         ctx,
                         x: 48,
                         y: 1160 + (76 - 56) / 2,
@@ -522,10 +533,9 @@ export default {
 
                 // 绘制原价
                 if (originalPrice && originalPrice !== sellingPrice) {
-                    const priceWidth = sellingPrice ? ctx.measureText(sellingPrice).width : ctx.measureText('免费').width
                     ctx.fillStyle = '#999'
                     ctx.font = '56px Microsoft YaHei UI'
-                    ctx.fillText(`¥${ originalPrice }`, 96 + priceWidth + 44, 1190 + (80 - 56) / 2)
+                    ctx.fillText(`¥${ originalPrice }`, priceWidth + 100, 1190 + (80 - 56) / 2)
                     const originalPriceWidth = ctx.measureText(`¥${ originalPrice }`).width
                     ctx.save()
 
@@ -533,8 +543,8 @@ export default {
                     ctx.strokeStyle = '#999'
                     ctx.beginPath()
                     ctx.lineWidth = '4'
-                    ctx.moveTo(96 + priceWidth + 44, 1190 + (80 - 56) / 2 + 80 / 3)
-                    ctx.lineTo(96 + priceWidth + 44 + originalPriceWidth, 1190 + (80 - 56) / 2 + 80 / 3)
+                    ctx.moveTo(priceWidth + 100, 1190 + (80 - 56) / 2 + 80 / 3)
+                    ctx.lineTo(priceWidth + 100 + originalPriceWidth, 1190 + (80 - 56) / 2 + 80 / 3)
                     ctx.stroke()
                 }
                 this.haibao = canvas.toDataURL('image/jpeg', 0.9)

@@ -46,7 +46,6 @@ export default {
         }
     },
     async mounted () {
-        console.log(123123)
         try {
             await this.$refs.loadMore.refresh()
         } catch (e) {

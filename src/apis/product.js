@@ -71,3 +71,10 @@ export const submitOrderAndPay = (courseId, params) => axios.post(`/apis/v1/mall
  * @returns {Promise<AxiosResponse<Object>>}
  */
 export const getImageTextDetail = id => axios.get(`/apis/v1/graphic/find/${ id }`)
+
+/**
+ * 标记图文资料为医学习
+ * @param id
+ * @return {*}
+ */
+export const markImageTextStudy = id => axios.put(`/apis/v1/graphic/modify/study/${ id }`)
