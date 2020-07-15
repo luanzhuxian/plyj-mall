@@ -161,7 +161,7 @@
             </div>
 
             <div v-if="tab === 1" :class="$style.sendMessage">
-                <form :class="{ [$style.inputBox]: true, [$style.interact]: detail.liveType === 'live'}" @submit.prevent="messageConfirm">
+                <form :class="{ [$style.inputBox]: true, [$style.interactBox]: detail.liveType === 'live'}" @submit.prevent="messageConfirm">
                     <pl-input
                         v-model.trim="message"
                         placeholder=" 进来了说点什么呗~"
@@ -174,10 +174,10 @@
 
                 <div :class="{ [$style.liveBtn]: true, [$style.interactBtn]: detail.liveType === 'live'}">
                     <pl-button :disabled="allowedSpeak" type="text" :class="$style.sendFlower" @click="sendFlower">
-                        <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/flower.png" width="37" />
+                        <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/flower.png" width="37" height="37" />
                     </pl-button>
                     <pl-button v-if="detail.liveType === 'live'" :class="$style.interact" @click="showInteract = true">
-                        <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/互动.png" alt="">
+                        <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/互动.png" width="72" height="72" />
                     </pl-button>
                 </div>
 
@@ -1385,7 +1385,7 @@ export default {
         line-height: 36px;
         background-color: transparent;
     }
-    &.interact {
+    &.interact-box {
         width: 480px;
     }
 }
@@ -1414,6 +1414,7 @@ export default {
         width: 72px;
         height: 72px;
         margin-left: 18px;
+        padding: 0;
         background-color: #fff;
     }
     > .send-flower {
