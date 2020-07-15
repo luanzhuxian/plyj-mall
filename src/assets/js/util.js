@@ -300,7 +300,7 @@ export function setTimeoutSync (duration) {
  * @param lineHeight {Number} 行高
  * @param lineNumber {Number} 行数（超过行数时，以...结尾）
  */
-export function createText ({ctx, x, y, text, lineHeight, width= 0, lineNumber = 1}) {
+export function createText ({ctx, x, y, text, lineHeight = 1, width= 0, lineNumber = 1}) {
     // 填充商品名称
     let charArr = []
     const strArr = []

@@ -376,7 +376,6 @@ import { GET_CART_COUNT, SET_SHARE_ID } from '../../store/mutation-type'
 import { addToCart } from '../../apis/shopping-cart'
 import youLike from './../home/components/YouLike.vue'
 import SoldOut from './Sold-Out.vue'
-import { generateQrcode, cutImageCenter, cutArcImage, loadImage } from '../../assets/js/util'
 import Comments from './Comments.vue'
 import CountDown from '../../components/product/Count-Down.vue'
 import TogetherBar from './together/Together-Bar'
@@ -397,65 +396,10 @@ import {
     getPublicBenefitStatistics,
     getPublicBenefitList
 } from '../../apis/longmen-festival/public-benefit'
-const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
-
-/**
- * 设置文字基本属性
- * @param ctx {CanvasRenderingContext2D} 2d context
- * @param font {String} 字体
- * @param color {String} 颜色
- * @param verticalAlign {String} 文字对齐方式
- * @returns {createText} {Function} 绘制文字的函数
- */
-const fontStyle = (ctx, font, color, verticalAlign) => {
-    ctx.font = font
-    ctx.fillStyle = color
-    ctx.textBaseline = verticalAlign
-    return createText
-}
-
-/**
- * 绘制文本
- * @param ctx {CanvasRenderingContext2D} 2d context
- * @param x {Number} 文本开始的x坐标
- * @param y {Number} 文本开始的y坐标
- * @param width {Number} 每行文本的最大宽度
- * @param text {String} 文本
- * @param lineHeight {Number} 行高
- * @param lineNumber {Number} 行数（超过行数时，以...结尾）
- */
-const createText = (ctx, x, y, text, lineHeight, width, lineNumber) => {
-    // 填充商品名称
-    let charArr = []
-    const strArr = []
-    let txtWidth = 0
-    // 文字行数
-    let lineCount = 0
-    const ellipsisWidth = ctx.measureText('...').width
-    for (let i = 0; i < text.length; i++) {
-        const char = text[i]
-        charArr.push(char)
-        txtWidth += ctx.measureText(char).width
-        if (lineCount === lineNumber - 1 && txtWidth + ellipsisWidth >= width) {
-            // 最后一行的文字
-            charArr.push('...')
-            strArr.push(charArr.join(''))
-            break
-        }
-
-        // 文本换行
-        if (txtWidth >= width || i === text.length - 1) {
-            lineCount++
-            strArr.push(charArr.join(''))
-            txtWidth = 0
-            charArr = []
-        }
-    }
-    for (const [i, str] of strArr.entries()) {
-        ctx.fillText(str, x, y + lineHeight * i)
-    }
-    return ctx.measureText(strArr[0]).width
-}
+import Poster from './poster/Poster'
+import GroupPurchasePoster from './poster/Group-Purchase-Poster'
+import SeckillPoster from './poster/Seckill-Poster'
+import PreorderPoster from './poster/Preorder-Poster'
 export default {
     name: 'Product',
     components: {
@@ -931,172 +875,71 @@ export default {
                     imgUrl: productMainImage,
                     willHide: hide
                 })
-                this.haibaoImg = await loadImage(productMainImage)
-
-                // let img = await loadImage(productMainImage)
-                // img = cutImageCenter(img)
-                // let qrcode = await generateQrcode(300, window.location.href, 15, img, 10, 'url')
-                // this.qrcode = qrcode
             } catch (error) {
                 throw error
             }
         },
         async createHaibao (type) {
-            if (this.loading) {
-                return
-            }
-            let img = this.haibaoImg
-            if (!img) {
-                this.$error('图片加载错误')
-                return
-            }
+            if (this.loading) return
             if (this.haibao) {
                 this.showHaibao = true
                 return
             }
-            this.creating = true
-
-            // let res = await this.$refs.html2canvas.toCanvas()
-            // console.log(res)
-            // 截取头像
-            let lodedAvatar
             try {
-                lodedAvatar = await loadImage(this.avatar)
-            } catch (e) {
-                lodedAvatar = await loadImage(avatar)
-            }
-            const arcAvatar = cutArcImage(lodedAvatar)
-            const allImgs = [
-                loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/poster3.png'),
-                loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/poster2.png'),
-                loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/poster1.png'),
-                loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/dikou.png'),
-                loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yuanjia.png'),
-                loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/miaoshajia.png'),
-                loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/tuangoujia.png'),
-                loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yuan.png'),
-                loadImage('https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yujiao.png')
-            ]
-            const res = await Promise.all(allImgs)
-            const tuanBg = res[0]
-            const miaoBg = res[1]
-            const yugouBg = res[2]
-            const dikou = res[3]
-            const original_price = res[4]
-            const second_price = res[5]
-            const tuan_price = res[6]
-            const yuan = res[7]
-            const yujiao = res[8]
-
-            // 截取中间部分
-            img = cutImageCenter(img, 750 / 500)
-            const canvas = document.createElement('canvas')
-            canvas.width = 1120
-            canvas.height = 1346
-            const ctx = canvas.getContext('2d')
-            if (type === 2 && this.preActivity === 2) {
-                ctx.drawImage(tuanBg, 0, 0, 1120, 192)
-            } else if (type === 3 && this.preActivity === 2) {
-                ctx.drawImage(miaoBg, 0, 0, 1120, 192)
-            } else if (type === 4 && this.preActivity === 2) {
-                ctx.drawImage(yugouBg, 0, 0, 1120, 192)
-            } else {
-                // 绘制头部
-                ctx.fillStyle = '#fff'
-                ctx.fillRect(0, 0, 1120, 192)
-                ctx.drawImage(arcAvatar, 32, 32, 128, 128)
-                fontStyle(ctx, 'bold 48px Microsoft YaHei UI', '#000', 'top')(ctx, 192, 74, this.userName, 68, 800, 1)
-
-                // fontStyle(ctx, '48px Microsoft YaHei UI', '#666', 'top')(ctx, 192 + 32 + textWidth, 74, '发现了好东西要与你分享', 68)
-            }
-            try {
-                // 二维码
-                const qrcode = await generateQrcode({ size: 300, text: this.shareUrl, padding: 15, img, centerPadding: 10, type: 'canvas' })
-
-                // 商品图片
-                ctx.drawImage(img, 0, 0, img.width, img.height, 0, 192, 1120, 746)
-                if (type !== 1 && this.preActivity === 2) {
-                    ctx.fillStyle = '#FA4D2F'
-                } else {
-                    ctx.fillStyle = '#fff'
+                this.creating = true
+                // 通用数据
+                const data = {
+                    cover: this.detail.productMainImage,
+                    productName: this.detail.productName,
+                    originalPrice: this.maxOriginalPrice,
+                    avatar: this.avatar,
+                    nickname: this.userName,
+                    shareUrl: this.shareUrl
                 }
-                ctx.fillRect(0, 938, 1120, 408)
-                ctx.drawImage(qrcode, 750, 978, 320, 320)
-
-                // 填充商品名称
-                const str = this.detail.productName
-                const line = (type !== 1 && this.preActivity === 2) ? 1 : 2
-                const price = this.minPrice
-                const originalPrice = this.maxOriginalPrice
-                const activePrice = this.detail.activityProductModel.price
-                fontStyle(ctx, '56px Microsoft YaHei UI', (type !== 1 && this.preActivity === 2) ? '#fff' : '#000', 'top')(ctx, 48, 978, str, 80, 620, line)
-                if (type === 2 && this.preActivity === 2) {
-                    // 团购
-                    const original = this.maxOriginalPrice || this.maxPrice
-                    ctx.drawImage(tuan_price, 48, 1090, 240, 104)
-                    fontStyle(ctx, 'bolder 88px Arial', '#F9E687', 'hanging')
-                    const priceWidth = ctx.measureText(activePrice).width
-                    ctx.fillText(activePrice, 48 + 240 + 10, 1105)
-                    ctx.drawImage(yuan, 48 + 240 + priceWidth + 10, 1090, 72, 104)
-
-                    ctx.drawImage(original_price, 48, 1210, 134, 96)
-                    fontStyle(ctx, 'bolder 88px Arial', '#fff', 'hanging')
-                    ctx.fillText(original, 48 + 144 + 10, 1220)
-                    const originalPriceWidth = ctx.measureText(original).width
-                    ctx.drawImage(yuan, 48 + 144 + 10 + originalPriceWidth + 10, 1210, 66, 96)
-                } else if (type === 3 && this.preActivity === 2) {
-                    // 秒杀
-                    ctx.drawImage(second_price, 48, 1090, 240, 104)
-                    fontStyle(ctx, 'bolder 88px Arial', '#F9E687', 'hanging')
-                    const priceWidth = ctx.measureText(activePrice).width
-                    const original = this.maxOriginalPrice || this.maxPrice
-                    ctx.fillText(activePrice, 48 + 240 + 10, 1105)
-                    ctx.drawImage(yuan, 48 + priceWidth + 240 + 10, 1090, 72, 104)
-
-                    ctx.drawImage(original_price, 48, 1210, 134, 96)
-                    fontStyle(ctx, 'bolder 88px Arial', '#fff', 'hanging')
-                    ctx.fillText(original, 48 + 144 + 10, 1220)
-                    const originalPriceWidth = ctx.measureText(original).width
-                    ctx.drawImage(yuan, 48 + 144 + 10 + originalPriceWidth + 10, 1210, 66, 96)
-                } else if (type === 4 && this.preActivity === 2) {
-                    // 预购
-                    ctx.drawImage(yujiao, 48, 1090, 144, 104)
-                    fontStyle(ctx, 'bolder 88px Arial', '#F9E687', 'hanging')
-                    const priceWidth = ctx.measureText(activePrice).width
-                    ctx.fillText(activePrice, 48 + 144 + 10, 1105)
-                    ctx.drawImage(yuan, 48 + priceWidth + 144 + 10, 1090, 72, 104)
-
-                    ctx.drawImage(dikou, 48, 1210, 134, 96)
-                    fontStyle(ctx, 'bolder 88px Arial', '#fff', 'hanging')
-                    const { depositTotal } = this.detail.activityProductModel
-                    const depositTotalPriceWidth = ctx.measureText(depositTotal).width
-                    ctx.fillText(depositTotal, 48 + 144 + 10, 1220)
-                    ctx.drawImage(yuan, 48 + 144 + 10 + depositTotalPriceWidth + 10, 1210, 66, 96)
-                } else {
-                    // 填充价钱
-                    ctx.fillStyle = '#FE7700'
-                    ctx.fillText('¥', 48, 1190 + (76 - 56) / 2)
-                    fontStyle(ctx, 'bold 88px Microsoft YaHei UI', '#FE7700', 'top')(ctx, 96, 1170 + (104 - 88) / 2, String(price), 104)
-
-                    // 绘制原价
-                    if (originalPrice && originalPrice !== price) {
-                        const priceWidth = ctx.measureText(price).width
-                        ctx.fillStyle = '#999'
-                        ctx.font = '56px Microsoft YaHei UI'
-                        ctx.fillText(`¥${ originalPrice }`, 96 + priceWidth + 44, 1190 + (80 - 56) / 2)
-                        const originalPriceWidth = ctx.measureText(`¥${ originalPrice }`).width
-                        ctx.save()
-
-                        // 设置删除线
-                        ctx.strokeStyle = '#999'
-                        ctx.beginPath()
-                        ctx.lineWidth = '4'
-                        ctx.moveTo(96 + priceWidth + 44, 1190 + (80 - 56) / 2 + 80 / 3)
-                        ctx.lineTo(96 + priceWidth + 44 + originalPriceWidth, 1190 + (80 - 56) / 2 + 80 / 3)
-                        ctx.stroke()
+                let poster = null
+                if (this.preActivity === 2) {
+                    if (type === 2) {
+                        // 团购海报
+                        poster = new GroupPurchasePoster({
+                            ...data,
+                            price: this.detail.activityProductModel.price,
+                            maxPrice: this.maxPrice,
+                            headerBg: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/poster3.png',
+                            tuanIcon: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/tuangoujia.png',
+                            yuanIcon: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yuan.png',
+                            originalPriceIcon: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yuanjia.png'
+                        })
+                    } else if (type === 3) {
+                        // 秒杀海报
+                        poster = new SeckillPoster({
+                            ...data,
+                            price: this.detail.activityProductModel.price,
+                            maxPrice: this.maxPrice,
+                            headerBg: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/poster2.png',
+                            sekillIcon: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/miaoshajia.png',
+                            yuanIcon: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yuan.png',
+                            originalPriceIcon: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yuanjia.png'
+                        })
+                    } else if (type === 4) {
+                        // 秒杀海报
+                        poster = new PreorderPoster({
+                            ...data,
+                            price: this.detail.activityProductModel.price,
+                            originalPrice: this.detail.activityProductModel.depositTotal,
+                            headerBg: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/poster2.png',
+                            yujiaoIcon: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yujiao.png',
+                            yuanIcon: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yuan.png',
+                            dikouIcon: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/dikou.png'
+                        })
                     }
+                } else {
+                    poster = new Poster({
+                        ...data,
+                        price: this.minPrice
+                    })
                 }
-                this.haibao = canvas.toDataURL('image/jpeg', 1)
+
+                this.haibao = await poster.create()
                 this.showHaibao = true
             } catch (e) {
                 throw e
