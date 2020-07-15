@@ -1413,7 +1413,7 @@ export default {
     > .interact {
         width: 72px;
         height: 72px;
-        margin-left: 18px;
+        margin-left: 36px;
         padding: 0;
         background-color: #fff;
     }
