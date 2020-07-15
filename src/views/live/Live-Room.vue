@@ -439,6 +439,7 @@ export default {
         // 直播互动
         async interactInit () {
             try {
+                await this.$nextTick()
                 if (this.detail.liveType !== 'live') return
                 await this.$refs.LiveInteract.init()
             } catch (e) { throw e }
