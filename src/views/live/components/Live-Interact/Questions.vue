@@ -153,10 +153,10 @@ export default {
     > .chat {
         position: fixed;
         left: 0;
-        bottom: -700px;
+        bottom: -800px;
         box-sizing: border-box;
         width: 100%;
-        height: 700px;
+        height: 800px;
         padding-bottom: 120px;
         border-radius: 40px 40px 0 0;
         background-color: #fff;
@@ -175,7 +175,7 @@ export default {
         > .contents {
             box-sizing: border-box;
             width: calc(100% - 104px);
-            max-height: 460px;
+            max-height: 560px;
             margin: 0 auto;
             overflow-y: auto;
             > .message {
