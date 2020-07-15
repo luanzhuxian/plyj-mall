@@ -7,11 +7,16 @@
                     <img src="https://mallcdn.youpenglai.com/static/mall/2.9.0/send-live.png">
                 </div>
                 <div :class="$style.title">
+                    <!--大标题-->
                     <span>
+                        <!--获得赠课数量为1时-->
                         <template v-if="courseList.length === 1">您免费获得了1节{{ courseType[courseList[0].courseType ] }}</template>
+                        <!--获得赠课数量为1时-->
                         <template v-else>您免费获得了{{ courseList.length }}节课程</template>
                     </span>
+                    <!--描述-->
                     <span>
+                        <!--获得赠课数量为1 + 赠课为直播-->
                         <template v-if="(courseList.length === 1) && (courseList[0].courseType === LIVE_TYPE)">
                             <!--直播未开始-->
                             <template v-if="isNotStart(courseList[0])">直播还未开始，请在直播开始时进入直播间学习</template>
@@ -19,14 +24,17 @@
                             <template v-else-if="courseList[0].videoLibId && courseList[0].videoLibId !== '0'">直播已结束，您可看回放进行直播课程学习</template>
                             <template v-else>直播进行中，可点击查看直播进入直播间学习</template>
                         </template>
+                        <!--赠课列表中含有直播课程时-->
                         <template v-else-if="currentCourseTypeCount(LIVE_TYPE) === courseList.length">
                             您可选择正在直播中的直播课程进行学习哦~
                         </template>
+                        <!--除上述两种描述之外的情况-->
                         <template v-else>
                             <div :class="$style.count">
                                 <b v-if="currentCourseTypeCount(LIVE_TYPE)">互动直播 {{ currentCourseTypeCount(LIVE_TYPE) }} </b>
                                 <b v-if="currentCourseTypeCount(SIGLE_TYPE)">精选单课 {{ currentCourseTypeCount(SIGLE_TYPE) }} </b>
                                 <b v-if="currentCourseTypeCount(SERIES_TYPE)">精选系列课 {{ currentCourseTypeCount(SERIES_TYPE) }} </b>
+                                <b v-if="currentCourseTypeCount(GRAPHIC_TYPE)">图文资料 {{ currentCourseTypeCount(GRAPHIC_TYPE) }} </b>
                             </div>
                         </template>
                     </span>
@@ -42,7 +50,8 @@
                                 [$style.icon]: true,
                                 [$style.isLiveCourse]: item.courseType === LIVE_TYPE,
                                 [$style.isSingleCourse]: item.courseType === SIGLE_TYPE,
-                                [$style.isSeriesCourse]: item.courseType === SERIES_TYPE
+                                [$style.isSeriesCourse]: item.courseType === SERIES_TYPE,
+                                [$style.isGraphicCourse]: item.courseType === GRAPHIC_TYPE
                             }"
                         >
                             <img v-imgError :src="item.coverImg" alt="">
@@ -64,7 +73,7 @@
                                     size="middle"
                                     @click.capture="goToWatchLive(item)"
                                 >
-                                    立即观看
+                                    {{ buttonText[item.courseType] }}
                                 </pl-button>
                             </div>
                         </div>
@@ -77,7 +86,8 @@
                                 [$style.icon]: true,
                                 [$style.isLiveCourse]: item.courseType === LIVE_TYPE,
                                 [$style.isSingleCourse]: item.courseType === SIGLE_TYPE,
-                                [$style.isSeriesCourse]: item.courseType === SERIES_TYPE
+                                [$style.isSeriesCourse]: item.courseType === SERIES_TYPE,
+                                [$style.isGraphicCourse]: item.courseType === GRAPHIC_TYPE
                             }"
                             v-for="(item, index) of courseList"
                             :key="index"
@@ -107,7 +117,7 @@
                                         type="primary"
                                         size="middle"
                                     >
-                                        立即观看
+                                        {{ buttonText[item.courseType] }}
                                     </pl-button>
                                 </div>
                             </div>
@@ -158,10 +168,18 @@ export default {
             LIVE_TYPE: 0,
             SIGLE_TYPE: 1,
             SERIES_TYPE: 2,
+            GRAPHIC_TYPE: 3,
             courseType: {
                 0: '互动直播',
                 1: '知识课程',
-                2: '系列课'
+                2: '系列课',
+                3: '图文资料'
+            },
+            buttonText: {
+                0: '立即观看',
+                1: '立即观看',
+                2: '立即观看',
+                3: '立即查看'
             },
             isAlreadyNotice: false
         }
@@ -200,7 +218,6 @@ export default {
                 // 后台返回的paidAmount单位为分，要转换为元
                 item.actuallyPaidAmount = Number(Number(item.paidAmount / 100).toFixed(2))
                 item.courseType = this.LIVE_TYPE
-                list.push(item)
             })
             // 单课 + 系列课
             const courseList = (data && data.courseList) || []
@@ -218,7 +235,16 @@ export default {
                 }
                 item.courseType === this.SIGLE_TYPE ? sigleCourse.push(newItem) : seriesCourse.push(newItem)
             })
-            list = [...list, ...seriesCourse, ...sigleCourse]
+            // 图文资料
+            const graphicList = (data && data.graphicList) || []
+            graphicList.forEach(item => {
+                item.courseType = this.GRAPHIC_TYPE
+                item.name = item.courseName
+                item.coverImg = item.courseImg
+                item.actuallyPaidAmount = item.sellingPrice
+                item.lecturerName = item.lecturer
+            })
+            list = [...liveList, ...seriesCourse, ...sigleCourse, ...graphicList]
             return list
         },
         isNotStart (row) {
@@ -230,18 +256,23 @@ export default {
         goToWatchLive (row) {
             // 互动直播
             if (row.courseType === this.LIVE_TYPE) {
+                // 直播已结束
                 if (row.liveCloseTime && moment(row.liveCloseTime).isBefore(moment())) {
                     if (row.videoLibId && row.videoLibId !== '0') {
-                        this.$router.push({ name: 'LivePlayBack', params: { id: row.videoLibId, activityId: row.id, isValidateEndTime: '0' } })
-                    } else {
-                        this.$error('该视频无法观看')
+                        return this.$router.push({ name: 'LivePlayBack', params: { id: row.videoLibId, activityId: row.id, isValidateEndTime: '0' } })
                     }
-                } else {
-                    this.$router.push({ name: 'LiveRoom', params: { id: row.roomValue } })
+                    return this.$error('该视频无法观看')
                 }
-            } else {
-                // 单课+系列课
-                this.$router.push({ name: 'Curriculum', params: { productId: row.courseId } })
+                // 直播进行中/未开始
+                return this.$router.push({ name: 'LiveRoom', params: { id: row.roomValue } })
+            }
+            // 单课+系列课
+            if (row.courseType === this.SIGLE_TYPE || row.courseType === this.SERIES_TYPE) {
+                return this.$router.push({ name: 'Curriculum', params: { productId: row.courseId } })
+            }
+            // 图文资料
+            if (row.courseType === this.GRAPHIC_TYPE) {
+                this.$router.push({ name: 'ImageTextDetail', params: { productId: row.courseId } })
             }
         },
         close () {
@@ -489,6 +520,9 @@ export default {
         }
         &.is-live-course:before {
           content: '直播';
+        }
+        &.is-graphic-course:before {
+          content: '图文资料';
         }
         &:before {
           position: absolute;

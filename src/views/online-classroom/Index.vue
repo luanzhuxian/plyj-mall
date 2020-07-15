@@ -105,7 +105,8 @@ export default {
                 const { result } = await getSendLiveList('1')
                 const liveList = (result.liveList && result.liveList) || []
                 const courseList = (result.courseList && result.courseList) || []
-                this.unaccalimedSendCount = liveList.length + courseList.length
+                const graphicList = (result && result.graphicList) || []
+                this.unaccalimedSendCount = liveList.length + courseList.length + graphicList.length
             } catch (e) {
                 throw e
             }
