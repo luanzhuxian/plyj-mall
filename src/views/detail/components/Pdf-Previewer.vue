@@ -79,7 +79,11 @@ export default {
                 if (!isCached) {
                     file = await this.loadPdf(url)
                     this.cacheMap.set(url, file)
-                    // console.log(file)
+                    if (!file) {
+                        this.close()
+                        await this.$nextTick()
+                        return this.$error({ message: '资料获取失败，请检查资料是否存在' })
+                    }
                 } else {
                     file = this.cacheMap.get(url)
                     // console.log('cached')
@@ -99,7 +103,7 @@ export default {
         async loadPdf (url) {
             try {
                 const loadingTask = pdfjsLib.getDocument(url)
-                const file = await loadingTask.promise
+                const file = await loadingTask.promise.catch(e => false)
                 return file
             } catch (error) {
                 throw error
