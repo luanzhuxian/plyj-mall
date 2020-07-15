@@ -2,8 +2,8 @@
     <transition name="fade">
         <div class="qrcode-modal-mask" v-if="show">
             <div class="qrcode-modal-modal">
-                <h4 v-if="mallQRCodeInfo.name">{{ mallQRCodeInfo.name }}</h4>
-                <p v-if="mallQRCodeInfo.description">{{ mallQRCodeInfo.description }}</p>
+                <h4>长按识别二维码关注</h4>
+                <p v-if="mallQRCodeInfo.name">{{ mallQRCodeInfo.name }}</p>
                 <pl-svg
                     name="icon-close"
                     width="26"
@@ -15,7 +15,7 @@
                 <div class="qrcode-modal-img-wrapper">
                     <img v-imgError :src="mallQRCodeInfo.qrCodeImgUrl" alt="">
                 </div>
-                <p class="qrcode-modal-bottom">关注有礼</p>
+                <p class="qrcode-modal-bottom" v-if="mallQRCodeInfo.description">{{ mallQRCodeInfo.description }}</p>
             </div>
         </div>
     </transition>
@@ -69,11 +69,12 @@ export default {
         flex-direction: column;
         align-items: center;
         box-sizing: border-box;
-        padding: 40px 0 50px;
+        padding: 40px 30px 50px;
         width: 540px;
         height: 586px;
         background: #fff;
         border-radius: 10px;
+        overflow: hidden;
         > h4 {
             font-size: 34px;
             line-height: 56px;
@@ -85,6 +86,9 @@ export default {
             font-family: Microsoft YaHei;
             line-height: 34px;
             color: #666;
+            width: 100%;
+            text-align: center;
+            @include elps();
         }
         > .botttom {
             margin-top: 26px;
