@@ -250,6 +250,7 @@
             ref="LiveInteract"
         />
 
+        <div :class="$style.qrcodeBtn" v-if="mallQRCodeInfo && mallQRCodeInfo.isLiveDisplay" @click.stop="$showMallQRCOde()">进入公众号</div>
     </div>
 </template>
 
@@ -379,7 +380,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['userName', 'avatar', 'userId', 'openId', 'roleCode', 'appId', 'isActivityAuth', 'mallDomain', 'mchId', 'mallUrl'])
+        ...mapGetters(['userName', 'avatar', 'userId', 'openId', 'roleCode', 'appId', 'isActivityAuth', 'mallDomain', 'mchId', 'mallUrl', 'mallQRCodeInfo'])
     },
     async created () {
         localStorage.removeItem(`LIVE_MESSAGE_${ this.mallDomain }`)
@@ -1186,6 +1187,7 @@ export default {
 
 <style module lang="scss">
 .live-room {
+    position: relative;
     height: 100vh;
     > .live-player {
         position: relative;
@@ -1553,6 +1555,23 @@ export default {
             margin-top: 64px;
         }
     }
+}
+
+.qrcode-btn {
+    position: absolute;
+    top: 533px;
+    right: 0;
+    box-sizing: border-box;
+    width: 148px;
+    height: 44px;
+    line-height: 40px;
+    text-align: center;
+    background: #fff;
+    border: 2px solid #f2b036;
+    border-right: none;
+    border-radius: 8px 0 0 8px;
+    font-size: 24px;
+    color: #f2b036;
 }
 
 @keyframes rotate {
