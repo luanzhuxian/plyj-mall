@@ -28,6 +28,7 @@ export default {
                 console.log('公告初始化')
                 const { EVENTS: { BULLETIN } } = window.PolyvLiveSdk
                 this.liveSdk.on(BULLETIN, (event, data) => {
+                    console.log('收到公告：', data.content)
                     this.message = data.content
                     this.showInfo()
                 })

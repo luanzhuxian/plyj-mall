@@ -53,6 +53,7 @@ export default {
                 const { EVENTS: { SIGN_IN, STOP_SIGN_IN } } = window.PolyvLiveSdk
 
                 this.liveSdk.on(SIGN_IN, (event, data) => {
+                    console.log('收到签到：', data)
                     this.checkinId = data.data.checkinId
                     this.roomId = data.roomId
                     this.showInfo()
