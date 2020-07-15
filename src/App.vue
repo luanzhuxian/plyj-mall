@@ -168,7 +168,7 @@ export default {
                     this.getSkinId()
                 ]
 
-                const [{ result: coupon }, { result: qrcode }] = await Promise.all(list.map(p => p.catch(e => {
+                const [{ result: coupon }, { result: qrcode = {} }] = await Promise.all(list.map(p => p.catch(e => {
                     console.error(e)
                     return { result: {} }
                 })))

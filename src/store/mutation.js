@@ -128,7 +128,9 @@ export default {
     [type.SET_CAMPAIGN_BOOK] (state, payload) {
         state.campaignBook = payload
     },
-    [type.SET_MALL_QRCODE_INFO] (state, payload) {
+    [type.SET_MALL_QRCODE_INFO] (state, payload = {}) {
+        if (!payload) payload = {}
+
         const { regionScope = '' } = payload
         const array = regionScope.split(',')
         payload.isHomeDisplay = array.includes('1')
