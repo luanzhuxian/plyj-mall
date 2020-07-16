@@ -131,7 +131,7 @@ export default {
             })
 
             this.answers.set(questionId, isMultiple ? this.multipleAnswer : this.singleAnswer)
-            const answer = isMultiple ? this.multipleAnswer.join('') : this.singleAnswer
+            const answer = isMultiple ? this.sortMultipleAnswer.join('') : this.singleAnswer
             this.send(answer, data.questionId)
             this.clear()
         },
@@ -182,6 +182,15 @@ export default {
             this.singleAnswer = ''
             this.multipleAnswer = []
             this.data = null
+        }
+    },
+    computed: {
+        sortMultipleAnswer () {
+            const answers = JSON.parse(JSON.stringify(this.multipleAnswer || []))
+            const templates = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+            const options = new Map(templates.map((item, index) => [item, index]))
+
+            return answers.sort((n, p) => options.get(n) - options.get(p))
         }
     }
 }
