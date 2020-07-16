@@ -7,7 +7,10 @@
                 <span>.pdf</span>
             </p>
             <button :class="$style.imageTextListButton">
-                <span v-if="isBought" :class="$style.highlight" @click="handleClick(index)">打开资料</span>
+                <template v-if="isBought">
+                    <a v-if="isIos" :href="item.url" :class="$style.highlight">打开资料</a>
+                    <span v-else :class="$style.highlight" @click="handleClick(index)">打开资料</span>
+                </template>
                 <span v-else>购买后可查看</span>
             </button>
         </li>
@@ -16,6 +19,7 @@
 
 <script>
 import { markImageTextStudy } from '../../../apis/product'
+
 export default {
     name: 'ImageTextList',
     props: {
@@ -28,7 +32,8 @@ export default {
             default: ''
         },
         isStudy: Boolean,
-        isBought: Boolean
+        isBought: Boolean,
+        isIos: Boolean
     },
     data () {
         return {}

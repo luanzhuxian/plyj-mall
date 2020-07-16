@@ -152,6 +152,10 @@ export function isIOS () {
     return !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
 }
 
+export function isAndroid  () {
+    return navigator.userAgent.indexOf('Android') > -1 || navigator.userAgent.indexOf('Linux') > -1
+}
+
 /**
  * 生成商品二维码
  * @param size {number} 二维码尺寸，必填

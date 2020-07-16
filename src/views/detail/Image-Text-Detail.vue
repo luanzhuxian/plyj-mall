@@ -78,6 +78,7 @@
                         :data="detail.graphicPdfs || []"
                         :is-bought="isBought"
                         :is-study="Boolean(detail.isStudy)"
+                        :is-ios="isIOS"
                         :product-id="detail.id"
                         @preview="previewPdf"
                     />
@@ -104,14 +105,23 @@
                     </a>
                 </div>
                 <div :class="$style.buttons">
-                    <button
-                        v-if="isBought"
-                        :class="$style.button + ' ' + $style.yellow"
-                        :disabled="loading"
-                        @click="previewPdf(0)"
-                    >
-                        查看资料
-                    </button>
+                    <template v-if="isBought">
+                        <a
+                            v-if="isIOS"
+                            :class="$style.button + ' ' + $style.yellow"
+                            :href="detail.graphicPdfs.length ? detail.graphicPdfs[0].url : 'javascript:void(0);'"
+                        >
+                            打开资料
+                        </a>
+                        <button
+                            v-else
+                            :class="$style.button + ' ' + $style.yellow"
+                            :disabled="loading"
+                            @click="previewPdf(0)"
+                        >
+                            查看资料
+                        </button>
+                    </template>
                     <button
                         v-else
                         :class="$style.button + ' ' + $style.orange"
@@ -174,7 +184,8 @@ import {
     cutImageCenter,
     cutArcImage,
     loadImage,
-    createText
+    createText,
+    isIOS
 } from '../../assets/js/util'
 import moment from 'moment'
 
@@ -223,7 +234,8 @@ export default {
             shareUrl: '',
             // pdf预览
             isPreviewerShow: false,
-            pdfUrl: ''
+            pdfUrl: '',
+            isIOS: isIOS()
         }
     },
     props: {
