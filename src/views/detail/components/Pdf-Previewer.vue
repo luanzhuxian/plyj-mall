@@ -1,6 +1,6 @@
 <template>
     <transition name="fade">
-        <div :class="$style.previewer" v-show="show">
+        <div :class="$style.previewer" v-if="show">
             <pl-svg name="icon-shibai" width="40" :class="$style.close" @click.stop="close" />
             <pl-svg v-show="!isLoaded" name="icon-btn-loading" width="50" fill="#fff" class="rotate" />
             <div ref="container" v-show="isLoaded" :class="$style.swiperContainer">
@@ -77,12 +77,10 @@ export default {
         }
     },
     mounted () {
-        this.container = this.$refs.container
-        this.screenWidth = window.screen.width * window.devicePixelRatio
+        this.init()
     },
     activated () {
-        this.container = this.$refs.container
-        this.screenWidth = window.screen.width * window.devicePixelRatio
+        this.init()
     },
     deactivated () {
         if (this.container) {
@@ -95,8 +93,15 @@ export default {
         }
     },
     methods: {
+        init () {
+            if (this.$refs.container) {
+                this.container = this.$refs.container
+            }
+            this.screenWidth = window.screen.width * window.devicePixelRatio
+        },
         bindScroll () {
             this.scrollHandler = throttle(this.onScroll, 200)
+            this.container = this.$refs.container
             this.container.addEventListener('scroll', this.scrollHandler, { passive: true })
         },
         onScroll (e) {
@@ -110,8 +115,8 @@ export default {
             // console.log('container.scrollLeft', container.scrollLeft)
             // console.log('container.clientWidth', container.clientWidth)
             // console.log('list.clientWidth', list.clientWidth)
-            this.current = this.calculateCurrentPage(target)
-            if (target.scrollLeft + target.clientWidth > target.scrollWidth - (3 * target.clientWidth)) {
+            this.current = this.calculateCurrentPage(target) || 1
+            if (target.scrollLeft + target.clientWidth > target.scrollWidth - (5 * target.clientWidth)) {
                 this.renderMutiplePages(10)
             }
         },
@@ -184,18 +189,18 @@ export default {
                 this.pages.push(page)
                 await this.$nextTick()
 
-                // console.log('page', page)
-
                 const viewport = page.getViewport({ scale })
                 const domList = this.$refs[`canvas-${ pageNumber }`]
                 if (!domList) {
+                    this.$error({ message: `第${ pageNumber }页渲染错误，找不到对应canvas` })
                     return Promise.reject(new Error(`第${ pageNumber }页渲染错误，找不到对应canvas`))
                 }
                 const canvas = domList[0]
                 const context = canvas.getContext('2d')
 
-                canvas.height = viewport.height
                 canvas.width = this.screenWidth
+                // canvas.width = viewport.width
+                canvas.height = viewport.height
 
                 const renderContext = {
                     canvasContext: context,
@@ -203,6 +208,7 @@ export default {
                 }
                 const renderingTask = page.render(renderContext)
                 await renderingTask.promise
+                // console.log(`canvas-${ pageNumber }`, canvas.toDataURL('image/jpeg', 0.1))
 
                 return pageNumber
             } catch (error) {
@@ -304,8 +310,8 @@ export default {
             this.lastRenderedPage = 0
         },
         close () {
-            this.$emit('update:show', false)
             this.clear()
+            this.$emit('update:show', false)
         }
     }
 
