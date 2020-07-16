@@ -1,13 +1,19 @@
 <template>
     <transition name="fade">
-        <div :class="$style.previewer" v-if="show">
+        <div :class="$style.previewer" v-show="show">
             <pl-svg name="icon-shibai" width="40" :class="$style.close" @click.stop="close" />
             <pl-svg v-show="!isLoaded" name="icon-btn-loading" width="50" fill="#fff" class="rotate" />
-            <canvas v-show="isLoaded" ref="canvas" :class="$style.canvas" />
+            <div ref="container" v-show="isLoaded" :class="$style.swiperContainer">
+                <div ref="list" :class="$style.swiperList">
+                    <div :class="$style.swiperItem" v-for="(item, index) of pages" :key="index">
+                        <canvas :ref="'canvas-' + (index + 1)" />
+                    </div>
+                </div>
+            </div>
             <div :class="$style.previewerBtnGroup">
-                <pl-svg name="icon-left" width="25" :class="$style.left" @click.stop="prev" />
+                <pl-svg name="icon-left" width="25" :class="$style.left" @click.stop="toPreviousPage" />
                 <span>{{ current }}</span>
-                <pl-svg name="icon-left" width="25" :class="$style.right" @click.stop="next" />
+                <pl-svg name="icon-left" width="25" :class="$style.right" @click.stop="toNextPage" />
             </div>
         </div>
     </transition>
@@ -15,6 +21,7 @@
 
 <script>
 import pdfjsLib from 'pdfjs-dist'
+import { throttle } from '../../../assets/js/util'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://mallcdn.youpenglai.com/cdn/pdf/pdf.worker.min.js'
 
@@ -22,11 +29,6 @@ export default {
     name: 'PdfPreviewer',
     props: {
         show: Boolean,
-        // 缩放指数
-        // scale: {
-        //     type: Number,
-        //     default: 1
-        // },
         url: {
             type: String,
             default: '',
@@ -35,25 +37,38 @@ export default {
     },
     data () {
         return {
-            // 当前pdf文件
-            file: null,
             // 是否加载
             isLoaded: false,
             // 正在绘制
             isRendering: false,
+            // 是否在翻页
+            isSwiping: false,
             // pdf总页数
-            totle: 0,
-            // 当前预览页
+            total: 10,
+            // 当前预览页页数
             current: 1,
+            // 已渲染的最后一页页数
+            lastRenderedPage: 0,
             cacheMap: new Map(),
-            scale: 1
+            // 缩放系数
+            scale: 1,
+            // 当前pdf文件
+            file: null,
+            pages: [],
+            container: null,
+            scrollHandler: null
         }
     },
     watch: {
         show: {
-            handler (val) {
+            async handler (val) {
                 if (val) {
-                    this.previewPdf()
+                    try {
+                        await this.previewPdf()
+                        this.bindScroll()
+                    } catch (error) {
+                        throw error
+                    }
                 } else {
                     this.close()
                 }
@@ -61,12 +76,59 @@ export default {
             immediate: true
         }
     },
+    mounted () {
+        this.container = this.$refs.container
+        this.screenWidth = window.screen.width * window.devicePixelRatio
+    },
+    activated () {
+        this.container = this.$refs.container
+        this.screenWidth = window.screen.width * window.devicePixelRatio
+    },
+    deactivated () {
+        if (this.container) {
+            this.container.removeEventListener('scroll', this.scrollHandler)
+        }
+    },
+    beforeDestroy () {
+        if (this.container) {
+            this.container.removeEventListener('scroll', this.scrollHandler)
+        }
+    },
     methods: {
+        bindScroll () {
+            this.scrollHandler = throttle(this.onScroll, 200)
+            this.container.addEventListener('scroll', this.scrollHandler, { passive: true })
+        },
+        onScroll (e) {
+            const { target } = e
+            // const container = this.$refs.container
+            // const list = this.$refs.list
+            // console.log(e)
+            // console.log('target.scrollLeft', target.scrollLeft)
+            // console.log('target.clientWidth', target.clientWidth)
+            // console.log('target.scrollWidth', target.scrollWidth)
+            // console.log('container.scrollLeft', container.scrollLeft)
+            // console.log('container.clientWidth', container.clientWidth)
+            // console.log('list.clientWidth', list.clientWidth)
+            this.current = this.calculateCurrentPage(target)
+            if (target.scrollLeft + target.clientWidth > target.scrollWidth - (3 * target.clientWidth)) {
+                this.renderMutiplePages(10)
+            }
+        },
+        calculateCurrentPage ({ scrollLeft, clientWidth }) {
+            const result = scrollLeft / clientWidth
+            const decimal = `0.${ result
+                .toString()
+                .split('.')
+                .pop() }`
+            return decimal > 0.3
+                ? Math.ceil(result) + 1
+                : Math.floor(result) + 1
+        },
         async calculateScale () {
             const page = await this.file.getPage(1)
-            const screenWidth = window.screen.width * window.devicePixelRatio
             const { width } = page.getViewport({ scale: 1 })
-            this.scale = screenWidth / width
+            this.scale = this.screenWidth / width
             return this.scale
         },
         async previewPdf () {
@@ -78,30 +140,34 @@ export default {
 
             try {
                 if (!isCached) {
-                    file = await this.loadPdf(url)
-                    this.cacheMap.set(url, file)
+                    file = await this.loadFile(url)
                     if (!file) {
                         this.close()
                         await this.$nextTick()
                         return this.$error({ message: '资料获取失败，请检查资料是否存在' })
                     }
+
+                    // file.pages = []
+                    this.cacheMap.set(url, file)
+                    // console.log('file', file)
                 } else {
                     file = this.cacheMap.get(url)
-                    // console.log('cached')
                 }
 
                 this.file = file
-                this.totle = file.numPages
+                this.total = file.numPages
                 this.current = 1
+
                 await this.calculateScale()
-                await this.renderPdf(this.current)
+                await this.renderMutiplePages(1)
                 await this.$nextTick()
                 this.isLoaded = true
+                await this.renderMutiplePages(9)
             } catch (error) {
                 throw error
             }
         },
-        async loadPdf (url) {
+        async loadFile (url) {
             try {
                 const loadingTask = pdfjsLib.getDocument(url)
                 const file = await loadingTask.promise.catch(e => false)
@@ -110,22 +176,26 @@ export default {
                 throw error
             }
         },
-        async renderPdf (pageNumber) {
+        async renderPage (pageNumber) {
             const { scale } = this
+
             try {
-                if (this.isRendering) {
-                    return false
-                }
-
-                this.isRendering = true
-
                 const page = await this.file.getPage(pageNumber)
+                this.pages.push(page)
+                await this.$nextTick()
+
+                // console.log('page', page)
+
                 const viewport = page.getViewport({ scale })
-                const canvas = this.$refs.canvas
+                const domList = this.$refs[`canvas-${ pageNumber }`]
+                if (!domList) {
+                    return Promise.reject(new Error(`第${ pageNumber }页渲染错误，找不到对应canvas`))
+                }
+                const canvas = domList[0]
                 const context = canvas.getContext('2d')
 
                 canvas.height = viewport.height
-                canvas.width = viewport.width
+                canvas.width = this.screenWidth
 
                 const renderContext = {
                     canvasContext: context,
@@ -133,44 +203,109 @@ export default {
                 }
                 const renderingTask = page.render(renderContext)
                 await renderingTask.promise
-                this.current = pageNumber
+
+                return pageNumber
             } catch (error) {
                 throw error
-            } finally {
-                this.isRendering = false
             }
         },
-        prev () {
-            const { current, isLoaded } = this
-            const pageNumber = current - 1
+        async renderMutiplePages (size) {
+            const asyncIterableMaker = size => ({
+                [Symbol.asyncIterator] () {
+                    return {
+                        i: 0,
+                        next () {
+                            if (this.i < size) {
+                                this.i++
+                                return Promise.resolve({ value: this.i, done: false })
+                            }
+                            return Promise.resolve({ value: this.i, done: true })
+                        }
+                    }
+                }
+            })
+
+            const asyncIterable = asyncIterableMaker(size)
+
+            if (!this.isRendering) {
+                try {
+                    this.isRendering = true
+
+                    // eslint-disable-next-line
+                    for await (const i of asyncIterable) {
+                        const next = this.lastRenderedPage + 1
+                        if (!next) {
+                            break
+                        }
+                        if (next > this.total) {
+                            break
+                        }
+                        this.lastRenderedPage = await this.renderPage(next)
+                    }
+                } catch (error) {
+                    throw error
+                } finally {
+                    this.isRendering = false
+                }
+            }
+        },
+        swipe (pageNumber) {
+            const offset = (pageNumber - 1) * this.screenWidth
+            this.isSwiping = true
+
+            this.container.scrollLeft = offset
+
+            this.isSwiping = false
+        },
+        toPreviousPage () {
+            const { isLoaded, isSwiping, current } = this
+            const previous = current - 1
+
             if (!isLoaded) {
                 return false
             }
-            if (pageNumber < 1) {
+            if (isSwiping) {
                 return false
             }
-            this.renderPdf(pageNumber)
+            if (previous < 1) {
+                return false
+            }
+
+            this.current = previous
+            this.swipe(previous)
         },
-        next () {
-            const { current, isLoaded, totle } = this
-            const pageNumber = current + 1
+        toNextPage () {
+            const { isLoaded, isSwiping, total, current, lastRenderedPage } = this
+            const next = current + 1
+
             if (!isLoaded) {
                 return false
             }
-            if (pageNumber > totle) {
+            if (isSwiping) {
                 return false
             }
-            this.renderPdf(pageNumber)
+            if (next > total) {
+                return false
+            }
+            if (lastRenderedPage - current < 5) {
+                this.renderMutiplePages(10)
+            }
+
+            this.current = next
+            this.swipe(next)
         },
         clear () {
             this.file = null
+            this.pages = []
             this.loaded = false
             this.isRendering = false
-            this.totle = 0
+            this.total = 0
             this.current = 1
+            this.lastRenderedPage = 0
         },
         close () {
             this.$emit('update:show', false)
+            this.clear()
         }
     }
 
@@ -191,8 +326,6 @@ export default {
     justify-content: center;
     align-items: center;
     background-color: rgba(58, 58, 58, .9);
-    overflow-x: hidden;
-    overflow-y: scroll;
     &-btn-group {
         position: absolute;
         bottom: 0;
@@ -217,6 +350,17 @@ export default {
         top: 30px;
         left: 30px;
         z-index: 1;
+    }
+}
+.swiper {
+    &-container {
+        width: 100%;
+        overflow-x: scroll;
+    }
+    &-list {
+        display: inline-flex;
+        align-items: center;
+        scroll-behavior: smooth;
     }
 }
 
