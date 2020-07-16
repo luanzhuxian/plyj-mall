@@ -182,7 +182,7 @@ export default {
                 color: #fff;
                 font-size: 26px;
                 text-align: center;
-                background: url('https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/中奖背景.png') no-repeat;
+                background: url('https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/中奖背景.png') 100%/100% no-repeat;
                 > .title {
                     margin-bottom: 18px;
                     font-size: 38px;
