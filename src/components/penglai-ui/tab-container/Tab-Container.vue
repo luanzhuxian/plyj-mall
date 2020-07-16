@@ -102,6 +102,7 @@ export default {
 
         startDrag (evt) {
             if (!this.swipeable) return
+
             const e = evt.changedTouches ? evt.changedTouches[0] : evt
             this.dragging = true
             this.start.x = e.pageX
@@ -110,23 +111,27 @@ export default {
 
         onDrag (evt) {
             if (!this.dragging) return
+
             const e = evt.changedTouches ? evt.changedTouches[0] : evt
             const offsetTop = e.pageY - this.start.y
             const offsetLeft = e.pageX - this.start.x
             const y = Math.abs(offsetTop)
             const x = Math.abs(offsetLeft)
+            const COEFFICIENT = 1.73
 
-            const swiping = !(x < 10 || y > 200 || (x >= 10 && y >= x * 1.73))
+            const swiping = !(x < 10 || y > 200 || (x >= 10 && y >= x * COEFFICIENT))
             if (!swiping) return
             evt.preventDefault()
 
             const length = this.$children.length - 1
             const index = this.$children.findIndex(child => child.id === this.currentTab)
+            // 当前tab页相对于wrapper左侧的距离，即左侧所有其他tab的宽度
             const currentPageOffset = index * this.pageWidth
             // 当前拖动时刻，wrapper的偏移量
             const offset = offsetLeft - currentPageOffset
             const absOffset = Math.abs(offset)
 
+            // 已经是最后一个tab了，禁止再继续左滑 || 已经是第一个tab了，禁止再右滑
             if (absOffset > length * this.pageWidth || (offset > 0 && offset < this.pageWidth)) {
                 // console.log('onDrag', 'absOffset > length * this.pageWidth', absOffset, length, this.pageWidth)
                 // console.log('onDrag', 'offset > 0 && offset < this.pageWidth', offset > 0 && offset < this.pageWidth)
@@ -141,6 +146,7 @@ export default {
 
         endDrag () {
             if (!this.swiping) return
+
             this.dragging = false
             const direction = this.offsetLeft > 0 ? -1 : 1
             const isChange = Math.abs(this.offsetLeft) > this.limitWidth
@@ -161,7 +167,7 @@ export default {
 </script>
 
 <style lang="scss" module>
-    .tab-container {
+.tab-container {
     position: relative;
     overflow: hidden;
 
@@ -169,10 +175,12 @@ export default {
         display: flex;
         width: 100%;
     }
-    }
+}
+
 </style>
 <style lang="scss" scoped>
-    .swipe-transition {
-        transition: transform 150ms ease-in-out;
-    }
+.swipe-transition {
+    transition: transform 150ms ease-in-out;
+}
+
 </style>
