@@ -793,6 +793,7 @@ export default {
             })
             socket.on('reconnect', attemptNumber => {
                 console.warn(`在第${ attemptNumber }次重连成功`)
+                // this.interactInit()
             })
             socket.on('error', error => {
                 console.error(error)

@@ -10,10 +10,6 @@ export default {
     name: 'SignIn',
     inheritAttrs: false,
     props: {
-        liveSdk: {
-            type: Object,
-            default: null
-        },
         appId: {
             type: String,
             default: ''
@@ -50,18 +46,32 @@ export default {
             try {
                 await this.$nextTick()
                 console.log('签到初始化')
-                const { EVENTS: { SIGN_IN, STOP_SIGN_IN } } = window.PolyvLiveSdk
 
-                this.liveSdk.on(SIGN_IN, (event, data) => {
-                    console.log('收到签到：', data)
-                    this.checkinId = data.data.checkinId
-                    this.roomId = data.roomId
-                    this.showInfo()
-                })
-                this.liveSdk.on(STOP_SIGN_IN, (event, data) => {
-                    this.checkinId = ''
-                })
+                this.socket.off('message', this.signIn)
+                this.socket.off('message', this.stopSignIn)
+
+                this.socket.on('message', this.signIn)
+                this.socket.on('message', this.stopSignIn)
             } catch (e) { throw e }
+        },
+        signIn (data) {
+            const { EVENTS: { SIGN_IN } } = window.PolyvLiveSdk
+            data = JSON.parse(data)
+
+            if (data.EVENT.toUpperCase() === SIGN_IN.toUpperCase()) {
+                console.log('收到签到：', data)
+                this.checkinId = data.data.checkinId
+                this.roomId = data.roomId
+                this.showInfo()
+            }
+        },
+        stopSignIn (data) {
+            const { EVENTS: { STOP_SIGN_IN } } = window.PolyvLiveSdk
+            data = JSON.parse(data)
+
+            if (data.EVENT.toUpperCase() === STOP_SIGN_IN.toUpperCase()) {
+                this.checkinId = ''
+            }
         },
         async showInfo () {
             try {

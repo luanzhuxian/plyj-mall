@@ -43,10 +43,6 @@ export default {
     name: 'Questions',
     inheritAttrs: false,
     props: {
-        liveSdk: {
-            type: Object,
-            default: null
-        },
         socket: {
             type: Object,
             default: null
@@ -76,8 +72,9 @@ export default {
             try {
                 await this.$nextTick()
                 console.log('提问初始化')
-                const { EVENTS: { T_ANSWER } } = window.PolyvLiveSdk
-                this.liveSdk.on(T_ANSWER, this.receive)
+                this.socket.off('message', this.receive)
+
+                this.socket.on('message', this.receive)
             } catch (e) { throw e }
         },
         async getQuestions () {
@@ -87,10 +84,15 @@ export default {
                 await this.scroll()
             } catch (e) { throw e }
         },
-        async receive (event, data) {
+        async receive (data) {
             try {
-                this.data.push(data)
-                await this.scroll()
+                const { EVENTS: { T_ANSWER } } = window.PolyvLiveSdk
+                data = JSON.parse(data)
+
+                if (data.EVENT.toUpperCase() === T_ANSWER.toUpperCase()) {
+                    this.data.push(data)
+                    await this.scroll()
+                }
             } catch (e) { throw e }
         },
         async send () {

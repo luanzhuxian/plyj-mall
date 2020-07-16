@@ -12,10 +12,6 @@ export default {
     name: 'Answer',
     inheritAttrs: false,
     props: {
-        liveSdk: {
-            type: Object,
-            default: null
-        },
         socket: {
             type: Object,
             default: null
@@ -47,10 +43,28 @@ export default {
             try {
                 await this.$nextTick()
                 console.log('答题初始化')
-                const { EVENTS: { GET_TEST_QUESTION_CONTENT, GET_TEST_QUESTION_RESULT } } = window.PolyvLiveSdk
-                this.liveSdk.on(GET_TEST_QUESTION_CONTENT, (event, data) => this.showData(data))
-                this.liveSdk.on(GET_TEST_QUESTION_RESULT, (event, data) => this.getResult(data))
+                this.socket.off('message', this.getQuestion)
+                this.socket.off('message', this.getQuestionResult)
+
+                this.socket.on('message', this.getQuestion)
+                this.socket.on('message', this.getQuestionResult)
             } catch (e) { throw e }
+        },
+        getQuestion (data) {
+            const { EVENTS: { GET_TEST_QUESTION_CONTENT } } = window.PolyvLiveSdk
+            data = JSON.parse(data)
+
+            if (data.EVENT.toUpperCase() === GET_TEST_QUESTION_CONTENT.toUpperCase()) {
+                this.showData(data)
+            }
+        },
+        getQuestionResult (data) {
+            const { EVENTS: { GET_TEST_QUESTION_RESULT } } = window.PolyvLiveSdk
+            data = JSON.parse(data)
+
+            if (data.EVENT.toUpperCase() === GET_TEST_QUESTION_RESULT.toUpperCase()) {
+                this.getResult(data)
+            }
         },
         getOptions (data) {
             let index = 1

@@ -11,7 +11,7 @@ export default {
     name: 'Notice',
     inheritAttrs: false,
     props: {
-        liveSdk: {
+        socket: {
             type: Object,
             default: null
         }
@@ -26,13 +26,19 @@ export default {
             try {
                 await this.$nextTick()
                 console.log('公告初始化')
-                const { EVENTS: { BULLETIN } } = window.PolyvLiveSdk
-                this.liveSdk.on(BULLETIN, (event, data) => {
-                    console.log('收到公告：', data.content)
-                    this.message = data.content
-                    this.showInfo()
-                })
+                this.socket.off('message', this.receiveMessage)
+
+                this.socket.on('message', this.receiveMessage)
             } catch (e) { throw e }
+        },
+        receiveMessage (data) {
+            const { EVENTS: { BULLETIN } } = window.PolyvLiveSdk
+            data = JSON.parse(data)
+
+            if (data.EVENT.toUpperCase() === BULLETIN.toUpperCase()) {
+                this.message = data.content
+                this.showInfo()
+            }
         },
         showInfo () {
             if (!this.message) {

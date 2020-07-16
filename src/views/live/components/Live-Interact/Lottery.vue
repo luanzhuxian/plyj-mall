@@ -41,7 +41,7 @@ export default {
     name: 'Lottery',
     inheritAttrs: false,
     props: {
-        liveSdk: {
+        socket: {
             type: Object,
             default: null
         },
@@ -67,29 +67,39 @@ export default {
             try {
                 await this.$nextTick()
                 console.log('抽奖初始化')
-                const { EVENTS: { LOTTERY_START, LOTTERY_END } } = window.PolyvLiveSdk
+                this.socket.off('message', this.start)
+                this.socket.off('message', this.end)
 
-                this.liveSdk.on(LOTTERY_START, this.start)
-                this.liveSdk.on(LOTTERY_END, this.end)
+                this.socket.on('message', this.start)
+                this.socket.on('message', this.end)
             } catch (e) { throw e }
         },
-        start (event, data) {
-            this.showMask = true
-            this.isStart = true
-            this.isEnd = false
-            this.hasLotteryResult = false
+        start (data) {
+            const { EVENTS: { LOTTERY_START } } = window.PolyvLiveSdk
+            data = JSON.parse(data)
+
+            if (data.EVENT.toUpperCase() === LOTTERY_START.toUpperCase()) {
+                this.showMask = true
+                this.isStart = true
+                this.isEnd = false
+                this.hasLotteryResult = false
+            }
         },
-        end (event, data) {
-            debugger
-            this.isStart = false
-            this.isEnd = true
-            this.showMask = true
-            this.hasLotteryResult = true
+        end (data) {
+            const { EVENTS: { LOTTERY_END } } = window.PolyvLiveSdk
+            data = JSON.parse(data)
 
-            const { data: winnerList, prize } = data
+            if (data.EVENT.toUpperCase() === LOTTERY_END.toUpperCase()) {
+                this.isStart = false
+                this.isEnd = true
+                this.showMask = true
+                this.hasLotteryResult = true
 
-            this.isWin = winnerList.some(item => item.userId === this.userId)
-            this.prize = prize
+                const { data: winnerList, prize } = data
+
+                this.isWin = winnerList.some(item => item.userId === this.userId)
+                this.prize = prize
+            }
         },
         confirm () {
             this.showMask = false
