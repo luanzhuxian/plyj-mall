@@ -66,7 +66,6 @@ export default {
         async init () {
             try {
                 await this.$nextTick()
-                console.log('抽奖初始化')
                 this.socket.off('message', this.start)
                 this.socket.off('message', this.end)
 

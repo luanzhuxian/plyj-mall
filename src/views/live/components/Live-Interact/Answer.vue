@@ -42,7 +42,6 @@ export default {
         async init () {
             try {
                 await this.$nextTick()
-                console.log('答题初始化')
                 this.socket.off('message', this.getQuestion)
                 this.socket.off('message', this.getQuestionResult)
 

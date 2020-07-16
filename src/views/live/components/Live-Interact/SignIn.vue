@@ -45,8 +45,6 @@ export default {
         async init () {
             try {
                 await this.$nextTick()
-                console.log('签到初始化')
-
                 this.socket.off('message', this.signIn)
                 this.socket.off('message', this.stopSignIn)
 
@@ -59,7 +57,6 @@ export default {
             data = JSON.parse(data)
 
             if (data.EVENT.toUpperCase() === SIGN_IN.toUpperCase()) {
-                console.log('收到签到：', data)
                 this.checkinId = data.data.checkinId
                 this.roomId = data.roomId
                 this.showInfo()

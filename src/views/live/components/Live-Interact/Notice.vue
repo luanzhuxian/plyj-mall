@@ -25,7 +25,6 @@ export default {
         async init () {
             try {
                 await this.$nextTick()
-                console.log('公告初始化')
                 this.socket.off('message', this.receiveMessage)
 
                 this.socket.on('message', this.receiveMessage)

@@ -71,7 +71,6 @@ export default {
         async init () {
             try {
                 await this.$nextTick()
-                console.log('提问初始化')
                 this.socket.off('message', this.receive)
 
                 this.socket.on('message', this.receive)
