@@ -1,5 +1,5 @@
 <template>
-    <div :class="$style.search">
+    <div :class="$style.search" :style="{ padding: isQRCodeBtnShow ? `${20 / 7.5}vw` : '' }">
         <router-link
             tag="div"
             :class="$style.searchBox"

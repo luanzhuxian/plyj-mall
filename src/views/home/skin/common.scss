@@ -94,7 +94,7 @@
         @include container(52px, $background-image);
     }
     .search {
-        padding: 0 92px !important;
+        padding: 0 92px;
     }
     .footer {
         $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/yuan-dan/cbfbc6a1-6e57-4cf8-82d9-54bb17d600ba.png';
@@ -111,7 +111,7 @@
         @include container(52px, $background-image);
     }
     .search {
-        padding: 0 92px !important;
+        padding: 0 92px;
     }
     .footer {
         $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/new-year/9c269eae-f95d-4651-9e37-1efbba2a3534.png';
@@ -131,7 +131,7 @@
         @include container(90px, $background-image);
     }
     .search {
-        padding: 0 92px !important;
+        padding: 0 92px;
     }
     .footer {
         @include footer(90px, #f2e2ba, #ff8401);
@@ -147,7 +147,7 @@
         @include container(90px, $background-image);
     }
     .search {
-        padding: 0 92px !important;
+        padding: 0 92px;
     }
     .footer {
         @include footer(90px, #f2e2ba, #d6922d);
@@ -173,7 +173,7 @@
         @include container(75px, $background-image);
         .search {
             margin-bottom: 15px;
-            padding: 0 92px !important;
+            padding: 0 92px;
             height: 55px !important;
         }
         .footer {
@@ -195,7 +195,7 @@
         @include container(65px, $background-image);
         .search {
             margin-bottom: 25px;
-            padding: 0 92px !important;
+            padding: 0 92px;
             height: 55px !important;
         }
         .footer {
@@ -217,7 +217,7 @@
         @include container(65px, $background-image);
         .search {
             margin-bottom: 25px;
-            padding: 0 92px !important;
+            padding: 0 92px;
             height: 55px !important;
         }
         .footer {
@@ -239,7 +239,7 @@
         @include container(129px, $background-image);
         .search {
             margin-bottom: 12px;
-            padding: 0 92px !important;
+            padding: 0 92px;
             height: 55px !important;
         }
         .footer {
@@ -261,7 +261,7 @@
         @include container(75px, $background-image);
         .search {
             margin-bottom: 25px;
-            padding: 0 92px !important;
+            padding: 0 92px;
             height: 55px !important;
         }
         .footer {
@@ -283,7 +283,7 @@
         @include container(130px, $background-image);
         .search {
             margin-bottom: 25px;
-            padding: 0 92px !important;
+            padding: 0 92px;
             height: 55px !important;
         }
         .footer {
@@ -305,7 +305,7 @@
         @include container(130px, $background-image);
         .search {
             margin-bottom: 25px;
-            padding: 0 92px !important;
+            padding: 0 92px;
             height: 55px !important;
         }
         .footer {
@@ -327,7 +327,7 @@
         @include container(130px, $background-image);
         .search {
             margin-bottom: 25px;
-            padding: 0 92px !important;
+            padding: 0 92px;
             height: 55px !important;
         }
         .footer {
@@ -349,7 +349,7 @@
         @include container(136px, $background-image);
     }
     .search {
-        padding: 0 92px !important;
+        padding: 0 92px;
     }
     .footer {
         @include footer(90px, #fff);
