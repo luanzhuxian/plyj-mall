@@ -1,7 +1,7 @@
 <template>
     <transition name="fade">
-        <div class="qrcode-modal-mask" v-if="show">
-            <div class="qrcode-modal-modal">
+        <div class="qrcode-modal-mask" v-show="isMaskShow" @transitionend="onTransitionEnd">
+            <div class="qrcode-modal-modal" v-show="isModalShow">
                 <h4>长按识别二维码关注</h4>
                 <p v-if="mallQRCodeInfo.name">{{ mallQRCodeInfo.name }}</p>
                 <pl-svg
@@ -10,7 +10,6 @@
                     fill="#999999"
                     class="qrcode-modal-close"
                     @click.stop="close"
-                    @transitionend="onTransitionend"
                 />
                 <div class="qrcode-modal-img-wrapper">
                     <img v-imgError :src="mallQRCodeInfo.qrCodeImgUrl" alt="">
@@ -24,21 +23,48 @@
 <script>
 export default {
     name: 'MallQRCodeModal',
+    // props: {
+    //     show: Boolean
+    // },
     data () {
         return {
             show: false,
+            isMaskShow: false,
+            isModalShow: false,
             mallQRCodeInfo: {}
         }
     },
     created () {
         this.mallQRCodeInfo = this.$store.state.mallQRCodeInfo || {}
     },
+    watch: {
+        show (val) {
+            if (val) {
+                this.isMaskShow = true
+                setTimeout(() => {
+                    this.isModalShow = true
+                }, 100)
+                window.addEventListener('popstate', this.popstateHandler)
+            } else {
+                window.removeEventListener('popstate', this.popstateHandler)
+                this.isModalShow = false
+                setTimeout(() => {
+                    this.isMaskShow = false
+                }, 100)
+            }
+        }
+    },
     methods: {
+        popstateHandler (e) {
+            // console.log(e)
+            // console.log(`location: ${ document.location }, state: ${ JSON.stringify(e.state) }`)
+            this.close()
+        },
         close () {
             this.show = false
             this.$emit('close')
         },
-        onTransitionend () {
+        onTransitionEnd () {
             if (!this.show) {
                 this.$destroy()
                 document.body.removeChild(this.$el)
@@ -47,6 +73,7 @@ export default {
     }
 }
 </script>
+
 <style lang="scss">
 .qrcode-modal {
     &-mask {
