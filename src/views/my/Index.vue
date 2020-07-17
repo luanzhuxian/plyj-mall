@@ -150,7 +150,7 @@
                         <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/我的奖学金.png" alt="">
                         <i :class="$style.text">我的奖学金</i>
                     </router-link>
-                    <router-link :to="{ name: 'LiveLibrary'}" :class="$style.welfareItem">
+                    <router-link :to="{ name: 'CourseLibrary'}" :class="$style.welfareItem">
                         <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/我的视频.png" alt="">
                         <i :class="$style.text">我的视频</i>
                     </router-link>
