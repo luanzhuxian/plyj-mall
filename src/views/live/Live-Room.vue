@@ -161,7 +161,7 @@
             </div>
 
             <div v-if="tab === 1" :class="$style.sendMessage">
-                <form :class="$style.inputBox" @submit.prevent="messageConfirm">
+                <form :class="{ [$style.inputBox]: true, [$style.interactBox]: detail.liveType === 'live'}" @submit.prevent="messageConfirm">
                     <pl-input
                         v-model.trim="message"
                         placeholder=" 进来了说点什么呗~"
@@ -171,9 +171,15 @@
                     />
                     <pl-button :disabled="allowedSpeak" :class="$style.sendBtn">发送</pl-button>
                 </form>
-                <pl-button :disabled="allowedSpeak" type="text" :class="$style.sendFlower" @click="sendFlower">
-                    <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/flower.png" width="37" />
-                </pl-button>
+
+                <div :class="{ [$style.liveBtn]: true, [$style.interactBtn]: detail.liveType === 'live'}">
+                    <pl-button :disabled="allowedSpeak" type="text" :class="$style.sendFlower" @click="sendFlower">
+                        <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/flower.png" width="37" height="37" />
+                    </pl-button>
+                    <pl-button v-if="detail.liveType === 'live'" :class="$style.interact" @click="showInteract = true">
+                        <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/互动.png" width="72" height="72" />
+                    </pl-button>
+                </div>
 
                 <!--<transition name="fade">
           <div v-if="showEmoticon" :class="$style.emoticon">
@@ -232,7 +238,21 @@
         <LivePassword :activity-id="activityId" ref="livePassword" />
         <!-- 报名 -->
         <LiveSignUp :info="detail" :activity-id="activityId" ref="LiveSignUp" />
+        <!-- 直播互动 -->
+        <LiveInteract
+            v-if="detail.liveType === 'live'"
+            :show.sync="showInteract"
+            :live-sdk="liveSdk"
+            :sign-str="signStr"
+            :app-id="appId"
+            :channel-id="channelId"
+            :user-name="userName"
+            :user-id="userId"
+            :socket="socket"
+            ref="LiveInteract"
+        />
 
+        <div :class="$style.qrcodeBtn" v-if="mallQRCodeInfo && mallQRCodeInfo.isLiveDisplay" @click.stop="$showMallQRCOde()">进入公众号</div>
     </div>
 </template>
 
@@ -246,6 +266,7 @@ import LivePassword from './components/Live-Password'
 import LiveMask from './components/Live-Mask'
 import LiveSignUp from './components/Live-Sign-Up'
 import LiveGoods from './components/Live-goods'
+import LiveInteract from './components/Live-Interact/Index'
 import {
     getRoomStatus,
     getActiveCompleteInfo,
@@ -288,7 +309,8 @@ export default {
         LivePassword,
         CouponItem,
         PaidPlayer,
-        LiveGoods
+        LiveGoods,
+        LiveInteract
     },
     props: {
         id: {
@@ -300,6 +322,8 @@ export default {
         this.requestPayDataCount = 0
         return {
             submiting: false,
+            liveSdk: null,
+            showInteract: false,
             showEmoticon: false,
             needPay: false,
             showPoster: false,
@@ -324,6 +348,8 @@ export default {
             isGive: false,
             // 是否禁言
             allowedSpeak: false,
+            // 频道签名
+            signStr: '',
 
             /**
              * 聊天信息记录
@@ -360,7 +386,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['userName', 'avatar', 'userId', 'openId', 'roleCode', 'appId', 'isActivityAuth', 'mallDomain', 'mchId', 'mallUrl'])
+        ...mapGetters(['userName', 'avatar', 'userId', 'openId', 'roleCode', 'appId', 'isActivityAuth', 'mallDomain', 'mchId', 'mallUrl', 'mallQRCodeInfo'])
     },
     async created () {
         localStorage.removeItem(`LIVE_MESSAGE_${ this.mallDomain }`)
@@ -408,7 +434,7 @@ export default {
             // 根据直播状态获取播放时所需数据
             await this.handleByLiveType()
             // 初始化播放器
-            this.init()
+            await this.init()
         } catch (e) {
             if (e) {
                 throw e
@@ -416,6 +442,14 @@ export default {
         }
     },
     methods: {
+        // 直播互动
+        async interactInit () {
+            try {
+                await this.$nextTick()
+                if (this.detail.liveType !== 'live') return
+                await this.$refs.LiveInteract.init()
+            } catch (e) { throw e }
+        },
         // 报名
         async signUp () {
             try {
@@ -682,9 +716,15 @@ export default {
         //         throw e
         //     }
         // },
-        init () {
-            this.initSocket()
-            this.initPlayer()
+        async init () {
+            try {
+                this.initSocket()
+                await this.initPlayer()
+                // 直播互动
+                await this.interactInit()
+            } catch (e) {
+                throw e
+            }
         },
         async initPlayer () {
             // 默认在线直播
@@ -724,6 +764,7 @@ export default {
                         this.setComeInConut(1)
                     })
                 })
+                this.signStr = signStr
                 this.liveSdk = liveSdk
             }
         },
@@ -759,6 +800,7 @@ export default {
             })
             socket.on('reconnect', attemptNumber => {
                 console.warn(`在第${ attemptNumber }次重连成功`)
+                this.interactInit()
             })
             socket.on('error', error => {
                 console.error(error)
@@ -775,7 +817,11 @@ export default {
             socket.emit('message', JSON.stringify({
                 EVENT: 'LOGIN',
                 // 登录用户信息，不可为空
-                values: [userName, avatar, userId || openId],
+                values: [
+                    userName,
+                    avatar,
+                    userId || openId
+                ],
                 // 当前房间号
                 roomId: channelId,
                 // 用户类型，可为空,teacher（教师）、assistant（助教）、manager（管理员）、slice（云课堂学员）
@@ -1205,6 +1251,7 @@ export default {
 
 <style module lang="scss">
 .live-room {
+    position: relative;
     height: 100vh;
     > .live-player {
         position: relative;
@@ -1402,6 +1449,9 @@ export default {
         line-height: 36px;
         background-color: transparent;
     }
+    &.interact-box {
+        width: 480px;
+    }
 }
 
 .send-btn {
@@ -1418,23 +1468,37 @@ export default {
     background-color: #f2b036;
 }
 
-.send-flower {
-    display: inline-flex;
+.live-btn {
+    display: flex;
     align-items: center;
-    justify-content: center;
-    width: 72px;
-    height: 72px;
-    line-height: 72px;
-    margin-left: 24px !important;
-    text-align: center;
-    border-radius: 36px;
-    background: linear-gradient(180deg, #ee7f62, #eb5a36);
-    &:disabled {
-        background: #ccc !important;
-        opacity: .5 !important;
+    &.interact-btn {
+        width: 222px;
     }
-    > span {
+    > .interact {
+        width: 72px;
+        height: 72px;
+        margin-left: 36px;
+        padding: 0;
+        background-color: #fff;
+    }
+    > .send-flower {
         display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 72px;
+        height: 72px;
+        line-height: 72px;
+        margin-left: 42px !important;
+        text-align: center;
+        border-radius: 36px;
+        background: linear-gradient(180deg, #ee7f62, #eb5a36);
+        &:disabled {
+            background: #ccc !important;
+            opacity: .5 !important;
+        }
+        > span {
+            display: inline-flex;
+        }
     }
 }
 
@@ -1556,6 +1620,23 @@ export default {
             margin-top: 64px;
         }
     }
+}
+
+.qrcode-btn {
+    position: absolute;
+    top: 533px;
+    right: 0;
+    box-sizing: border-box;
+    width: 148px;
+    height: 44px;
+    line-height: 40px;
+    text-align: center;
+    background: #fff;
+    border: 2px solid #f2b036;
+    border-right: none;
+    border-radius: 8px 0 0 8px;
+    font-size: 24px;
+    color: #f2b036;
 }
 
 @keyframes rotate {

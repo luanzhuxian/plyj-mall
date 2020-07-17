@@ -8,13 +8,14 @@ import './assets/scss/index.scss'
 import directive from './directive'
 import { beforeResolve, onError } from './assets/js/router-guard'
 import PenglaiUI from './components/penglai-ui'
-import animated from 'animate.css'
 import VueLazyload from 'vue-lazyload'
 import VueClipboard from 'vue-clipboard2'
 import filters from './filter'
+import animated from 'animate.css'
 import './assets/css/quill.css'
 import './assets/css/fonts.css'
 import PlSvg from './components/common/Pl-Svg.vue'
+import MallQRCodeModal from './components/common/qrcode-modal'
 // import { errorlog } from './apis/base-api'
 
 import * as Sentry from '@sentry/browser'
@@ -38,6 +39,7 @@ for (const k of Object.keys(filters)) {
 
 // UI组件库
 Vue.use(PenglaiUI)
+Vue.use(MallQRCodeModal)
 Vue.config.productionTip = false
 /* eslint-disable no-new */
 new Vue({

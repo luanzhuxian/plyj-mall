@@ -1,19 +1,23 @@
 <template>
     <div :class="$style.buyNow">
-        <div :class="$style.phone">
-            <router-link :class="$style.link" :to="{ name: 'Home' }">
-                <pl-svg name="icon-home" width="38" height="70" />
+        <div :class="$style.icons">
+            <router-link :class="$style.link + ' ' + $style.home" :to="{ name: 'Home' }">
+                <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/首页选中.png" alt="">
+                <i :class="$style.text">首页</i>
             </router-link>
-            <a v-if="servicePhoneModels.length === 1" :class="$style.link" :href="'tel:' + servicePhoneModels[0].contactWay">
-                <pl-svg name="icon-call-us" width="80" height="72" />
+            <a v-if="servicePhoneModels.length === 1" :class="$style.link + ' ' + $style.contact" :href="'tel:' + servicePhoneModels[0].contactWay">
+                <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/联系我们.png" alt="">
+                <i :class="$style.text">联系我们</i>
             </a>
-            <a v-else :class="$style.link + ' ' + $style.callUs" @click="showContact = true">
-                <pl-svg name="icon-call-us" width="80" height="72" />
+            <a v-else :class="$style.link + ' ' + $style.contact" @click="showContact = true">
+                <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/联系我们.png" alt="">
+                <i :class="$style.text">联系我们</i>
             </a>
-            <router-link :class="$style.link + ' ' + $style.toCart" :to="{ name: 'ShoppingCart' }">
+            <router-link :class="$style.link + ' ' + $style.cart" :to="{ name: 'ShoppingCart' }">
                 <i v-if="cartCount > 99" :class="$style.cartCount">99+</i>
                 <i v-else-if="cartCount > 0" :class="$style.cartCount" v-text="cartCount" />
-                <pl-svg name="icon-cart2" width="80" height="72" />
+                <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/购物车选中.png" alt="">
+                <i :class="$style.text">购物车</i>
             </router-link>
         </div>
         <!-- 团购商品下单 -->
@@ -133,6 +137,7 @@ import { GET_CART_COUNT } from '../../store/mutation-type'
 import { addToCart } from '../../apis/shopping-cart'
 import SpecificationPop from '../../components/detail/Specification-Pop.vue'
 import Contact from '../common/Contact.vue'
+
 export default {
     name: 'BuyNow',
     components: {
@@ -149,10 +154,10 @@ export default {
             showContact: false,
 
             /**
-             * 购买方式
-             * 2 按正常商品购买
-             * 3 按活动商品购买
-             */
+                 * 购买方式
+                 * 2 按正常商品购买
+                 * 3 按活动商品购买
+                 */
             buyWay: 2
         }
     },
@@ -267,11 +272,11 @@ export default {
         },
 
         /**
-     * 购买
-     * @param options {object} 选择的规格
-     * @param limiting {number} 总限购数量
-     * @param limit {number} 可买数量
-     */
+             * 购买
+             * @param options {object} 选择的规格
+             * @param limiting {number} 总限购数量
+             * @param limit {number} 可买数量
+             */
         async confirm (options, limiting, limit) {
             try {
                 await this.$nextTick()
@@ -416,107 +421,146 @@ export default {
 </script>
 
 <style module lang="scss">
-  .buy-now {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    height: 110px;
-    background-color: #fff;
-    border-top: 1px solid #e7e7e7;
-    z-index: 11;
-    .phone {
-      display: flex;
-      justify-content: space-around;
-      width: 258px;
-      text-align: center;
-      > .link {
-        position: relative;
-        flex: 1;
-        .cartCount {
-          position: absolute;
-          right: -6px;
-          top: -8px;
-          height: 36px;
-          min-width: 36px;
-          padding: 0 5px;
-          line-height: 32px;
-          color: #fff;
-          background-color: #FE7700;
-          border-radius: 18px;
-          font-size: 24px;
-          border: 2px solid #fff;
-          box-sizing: border-box;
+    .buy-now {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        height: 110px;
+        background-color: #fff;
+        border-top: 1px solid #e7e7e7;
+        z-index: 11;
+
+        .icons {
+            display: flex;
+            justify-content: space-between;
+            flex: 1;
+            width: 0;
+            height: 100%;
+            padding: 0 40px;
+
+            > .link {
+                position: relative;
+                display: inline-flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: space-between;
+                height: 100%;
+                box-sizing: border-box;
+                padding: 16px 0 14px;
+                font-size: 18px;
+                line-height: 24px;
+                color: #F2B036;
+
+                &.home > .icon {
+                    width: 50px;
+                    height: 46px;
+                }
+                &.contact > .icon {
+                    width: 46px;
+                    height: 46px;
+                }
+                &.cart > .icon {
+                    width: 44px;
+                    height: 45px;
+                }
+
+                .cart-count {
+                    position: absolute;
+                    right: -20px;
+                    top: -5px;
+                    height: 36px;
+                    min-width: 36px;
+                    padding: 0 5px;
+                    line-height: 32px;
+                    color: #fff;
+                    background-color: #FE7700;
+                    border-radius: 18px;
+                    font-size: 24px;
+                    border: 2px solid #fff;
+                    box-sizing: border-box;
+                    text-align: center;
+                }
+            }
         }
+    }
+
+    .buttons {
+        display: flex;
+        margin-right: 20px;
+        width: 420px;
+        border-radius: 10px;
+        overflow: hidden;
+
+        > button {
+            flex: 1;
+        }
+    }
+
+    .addToCart, .buyNowBtn {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 220px;
+        height: 80px;
+        color: #fff;
+        font-size: 30px;
+
+        &:disabled {
+            color: rgba(255, 255, 255, .4);
+
+            .btn-text {
+                background-color: #e7e7e7;
+                color: #ccc;
+            }
+        }
+
+        > span {
+            display: inline-block;
+        }
+    }
+
+    /*.preBtn{
+      width: 440px;
+      height: 80px;
+      margin-right: 16px;
+      color: #fff;
+      font-size: 30px;
+      background: #FE7700;
+      border-radius: 10px;
+      &:disabled {
+        color: rgba(255, 255, 255, .4);
       }
+    }*/
+    .addToCart {
+        background-color: $--warning-color;
     }
-  }
-  .buttons {
-    flex: 1;
-    display: flex;
-    margin: 0 16px;
-    border-radius: 10px;
-    overflow: hidden;
-    > button {
-      flex: 1;
+
+    .buyNowBtn {
+        background-color: $--primary-color;
+
+        &:disabled {
+            color: rgba(255, 255, 255, .4);
+
+            .btn-text {
+                background-color: #e7e7e7;
+                color: #ccc;
+            }
+        }
     }
-  }
-  .addToCart, .buyNowBtn {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 220px;
-    height: 80px;
-    color: #fff;
-    font-size: 30px;
-    &:disabled {
-      color: rgba(255, 255, 255, .4);
-      .btn-text {
-        background-color: #e7e7e7;
-        color: #ccc;
-      }
+
+    .btn-text {
+        margin: 4px auto 0;
+        width: 100px;
+        text-align: center;
+        line-height: 28px;
+        background: #ffffff;
+        border-radius: 304px;
+        font-size: 20px;
+        color: #FE7700;
     }
-    > span {
-      display: inline-block;
-    }
-  }
-  /*.preBtn{
-    width: 440px;
-    height: 80px;
-    margin-right: 16px;
-    color: #fff;
-    font-size: 30px;
-    background: #FE7700;
-    border-radius: 10px;
-    &:disabled {
-      color: rgba(255, 255, 255, .4);
-    }
-  }*/
-  .addToCart {
-    background-color: $--warning-color;
-  }
-  .buyNowBtn {
-    background-color: $--primary-color;
-    &:disabled {
-      color: rgba(255, 255, 255, .4);
-      .btn-text {
-        background-color: #e7e7e7;
-        color: #ccc;
-      }
-    }
-  }
-  .btn-text{
-    margin: 4px auto 0;
-    width: 100px;
-    text-align: center;
-    line-height: 28px;
-    background: #ffffff;
-    border-radius: 304px;
-    font-size: 20px;
-    color: #FE7700;
-  }
 </style>

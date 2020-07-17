@@ -19,7 +19,21 @@ const confirm = (config = {}) => new Promise((resolve, reject) => {
         el: document.createElement('div')
     })
     document.body.appendChild(Instance.$el)
-    const { slot = null, cancelText = '取消', confirmText = '确定', viceMessage = '', html = '', message = '', icon, closeOnClickMask = true, confirmStyle, cancelStyle, useDangersHtml = false } = config
+    const { 
+        slot = null, 
+        cancelText = '取消', 
+        confirmText = '确定',
+        viceMessage = '', 
+        html = '', 
+        message = '', 
+        icon, 
+        closeOnClickMask = true, 
+        confirmStyle,
+        cancelStyle, 
+        useDangersHtml = false,
+        hasCancelButton = true,
+        hasConfirmButton = true
+    } = config
     if (slot) {
         Instance.$slots.default = [slot]
     }
@@ -33,6 +47,8 @@ const confirm = (config = {}) => new Promise((resolve, reject) => {
         Instance.confirmStyle = confirmStyle
         Instance.cancelStyle = cancelStyle
         Instance.icon = icon
+        Instance.hasCancelButton = hasCancelButton
+        Instance.hasConfirmButton = hasConfirmButton
         Instance.type = 'confirm'
         Instance.show = true
         Instance.closeOnClickMask = closeOnClickMask
@@ -52,7 +68,19 @@ const alert = (config = {}) => new Promise((resolve, reject) => {
         el: document.createElement('div')
     })
     document.body.appendChild(Instance.$el)
-    const { slot = null, cancelText = '取消', confirmText = '确定', viceMessage = '', message = '', icon, confirmStyle, cancelStyle, useDangersHtml = false } = config
+    const { 
+        slot = null, 
+        cancelText = '取消',
+        confirmText = '确定',
+        viceMessage = '',
+        message = '',
+        icon,
+        confirmStyle,
+        cancelStyle,
+        useDangersHtml = false,
+        hasCancelButton = false,
+        hasConfirmButton = true
+    } = config
     if (slot) {
         Instance.$slots.default = [slot]
     }
@@ -64,6 +92,8 @@ const alert = (config = {}) => new Promise((resolve, reject) => {
         Instance.confirmText = confirmText
         Instance.confirmStyle = confirmStyle
         Instance.cancelStyle = cancelStyle
+        Instance.hasCancelButton = hasCancelButton
+        Instance.hasConfirmButton = hasConfirmButton
         Instance.type = 'alert'
         Instance.icon = icon
         Instance.show = true
@@ -83,7 +113,23 @@ const propmt = (config = {}) => new Promise((resolve, reject) => {
         el: document.createElement('div')
     })
     document.body.appendChild(Instance.$el)
-    const { slot = null, cancelText = '取消', confirmText = '确定', viceMessage = '', message = '', icon = '', placeholder = '请输入', rules = [], value = '', useDangersHtml = false } = config
+    const { 
+        slot = null,
+        cancelText = '取消',
+        confirmText = '确定',
+        viceMessage = '',
+        message = '',
+        icon = '',
+        placeholder = '请输入',
+        rules = [],
+        value = '',
+        useDangersHtml = false,
+        hasCancelButton = true,
+        hasConfirmButton = true,
+        hasDefaultInput = true,
+        closeOnClickMask = true,
+        customValidate = () => true
+    } = config
     if (slot) {
         Instance.$slots.default = [slot]
     }
@@ -96,6 +142,11 @@ const propmt = (config = {}) => new Promise((resolve, reject) => {
         Instance.rules = rules
         Instance.cancelText = cancelText
         Instance.confirmText = confirmText
+        Instance.hasCancelButton = hasCancelButton
+        Instance.hasConfirmButton = hasConfirmButton
+        Instance.hasDefaultInput = hasDefaultInput
+        Instance.closeOnClickMask = closeOnClickMask
+        Instance.customValidate = customValidate
         Instance.type = 'propmt'
         Instance.icon = icon
         Instance.show = true

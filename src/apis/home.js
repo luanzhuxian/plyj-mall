@@ -36,3 +36,6 @@ export const getDragonGateSignInfo = () => axios.get('/apis/v1/signinActivity/cu
 
 // 当前龙门节抽奖活动
 export const getDragonGatePlayInfo = () => axios.get('/apis/v1/luckdraw/findLuckDraw/activityIng')
+
+// 查询是否展示公众号二维码增粉
+export const getMallQRCodeInfo = () => axios.get('/apis/v1/wechatQRCode/currentMallQR')

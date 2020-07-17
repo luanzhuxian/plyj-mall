@@ -14,25 +14,18 @@
 .skin-dragon-boat,
 .skin-campaign {
     .route {
-        box-sizing: border-box;
+        padding: 0 0 4px;
         &.active > .tab-name {
             color: #c81819;
         }
-        img {
+        > img {
             width: 71px;
             height: 62px;
         }
     }
     .tab-name {
-        margin-top: 1px;
-        padding-bottom: 4px;
         line-height: 18px;
-        font-size: 18px;
         color: #242424;
-        text-align: center;
-    }
-    .icon {
-        margin-bottom: 0 !important;
     }
 }
 

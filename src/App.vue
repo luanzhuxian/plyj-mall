@@ -27,7 +27,6 @@ import NewUserHomeBtn from './views/marketing-activity/newcomers/components/New-
 import { mapMutations, mapActions } from 'vuex'
 import {
     SET_THEME,
-    USER_INFO,
     GET_MALL_INFO,
     LOGIN,
     GET_ACTIVITY_DATA,
@@ -37,7 +36,9 @@ import {
     SET_NW_EVENT,
     SET_DRAGON_GATE_CHARITY,
     SET_DRAGON_GATE_SIGN,
-    SET_DRAGON_GATE_PLAY
+    SET_DRAGON_GATE_PLAY,
+    SET_MALL_QRCODE_INFO,
+    USER_INFO
 } from './store/mutation-type'
 
 import Cookie from './assets/js/storage-cookie'
@@ -47,10 +48,10 @@ import {
     getNianweiInfo,
     getDragonGateCharityInfo,
     getDragonGateSignInfo,
-    getDragonGatePlayInfo
+    getDragonGatePlayInfo,
+    getMallQRCodeInfo
 } from './apis/home'
 import { setFirstVisit } from './apis/longmen-festival/lottery'
-
 // 新人有礼
 import { isNewUser, getGoingInfo } from './apis/newcomers'
 export default {
@@ -108,10 +109,10 @@ export default {
             await this.getMallInfo()
             // 如果以及登录，且商城没切换，就不用重新登录
             if (!token) {
-                await this.login()
-            } else {
-                await this.getUserInfo()
+                const SUCCESS = await this.login()
+                if (!SUCCESS) return
             }
+            await this.getUserInfo()
             this.logined = true
             // 标记一天中首次访问
             setFirstVisit()
@@ -130,14 +131,15 @@ export default {
             setNwEvent: SET_NW_EVENT,
             setDragonGateCharity: SET_DRAGON_GATE_CHARITY,
             setDragonGateSign: SET_DRAGON_GATE_SIGN,
-            setDragonGatePlay: SET_DRAGON_GATE_PLAY
+            setDragonGatePlay: SET_DRAGON_GATE_PLAY,
+            setMallQRCodeInfo: SET_MALL_QRCODE_INFO
         }),
         ...mapActions({
             getMallInfo: GET_MALL_INFO,
             login: LOGIN,
-            getUserInfo: USER_INFO,
             getMainCenter: GET_ACTIVITY_DATA,
-            getSkinId: GET_SKIN_ID
+            getSkinId: GET_SKIN_ID,
+            getUserInfo: USER_INFO
         }),
         // 获取新人有礼数据
         async getNewUserInfo () {
@@ -161,17 +163,19 @@ export default {
                 const list = [
                     // 待领优惠券
                     getMyCouponInfo(),
+                    getMallQRCodeInfo(),
                     // 获取主会场数据
                     this.getMainCenter(),
                     // 获取皮肤id
                     this.getSkinId()
                 ]
 
-                const [{ result: coupon }] = await Promise.all(list.map(p => p.catch(e => {
+                const [{ result: coupon }, { result: qrcode = {} }] = await Promise.all(list.map(p => p.catch(e => {
                     console.error(e)
                     return { result: {} }
                 })))
                 this.setCouponInfo(coupon)
+                this.setMallQRCodeInfo(qrcode)
             } catch (error) {
                 throw error
             }

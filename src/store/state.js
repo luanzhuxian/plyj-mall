@@ -94,6 +94,8 @@ export default {
     campaignReport: null,
     // 疫情签到
     campaignBook: null,
+    // 公众号二维码信息
+    mallQRCodeInfo: null,
     // 服务器时间
     currentTime: 0,
     // 链接中携带的分享人id

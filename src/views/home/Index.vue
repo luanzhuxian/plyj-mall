@@ -37,6 +37,8 @@
 </template>
 
 <script>
+/* eslint-disable no-multi-assign */
+
 import { mapGetters, mapMutations } from 'vuex'
 import moment from 'moment'
 import 'swiper/dist/css/swiper.css'
@@ -49,8 +51,6 @@ import SendLive from './../../components/common/Send-Live.vue'
 import { getTemplate } from '../../apis/home'
 import { getReportActivity, getBookActivity } from '../../apis/fight-epidemic'
 import { SET_CAMPAIGN_REPORT, SET_CAMPAIGN_BOOK } from '../../store/mutation-type'
-
-/* eslint-disable no-multi-assign */
 
 export default {
     name: 'Home',
@@ -79,22 +79,25 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['mallId', 'serverTime', 'agentUser', 'userId', 'isActivityAuth', 'skinId', 'mallDomain']),
+        ...mapGetters(['mallId', 'serverTime', 'agentUser', 'userId', 'isActivityAuth', 'skinId', 'mallDomain', 'mallQRCodeInfo']),
         allLoaded () {
-            let result
-            if (this.type === 3) {
-                result = this.loaded &&
-                this.skinId !== null
-            }
-            if (this.type === 4) {
-                result = this.loaded &&
-                this.skinId !== null
-            }
-            if (this.type === -1 || this.type === 9) {
-                result = this.loaded &&
-                this.skinId !== null
-            }
-            return result
+            // let result
+            // if (this.type === 3) {
+            //     result = this.loaded &&
+            //     this.skinId !== null
+            // }
+            // if (this.type === 4) {
+            //     result = this.loaded &&
+            //     this.skinId !== null
+            // }
+            // if (this.type === -1 || this.type === 9) {
+            //     result = this.loaded &&
+            //     this.skinId !== null
+            // }
+            // return result
+            return this.loaded &&
+                this.skinId !== null &&
+                this.mallQRCodeInfo !== null
         }
     },
     watch: {

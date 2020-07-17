@@ -55,36 +55,54 @@
                     </template>
                     <span v-else>已结束</span>
                 </div>
-                <div :class="$style.proList" :style="{ 'max-height': item.maxHeight }">
-                    <ul :ref="'prod-list-' + index">
-                        <SpringPloughingProItem
-                            :class="$style.proListItem"
-                            v-for="(pro, j) of item.products"
-                            :key="index + '-' + i + '-' + j"
-                            :data="pro"
-                            color="yellow"
-                        />
-                    </ul>
-                </div>
-                <template v-if="item.products.length > 3">
-                    <div :class="[$style.showMore, item.isShowProdMore ? $style.expanded : '']" @click="showMore(item, index)">
-                        <span>{{ item.isShowProdMore ? '收起' : '查看更多' }}</span>
+
+                <!-- 商品 -->
+                <section>
+                    <div :class="$style.productList" :style="{ 'max-height': item.productsMaxHeight }">
+                        <ul :ref="'product-list-' + index">
+                            <SpringPloughingProItem
+                                :class="$style.productListItem"
+                                v-for="(product, j) of item.products"
+                                :key="index + '-' + i + '-' + j"
+                                :data="product"
+                                color="yellow"
+                            />
+                        </ul>
+                    </div>
+                    <div
+                        v-if="item.products.length > 3"
+                        :class="[$style.showMore, item.isProductsExpanded ? $style.expanded : '']"
+                        @click="showMoreProducts(item)"
+                    >
+                        <span>{{ item.isProductsExpanded ? '收起' : '查看更多' }}</span>
                         <pl-svg name="icon-right" fill="#663A15" width="24" />
                     </div>
-                </template>
-                <div :class="$style.giftList" v-if="item.gifts.length">
-                    <div :class="$style.title">
+                </section>
+
+                <!-- 优惠券 -->
+                <section :class="$style.gift" v-if="item.gifts.length">
+                    <div :class="$style.giftTitle">
                         更享更多伴手礼
                     </div>
-                    <template v-for="(gift, k) of item.gifts">
-                        <spring-ploughing-gift-item
-                            v-show="k < 3 || item.isShowGiftMore"
-                            :key="index + '-' + i + '-' + k"
-                            :data="gift"
-                            color="yellow"
-                        />
-                    </template>
-                    <template v-if="item.gifts.length > 3">
+                    <div :class="$style.giftList" :style="{ 'max-height': item.giftsMaxHeight }">
+                        <ul :ref="'gift-list-' + index">
+                            <spring-ploughing-gift-item
+                                v-for="(gift, k) of item.gifts"
+                                :key="index + '-' + i + '-' + k"
+                                :data="gift"
+                                color="yellow"
+                            />
+                        </ul>
+                    </div>
+                    <div
+                        v-if="item.gifts.length > 3"
+                        :class="[$style.showMore, item.isGiftsExpanded ? $style.expanded : '']"
+                        @click="showMoreGifts(item)"
+                    >
+                        <span>{{ item.isGiftsExpanded ? '收起' : '查看更多' }}</span>
+                        <pl-svg name="icon-right" fill="#663A15" width="24" />
+                    </div>
+                    <!-- <template v-if="item.gifts.length > 3">
                         <div :class="$style.closeMore" v-show="item.isShowGiftMore">
                             <pl-svg @click="item.isShowGiftMore = false" name="icon-close3" fill="#663a15" width="40" />
                         </div>
@@ -95,8 +113,10 @@
                         >
                             查看更多
                         </div>
-                    </template>
-                </div>
+                    </template> -->
+                </section>
+
+                <!-- 底部按钮 -->
                 <button v-if="!item.stock" :class="$style.button">
                     太火爆了，都被抢空了
                 </button>
@@ -150,7 +170,11 @@ import Countdown from '../../../assets/js/Countdown'
 import share from '../../../assets/js/wechat/wechat-share'
 import { SET_SHARE_ID } from '../../../store/mutation-type'
 
-const MAX_HEIGHT = 700
+const PRODUCT_HEIGHT = 220
+const GIFT_HEIGHT = 120
+const MARGIN = 20
+const PRODUCTS_MAX_HEIGHT = PRODUCT_HEIGHT * 3 + MARGIN * 2
+const GIFTS_MAX_HEIGHT = GIFT_HEIGHT * 3 + MARGIN * 2
 
 export default {
     name: 'SpringPloughing',
@@ -222,12 +246,13 @@ export default {
                 window.scrollTo(0, top)
             }
         },
-        showMore (item, index) {
-            const list = this.$refs[`prod-list-${ index }`][0]
-            if (list) {
-                item.isShowProdMore = !item.isShowProdMore
-                item.maxHeight = item.isShowProdMore ? `${ list.offsetHeight / 7.5 }vw` : `${ MAX_HEIGHT / 7.5 }vw`
-            }
+        showMoreProducts (item, index) {
+            item.isProductsExpanded = !item.isProductsExpanded
+            item.productsMaxHeight = item.isProductsExpanded ? item.productsClientHeight : `${ PRODUCTS_MAX_HEIGHT / 7.5 }vw`
+        },
+        showMoreGifts (item, index) {
+            item.isGiftsExpanded = !item.isGiftsExpanded
+            item.giftsMaxHeight = item.isGiftsExpanded ? item.giftsClientHeight : `${ GIFTS_MAX_HEIGHT / 7.5 }vw`
         },
         // batchType 1: 组合课 2: 春耘
         async getSpringCombination () {
@@ -256,11 +281,16 @@ export default {
                 for (const activity of result.records) {
                     activity.models.sort((a, b) => moment(a.activityStartTime).valueOf() - moment(b.activityStartTime).valueOf())
                     for (const group of activity.models) {
-                        group.maxHeight = `${ MAX_HEIGHT / 7.5 }vw`
+                        const { products = [], gifts = [] } = group
+
                         // 隐藏3个以上的商品，按钮控制是否显示更多
-                        group.isShowProdMore = false
+                        group.isProductsExpanded = false
+                        group.productsMaxHeight = `${ PRODUCTS_MAX_HEIGHT / 7.5 }vw`
+                        group.productsClientHeight = `${ (PRODUCT_HEIGHT * products.length + MARGIN * (products.length - 1)) / 7.5 }vw`
                         // 隐藏3个以上的礼品，按钮控制是否显示更多
-                        group.isShowGiftMore = false
+                        group.isGiftsExpanded = false
+                        group.giftsMaxHeight = `${ GIFTS_MAX_HEIGHT / 7.5 }vw`
+                        group.giftsClientHeight = `${ (GIFT_HEIGHT * gifts.length + MARGIN * (gifts.length - 1)) / 7.5 }vw`
 
                         // 添加倒计时相关字段
                         group.d = ''
@@ -585,14 +615,38 @@ export default {
         border-radius: 6px;
     }
 }
-.pro-list {
+.product-list {
+    box-sizing: border-box;
     margin-top: 32px;
     overflow: hidden;
     transition: max-height .3s linear;
+    &-item {
+        &:nth-of-type(1) {
+            margin-top: 0;
+        }
+    }
 }
-.pro-list-item {
-    &:nth-of-type(1) {
-        margin-top: 0;
+.gift {
+    padding: 0 14px;
+    &-title {
+        margin: 24px 0;
+        font-weight: bold;
+        font-size: 40px;
+        color: #ea7635;
+        &:before {
+            display: inline-block;
+            content: '';
+            width: 8px;
+            height: 40px;
+            vertical-align: -6px;
+            border-radius: 4px;
+            background-color: #ea7635;
+        }
+    }
+    &-list {
+        box-sizing: border-box;
+        overflow: hidden;
+        transition: max-height .3s linear;
     }
 }
 .show-more {
@@ -614,24 +668,6 @@ export default {
     > svg {
         transform: rotate(90deg);
         transition: transform .3s linear;
-    }
-}
-.gift-list {
-    padding: 0 14px;
-    .title {
-        margin: 24px 0;
-        font-weight: bold;
-        font-size: 40px;
-        color: #ea7635;
-        &:before {
-            display: inline-block;
-            content: '';
-            width: 8px;
-            height: 40px;
-            vertical-align: -6px;
-            border-radius: 4px;
-            background-color: #ea7635;
-        }
     }
 }
 .button {
@@ -669,20 +705,6 @@ export default {
     > svg {
         margin-top: 20px;
     }
-}
-
-.close-more{
-  text-align: center;
-}
-.more {
-  width: 200px;
-  margin: 0 auto;
-  border-radius: 20px;
-  text-align: center;
-  line-height: 40px;
-  font-size: 26px;
-  background-color: #f5c36c;
-  color: #663a15;
 }
 
 </style>

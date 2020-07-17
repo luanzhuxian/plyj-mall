@@ -166,6 +166,13 @@
                     </div>
                     <div :class="$style.pingxuanMiddle">
                         <img :src="logoUrl" alt="">
+                        <button
+                            v-if="mallQRCodeInfo && mallQRCodeInfo.isDetailDisplay"
+                            :class="$style.qrcodeBtn"
+                            @click.stop="$showMallQRCOde()"
+                        >
+                            关注
+                        </button>
                     </div>
                     <div :class="$style.pingxuanRight">
                         <pl-svg name="icon-right" fill="#ccc" width="20" height="25" />
@@ -482,7 +489,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['appId', 'mallUrl', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl', 'mchId', 'roleCode', 'shareId']),
+        ...mapGetters(['appId', 'mallUrl', 'agentUser', 'userId', 'avatar', 'userName', 'mobile', 'mallName', 'mallDesc', 'logoUrl', 'mchId', 'roleCode', 'shareId', 'mallQRCodeInfo']),
 
         // 公益活动可购买数量
         publicBenefitActiveStock () {
@@ -1232,9 +1239,10 @@ export default {
       @include elps-wrap(2);
     }
     .pingxuan-middle {
-      margin-right: 40px;
       display: flex;
       flex-direction: column;
+      align-items: center;
+      margin-right: 40px;
       > img {
         width: 128px;
         height: 128px;
@@ -1245,6 +1253,18 @@ export default {
     .pingxuan-right {
       display: flex;
       flex-direction: column;
+    }
+    .qrcode-btn {
+        margin-top: 14px;
+        width: 120px;
+        height: 48px;
+        background: #F2B036;
+        border-radius: 30px;
+        font-size: 26px;
+        font-family: Microsoft YaHei;
+        line-height: 48px;
+        text-align: center;
+        color: #FFFFFF;
     }
   }
 
