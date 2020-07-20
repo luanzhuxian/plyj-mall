@@ -39,3 +39,6 @@ export const getDragonGatePlayInfo = () => axios.get('/apis/v1/luckdraw/findLuck
 
 // 查询是否展示公众号二维码增粉
 export const getMallQRCodeInfo = () => axios.get('/apis/v1/wechatQRCode/currentMallQR')
+
+// 查询当前直播在线人数
+export const getLiveViewers = params => axios.get('/apis/v1/mall/live/room/viewers', { params })

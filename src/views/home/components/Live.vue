@@ -112,6 +112,8 @@
 </template>
 
 <script>
+import { getLiveViewers } from '../../../apis/home'
+
 export default {
     name: 'Live',
     props: {
@@ -136,8 +138,23 @@ export default {
             futrueCount,
             pastCount
         })
+
+        // 单独查每个直播的在线人数
+        if (this.data.values.length) {
+            for (const item of this.data.values) {
+                this.getLiveViewers(item).catch(err => console.error(err))
+            }
+        }
     },
     methods: {
+        async getLiveViewers (live) {
+            try {
+                const { result: { count = 0 } } = await getLiveViewers({ roomId: live.roomId })
+                live.visitTimes = Number(live.visitTimes) + Number(count)
+            } catch (error) {
+                throw error
+            }
+        },
         isNoticeShow (live) {
             return live.statue === 2 && live.hasNotice
         },

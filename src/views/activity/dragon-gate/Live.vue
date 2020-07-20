@@ -68,6 +68,7 @@
 <script>
 import moment from 'moment'
 import Panel from './Panel.vue'
+import { getLiveViewers } from '../../../apis/home'
 
 export default {
     name: 'Live',
@@ -112,9 +113,20 @@ export default {
                 this.$set(live, 'ts', moment(liveStartTime).valueOf())
             }
             this.$set(live, 'isNoticeShow', live.statue === 2 && live.hasNotice)
+
+            // 单独查每个直播的在线人数
+            this.getLiveViewers(live).catch(err => console.error(err))
         }
     },
     methods: {
+        async getLiveViewers (live) {
+            try {
+                const { result: { count = 1 } } = await getLiveViewers({ roomId: live.roomId })
+                live.visitTimes = Number(live.visitTimes) + Number(count)
+            } catch (error) {
+                throw error
+            }
+        },
         done () {
             if (this.live.statue === 2) {
                 this.live.statue = 4

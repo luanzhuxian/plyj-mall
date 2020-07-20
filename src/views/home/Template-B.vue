@@ -3,6 +3,10 @@
         <div :class="$style.container">
             <search :class="$style.search" placeholder="搜索商品" />
             <banner :class="$style.banner" :data="BANNER" />
+            <!-- 820 -->
+            <a href="https://m.youpenglai.com/new/activity/22449" :class="$style.wwec" v-if="mallDomain === 'pljs'">
+                <img src="https://mallcdn.youpenglai.com/static/820/wwec2020.jpg" alt="wwec2020">
+            </a>
             <adv :class="$style.adv" v-if="type === 4 && ADV.showStatue === 1" :data="ADV" />
             <live :class="$style.live" :data="LIVE" v-if="isLiveShow" />
             <online-course :class="$style.onlineCourse" :data="COURSE" v-if="isOnlineCourseShow" />
@@ -54,6 +58,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Search from './components/Search.vue'
 import Live from './components/Live.vue'
 import OnlineCourse from './components/Online-Course.vue'
@@ -113,6 +118,7 @@ export default {
         }
     },
     computed: {
+        ...mapGetters(['mallDomain']),
         BANNER () {
             return this.data.BANNER || {}
         },
@@ -289,4 +295,15 @@ export default {
     background-color: #f4f5f9;
 }
 
+.wwec {
+    display: block;
+    margin: 20px 24px 0;
+    border-radius: 20px;
+    overflow: hidden;
+    > img {
+        width: 100%;
+        height: 187px;
+        object-fit: cover;
+    }
+}
 </style>

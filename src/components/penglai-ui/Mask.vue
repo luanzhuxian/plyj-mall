@@ -13,10 +13,22 @@ export default {
     props: {
         show: Boolean
     },
+    watch: {
+        show (val) {
+            if (val) {
+                window.addEventListener('popstate', this.popstateHandler)
+            } else {
+                window.removeEventListener('popstate', this.popstateHandler)
+            }
+        }
+    },
     methods: {
         close () {
             this.$emit('update:show', false)
             this.$emit('close')
+        },
+        popstateHandler (e) {
+            this.close()
         }
     }
 }

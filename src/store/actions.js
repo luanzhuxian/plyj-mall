@@ -70,10 +70,6 @@ export default {
                 commit(type.SET_OPENID, { mallDomain, openId: result.OPEN_ID })
                 return result.OPEN_ID
             }
-            // delete search.code
-            // location.href = getWeixinURL(appSecret, appId, componentAppid, search)
-            /* eslint-disable no-throw-literal */
-            // 手动抛出一个错误，让后续操作停下
             return false
         } catch (e) {
             if (e) {
@@ -98,6 +94,7 @@ export default {
                 return loginInfo
             }
             const search = Qs.parse(location.search.substring(1)) || {}
+            delete search.code
             const { appSecret, componentAppid, appid } = state.mallInfo
             location.replace(getWeixinURL(appSecret, appid, componentAppid, search))
             return null
