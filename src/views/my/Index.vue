@@ -174,7 +174,7 @@
             </router-link>
             <!-- helper -->
             <div :class="[$style.panel, $style.helper]" v-if="isHelperModuleShow && lockStatus">
-                <a @click.native="toHelperManagementPage" :class="$style.helperLink">
+                <a @click="toHelperManagementPage" :class="$style.helperLink">
                     <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/Help管理.png" alt="">
                     <i :class="$style.text">Helper管理</i>
                 </a>
