@@ -92,9 +92,9 @@
             </pl-button>
         </div>
 
-        <!--选择售后类型-->
+        <!--选择服务类型-->
         <pl-popup
-            title="售后类型"
+            title="服务类型"
             :show.sync="showRefundType"
         >
             <div :class="$style.popupContentWrapper">
@@ -200,14 +200,14 @@ export default {
         return {
             // 页面加载中
             loading: false,
-            // 是否显示 选择售后类型 弹框
+            // 是否显示 选择服务类型 弹框
             showRefundType: false,
             // TODO.当前货物状态不显示
             // 是否显示 货物状态 弹框
             showGoodsType: false,
             // 是否显示 选择退款原因 弹框
             showRefundReason: false,
-            // 临时存储售后类型
+            // 临时存储服务类型
             temporaryRefundKeyType: 1,
             // 临时退款原因
             temporaryRefundReason: '',
@@ -230,7 +230,7 @@ export default {
             form: {
                 // 原订单id
                 orderId: '',
-                // 售后类型 1-仅退款 2-退款退货
+                // 服务类型 1-仅退款 2-退款退货
                 type: '',
                 // 退款原因
                 reasonForReturn: '',
@@ -279,7 +279,7 @@ export default {
             this.form = {
                 // 原订单id
                 orderId: this.orderId,
-                // 售后类型 1-仅退款 2-退款退货
+                // 服务类型 1-仅退款 2-退款退货
                 type,
                 // 退款原因
                 reasonForReturn,
