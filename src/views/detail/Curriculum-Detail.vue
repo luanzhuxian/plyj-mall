@@ -307,18 +307,10 @@ import VideoPlayer from './components/Video-Player'
 import Tabs from './components/Tabs.vue'
 import { getCourseDetail } from '../../apis/product'
 import {
-    generateQrcode,
-    cutImageCenter,
-    cutArcImage,
-    loadImage,
-    createText
-} from '../../assets/js/util'
-import {
     getPublicBenefitStatistics,
     getPublicBenefitList
 } from '../../apis/longmen-festival/public-benefit'
-
-const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
+import Poster from './poster/Poster'
 
 export default {
     name: 'CurriculumDetail',
@@ -624,126 +616,24 @@ export default {
         },
         // 生成海报
         async createPoster (type) {
-            if (this.loading) {
+            if (this.loading) return
+            if (this.haibao) {
+                this.showHaibao = true
                 return
             }
-
-            let img = await loadImage(this.detail.courseImg)
-            if (!img) {
-                this.$error('图片加载错误')
-                return
-            }
-            this.creating = true
-
-            // 截取头像
-            let lodedAvatar
             try {
-                lodedAvatar = await loadImage(this.avatar)
-            } catch (e) {
-                lodedAvatar = await loadImage(avatar)
-            }
-            const arcAvatar = cutArcImage(lodedAvatar)
-
-            // 截取中间部分
-            img = cutImageCenter(img, 750 / 500)
-            const canvas = document.createElement('canvas')
-            canvas.width = 1120
-            canvas.height = 1346
-            const ctx = canvas.getContext('2d')
-
-            // 绘制头部
-            ctx.fillStyle = '#fff'
-            ctx.fillRect(0, 0, 1120, 192)
-            ctx.drawImage(arcAvatar, 32, 32, 128, 128)
-            ctx.font = 'bold 48px Microsoft YaHei UI'
-            ctx.fillStyle = '#000'
-            createText({
-                ctx,
-                x: 192,
-                y: 120,
-                text: this.userName,
-                lineHeight: 68,
-                width: 800
-            })
-            try {
-                // 二维码
-                const qrcode = await generateQrcode({ size: 300, text: this.shareUrl, padding: 15, img, centerPadding: 10, type: 'canvas' })
-
-                // 商品图片
-                ctx.drawImage(img, 0, 0, img.width, img.height, 0, 192, 1120, 746)
-                if (type !== 1 && this.preActivity === 2) {
-                    ctx.fillStyle = '#FA4D2F'
-                } else {
-                    ctx.fillStyle = '#fff'
-                }
-                ctx.fillRect(0, 938, 1120, 408)
-                ctx.drawImage(qrcode, 750, 978, 320, 320)
-
-                // 填充商品名称
-                const line = ((type !== 1 && this.preActivity === 2) || this.courseType === 2) ? 1 : 2
-                const { sellingPrice, originalPrice, totalLiveNumber } = this.detail
-                ctx.textBaseline = 'top'
-                ctx.font = '56px Microsoft YaHei UI'
-                ctx.fillStyle = '#000'
-
-                // 商品名称
-                createText({
-                    ctx,
-                    x: 49,
-                    y: 978,
-                    text: this.detail.courseName,
-                    lineHeight: 80,
-                    width: 620,
-                    lineNumber: line
+                this.creating = true
+                let poster = null
+                poster = new Poster({
+                    cover: this.detail.courseImg,
+                    productName: this.detail.courseName,
+                    originalPrice: this.detail.originalPrice,
+                    avatar: this.avatar,
+                    nickname: this.userName,
+                    shareUrl: this.shareUrl,
+                    price: this.detail.sellingPrice
                 })
-                if (this.courseType === 2) {
-                    ctx.font = '48px Microsoft YaHei UI'
-                    ctx.fillStyle = '#999'
-                    ctx.fillText(`包含${ totalLiveNumber }节课程`, 48, 1058)
-                }
-
-                // 填充价钱
-                if (sellingPrice) {
-                    ctx.fillStyle = '#FE7700'
-                    ctx.fillText('¥', 48, 1190 + (76 - 56) / 2)
-                    ctx.font = 'bold 88px Microsoft YaHei UI'
-                    createText({
-                        ctx,
-                        x: 96,
-                        y: 1170 + (104 - 88) / 2,
-                        text: String(sellingPrice),
-                        lineHeight: 104
-                    })
-                } else {
-                    ctx.fillStyle = '#FE7700'
-                    ctx.font = 'bold 88px Microsoft YaHei UI'
-                    createText({
-                        ctx,
-                        x: 48,
-                        y: 1190 + (76 - 56) / 2,
-                        text: '免费',
-                        lineHeight: 104
-                    })
-                }
-
-                // 绘制原价
-                if (originalPrice && originalPrice !== sellingPrice) {
-                    const priceWidth = ctx.measureText(sellingPrice).width
-                    ctx.fillStyle = '#999'
-                    ctx.font = '56px Microsoft YaHei UI'
-                    ctx.fillText(`¥${ originalPrice }`, 96 + priceWidth + 44, 1190 + (80 - 56) / 2)
-                    const originalPriceWidth = ctx.measureText(`¥${ originalPrice }`).width
-                    ctx.save()
-
-                    // 设置删除线
-                    ctx.strokeStyle = '#999'
-                    ctx.beginPath()
-                    ctx.lineWidth = '4'
-                    ctx.moveTo(96 + priceWidth + 44, 1190 + (80 - 56) / 2 + 80 / 3)
-                    ctx.lineTo(96 + priceWidth + 44 + originalPriceWidth, 1190 + (80 - 56) / 2 + 80 / 3)
-                    ctx.stroke()
-                }
-                this.haibao = canvas.toDataURL('image/jpeg', 0.9)
+                this.haibao = await poster.create()
                 this.showHaibao = true
             } catch (e) {
                 throw e

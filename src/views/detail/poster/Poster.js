@@ -140,17 +140,30 @@ export default class Poster {
      */
     drawPrice () {
         const CTX = this.CTX
+        let priceWidth = 0
         CTX.fillStyle = '#FE7700'
-        CTX.fillText('¥', 48, 1190 + (76 - 56) / 2)
-        CTX.font = 'bold 88px Microsoft YaHei UI'
         CTX.textBaseline = 'top'
-        const priceWidth = createText({
-            ctx: CTX,
-            x: 96,
-            y: 1170 + (104 - 88) / 2,
-            text: String(this.price),
-            lineHeight: 104
-        })
+        if (Number(this.price) > 0) {
+            CTX.fillText('¥', 48, 1190 + (76 - 56) / 2)
+            CTX.font = 'bold 88px Microsoft YaHei UI'
+            priceWidth = createText({
+                ctx: CTX,
+                x: 96,
+                y: 1170 + (104 - 88) / 2,
+                text: String(this.price),
+                lineHeight: 104
+            })
+        } else {
+            CTX.font = 'bold 88px Microsoft YaHei UI'
+            priceWidth = createText({
+                ctx: CTX,
+                x: 48,
+                y: 1170 + (76 - 56) / 2,
+                text: '免费',
+                lineHeight: 104
+            })
+        }
+
         // 绘制原价
         if (this.originalPrice && this.originalPrice !== this.price) {
             CTX.fillStyle = '#999'
