@@ -1,74 +1,32 @@
 <template>
-    <transition name="fade">
-        <div class="qrcode-modal-mask" v-show="isMaskShow" @transitionend="onTransitionEnd">
-            <div class="qrcode-modal-modal" v-show="isModalShow">
-                <h4>长按识别二维码关注</h4>
-                <p v-if="mallQRCodeInfo.name">{{ mallQRCodeInfo.name }}</p>
-                <pl-svg
-                    name="icon-close"
-                    width="26"
-                    fill="#999999"
-                    class="qrcode-modal-close"
-                    @click.stop="close"
-                />
-                <div class="qrcode-modal-img-wrapper">
-                    <img v-imgError :src="mallQRCodeInfo.qrCodeImgUrl" alt="">
-                </div>
-                <p class="qrcode-modal-bottom" v-if="mallQRCodeInfo.description">{{ mallQRCodeInfo.description }}</p>
+    <pl-mask :show="show" @close="close">
+        <div class="qrcode-modal-modal">
+            <h4>长按识别二维码关注</h4>
+            <p v-if="mallQRCodeInfo.name">{{ mallQRCodeInfo.name }}</p>
+            <div class="qrcode-modal-img-wrapper">
+                <img v-imgError :src="mallQRCodeInfo.qrCodeImgUrl" alt="">
             </div>
+            <p class="qrcode-modal-bottom" v-if="mallQRCodeInfo.description">{{ mallQRCodeInfo.description }}</p>
         </div>
-    </transition>
+    </pl-mask>
 </template>
 
 <script>
 export default {
     name: 'MallQRCodeModal',
-    // props: {
-    //     show: Boolean
-    // },
     data () {
         return {
             show: false,
-            isMaskShow: false,
-            isModalShow: false,
             mallQRCodeInfo: {}
         }
     },
     created () {
         this.mallQRCodeInfo = this.$store.state.mallQRCodeInfo || {}
     },
-    watch: {
-        show (val) {
-            if (val) {
-                this.isMaskShow = true
-                setTimeout(() => {
-                    this.isModalShow = true
-                }, 100)
-                window.addEventListener('popstate', this.popstateHandler)
-            } else {
-                window.removeEventListener('popstate', this.popstateHandler)
-                this.isModalShow = false
-                setTimeout(() => {
-                    this.isMaskShow = false
-                }, 100)
-            }
-        }
-    },
     methods: {
-        popstateHandler (e) {
-            // console.log(e)
-            // console.log(`location: ${ document.location }, state: ${ JSON.stringify(e.state) }`)
-            this.close()
-        },
         close () {
             this.show = false
             this.$emit('close')
-        },
-        onTransitionEnd () {
-            if (!this.show) {
-                this.$destroy()
-                document.body.removeChild(this.$el)
-            }
         }
     }
 }
@@ -76,20 +34,6 @@ export default {
 
 <style lang="scss">
 .qrcode-modal {
-    &-mask {
-        position: fixed;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        width: 100%;
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: rgba(0, 0, 0, .6);
-        z-index: 999;
-    }
     &-modal {
         position: relative;
         display: flex;
@@ -134,12 +78,6 @@ export default {
             height: 100%;
             object-fit: cover;
         }
-    }
-    &-close {
-        position: absolute;
-        top: 22px;
-        right: 22px;
-        z-index: 1;
     }
 }
 
