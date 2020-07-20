@@ -201,8 +201,8 @@ export default {
         },
         // 售后状态
         businessStatus: {
-            type: Number,
-            default: 0
+            type: [Number, String],
+            default: ''
         },
         // 售后单审核状态
         auditStatus: {

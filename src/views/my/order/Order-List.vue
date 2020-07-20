@@ -4,7 +4,7 @@
             size="small"
             :class="$style.tabBar"
             :tabs="tabs"
-            :active-id.sync="form.orderStatus"
+            :active-id.sync="status"
             @change="onTabChange"
         >
             <div
@@ -86,9 +86,9 @@ export default {
     },
     data () {
         return {
-            status: '',
+            status: 'ALL_ORDER',
             tabs: [
-                { name: '全部', id: '' },
+                { name: '全部', id: 'ALL_ORDER' },
                 { name: '待付款', id: 'WAIT_PAY' },
                 { name: '待发货', id: 'WAIT_SHIP' },
                 { name: '待收货', id: 'WAIT_RECEIVE' },
@@ -136,21 +136,22 @@ export default {
         this.$refresh = this.$refs.loadMore.refresh
     },
     activated () {
-        this.status = this.$route.params.status === 'ALL_ORDERS' ? '' : this.$route.params.status
+        this.status = this.$route.params.status
+        this.form.orderStatus = this.status === 'ALL_ORDER' ? '' : this.status
         // 从 订单详情/物流 来的，需原地刷新页面
         if (this.orderList.length && this.$router.currentRoute.meta.noRefresh) {
             if (!this.orderOperatedList.length) return
             this.handleCurrentOrder(this.orderOperatedList)
             return
         }
-        this.form.orderStatus = this.status
         this.$refresh()
     },
     methods: {
         ...mapMutations(['clearOrderOperatedList']),
         onTabChange (item) {
             this.$nextTick(() => {
-                this.$router.replace({ name: 'Orders', params: { status: item.id || 'ALL_ORDERS' } })
+                this.form.orderStatus = item.id === 'ALL_ORDER' ? '' : item.id
+                this.$router.replace({ name: 'Orders', params: { status: item.id } })
                 this.$refresh()
             })
         },
@@ -166,7 +167,7 @@ export default {
                 // 上个页面有 支付 操作
                 if (action === this.orderActionMap.pay) {
                     return (order, index) => {
-                        if (!this.status) {
+                        if (this.status !== 'ALL_ORDER') {
                             order.orderStatus = order.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS ? 'WAIT_SHIP' : 'WAIT_RECEIVE'
                         }
                         if (this.status === 'WAIT_PAY') {
@@ -177,7 +178,7 @@ export default {
                 // 上个页面有 确认收货 操作
                 if (action === this.orderActionMap.receive) {
                     return (order, index) => {
-                        if (!this.status) {
+                        if (this.status !== 'ALL_ORDER') {
                             order.orderStatus = this.orderStatuskeyMap.FINISHED
                         }
                         if (this.status === 'WAIT_RECEIVE') {
@@ -188,7 +189,7 @@ export default {
                 // 上个页面有 取消订单 操作
                 if (action === this.orderActionMap.cancel) {
                     return (order, index) => {
-                        if (!this.status) {
+                        if (this.status !== 'ALL_ORDER') {
                             order.orderStatus = this.orderStatuskeyMap.CLOSED
                         }
                         if (this.status === 'WAIT_PAY') {

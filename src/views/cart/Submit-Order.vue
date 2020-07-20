@@ -672,7 +672,7 @@ export default {
             } catch (e) {
                 this.requestPayDataCount = 0
                 await this.handlepayError(orderBatchNumber)
-                await this.$router.replace({ name: 'Orders', params: { status: 'ALL_ORDERS' } })
+                await this.$router.replace({ name: 'Orders', params: { status: 'ALL_ORDER' } })
                 throw e
             }
         },
