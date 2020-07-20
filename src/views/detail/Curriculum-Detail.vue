@@ -623,8 +623,7 @@ export default {
             }
             try {
                 this.creating = true
-                let poster = null
-                poster = new Poster({
+                const poster = new Poster({
                     cover: this.detail.courseImg,
                     productName: this.detail.courseName,
                     originalPrice: this.detail.originalPrice,
