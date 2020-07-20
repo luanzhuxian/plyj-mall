@@ -90,7 +90,7 @@
                             v-text="count.waitReceive > 99 ? '99+' : count.waitReceive"
                         />
                     </router-link>
-                    <router-link :to="{ name: 'RefundList', params: { status: 'ALL_ORDER' } }" :class="$style.orderLink">
+                    <router-link :to="{ name: 'RefundList', params: { status: 'ALL' } }" :class="$style.orderLink">
                         <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/退款.png" :style="{ width: 45 / 7.5 + 'vw' }" alt="">
                         <i :class="$style.text">退款/售后</i>
                         <span
