@@ -121,8 +121,8 @@ export default {
     methods: {
         async getLiveViewers (live) {
             try {
-                const { result: { count = 0 } } = await getLiveViewers({ roomId: live.roomId })
-                live.visitTimes = count
+                const { result: { count = 1 } } = await getLiveViewers({ roomId: live.roomId })
+                live.visitTimes = Number(live.visitTimes) + Number(count)
             } catch (error) {
                 throw error
             }

@@ -150,7 +150,7 @@ export default {
         async getLiveViewers (live) {
             try {
                 const { result: { count = 0 } } = await getLiveViewers({ roomId: live.roomId })
-                live.visitTimes = count
+                live.visitTimes = Number(live.visitTimes) + Number(count)
             } catch (error) {
                 throw error
             }
