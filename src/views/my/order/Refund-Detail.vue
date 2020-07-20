@@ -429,11 +429,10 @@ export default {
                 if (!this.form.expressNo.trim()) return this.$warning('请输入快递单号')
                 if (!isExpressNumber(this.form.expressNo)) return this.$warning('请输入正确的快递单号')
                 this.loading = true
-                const { dictDataKey: shipChannel } = this.expressMap.find(item => item.dictDataValue === this.form.expressName)
                 const params = {
                     id: this.id,
-                    shipChannel,
-                    shipSn: this.form.expressNo
+                    logisticsCompany: this.form.expressName,
+                    logisticsNumber: this.form.expressNo
                 }
                 await submitExpressInfo(params)
                 this.loading = false

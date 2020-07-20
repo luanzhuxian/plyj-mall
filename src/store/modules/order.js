@@ -135,9 +135,9 @@ export default {
             // 无售后
             NO_AFTER_SALES: '',
             // 处理中
-            PROCESSING: '退款中',
+            PROCESSING: '售后中',
             // 处理完成
-            PROCESSING_COMPLETED: '退款成功'
+            PROCESSING_COMPLETED: '退款完成'
         },
         // 要申请售后的商品信息
         refundGoodsInfo,

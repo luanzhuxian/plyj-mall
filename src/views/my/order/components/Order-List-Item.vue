@@ -22,7 +22,7 @@
             :option="subSkuName ? `${skuName},${subSkuName}` : skuName"
             :count="count"
             :price="localFormatAmount(unitPrice)"
-            :status="aftersaleStatusMap[aftersaleStatus]"
+            :status="refundStatusDesc"
             :active-product="skuSource"
             :pre-active="skuSource !== 1 ? 2 : ''"
             border
@@ -204,6 +204,11 @@ export default {
             type: Number,
             default: 0
         },
+        // 售后单审核状态
+        auditStatus: {
+            type: [Number, String],
+            default: ''
+        },
         // 售后状态 NO_AFTER_SALES:无售后 PROCESSING:处理中 PROCESSING_COMPLETED:处理完成
         aftersaleStatus: {
             type: String,
@@ -279,6 +284,15 @@ export default {
     },
     computed: {
         ...mapGetters(['skuSourceKeyMap', 'orderTypeMap', 'orderTypeKeyMap', 'orderStatusMap', 'orderStatuskeyMap', 'refundStatusMap', 'aftersaleStatusMap', 'aftersaleStatusKeyMap']),
+        refundStatusDesc () {
+            if (this.skuSource === this.skuSourceKeyMap.NORMAL && this.aftersaleStatus === this.aftersaleStatusKeyMap.PROCESSING && !(this.auditStatus === 2 && this.businessStatus === 1)) {
+                return '售后中'
+            }
+            if (this.skuSource === this.skuSourceKeyMap.NORMAL && this.aftersaleStatus === this.aftersaleStatusKeyMap.PROCESSING_COMPLETED) {
+                return '退款完成'
+            }
+            return ''
+        },
         orderStatusDesc () {
             // 虚拟订单 待收货 改为 待使用； 订单完成 还未评价的 待评价
             return [this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS].includes(this.orderType) &&
