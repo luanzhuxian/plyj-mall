@@ -473,9 +473,10 @@ export default {
                 // 二次申请发票
                 try {
                     this.loading = true
+                    // invoiceType与当前发票类型不同， 原 1-个人 2-单位  现 0-个人 1-单位
                     await applyInvoice({
                         invoiceTitle: invoiceModel.invoiceTitle,
-                        invoiceType: invoiceModel.invoiceType,
+                        invoiceType: invoiceModel.invoiceType === 1? 0 : 1,
                         taxpayerNumber: this.type === 2 ? this.form.tin : '',
                         orderIds: [this.orderId],
                         companyPhone: invoiceModel.receiverMobile,
