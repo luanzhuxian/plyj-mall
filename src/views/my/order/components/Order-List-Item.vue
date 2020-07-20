@@ -283,7 +283,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['skuSourceKeyMap', 'orderTypeMap', 'orderTypeKeyMap', 'orderStatusMap', 'orderStatuskeyMap', 'refundStatusMap', 'aftersaleStatusMap', 'aftersaleStatusKeyMap']),
+        ...mapGetters(['skuSourceKeyMap', 'orderTypeMap', 'orderTypeKeyMap', 'orderStatusMap', 'orderStatuskeyMap', 'aftersaleStatusMap', 'aftersaleStatusKeyMap']),
         refundStatusDesc () {
             if (this.skuSource === this.skuSourceKeyMap.NORMAL && this.aftersaleStatus === this.aftersaleStatusKeyMap.PROCESSING && !(this.auditStatus === 2 && this.businessStatus === 1)) {
                 return '售后中'
