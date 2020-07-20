@@ -894,6 +894,7 @@ export default {
             goodsModel.orderStatus = detail.status
             goodsModel.orderType = detail.orderType
             goodsModel.orderId = orderId
+            goodsModel.freight = this.detail.freight
             this.$store.commit('setRefundGoods', goodsModel)
             this.$router.push({
                 name: 'Refund',

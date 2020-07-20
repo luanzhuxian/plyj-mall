@@ -52,7 +52,7 @@
                             />
                         </div>
                         <div :class="$style.tips">
-                            运费不可退，如有疑问，请联系商家协商
+                            <template v-if="notNeedReturnFreight">运费不可退，</template> 如有疑问，请联系商家协商
                         </div>
                     </div>
                 </div>
@@ -262,6 +262,12 @@ export default {
             if (this.form.refundType !== '1') return 'REASONSRECEIVEDGOODS'
             if ([this.orderStatuskeyMap.WAIT_RECEIVE, this.orderStatuskeyMap.FINISHED].includes(this.orderStatus)) return 'REASONSRECEIVEDGOODS'
             return 'REASONSNOTRECEIVEDGOODS'
+        },
+        // 实体订单 + 有运费 + 已发货(待收货/已完成) 运费不可退
+        notNeedReturnFreight () {
+            return this.refundGoodsInfo.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS &&
+              this.refundGoodsInfo.freight &&
+              [this.orderStatuskeyMap.WAIT_RECEIVE, this.orderStatuskeyMap.FINISHED].includes(this.orderStatus)
         }
     },
     async created () {

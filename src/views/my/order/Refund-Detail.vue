@@ -387,6 +387,7 @@ export default {
         modifyRefund () {
             const goodsModel = JSON.parse(JSON.stringify(this.orderDetails.goodsModel))
             goodsModel.orderType = this.orderDetails.orderType
+            goodsModel.freight = this.orderDetails.freight
             this.$store.commit('setRefundGoods', goodsModel)
             this.$router.push({ name: 'RefundApply',
                 params: {
