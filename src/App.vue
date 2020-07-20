@@ -54,6 +54,7 @@ import {
 import { setFirstVisit } from './apis/longmen-festival/lottery'
 // 新人有礼
 import { isNewUser, getGoingInfo } from './apis/newcomers'
+
 export default {
     components: {
         Navbar,
