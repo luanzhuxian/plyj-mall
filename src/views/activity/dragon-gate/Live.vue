@@ -266,8 +266,8 @@ export default {
         }
         .img-wrapper {
             flex: 1;
-            width: 100%;
-            height: 0;
+            // width: 100%;
+            // height: 0;
         }
         img {
             width: 100%;
