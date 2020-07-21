@@ -191,7 +191,7 @@ export default {
         left: 0;
         width: 100px;
         border-radius: 20px 0 20px 0;
-        background: #fe7700;
+        background: #F2B036;
         line-height: 42px;
         text-align: center;
         font-size: 24px;
