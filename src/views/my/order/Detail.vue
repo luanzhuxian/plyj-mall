@@ -734,7 +734,7 @@ export default {
 
                 // 虚拟商品 正式课 体验课 生成核销码
                 if ([this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS].includes(result.orderType) && this.redeemCodeModels.length) {
-                    if ([this.orderStatuskeyMap.WAIT_SHIP, this.orderStatuskeyMap.WAIT_RECEIVE, this.orderStatuskeyMap.FINISHED].includes(result.status)) {
+                    if ([this.orderStatuskeyMap.WAIT_PAY_TAIL_MONEY, this.orderStatuskeyMap.WAIT_SHIP, this.orderStatuskeyMap.WAIT_RECEIVE, this.orderStatuskeyMap.FINISHED].includes(result.status)) {
                         this.generateQrcode()
                     }
                     if (result.status !== this.orderStatuskeyMap.CLOSED) {
