@@ -43,7 +43,7 @@
                         <div :class="$style.desc">
                             <div :class="$style.title" v-text="item.graphicName" />
                             <div :class="[$style.text1, item.lecturer? '' : $style.noLecturer]">
-                                <span v-if="item.author">主讲人： {{ item.author }}</span>
+                                <span v-if="item.author">作者： {{ item.author }}</span>
                             </div>
                             <div :class="$style.bottom">
                                 <template>
