@@ -95,9 +95,9 @@
                             <pl-timeline-item
                                 v-for="(item, i) of refundProgress"
                                 :key="i"
-                                :timestamp="item.createTime"
+                                :timestamp="item.operatorTime"
                             >
-                                <div :class="$style.refundProgressContent" v-text="item.operatingLog" />
+                                <div :class="$style.refundProgressContent" v-text="item.message" />
                             </pl-timeline-item>
                         </pl-timeline>
                     </collapse-item>
@@ -355,7 +355,7 @@ export default {
                 if (result.refundMobile) {
                     this.refundDetail.refundMobile = replaceMobile(result.refundMobile)
                 }
-                this.refundProgress = []
+                this.refundProgress = result.record
                 result.operations && result.operations.map(item => {
                     item.createTimeArray = rebuildDate(item.createTime)
                     return item
