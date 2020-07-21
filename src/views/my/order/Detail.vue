@@ -159,7 +159,7 @@
                         <span>定金(不退<i v-if="detail.orderIntentionAmountDouble > 1">，翻{{ detail.orderIntentionAmountDouble }}倍</i>)</span>
                         <span class="rmb">{{ detail.orderIntentionAmount | formatAmount }}</span>
                     </p>
-                    <p v-if="detail.status === orderStatuskeyMap.WAIT_PAY_TAIL_MONEY">
+                    <p v-if="[orderStatuskeyMap.WAIT_PAY_TAIL_MONEY, orderStatuskeyMap.CLOSED].includes(detail.status)">
                         <span>待付尾款</span>
                         <span class="rmb">{{ detail.orderAmountTailMoney | formatAmount }}</span>
                     </p>
