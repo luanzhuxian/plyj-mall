@@ -386,7 +386,7 @@ export default {
         },
 
         // 改变规格
-        async specChanged (option, revert, limiting, limit) {
+        async specChanged (currentSku, revert, limiting, limit) {
             /* if (limiting && option.count > limit) {
                 if (limiting === limit) {
                     return this.$warning(`您至多购买${ limit }件`)
@@ -399,7 +399,8 @@ export default {
             try {
                 // 请求修改
                 this.updating = true
-                const { skuCode1, count, skuCode2 } = option
+                const { skuCode1, count, skuCode2 } = currentSku
+                console.log(skuCode1, count, skuCode2)
                 const isUpdateSku = await updateCartProductSku({
                     id: this.currentPro.id,
                     skuCode: skuCode1,
@@ -421,7 +422,7 @@ export default {
                     this.showSpecifica = false
                     this.$set(this.products, this.products.indexOf(this.currentPro), this.currentPro)
                     this.computeMoney()
-                    this.isDouble(option)
+                    this.isDouble(currentSku)
                     this.setDisabled(this.products)
                     this.setCoupon()
                 } else {
@@ -430,7 +431,7 @@ export default {
                 }
             } catch (e) {
                 // 修改失败，回滚选框中的值
-                revert()
+                // revert()
                 throw e
             } finally {
                 this.updating = false
