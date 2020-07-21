@@ -79,7 +79,7 @@
                         <template slot="label" v-else-if="activeProduct === 6">组合折扣</template>
                         <span slot="content">
                             <span class="primary-color">{{ item.discount / 10 }}折</span>
-                            <span> -¥{{ item.count * item.sellingPrice - item.amount | formatAmount }}</span>
+                            <span> -¥{{ item.sellingPrice === 0 ? 0 : (item.count * item.sellingPrice - item.amount) | formatAmount }}</span>
                         </span>
                     </InfoItem>
 
