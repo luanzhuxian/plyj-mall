@@ -10,6 +10,7 @@
             <live :class="$style.live" :data="LIVE" v-if="isLiveShow" />
             <online-course :class="$style.onlineCourse" :data="COURSE" v-if="isOnlineCourseShow" />
             <series-course :class="$style.seriesCourse" :data="SERIES" v-if="isSeriesCourseShow" />
+            <image-text :class="$style.imageText" :data="ImageText" v-if="isImageTextShow" />
             <campaign v-if="isCampaignShow" />
             <!-- <activity :class="$style.activity" v-if="isNwEventShow" /> -->
             <!-- <d12-activity :class="$style.activity" /> -->
@@ -67,6 +68,7 @@ import Search from './components/Search.vue'
 import Live from './components/Live.vue'
 import OnlineCourse from './components/Online-Course.vue'
 import SeriesCourse from './components/Series-Course.vue'
+import ImageText from './components/Image-Text.vue'
 // import Activity from '../activity/spring/Activity.vue'
 // import D12Activity from './components/Activity.vue'
 import HotItem from './components/Hot-Item.vue'
@@ -87,6 +89,7 @@ export default {
         Live,
         OnlineCourse,
         SeriesCourse,
+        ImageText,
         // Activity,
         // D12Activity,
         HotItem,
@@ -133,6 +136,9 @@ export default {
         SERIES () {
             return this.data.SERIES || {}
         },
+        ImageText () {
+            return this.data.ImageText || {}
+        },
         APPOINTMENT () {
             return this.data.APPOINTMENT || {}
         },
@@ -156,6 +162,9 @@ export default {
         },
         isSeriesCourseShow () {
             return this.SERIES.showStatue === 1 && this.SERIES.values && this.SERIES.values.length
+        },
+        isImageTextShow () {
+            return this.ImageText.showStatue === 1 && this.ImageText.values && this.ImageText.values.length
         },
         // isNwEventShow () {
         //     return this.parent.nwEvent && this.parent.nwEvent.permissionStatus
@@ -247,7 +256,8 @@ export default {
 
 .live,
 .online-course,
-.series-course {
+.series-course,
+.image-text {
     padding: 24px 24px 0;
 }
 

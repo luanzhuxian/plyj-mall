@@ -18,6 +18,8 @@
             <online-course :class="$style.onlineCourse" :data="COURSE" v-if="isOnlineCourseShow" />
             <!-- 系列课 -->
             <series-course :class="$style.seriesCourse" :data="SERIES" v-if="isSeriesCourseShow" />
+            <!-- 图文资料 -->
+            <image-text :class="$style.imageText" :data="ImageText" v-if="isImageTextShow" />
             <!-- 疫情 -->
             <campaign v-if="isCampaignShow" />
             <!-- 预约 -->
@@ -117,6 +119,7 @@ import Propagate from './components/Propagate-Small.vue'
 import Live from './components/Live.vue'
 import OnlineCourse from './components/Online-Course.vue'
 import SeriesCourse from './components/Series-Course.vue'
+import ImageText from './components/Image-Text.vue'
 import Coupon from './activity/Coupon.vue'
 import Activity from './activity/Activity.vue'
 import Miaosha from './activity/Miaosha.vue'
@@ -141,6 +144,7 @@ export default {
         Live,
         OnlineCourse,
         SeriesCourse,
+        ImageText,
         Coupon,
         Activity,
         Miaosha,
@@ -194,6 +198,9 @@ export default {
         SERIES () {
             return this.data.SERIES || {}
         },
+        ImageText () {
+            return this.data.ImageText || {}
+        },
         APPOINTMENT () {
             return this.data.APPOINTMENT || {}
         },
@@ -229,6 +236,9 @@ export default {
         },
         isSeriesCourseShow () {
             return this.SERIES.showStatue === 1 && this.SERIES.values && this.SERIES.values.length
+        },
+        isImageTextShow () {
+            return this.ImageText.showStatue === 1 && this.ImageText.values && this.ImageText.values.length
         },
         isCampaignShow () {
             return this.parent.isReportShow || this.parent.isBookShow
@@ -313,6 +323,7 @@ export default {
 .live,
 .online-course,
 .series-course,
+.image-text,
 .coupon,
 .propagate,
 .appointment {
