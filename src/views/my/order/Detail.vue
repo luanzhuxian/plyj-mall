@@ -189,7 +189,7 @@
                     <span>-¥{{ detail.scholarship | formatAmount }}</span>
                 </p>
                 <!--春耘减免-->
-                <p v-if="detail.orderSource === skuSourceKeyMap.SPRINGPLOUGHING && detail.combinationSpecialPrice">
+                <p v-if="detail.orderSource === skuSourceKeyMap.SPRINGPLOUGHING">
                     <span>春耘减免</span>
                     <span>
                         <span class="color-fe7700">{{ detail.discount / 10 }}折 </span>
@@ -197,7 +197,7 @@
                     </span>
                 </p>
                 <!--组合折扣-->
-                <p v-if="detail.orderSource === skuSourceKeyMap.COURSEPACKAGE && detail.combinationSpecialPrice">
+                <p v-if="detail.orderSource === skuSourceKeyMap.COURSEPACKAGE">
                     <span>组合折扣</span>
                     <span>
                         <span class="color-fe7700">{{ detail.discount / 10 }}折 </span>
@@ -707,7 +707,7 @@ export default {
                 const { goodsModel, orderPayTransInfos, redeemCodeModels, productCustomInfo, invoiceInfoModel, shippingInfoModel } = result
                 result.refundId = (result.orderRefundsModel && result.orderRefundsModel.id) || ''
                 // 组合折扣  = 商品总价 - 运费 - 实际付款值
-                result.combinationSpecialPrice = (result.goodsPrice || 0) - (result.freight || 0) - (result.amount || 0)
+                result.combinationSpecialPrice = result.goodsPrice === 0 ? 0 : (result.goodsPrice || 0) - (result.freight || 0) - (result.amount || 0)
                 this.detail = result
                 goodsModel.sellingPrice = filter.formatAmount(goodsModel.sellingPrice)
                 // // orderRefundsModel.businessStatus 退换货状态 1:待退货 2:待收货 3:退货完成 4:待退款 5:退款中 6:退款成功 7:退款失败
