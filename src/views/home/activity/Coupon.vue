@@ -29,11 +29,9 @@
                             <div :class="$style.price">
                                 ￥<span :class="$style.number">{{ item.goodsInfo.amount }}</span>
                             </div>
-                            <div>
-                                <div :class="$style.rule">{{ `满${item.goodsInfo.useLimitAmount}减${item.goodsInfo.amount}` }}</div>
-                                <div :class="$style.date">
-                                    <span>{{ `${getDate(item.goodsInfo.useStartTime, 'MM/DD')}-${getDate(item.goodsInfo.useEndTime, 'MM/DD')}` }}</span>
-                                </div>
+                            <div :class="$style.rule">{{ `满${item.goodsInfo.useLimitAmount}减${item.goodsInfo.amount}` }}</div>
+                            <div :class="$style.date">
+                                <span>{{ `${getDate(item.goodsInfo.useStartTime, 'MM/DD')}-${getDate(item.goodsInfo.useEndTime, 'MM/DD')}` }}</span>
                             </div>
                         </div>
                         <div :class="$style.couponListItemCover">
@@ -90,7 +88,7 @@ export default {
             font-family: Microsoft YaHei;
             color: #ff8533;
             letter-spacing: 2px;
-            > svg {
+            > img {
                 margin-right: 10px;
             }
         }
@@ -107,8 +105,8 @@ export default {
         justify-content: space-around;
         padding: 24px 12px 40px;
         &-item {
-            box-sizing: border-box;
             position: relative;
+            box-sizing: border-box;
             padding: 10px;
             width: 214px;
             font-size: 20px;
@@ -164,7 +162,12 @@ export default {
                 }
             }
             &-wrapper {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                box-sizing: border-box;
                 padding: 6px 45px 12px 12px;
+                height: 100%;
                 border: 2px solid #f29e5e;
                 border-style: dashed;
                 border-radius: 10px;
@@ -200,9 +203,10 @@ export default {
             }
             .rule {
                 font-size: 20px;
+                @include elps-wrap(2);
             }
             .date {
-                margin-top: 4px;
+                margin-top: auto;
                 font-size: 18px;
                 font-family: San Francisco Display;
                 @include elps();
