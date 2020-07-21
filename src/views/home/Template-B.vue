@@ -290,7 +290,7 @@ export default {
 
 .live,
 .online-course,
-.series-course
+.series-course,
 .image-text {
     padding: 24px 24px 0;
 }
