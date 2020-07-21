@@ -122,12 +122,8 @@
             <div :class="$style.infoList">
                 <pl-list title="退单编号：" :content="refundDetail.id" />
                 <pl-list title="订单编号：" :content="orderDetails.id" />
+                <pl-list title="订单状态：" :content="orderDetails.orderStatusDesc" />
                 <pl-list title="服务类型：" :content="refundTypeMap[refundType]" />
-                <pl-list
-                    v-if="orderDetails.orderType === orderTypeKeyMap.PHYSICAL_GOODS"
-                    title="货物状态："
-                    :content="orderStatuskeyMap.FINISHED === orderDetails.status? '已收到货' : '未收到货'"
-                />
                 <pl-list
                     v-if="refundDetail.reasonForReturn"
                     title="退款原因："
@@ -324,7 +320,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['refundTypeMap', 'refundStatusMap', 'orderStatuskeyMap', 'auditStatusMap', 'orderStatuskeyMap', 'orderTypeKeyMap', 'orderActionMap']),
+        ...mapGetters(['refundTypeMap', 'refundStatusMap', 'orderStatuskeyMap', 'orderStatusMap', 'auditStatusMap', 'orderStatuskeyMap', 'orderTypeKeyMap', 'orderActionMap']),
         // 卖家已将货物寄出
         needReturnProduct () {
             return this.orderDetails.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS && [this.orderStatuskeyMap.WAIT_RECEIVE, this.orderStatuskeyMap.FINISHED].includes(this.orderDetails.status)
@@ -348,8 +344,13 @@ export default {
                 this.refundStatus = result.businessStatus
                 this.refundType = result.serviceType
                 this.refundDetail = result
-                this.orderDetails = result.orderDetailsModel || {}
-                this.orderDetails.goodsModel.sellingPrice = filter.formatAmount(this.orderDetails.goodsModel.sellingPrice)
+                const orderDetails = result.orderDetailsModel || {}
+                orderDetails.goodsModel.sellingPrice = filter.formatAmount(orderDetails.goodsModel.sellingPrice)
+                // 订单状态 虚拟订单 待收货 改为 待使用
+                orderDetails.orderStatusDesc = [this.orderTypeKeyMap.VIRTUAL_GOODS, this.orderTypeKeyMap.FORMAL_CLASS, this.orderTypeKeyMap.EXPERIENCE_CLASS].includes(orderDetails.orderType) &&
+                                              this.orderStatuskeyMap.WAIT_RECEIVE === orderDetails.status
+                    ? this.orderStatusMap[this.orderStatuskeyMap.WAIT_RECEIVE_OF_VIRTUAL] : this.orderStatusMap[orderDetails.status]
+                this.orderDetails = orderDetails
                 this.goodsModel = this.orderDetails.goodsModel || {}
                 if (result.refundMobile) {
                     this.refundDetail.refundMobile = replaceMobile(result.refundMobile)
