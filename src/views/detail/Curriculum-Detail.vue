@@ -728,7 +728,10 @@ export default {
 }
 
 .rule,
-.slide-courses,
+.slide-courses {
+    margin-top: 20px;
+}
+
 .bottom {
     position: fixed;
     bottom: 0;
