@@ -430,7 +430,6 @@ export default {
                 }
             } catch (e) {
                 // 修改失败，回滚选框中的值
-                console.log(123)
                 revert()
                 throw e
             } finally {
