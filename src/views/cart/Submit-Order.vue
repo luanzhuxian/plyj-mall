@@ -614,6 +614,8 @@ export default {
                 this.$store.commit('submitOrder/setOrderProducts', {
                     products: this.CONFIRM_LIST
                 })
+                await this.init()
+                await this.$nextTick()
                 next()
             } catch (e) {
                 next(e)
