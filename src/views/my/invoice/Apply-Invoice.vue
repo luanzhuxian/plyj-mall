@@ -490,6 +490,7 @@ export default {
                 }
             } else {
                 const params = { ...invoiceModel }
+                params.invoiceType = invoiceModel.invoiceType === 1? 0 : 1
                 params.companyPhone = invoiceModel.receiverMobile,
                 this.$store.commit('submitOrder/setInvoiceInfo', params)
             }
