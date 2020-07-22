@@ -344,11 +344,8 @@
         <!-- 发票信息：0元 + 不支持开发票 不显示 -->
         <div v-if=" detail.orderSource === skuSourceKeyMap.NORMAL &&
             (detail.amount - detail.freight) > 0 &&
-            detail.supportInvoice " :class="[$style.panel, $style.invoice]">
-            <div :class="$style.title">
-                发票信息：<span :class="$style.color222" v-if="!detail.invoiceId">未开票</span>
-            </div>
-            <div v-if="detail.invoiceId">
+            detail.supportInvoice" :class="[$style.panel, $style.invoice]">
+            <div v-if="detail.invoiceId && voidInvoice === 0">
                 <div>
                     <span :class="$style.type" v-text="invoiceMap[invoiceModel.invoiceType].main" />
                     <span :class="$style.name" v-text="invoiceModel.invoiceTitle" />
@@ -359,6 +356,10 @@
                     <span v-text="invoiceModel.invoiceType === 0? invoiceModel.companyPhone : invoiceModel.taxpayerNumber" />
                 </div>
             </div>
+            <div :class="$style.title" v-else-if="!detail.invoiceId">
+                发票信息：<span :class="$style.color222">未开票</span>
+            </div>
+            <div v-else>{{ voidInvoice ===1? '发票被机构驳回，请重新申请' : '发票作废' }}</div>
         </div>
 
         <!-- footer -->
@@ -552,6 +553,8 @@ export default {
             orderLastPayInfo: {},
             // TODO.20200513物流详情 暂时不显示，发货后直接显示已发货
             logisticsInfoModel: {},
+            // 发票作废 0-未作废 1-因机构驳回发票作废 2-因申请售后发票作废
+            voidInvoice: 0,
             // 发票信息
             invoiceModel: {},
             // 联系人信息
@@ -627,14 +630,14 @@ export default {
             /*
             * 普通商品
             * 商品本身支持发票
-            * 未开具过发票
+            * 未开具过发票 / 因机构驳回发票作废
             * 除运费外的实付款大于0
             * 待发货/待收货/订单已完成
             * 商品不在售后中
             * */
             return this.detail.orderSource === this.skuSourceKeyMap.NORMAL &&
               this.detail.supportInvoice &&
-              !this.detail.invoiceId &&
+              (this.voidInvoice === 1 || !this.detail.invoiceId) &&
             (this.detail.amount - this.detail.freight) > 0 &&
             [this.orderStatuskeyMap.WAIT_SHIP, this.orderStatuskeyMap.WAIT_RECEIVE, this.orderStatuskeyMap.FINISHED].includes(this.detail.status) &&
               this.detail.aftersaleStatus === this.aftersaleStatusKeyMap.NO_AFTER_SALES
@@ -728,6 +731,8 @@ export default {
                 this.logisticsInfoModel = {}
                 // 发票信息
                 this.invoiceModel = invoiceInfoModel || {}
+                // 状态为3 发票作废， 售后完成-为售后导致作废2 + 其他只有因驳回 作废3
+                this.voidInvoice = invoiceInfoModel.status !== 3 ? 0 : this.detail.aftersaleStatus === this.aftersaleStatusKeyMap.PROCESSING_COMPLETED ? 2 : 1
                 // 核销码信息
                 this.redeemCodeModels = redeemCodeModels || []
                 this.setTime()
