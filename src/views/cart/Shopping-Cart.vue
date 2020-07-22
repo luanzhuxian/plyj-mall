@@ -336,7 +336,7 @@ export default {
             }
         },
 
-        // 单击规格
+        // 单击规格选框
         skuClick (data) {
             this.currentPro = data
 
@@ -430,7 +430,8 @@ export default {
                 }
             } catch (e) {
                 // 修改失败，回滚选框中的值
-                // revert()
+                console.log(123)
+                revert()
                 throw e
             } finally {
                 this.updating = false
@@ -548,12 +549,15 @@ export default {
         // 判断当前规格是否已经存在于购物车中，如果存在，删之
         isDouble (options) {
             // 查找此规格对应的商品
-            const currentSkuCount = this.products.filter(cartPro => cartPro.cartSkuCode === options.skuCode1 && cartPro.cartSkuCode2 === options.skuCode2)
-            if (currentSkuCount.length >= 2) {
-                this.products.splice(this.products.indexOf(currentSkuCount[0]), 1)
-                this.checkedList.splice(this.checkedList.indexOf(currentSkuCount[0]), 1)
+            const filter = cartPro => cartPro.cartSkuCode === options.skuCode1 && cartPro.cartSkuCode2 === options.skuCode2
+            // 存在重复规格
+            if (this.products.filter(filter).length === 2) {
+                this.products.splice(this.products.indexOf(this.currentPro, 1))
+                this.checkedList.splice(this.checkedList.indexOf(this.currentPro, 1))
             }
             this.total = this.products.length
+            // 将当前商品切换至留下的那个商品
+            this.currentPro = this.products.find(filter) || {}
         }
     },
     beforeRouteEnter (to, from, next) {

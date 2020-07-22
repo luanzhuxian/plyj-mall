@@ -459,6 +459,8 @@ export default {
                 this.$emit('change', this.sku)
                 this.localCurrentSku = this.sku
                 this.count = this.sku.count
+                this.currentSku1 = this.sku.skuCode1
+                this.currentSku2 = this.sku.skuCode2
             }
         },
 
