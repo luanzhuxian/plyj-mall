@@ -2,6 +2,7 @@
 import Compressor from 'compressorjs'
 import { getSTS } from '../../apis/base-api'
 import store from '../../store'
+import moment from 'moment'
 const { VUE_APP_MODEL } = process.env
 const ENV = VUE_APP_MODEL === 'production' ? 'pro' : 'dev'
 const OSS = require('ali-oss')
@@ -9,8 +10,6 @@ const REGION = 'oss-accelerate'
 const BUCKET = 'penglai-weimall'
 const DOMAIN = 'https://mallcdn.youpenglai.com'
 const PATH = `img/mall/${ ENV }`
-// STS有效时间，10分钟
-const STSLIFETIME = 600000
 Compressor.setDefaults({
     // 检查方向
     checkOrientation: true,
@@ -68,12 +67,13 @@ export const compress = function (file, size, fileType) {
 const getClient = async function () {
     const sts = JSON.parse(localStorage.getItem('sts')) || {}
     let credentials = null
-
-    if (!sts.time || STSLIFETIME < Date.now() - sts.time) {
+    // 如果离过期时间不到10分钟，就重新获取sts
+    if (!sts.time || sts.time - Date.now() < 600000) {
         // sts过期
-        const { result } = await getSTS()
+        let { result } = await getSTS()
+        result = JSON.parse(result)
         credentials = result.credentials
-        result.time = Date.now()
+        result.time = moment(result.credentials.expiration).valueOf()
         localStorage.setItem('sts', JSON.stringify(result))
     } else {
         credentials = sts.credentials
