@@ -180,18 +180,10 @@ import Skeleton from './components/Skeleton.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import { getImageTextDetail } from '../../apis/product'
 import {
-    // generateQrcode,
-    // cutImageCenter,
-    // cutArcImage,
-    // loadImage,
-    // createText,
     isIOS
 } from '../../assets/js/util'
 import Poster from './poster/Poster'
 import moment from 'moment'
-
-// const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
-
 export default {
     name: 'ImageTextDetail',
     components: {

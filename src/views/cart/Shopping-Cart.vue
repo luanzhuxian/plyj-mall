@@ -400,7 +400,6 @@ export default {
                 // 请求修改
                 this.updating = true
                 const { skuCode1, count, skuCode2 } = currentSku
-                console.log(skuCode1, count, skuCode2)
                 const isUpdateSku = await updateCartProductSku({
                     id: this.currentPro.id,
                     skuCode: skuCode1,

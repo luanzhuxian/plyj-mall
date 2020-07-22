@@ -1,9 +1,7 @@
-/* eslint-disable */
 import {
     createText,
     loadImage,
     generateQrcode,
-    cutImageCenter,
     cutArcImage
 } from '../../../assets/js/util'
 
