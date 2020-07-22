@@ -177,10 +177,6 @@ export default {
             type: String,
             default: null
         },
-        orderStatus: {
-            type: String,
-            default: null
-        },
         refundId: {
             type: String,
             default: null
@@ -257,17 +253,17 @@ export default {
         },
         refundReasonCode () {
             if (this.refundGoodsInfo.orderType !== this.orderTypeKeyMap.PHYSICAL_GOODS) return 'REASONREFUNDVIRTURALANDCLASS'
-            if (this.orderStatus === this.orderStatuskeyMap.WAIT_SHIP) return 'REASONBUYERPAID'
-            if (![this.orderStatuskeyMap.FINISHED, this.orderStatuskeyMap.WAIT_RECEIVE].includes(this.orderStatus)) return ''
+            if (this.refundGoodsInfo.orderStatus === this.orderStatuskeyMap.WAIT_SHIP) return 'REASONBUYERPAID'
+            if (![this.orderStatuskeyMap.FINISHED, this.orderStatuskeyMap.WAIT_RECEIVE].includes(this.refundGoodsInfo.orderStatus)) return ''
             if (this.form.refundType !== '1') return 'REASONSRECEIVEDGOODS'
-            if ([this.orderStatuskeyMap.WAIT_RECEIVE, this.orderStatuskeyMap.FINISHED].includes(this.orderStatus)) return 'REASONSRECEIVEDGOODS'
+            if ([this.orderStatuskeyMap.WAIT_RECEIVE, this.orderStatuskeyMap.FINISHED].includes(this.refundGoodsInfo.orderStatus)) return 'REASONSRECEIVEDGOODS'
             return 'REASONSNOTRECEIVEDGOODS'
         },
         // 实体订单 + 有运费 + 已发货(待收货/已完成) 运费不可退
         notNeedReturnFreight () {
             return this.refundGoodsInfo.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS &&
               this.refundGoodsInfo.freight &&
-              [this.orderStatuskeyMap.WAIT_RECEIVE, this.orderStatuskeyMap.FINISHED].includes(this.orderStatus)
+              [this.orderStatuskeyMap.WAIT_RECEIVE, this.orderStatuskeyMap.FINISHED].includes(this.refundGoodsInfo.orderStatus)
         }
     },
     async created () {

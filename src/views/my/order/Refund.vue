@@ -19,7 +19,7 @@
                     :class="$style.item"
                     tag="div"
                     replace
-                    :to="{ name: 'RefundApply', params: { orderId, orderStatus, refundType: '1', type: 'APPLY' } }"
+                    :to="{ name: 'RefundApply', params: { orderId, refundType: '1', type: 'APPLY' } }"
                 >
                     <div :class="$style.itemLeft">
                         <div :class="$style.itemTitle">
@@ -43,7 +43,7 @@
                     :class="$style.item"
                     tag="div"
                     replace
-                    :to="{ name: 'RefundApply', params: { orderId, orderStatus, refundType: '2', type: 'APPLY' } }"
+                    :to="{ name: 'RefundApply', params: { orderId, refundType: '2', type: 'APPLY' } }"
                 >
                     <div :class="$style.itemLeft">
                         <div :class="$style.itemTitle">
