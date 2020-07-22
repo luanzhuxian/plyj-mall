@@ -356,7 +356,7 @@
                 <div>
                     <span v-text="invoiceMap[invoiceModel.invoiceType].sub" />
                     <!--个人发票 - 取 收货人电话； 单位发票-取 纳税人识别号 -->
-                    <span v-text="invoiceModel.invoiceType === 1? invoiceModel.companyPhone : invoiceModel.taxpayerNumber" />
+                    <span v-text="invoiceModel.invoiceType === 0? invoiceModel.companyPhone : invoiceModel.taxpayerNumber" />
                 </div>
             </div>
         </div>
@@ -507,8 +507,8 @@ const suggestionMap = {
     WAIT_PAY_REPAYMENT: ''
 }
 const invoiceMap = {
-    1: { main: '个人', sub: '手机号：' },
-    2: { main: '单位', sub: '纳税人识别号：' }
+    0: { main: '个人', sub: '手机号：' },
+    1: { main: '单位', sub: '纳税人识别号：' }
 }
 
 export default {
