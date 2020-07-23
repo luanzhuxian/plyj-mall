@@ -101,15 +101,6 @@ export default {
         }
     },
     watch: {
-        // 首次打开跳转主会场
-        // isActivityAuth: {
-        //     handler (val) {
-        //         if (val === true && !this.$router.currentRoute.meta.from) {
-        //             window.myAssign(`/${ this.mallDomain }/activity`)
-        //         }
-        //     },
-        //     immediate: true
-        // }
     },
     async created () {
         try {
