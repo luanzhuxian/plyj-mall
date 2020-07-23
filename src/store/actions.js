@@ -39,6 +39,20 @@ const getWeixinURL = (appSecret, appId, componentAppid, search) => {
     }
     return openIdUrl
 }
+
+/**
+ * 处理链接search
+ * 可以处理链接中包含多个问号的情况
+ */
+const parseSearch = () => {
+    const searchArr = location.search.split('?')
+    let search = {}
+    for (const val of searchArr) {
+        search = { ...search, ...Qs.parse(val) }
+    }
+    return search
+}
+
 export default {
 
     /* 获取商城信息 */
@@ -62,7 +76,7 @@ export default {
             commit(type.SET_OPENID, { mallDomain, openId: OPEN_ID })
             return OPEN_ID
         }
-        const search = Qs.parse(location.search.substring(1)) || {}
+        const search = parseSearch()
         try {
             if (search.code) {
                 // 微信
@@ -93,7 +107,7 @@ export default {
                 commit(type.SET_TOKEN, loginInfo.result)
                 return loginInfo
             }
-            const search = Qs.parse(location.search.substring(1)) || {}
+            const search = parseSearch()
             delete search.code
             const { appSecret, componentAppid, appid } = state.mallInfo
             location.replace(getWeixinURL(appSecret, appid, componentAppid, search))
