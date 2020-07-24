@@ -188,7 +188,7 @@ import {
 } from '../../apis/broker-manager'
 import { hasValue, isPhone, isName } from '../../assets/js/validate'
 import { mapGetters } from 'vuex'
-import { REFRESH_TOKEN, USER_INFO } from '../../store/mutation-type'
+import { LOGIN, USER_INFO } from '../../store/mutation-type'
 
 const isCode = code => code.length === 4
 export default {
@@ -322,7 +322,7 @@ export default {
                     } else {
                         await AuditCreate(this.form)
                     }
-                    await this.$store.dispatch(REFRESH_TOKEN)
+                    await this.$store.dispatch(LOGIN)
                     this.$refs.getCode.finishCountDown()
                     this.$alert({
                         message: '提交成功',

@@ -4,7 +4,7 @@ import {
     getOpenId,
     getUserInfo,
     login,
-    refreshToken,
+    // refreshToken,
     getCartCount,
     userInfoSettings
 } from '../apis/base-api'
@@ -19,15 +19,14 @@ import {
 } from '../apis/broker-manager'
 import { getTemplate, getSkinStatus } from '../apis/home'
 import {
-    DelayExec,
+    // DelayExec,
     loadImage
     // promise
 } from '../assets/js/util'
 import { upload } from '../assets/js/upload-image'
-import Cookie from '../assets/js/storage-cookie'
+// import Cookie from '../assets/js/storage-cookie'
 import Qs from 'qs'
 import MessageBox from '../components/penglai-ui/message-box'
-const delay = new DelayExec(500)
 
 const getWeixinURL = (appSecret, appId, componentAppid, search) => {
     let openIdUrl = ''
@@ -143,24 +142,11 @@ export default {
             const { result } = await getUserInfo()
             commit(type.USER_INFO, result)
             await dispatch(type.ADDRESS_LIST)
-            localStorage.setItem('refresh_count', 0)
             // 替换微信头像文件地址
             dispatch(type.SAVE_WX_AVATAR, result.img)
-            // 如果用户头像是微信那边的，那就转存至ali-oss
-            if (result.img.indexOf('qlogo') > -1) {
-            }
             resolve(result)
         } catch (e) {
-            /*
-            * 获取用户信息失败,可能原因： token失效
-            * 所以不要第一时间抛错， 尝试刷新一次token，如果刷新失败，再抛错
-            * */
-            try {
-                await dispatch(type.REFRESH_TOKEN)
-                resolve(e)
-            } catch (e) {
-                reject(e)
-            }
+            throw e
         }
     }),
     [type.ADDRESS_LIST]: ({ commit }) => new Promise(async (resolve, reject) => {
@@ -172,37 +158,46 @@ export default {
             reject(e)
         }
     }),
-    [type.REFRESH_TOKEN]: ({ commit, state, dispatch }) => new Promise(async (resolve, reject) => {
-        const refreshCount = Number(sessionStorage.getItem('refresh_count') || 0)
-        const refresh_token = Cookie.get('refresh_token')
-        sessionStorage.setItem('refresh_count', String(refreshCount + 1))
-
-        // refresh_token 连续刷三次以上时，说明存在异常，退出重新登录
-        if (Number(refreshCount) > 3) {
-            sessionStorage.setItem('refresh_count', '0')
-            commit(type.LOG_OUT)
-            await dispatch(type.LOGIN)
-            return
-        }
-        try {
-            if (refresh_token) {
-                await delay.exec()
-                const { result } = await refreshToken(refresh_token)
-                commit(type.SET_TOKEN, result)
-                await dispatch(type.USER_INFO)
-                sessionStorage.setItem('refresh_count', 0)
-            } else {
-                commit(type.LOG_OUT)
-                await dispatch(type.LOGIN)
-            }
-            resolve()
-        } catch (e) {
-        // refresh_token失效
-            commit(type.LOG_OUT)
-            await dispatch(type.LOGIN)
-            reject(e)
-        }
-    }),
+    // [type.REFRESH_TOKEN]: ({ commit, state, dispatch }) => new Promise(async (resolve, reject) => {
+    //     const refreshCount = Number(sessionStorage.getItem('refresh_count') || 0)
+    //     const refresh_token = Cookie.get('refresh_token')
+    //     sessionStorage.setItem('refresh_count', String(refreshCount + 1))
+    //
+    //     // refresh_token 连续刷三次以上时，说明存在异常，退出重新登录
+    //     if (Number(refreshCount) > 3) {
+    //         sessionStorage.setItem('refresh_count', '0')
+    //         commit(type.LOG_OUT)
+    //         await dispatch(type.LOGIN)
+    //         return
+    //     }
+    //     try {
+    //         if (refresh_token) {
+    //             // const delay = new DelayExec(500)
+    //             // await delay.exec()
+    //             const { result } = await refreshToken(refresh_token)
+    //             commit(type.SET_TOKEN, result)
+    //             await dispatch(type.USER_INFO)
+    //             // sessionStorage.setItem('refresh_count', 0)
+    //         } else {
+    //             commit(type.LOG_OUT)
+    //             await dispatch(type.LOGIN)
+    //         }
+    //         resolve()
+    //     } catch (e) {
+    //         // refresh_token失效
+    //         commit(type.LOG_OUT)
+    //         try {
+    //             const SUCCESS = await dispatch(type.LOGIN)
+    //             if (SUCCESS) {
+    //                 resolve()
+    //             } else {
+    //                 reject(e)
+    //             }
+    //         } catch (e) {
+    //             reject(e)
+    //         }
+    //     }
+    // }),
     [type.GET_CART_COUNT]: ({ commit }) => new Promise(async (resolve, reject) => {
         try {
             const { result } = await getCartCount()
