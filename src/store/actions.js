@@ -30,11 +30,16 @@ import MessageBox from '../components/penglai-ui/message-box'
 
 const getWeixinURL = (appSecret, appId, componentAppid, search) => {
     let openIdUrl = ''
-    const href = `${ location.protocol }//${ location.host }${ location.pathname }`
-    if (appSecret) {
-        openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${ appId }&redirect_uri=${ href }?${ Qs.stringify(search) }&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
+    let href = ''
+    if (search) {
+        href = `${ location.protocol }//${ location.host }${ location.pathname }?${ Qs.stringify(search) }`
     } else {
-        openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${ appId }&redirect_uri=${ href }?${ Qs.stringify(search) }&response_type=code&scope=snsapi_userinfo&state=STATE&component_appid=${ componentAppid }#wechat_redirect`
+        href = `${ location.protocol }//${ location.host }${ location.pathname }`
+    }
+    if (appSecret) {
+        openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${ appId }&redirect_uri=${ href }&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`
+    } else {
+        openIdUrl = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${ appId }&redirect_uri=${ href }&response_type=code&scope=snsapi_userinfo&state=STATE&component_appid=${ componentAppid }#wechat_redirect`
     }
     return openIdUrl
 }
@@ -137,18 +142,18 @@ export default {
             console.error(`转存微信头像失败：${ e.message }`)
         }
     },
-    [type.USER_INFO]: ({ commit, dispatch, getters }) => new Promise(async (resolve, reject) => {
+    [type.USER_INFO]: async ({ state, commit, dispatch, getters }) => {
         try {
             const { result } = await getUserInfo()
             commit(type.USER_INFO, result)
             await dispatch(type.ADDRESS_LIST)
             // 替换微信头像文件地址
             dispatch(type.SAVE_WX_AVATAR, result.img)
-            resolve(result)
+            return result
         } catch (e) {
             throw e
         }
-    }),
+    },
     [type.ADDRESS_LIST]: ({ commit }) => new Promise(async (resolve, reject) => {
         try {
             const { result } = await getAddress()

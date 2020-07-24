@@ -116,20 +116,20 @@ const render = () => {
 const init = async () => {
     // 切换了商城之后，清空所有登录数据
     const mallDomain = window.location.pathname.split('/')[1]
-    const localOpengId = localStorage.getItem(`openId_${ mallDomain }`)
-    const token = Cookie.get('token')
-    // 用户切换商城的时候，清空所有登录认证信息
-    if (!localOpengId) {
-        localStorage.clear()
-        sessionStorage.clear()
+    const preMallDomain = localStorage.getItem('CURRENT_MALL')
+    if (preMallDomain !== mallDomain) {
+        localStorage.setItem('CURRENT_MALL', mallDomain)
+        Cookie.remove('token')
+        Cookie.remove('refresh_token')
+        Cookie.remove('mallId')
+        Cookie.remove('agencyCode')
     }
+    const token = Cookie.get('token')
     await store.dispatch(GET_MALL_INFO)
     if (!token) {
-        const SUCCESS = await store.dispatch(LOGIN)
-        if (!SUCCESS) return
+        await store.dispatch(LOGIN)
     }
     await store.dispatch(USER_INFO)
     render()
 }
-
 init()
