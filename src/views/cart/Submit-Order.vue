@@ -230,8 +230,18 @@ export default {
         params () {
             return this['submitOrder/orderProducts'].params || { activityId: '', preActivity: '', activeProduct: '1' }
         },
+        // 知识课程包含的类型
+        knowlegeCourseType () {
+            const {
+                KNOWLEDGE_COURSE,
+                SERIES_OF_COURSE,
+                GRAPHIC_DATA
+            } = this.orderTypeKeyMap
+            return [KNOWLEDGE_COURSE, SERIES_OF_COURSE, GRAPHIC_DATA]
+        },
+        // 商品中是否包含线上知识课程
         hasKnowlegeCourse () {
-            return this.form.skus.some(item => [this.orderTypeKeyMap.KNOWLEDGE_COURSE, this.orderTypeKeyMap.SERIES_OF_COURSE].includes(item.goodsType))
+            return this.form.skus.some(item => this.knowlegeCourseType.includes(item.goodsType))
         }
     },
     watch: {
