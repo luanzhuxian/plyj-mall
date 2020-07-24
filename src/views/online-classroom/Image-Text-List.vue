@@ -96,7 +96,6 @@ export default {
         return {
             form: {
                 categoryId: '',
-                subCategoryId: '',
                 current: 1,
                 size: 10
             },
@@ -110,7 +109,6 @@ export default {
     },
     async mounted () {
         try {
-            this.form.categoryId = this.parentCategory
             this.$refresh = this.$refs.loadMore.refresh
             await this.getServerTime()
             if (!this.courseList.length) {
@@ -133,7 +131,7 @@ export default {
         async classifyChanged (item) {
             try {
                 this.form.current = 1
-                this.form.subCategoryId = item.id
+                this.form.categoryId = item.id
                 this.$refresh()
             } catch (e) {
                 throw e
