@@ -75,6 +75,9 @@ export default {
     // 获取openid并登录
     [type.GET_OPENID]: async ({ commit, dispatch, state }) => {
         const { appSecret, mallDomain, componentAppid, appid: appId } = state.mallInfo
+        if (!appId) {
+            throw new Error('商城还未授权给雅集')
+        }
         const OPEN_ID = localStorage.getItem(`openId_${ mallDomain }`) || ''
         if (OPEN_ID) {
             commit(type.SET_OPENID, { mallDomain, openId: OPEN_ID })

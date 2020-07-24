@@ -17,6 +17,7 @@ import './assets/css/quill.css'
 import './assets/css/fonts.css'
 import PlSvg from './components/common/Pl-Svg.vue'
 import MallQRCodeModal from './components/common/qrcode-modal'
+import MessageBox from './components/penglai-ui/message-box'
 // import { errorlog } from './apis/base-api'
 
 import * as Sentry from '@sentry/browser'
@@ -124,12 +125,27 @@ const init = async () => {
         Cookie.remove('mallId')
         Cookie.remove('agencyCode')
     }
-    const token = Cookie.get('token')
-    await store.dispatch(GET_MALL_INFO)
-    if (!token) {
-        await store.dispatch(LOGIN)
+    try {
+        const token = Cookie.get('token')
+        await store.dispatch(GET_MALL_INFO)
+        if (!token) {
+            const SUCCESS = await store.dispatch(LOGIN)
+            if (!SUCCESS) return
+        }
+        await store.dispatch(USER_INFO)
+        render()
+    } catch (err) {
+        if (err && err.name === 'ResponseError') {
+            // 响应出错
+            const error = JSON.parse(err.message)
+            MessageBox.alert(error.message)
+                .then(() => {})
+                .catch(() => {})
+        } else {
+            MessageBox.alert(err.message)
+                .then(() => {})
+                .catch(() => {})
+        }
     }
-    await store.dispatch(USER_INFO)
-    render()
 }
 init()
