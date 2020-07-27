@@ -105,7 +105,7 @@ export default {
             type: String,
             default: ''
         },
-        // 退换货类型 1:仅退款 2:退款退货
+        // 退换货类型 1:仅退款 2:退货退款
         refundType: {
             type: Number,
             default: 0

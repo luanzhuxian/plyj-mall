@@ -32,7 +32,7 @@
             </div>
         </section>
 
-        <!--实体订单,退款退货 + 待退货 填写物流信息, 由后台决定，待退货状态则显示-->
+        <!--实体订单,退货退款 + 待退货 填写物流信息, 由后台决定，待退货状态则显示-->
         <section
             v-if="refundDetail.auditStatus === 2 && refundStatus === 1"
             :class="[$style.panel, $style.expressInfoPanel]"
@@ -85,7 +85,7 @@
                 <!-- 4:待退款 5:退款中 6:退款成功-->
                 <div v-if="[4, 5, 6].includes(refundStatus)" :class="$style.tips">
                     <div>退款返还您的实际付款金额，优惠劵、红包(奖学金)将不予退回</div>
-                    <div>退款到帐时间，请查看您的付款账户</div>
+                    <div>退款到账时间，请查看您的付款账户</div>
                 </div>
             </div>
             <div :class="$style.bottom">
@@ -157,7 +157,7 @@
             </div>
         </div>
 
-        <!--退款退货1 + 待退货1 填写物流信息 后确认按钮-->
+        <!--退货退款1 + 待退货1 填写物流信息 后确认按钮-->
         <div v-if="refundDetail.auditStatus === 2 && refundStatus === 1" :class="$style.footerSubmit">
             <pl-button size="larger" type="warning" :loading="loading" :disabled="loading" @click="submit">
                 提交申请
@@ -271,7 +271,7 @@ export default {
             isPickerShow: false,
             // 1: 待退货 2:待收货 3:退货完成 4:待退款 5:退款中 6:退款成功 7:退款失败
             refundStatus: '',
-            // 1:仅退款 2:退款退货
+            // 1:仅退款 2:退货退款
             refundType: '',
             // 退换货详情
             refundDetail: {

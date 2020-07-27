@@ -186,7 +186,7 @@ export default {
             type: String,
             default: 'APPLY'
         },
-        // 1: '退款', 2: '退款退货'
+        // 1: '退款', 2: '退货退款'
         refundType: {
             type: [String, Number],
             default: null
@@ -226,7 +226,7 @@ export default {
             form: {
                 // 原订单id
                 orderId: '',
-                // 服务类型 1-仅退款 2-退款退货
+                // 服务类型 1-仅退款 2-退货退款
                 type: '',
                 // 退款原因
                 reasonForReturn: '',
@@ -242,12 +242,12 @@ export default {
     computed: {
         ...mapGetters(['refundTypeMap', 'refundGoodsInfo', 'orderTypeKeyMap', 'orderStatuskeyMap']),
         localRefundTypeMap () {
-            // 只有实体商品 可 退款退货
+            // 只有实体商品 可 退货退款
             const refundTypeMap = {
                 1: '仅退款'
             }
             if (this.refundGoodsInfo.orderType === this.orderTypeKeyMap.PHYSICAL_GOODS) {
-                refundTypeMap[2] = '退款退货'
+                refundTypeMap[2] = '退货退款'
             }
             return refundTypeMap
         },
@@ -281,7 +281,7 @@ export default {
             this.form = {
                 // 原订单id
                 orderId: this.orderId,
-                // 服务类型 1-仅退款 2-退款退货
+                // 服务类型 1-仅退款 2-退货退款
                 type,
                 // 退款原因
                 reasonForReturn,

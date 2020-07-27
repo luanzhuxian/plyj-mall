@@ -14,7 +14,7 @@
 
         <section :class="$style.content">
             <div :class="$style.panel">
-                <!--实体商品一直有退款退货两种状态；虚拟只支持仅退款-->
+                <!--实体商品一直有退货退款两种状态；虚拟只支持仅退款-->
                 <router-link
                     :class="$style.item"
                     tag="div"
@@ -47,7 +47,7 @@
                 >
                     <div :class="$style.itemLeft">
                         <div :class="$style.itemTitle">
-                            退款退货
+                            退货退款
                         </div>
                         <div>
                             已收到货，需要退换所收到的商品，商家收到商品后
