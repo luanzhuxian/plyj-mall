@@ -1,7 +1,8 @@
 <template>
     <div
         :class="{
-            [$style.onlineClassroom]: true
+            [$style.onlineClassroom]: true,
+            [$style.noCategory]: !category.length
         }"
     >
         <CategorySelector
@@ -174,6 +175,9 @@ export default {
         background-color: #fff;
         > .content {
             padding: 0 20px 20px 20px;
+        }
+        &.no-category {
+            margin-top: 28px;
         }
     }
     .course-list {

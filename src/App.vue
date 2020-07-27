@@ -84,6 +84,7 @@ export default {
                 'InviteNewcomers',
                 'SpringPloughing',
                 'OnlineClassroom',
+                'ImageTextList',
                 'InteractiveLive',
                 'seriesOfCourses'
             ]

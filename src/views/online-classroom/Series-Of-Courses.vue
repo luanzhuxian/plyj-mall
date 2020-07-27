@@ -1,5 +1,10 @@
 <template>
-    <div :class="$style.onlineClassroom">
+    <div
+        :class="{
+            [$style.onlineClassroom]: true,
+            [$style.noCategory]: !category.length
+        }"
+    >
         <CategorySelector
             :category="category"
             @change="classifyChanged"
@@ -179,6 +184,9 @@ export default {
         padding: 20px;
         min-height: 50vh;
         background-color: #fff;
+        &.no-category {
+            margin-top: 28px;
+        }
     }
 
     .course-item {
