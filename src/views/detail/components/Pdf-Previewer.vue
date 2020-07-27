@@ -70,7 +70,7 @@ export default {
                         throw error
                     }
                 } else {
-                    this.close()
+                    this.clear()
                 }
             },
             immediate: true
@@ -301,15 +301,18 @@ export default {
             this.swipe(next)
         },
         clear () {
+            this.current = 1
+            this.lastRenderedPage = 0
+            this.total = 0
             this.file = null
             this.pages = []
             this.loaded = false
             this.isRendering = false
-            this.total = 0
-            this.current = 1
-            this.lastRenderedPage = 0
         },
         close () {
+            // 渲染完才能关闭
+            if (this.isRendering) return
+
             this.clear()
             this.$emit('update:show', false)
         }
