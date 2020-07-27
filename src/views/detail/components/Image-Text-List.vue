@@ -8,6 +8,7 @@
             </p>
             <button :class="$style.imageTextListButton">
                 <template v-if="isBought">
+                    <!-- ios用a标签预览pdf，android采用预览组件 -->
                     <a v-if="isIos" :href="item.url" :class="$style.highlight">打开资料</a>
                     <span v-else :class="$style.highlight" @click="handleClick(index)">打开资料</span>
                 </template>

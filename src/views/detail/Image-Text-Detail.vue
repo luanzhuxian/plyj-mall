@@ -105,13 +105,14 @@
                     </a>
                 </div>
                 <div :class="$style.buttons">
+                    <!-- ios用a标签预览pdf，android采用预览组件 -->
                     <template v-if="isBought">
                         <a
                             v-if="isIOS"
                             :class="$style.button + ' ' + $style.yellow"
                             :href="detail.graphicPdfs.length ? detail.graphicPdfs[0].url : 'javascript:void(0);'"
                         >
-                            打开资料
+                            查看资料
                         </a>
                         <button
                             v-else
