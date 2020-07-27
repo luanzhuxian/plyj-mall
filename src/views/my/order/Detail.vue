@@ -348,12 +348,12 @@
             <div v-if="detail.invoiceId && voidInvoice === 0">
                 <div>
                     <span :class="$style.type" v-text="invoiceMap[invoiceModel.invoiceType].main" />
-                    <span :class="$style.name" v-text="invoiceModel.invoiceTitle" />
+                    <span :class="$style.name" v-text="invoiceModel.recvName" />
                 </div>
                 <div>
                     <span v-text="invoiceMap[invoiceModel.invoiceType].sub" />
                     <!--个人发票 - 取 收货人电话； 单位发票-取 纳税人识别号 -->
-                    <span v-text="invoiceModel.invoiceType === 0? invoiceModel.companyPhone : invoiceModel.taxpayerNumber" />
+                    <span v-text="invoiceModel.invoiceType === 0? invoiceModel.recvMobile : invoiceModel.taxpayerNumber" />
                 </div>
             </div>
             <div :class="$style.title" v-else-if="!detail.invoiceId">
