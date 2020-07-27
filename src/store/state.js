@@ -8,6 +8,8 @@ export default {
         noticeStatus: '',
         status: ''
     },
+    // 是否登录成功
+    LOGIN_SUCCESS: false,
     userInfo: {
         isAgentUser: false,
         // 已申请润笔

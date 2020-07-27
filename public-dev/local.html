@@ -3,24 +3,24 @@
 <head>
     <script>
         (function () {
-            var search = location.search;
-            var myAssign = function (url) {
-                var search = url.split('?')[1] || '';
-                var path = url.split('?')[0];
-                if (search) {
-                    search += '&random=' + Date.now();
-                    search = '?' + search;
-                } else {
-                    search = '?random=' + Date.now();
-                }
-                path += search;
-                location.assign(path);
-            }
-            if (search.indexOf('random') === -1) {
-                myAssign(location.href);
-                return
-            }
-            window.myAssign = myAssign;
+            // var search = location.search;
+            // var myAssign = function (url) {
+            //     var search = url.split('?')[1] || '';
+            //     var path = url.split('?')[0];
+            //     if (search) {
+            //         search += '&random=' + Date.now();
+            //         search = '?' + search;
+            //     } else {
+            //         search = '?random=' + Date.now();
+            //     }
+            //     path += search;
+            //     location.assign(path);
+            // }
+            // if (search.indexOf('random') === -1) {
+            //     myAssign(location.href);
+            //     return
+            // }
+            // window.myAssign = myAssign;
             var devicePixelRatio = window.devicePixelRatio;
             var initialScale = 1 / devicePixelRatio;
             var maximumScale = 1 / devicePixelRatio;
@@ -33,7 +33,7 @@
     </script>
 
     <script>
-        // localStorage.setItem('openId_pljs', 'oEV5S0TEXD9jXfXS6AN8YAdbnYfk');
+        localStorage.setItem('openId_pljs', 'oEV5S0TEXD9jXfXS6AN8YAdbnYfk');
         // localStorage.setItem('openId_pljs', 'oEV5S0bs8SF6o0UOrihFc0Gq56Vg');
         // localStorage.setItem('openId_pljs', 'oEV5S0Tdcb_gm2gamf_k682f5alU'); // Leon
         localStorage.setItem('openId_pljs', 'oEV5S0Tw8WWd5IqI9ZiTPQqC0OaM'); // echo

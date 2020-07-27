@@ -41,7 +41,7 @@ export const getActivityInfo = activityId => axios.get(`/apis/v1/invitingEvents/
  */
 export const getClaimGiftList = activityId => axios.get(`/apis/v1/invitingEvents/page/claimGift/baseInfo`, { params: { activityId } })
 
-export const getUserInfo = userId => axios.post(`/apis/v1/mallActivitys/${ userId }/info`)
+// export const getUserInfo = userId => axios.post(`/apis/v1/mallActivitys/${ userId }/info`)
 
 /**
  * 发放礼物的数量
