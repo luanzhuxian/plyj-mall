@@ -29,7 +29,7 @@
                         <div :class="$style.info">
                             <div :class="$style.top" v-text="item.goodsInfo.graphicName" />
                             <div :class="$style.middle" v-if="item.goodsInfo.author">
-                                {{ `主讲人：${item.goodsInfo.author}` }}
+                                {{ `作者：${item.goodsInfo.author}` }}
                             </div>
                             <div :class="$style.bottom">
                                 <span

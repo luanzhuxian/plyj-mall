@@ -35,7 +35,7 @@
                         <div :class="$style.original">
                             <template v-if="detail.priceType === 1">
                                 <div v-if="detail.isGive" class="mr-30">
-                                    售价：<span v-text="detail.sellingPrice" />
+                                    售价：<del v-text="detail.sellingPrice" />
                                 </div>
                                 <div v-else-if="detail.originalPrice && detail.originalPrice !== detail.sellingPrice" class="mr-30">
                                     原价：<del v-text="detail.originalPrice" />
