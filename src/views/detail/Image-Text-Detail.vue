@@ -77,9 +77,6 @@
                         v-show="tab === 2"
                         :data="detail.graphicPdfs || []"
                         :is-bought="isBought"
-                        :is-study="Boolean(detail.isStudy)"
-                        :is-ios="isIOS"
-                        :product-id="detail.id"
                         @preview="previewPdf"
                     />
                 </Tabs>
@@ -105,17 +102,16 @@
                     </a>
                 </div>
                 <div :class="$style.buttons">
-                    <!-- ios用a标签预览pdf，android采用预览组件 -->
                     <template v-if="isBought">
-                        <a
+                        <!-- ios用a标签预览pdf，android采用预览组件 -->
+                        <!-- <a
                             v-if="isIOS"
                             :class="$style.button + ' ' + $style.yellow"
                             :href="detail.graphicPdfs.length ? detail.graphicPdfs[0].url : 'javascript:void(0);'"
                         >
                             查看资料
-                        </a>
+                        </a> -->
                         <button
-                            v-else
                             :class="$style.button + ' ' + $style.yellow"
                             :disabled="loading"
                             @click="previewPdf(0)"
@@ -179,7 +175,7 @@ import ImageTextList from './components/Image-Text-List.vue'
 import PdfPreviewer from './components/Pdf-Previewer.vue'
 import Skeleton from './components/Skeleton.vue'
 import share from '../../assets/js/wechat/wechat-share'
-import { getImageTextDetail } from '../../apis/product'
+import { getImageTextDetail, markImageTextStudy } from '../../apis/product'
 import {
     isIOS
 } from '../../assets/js/util'
@@ -228,8 +224,7 @@ export default {
             shareUrl: '',
             // pdf预览
             isPreviewerShow: false,
-            pdfUrl: '',
-            isIOS: isIOS()
+            pdfUrl: ''
         }
     },
     props: {
@@ -464,15 +459,30 @@ export default {
             }
         },
         async previewPdf (index) {
-            const { graphicPdfs = [] } = this.detail
+            const { id, isStudy, graphicPdfs = [] } = this.detail
             const pdf = graphicPdfs[index]
 
             if (!pdf || !pdf.url) {
                 return false
             }
 
-            this.pdfUrl = pdf.url
-            this.isPreviewerShow = true
+            if (!isStudy) {
+                try {
+                    await markImageTextStudy(id)
+                } catch (e) {
+                    throw e
+                }
+            }
+
+            // ios用a标签预览pdf，android用预览组件
+            if (isIOS()) {
+                const a = document.createElement('a')
+                a.href = pdf.url
+                a.click()
+            } else {
+                this.pdfUrl = pdf.url
+                this.isPreviewerShow = true
+            }
         }
     }
 }
