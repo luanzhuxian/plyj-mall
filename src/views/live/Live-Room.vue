@@ -1099,13 +1099,29 @@ export default {
                     this.$success('支付成功')
                     this.submiting = false
                     this.needPay = false
-                } else if (this.detail.paidAmount === 0) {
+
+                    // 支付成功，请求直播信息
+                    await this.handleByLiveType()
+                    await this.init()
+                    this.$success('付款成功立即观看')
+                    await this.setComeInConut(1)
+
+                    return
+                }
+                if (this.detail.paidAmount === 0) {
                     this.$success('支付成功')
                     this.submiting = false
                     this.needPay = false
-                } else {
-                    throw new Error('支付失败')
+
+                    // 支付成功，请求直播信息
+                    await this.handleByLiveType()
+                    await this.init()
+                    this.$success('付款成功立即观看')
+                    await this.setComeInConut(1)
+
+                    return
                 }
+                throw new Error('支付失败')
             } catch (e) {
                 throw e
             }
