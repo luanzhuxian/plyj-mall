@@ -418,20 +418,30 @@ export default {
               if(!this.receiveInfo.city) return this.$warning('请选择区域')
               if(!this.receiveInfo.address) return this.$warning('请填写详细地址')
             }
-            const receiveInfo = this.receiveInfo
+            const { mailingMethod, mobile, city, address} = this.receiveInfo
             let invoiceModel = null
-            let invoiceAmount = 0
-            const orderDetails = []
             if (this.type === 1) {
-                // 个人发票
-                invoiceModel = {
-                    invoiceType: 1,
-                    mailingMethod: receiveInfo.mailingMethod,
-                    invoiceTitle: this.personalInfo.name,
-                    receiverMobile: receiveInfo.mailingMethod === 0 ? receiveInfo.mobile : this.personalInfo.mobile,
-                    userAddress: receiveInfo.mailingMethod === 0 ? `${ receiveInfo.city }${ receiveInfo.address }` : ''
-                }
-            } else {
+              // 个人发票
+              invoiceModel = {
+                // 发票类型0：个人发票 1：企业增值税普票 2：企业增值税专票：
+                invoiceType: 0,
+                // 发票抬头
+                invoiceTitle: this.personalInfo.name,
+                // 纳税人识别号
+                taxpayerNumber: '',
+                // 公司电话, 注：个人电话也放入此
+                companyPhone: this.personalInfo.mobile,
+                // 邮寄方式：0邮寄，1自提
+                mailingMethod: mailingMethod,
+                // 收货人姓名
+                recvName: mailingMethod === 0 ? this.personalInfo.name : '',
+                // 收货人手机号
+                recvMobile: mailingMethod === 0 ? mobile : '',
+                // 收货地址
+                recvAddr: mailingMethod === 0 ? `${city}${address}` : ''
+              }
+            }
+            if (this.type === 2) {
                 // 单位发票
                 if (this.currentInvoice) {
                     this.form.tin = this.currentInvoice.tin
@@ -439,12 +449,22 @@ export default {
                 }
                 if (!this.$refs.form.validate()) return
                 invoiceModel = {
-                    invoiceType: 2,
-                    tin: this.form.tin,
-                    invoiceTitle: this.form.firmName,
-                    receiverMobile: receiveInfo.mailingMethod === 0 ? receiveInfo.mobile : this.defaultMobile,
-                    mailingMethod: receiveInfo.mailingMethod,
-                    userAddress: receiveInfo.mailingMethod === 0 ? `${ receiveInfo.city }${ receiveInfo.address }` : ''
+                  // 发票类型0：个人发票 1：企业增值税普票 2：企业增值税专票：
+                  invoiceType: 1,
+                  // 发票抬头
+                  invoiceTitle: this.form.firmName,
+                  // 纳税人识别号
+                  taxpayerNumber: this.form.tin,
+                  // 公司电话
+                  companyPhone: mobile,
+                  // 邮寄方式：0邮寄，1自提
+                  mailingMethod: mailingMethod,
+                  // 收货人姓名
+                  recvName: mailingMethod === 0 ? this.form.firmName : '',
+                  // 收货人手机号
+                  recvMobile: mailingMethod === 0 ? mobile : '',
+                  // 收货地址
+                  recvAddr: mailingMethod === 0 ? `${city}${address}` : ''
                 }
                 // 一个发票都没有，把填的发票保存起来
                 if (!this.currentInvoice || !this.currentInvoice.id) {
@@ -456,47 +476,28 @@ export default {
                 }
             }
 
-            for (const prod of this.checkedList) {
-                invoiceAmount += Number(prod.amount) * 100
-                orderDetails.push({
-                    goodsId: prod.goodsId,
-                    goodsType: prod.goodsType,
-                    count: prod.count,
-                    sku1: prod.sku1,
-                    sku2: prod.sku2
-                })
-            }
-            invoiceModel.orderDetails = orderDetails
-            invoiceModel.invoiceAmount = invoiceAmount / 100
-
             if (this.orderId) {
                 // 二次申请发票
                 try {
                     this.loading = true
-                    let params = {
-                      orderIds: [this.orderId],
-                      // invoiceType与当前发票类型不同， 原 1-个人 2-单位  现 0-个人 1-单位
-                      invoiceType: invoiceModel.invoiceType === 1? 0 : 1,
-                      invoiceTitle: invoiceModel.invoiceTitle,
-                      taxpayerNumber: this.type === 2 ? this.form.tin : '',
-                      companyAddr: invoiceModel.userAddress,
-                      companyPhone: invoiceModel.receiverMobile,
-                      mailingMethod: invoiceModel.mailingMethod,
-                      recvName: invoiceModel.invoiceTitle,
-                      recvMobile: invoiceModel.receiverMobile,
-                      recvAddr: invoiceModel.userAddress
-                    }
-                    await applyInvoice(params)
+                    await applyInvoice({...invoiceModel, orderIds: [this.orderId]})
                 } catch (e) {
                     throw e
                 } finally {
                     this.loading = false
                 }
             } else {
-                const params = { ...invoiceModel }
-                params.invoiceType = invoiceModel.invoiceType === 1? 0 : 1
-                params.companyPhone = invoiceModel.receiverMobile,
-                this.$store.commit('submitOrder/setInvoiceInfo', params)
+                const skus = []
+                for (const prod of this.checkedList) {
+                  skus.push({
+                    goodsId: prod.goodsId,
+                    goodsType: prod.goodsType,
+                    count: prod.count,
+                    sku1: prod.sku1,
+                    sku2: prod.sku2
+                  })
+                }
+                this.$store.commit('submitOrder/setInvoiceInfo', {...invoiceModel, skus })
             }
 
             const APPLY_INVOICE_FROM = this['submitOrder/invoiceFromRoute']

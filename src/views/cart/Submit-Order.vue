@@ -546,18 +546,7 @@ export default {
 
         // 选择了发票
         invoiceSelected (data) {
-            this.form.invoiceInfoModel = data ? {
-                skus: data.orderDetails,
-                invoiceType: data.invoiceType,
-                invoiceTitle: data.invoiceTitle,
-                taxpayerNumber: data.tin,
-                companyAddr: data.userAddress,
-                companyPhone: data.receiverMobile,
-                mailingMethod: data.mailingMethod,
-                recvName: data.invoiceTitle,
-                recvMobile: data.receiverMobile,
-                recvAddr: data.userAddress
-            } : null
+            this.form.invoiceInfoModel = data ? { ...data } : null
         },
         // 若商品实付款金额,因奖学金/品类券为0,发票中不能给该商品开发票
         checkInvoiceSelected (form) {
