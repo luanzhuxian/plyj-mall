@@ -9,8 +9,8 @@
             <button :class="$style.imageTextListButton">
                 <template v-if="isBought">
                     <!-- ios用a标签预览pdf，android采用预览组件 -->
-                    <a v-if="isIos" :href="item.url" :class="$style.highlight">打开资料</a>
-                    <span v-else :class="$style.highlight" @click="handleClick(index)">打开资料</span>
+                    <!--<a  v-if="isIos" :href="item.url" :class="$style.highlight">打开资料</a>-->
+                    <span :class="$style.highlight" @click="handleClick(index, item)">打开资料</span>
                 </template>
                 <span v-else>购买后可查看</span>
             </button>
@@ -20,6 +20,7 @@
 
 <script>
 import { markImageTextStudy } from '../../../apis/product'
+import { isIOS } from '../../../assets/js/util'
 
 export default {
     name: 'ImageTextList',
@@ -33,21 +34,26 @@ export default {
             default: ''
         },
         isStudy: Boolean,
-        isBought: Boolean,
-        isIos: Boolean
+        isBought: Boolean
     },
     data () {
         return {}
     },
     methods: {
-        async handleClick (index) {
-            this.$emit('preview', index)
+        async handleClick (index, item) {
             if (!this.isStudy) {
                 try {
                     await markImageTextStudy(this.productId)
                 } catch (e) {
                     throw e
                 }
+            }
+            if (isIOS()) {
+                const a = document.createElement('a')
+                a.href = item.url
+                a.click()
+            } else {
+                this.$emit('preview', index)
             }
         }
     }
