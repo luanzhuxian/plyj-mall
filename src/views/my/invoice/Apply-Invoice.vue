@@ -142,6 +142,9 @@
                     <pl-radio v-if="hasPhysicalGoods()" v-model="receiveInfo.mailingMethod" align="flex-start" inline :label="0">邮寄</pl-radio>
                 </pl-form-item>
                 <template v-if="receiveInfo.mailingMethod === 0">
+                    <pl-form-item label="收票人姓名">
+                        <pl-input v-model="receiveInfo.userName" placeholder="收票人姓名" />
+                    </pl-form-item>
                     <pl-form-item label="联系电话">
                         <pl-input v-model="receiveInfo.mobile" placeholder="联系电话" />
                     </pl-form-item>
@@ -292,6 +295,7 @@ export default {
             },
             // 收票方式
             receiveInfo: {
+                userName: '',
                 mobile: '',
                 city: '',
                 address: '',
@@ -345,6 +349,7 @@ export default {
           this.receiveInfo.mailingMethod = this.checkedList && this.checkedList[0] && this.checkedList[0].goodsType === this.orderTypeKeyMap.PHYSICAL_GOODS ? 0 : 1
           this.applyInvoice = APPLY_INVOICE
           // 设置默认邮寄信息
+          this.receiveInfo.userName = this.receiveName || this.realName
           this.receiveInfo.mobile = this.mobile || this.receiveMobile
           this.receiveInfo.city = this.selectedAddress.addressPrefix
           this.receiveInfo.address = this.selectedAddress.agencyAddress
@@ -414,11 +419,12 @@ export default {
             }
             // 选择邮寄时,以下内容必填
             if(this.receiveInfo.mailingMethod === 0){
+              if(!this.receiveInfo.userName) return this.$warning('请填写收票人姓名')
               if(!this.receiveInfo.mobile) return this.$warning('请填写联系电话')
               if(!this.receiveInfo.city) return this.$warning('请选择区域')
               if(!this.receiveInfo.address) return this.$warning('请填写详细地址')
             }
-            const { mailingMethod, mobile, city, address} = this.receiveInfo
+            const { userName, mailingMethod, mobile, city, address} = this.receiveInfo
             let invoiceModel = null
             if (this.type === 1) {
               // 个人发票
@@ -434,7 +440,7 @@ export default {
                 // 邮寄方式：0邮寄，1自提
                 mailingMethod: mailingMethod,
                 // 收货人姓名
-                recvName: mailingMethod === 0 ? this.personalInfo.name : '',
+                recvName: mailingMethod === 0 ? userName : '',
                 // 收货人手机号
                 recvMobile: mailingMethod === 0 ? mobile : '',
                 // 收货地址
@@ -460,7 +466,7 @@ export default {
                   // 邮寄方式：0邮寄，1自提
                   mailingMethod: mailingMethod,
                   // 收货人姓名
-                  recvName: mailingMethod === 0 ? this.form.firmName : '',
+                  recvName: mailingMethod === 0 ? userName : '',
                   // 收货人手机号
                   recvMobile: mailingMethod === 0 ? mobile : '',
                   // 收货地址
