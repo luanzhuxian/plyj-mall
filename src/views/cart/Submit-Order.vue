@@ -547,12 +547,15 @@ export default {
         // 选择了发票
         invoiceSelected (data) {
             this.form.invoiceInfoModel = data ? {
-                recvName: data.invoiceTitle,
-                invoiceType: data.invoiceType,
-                taxpayerNumber: data.tin,
                 skus: data.orderDetails,
-                recvMobile: data.receiverMobile,
+                invoiceType: data.invoiceType,
+                invoiceTitle: data.invoiceTitle,
+                taxpayerNumber: data.tin,
+                companyAddr: data.userAddress,
+                companyPhone: data.receiverMobile,
                 mailingMethod: data.mailingMethod,
+                recvName: data.invoiceTitle,
+                recvMobile: data.receiverMobile,
                 recvAddr: data.userAddress
             } : null
         },

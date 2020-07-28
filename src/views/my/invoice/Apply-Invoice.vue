@@ -137,11 +137,11 @@
         <div :class="$style.receiveInfo">
             <pl-form>
                 <pl-form-item label="收票方式">
-                    <pl-radio v-model="receiveInfo.mailingMethod" align="flex-start" inline :label="0">自提</pl-radio>
+                    <pl-radio v-model="receiveInfo.mailingMethod" align="flex-start" inline :label="1">自提</pl-radio>
                     <!--当前订单列表中若没有实体商品,不支持邮寄-->
-                    <pl-radio v-if="hasPhysicalGoods()" v-model="receiveInfo.mailingMethod" align="flex-start" inline :label="1">邮寄</pl-radio>
+                    <pl-radio v-if="hasPhysicalGoods()" v-model="receiveInfo.mailingMethod" align="flex-start" inline :label="0">邮寄</pl-radio>
                 </pl-form-item>
-                <template v-if="receiveInfo.mailingMethod === 1">
+                <template v-if="receiveInfo.mailingMethod === 0">
                     <pl-form-item label="联系电话">
                         <pl-input v-model="receiveInfo.mobile" placeholder="联系电话" />
                     </pl-form-item>
@@ -295,7 +295,7 @@ export default {
                 mobile: '',
                 city: '',
                 address: '',
-                mailingMethod: 0 // 0-自提 1-邮寄
+                mailingMethod: 1 //  0-邮寄 1-自提
             },
             rules: {
                 firmName: [{ required: true, message: '请输入单位名称', trigger: 'blur' }],
@@ -342,7 +342,7 @@ export default {
           }
           this.checkedList = [...APPLY_INVOICE]
           // 根据开具发票的第一个商品决定，第一个实体-默认邮寄 + 虚拟-自提
-          this.receiveInfo.mailingMethod = this.checkedList && this.checkedList[0] && this.checkedList[0].goodsType === this.orderTypeKeyMap.PHYSICAL_GOODS ? 1 : 0
+          this.receiveInfo.mailingMethod = this.checkedList && this.checkedList[0] && this.checkedList[0].goodsType === this.orderTypeKeyMap.PHYSICAL_GOODS ? 0 : 1
           this.applyInvoice = APPLY_INVOICE
           // 设置默认邮寄信息
           this.receiveInfo.mobile = this.mobile || this.receiveMobile
@@ -413,7 +413,7 @@ export default {
               if(!this.form.tin && !this.currentInvoice.tin) return this.$warning('请输入纳税人识别号')
             }
             // 选择邮寄时,以下内容必填
-            if(this.receiveInfo.mailingMethod === 1){
+            if(this.receiveInfo.mailingMethod === 0){
               if(!this.receiveInfo.mobile) return this.$warning('请填写联系电话')
               if(!this.receiveInfo.city) return this.$warning('请选择区域')
               if(!this.receiveInfo.address) return this.$warning('请填写详细地址')
@@ -428,8 +428,8 @@ export default {
                     invoiceType: 1,
                     mailingMethod: receiveInfo.mailingMethod,
                     invoiceTitle: this.personalInfo.name,
-                    receiverMobile: receiveInfo.mailingMethod === 1 ? receiveInfo.mobile : this.personalInfo.mobile,
-                    userAddress: receiveInfo.mailingMethod === 1 ? `${ receiveInfo.city }${ receiveInfo.address }` : ''
+                    receiverMobile: receiveInfo.mailingMethod === 0 ? receiveInfo.mobile : this.personalInfo.mobile,
+                    userAddress: receiveInfo.mailingMethod === 0 ? `${ receiveInfo.city }${ receiveInfo.address }` : ''
                 }
             } else {
                 // 单位发票
@@ -442,9 +442,9 @@ export default {
                     invoiceType: 2,
                     tin: this.form.tin,
                     invoiceTitle: this.form.firmName,
-                    receiverMobile: receiveInfo.mailingMethod === 1 ? receiveInfo.mobile : this.defaultMobile,
+                    receiverMobile: receiveInfo.mailingMethod === 0 ? receiveInfo.mobile : this.defaultMobile,
                     mailingMethod: receiveInfo.mailingMethod,
-                    userAddress: receiveInfo.mailingMethod === 1 ? `${ receiveInfo.city }${ receiveInfo.address }` : ''
+                    userAddress: receiveInfo.mailingMethod === 0 ? `${ receiveInfo.city }${ receiveInfo.address }` : ''
                 }
                 // 一个发票都没有，把填的发票保存起来
                 if (!this.currentInvoice || !this.currentInvoice.id) {
@@ -473,16 +473,20 @@ export default {
                 // 二次申请发票
                 try {
                     this.loading = true
-                    // invoiceType与当前发票类型不同， 原 1-个人 2-单位  现 0-个人 1-单位
-                    await applyInvoice({
-                        recvName: invoiceModel.invoiceTitle,
-                        invoiceType: invoiceModel.invoiceType === 1? 0 : 1,
-                        taxpayerNumber: this.type === 2 ? this.form.tin : '',
-                        orderIds: [this.orderId],
-                        recvMobile: invoiceModel.receiverMobile,
-                        mailingMethod: invoiceModel.mailingMethod,
-                        recvAddr: invoiceModel.userAddress
-                    })
+                    let params = {
+                      orderIds: [this.orderId],
+                      // invoiceType与当前发票类型不同， 原 1-个人 2-单位  现 0-个人 1-单位
+                      invoiceType: invoiceModel.invoiceType === 1? 0 : 1,
+                      invoiceTitle: invoiceModel.invoiceTitle,
+                      taxpayerNumber: this.type === 2 ? this.form.tin : '',
+                      companyAddr: invoiceModel.userAddress,
+                      companyPhone: invoiceModel.receiverMobile,
+                      mailingMethod: invoiceModel.mailingMethod,
+                      recvName: invoiceModel.invoiceTitle,
+                      recvMobile: invoiceModel.receiverMobile,
+                      recvAddr: invoiceModel.userAddress
+                    }
+                    await applyInvoice(params)
                 } catch (e) {
                     throw e
                 } finally {
