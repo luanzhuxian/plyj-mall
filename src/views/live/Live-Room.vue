@@ -1094,34 +1094,19 @@ export default {
        */
         async pay (CREDENTIAL) {
             try {
-                if (CREDENTIAL.appId) {
-                    await wechatPay(CREDENTIAL)
-                    this.$success('支付成功')
-                    this.submiting = false
-                    this.needPay = false
-
-                    // 支付成功，请求直播信息
-                    await this.handleByLiveType()
-                    await this.init()
-                    this.$success('付款成功立即观看')
-                    await this.setComeInConut(1)
-
-                    return
+                if (!CREDENTIAL.appId && this.detail.paidAmount !== 0) {
+                    throw new Error('支付失败')
                 }
-                if (this.detail.paidAmount === 0) {
-                    this.$success('支付成功')
-                    this.submiting = false
-                    this.needPay = false
 
-                    // 支付成功，请求直播信息
-                    await this.handleByLiveType()
-                    await this.init()
-                    this.$success('付款成功立即观看')
-                    await this.setComeInConut(1)
+                await wechatPay(CREDENTIAL)
+                this.$success('付款成功立即观看')
+                this.submiting = false
+                this.needPay = false
 
-                    return
-                }
-                throw new Error('支付失败')
+                // 支付成功，请求直播信息
+                await this.handleByLiveType()
+                await this.init()
+                await this.setComeInConut(1)
             } catch (e) {
                 throw e
             }
