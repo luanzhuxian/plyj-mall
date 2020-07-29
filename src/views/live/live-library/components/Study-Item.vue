@@ -10,10 +10,24 @@
         <div :class="$style.content">
             <div :class="$style.description">
                 <div v-if="item.courseName" :class="$style.name" v-text="item.courseName" />
-                <div v-if="item.category2Name" :class="$style.category" v-text="item.category2Name" />
+                <!-- 图文资料的作者信息要在此处显示 -->
+                <div
+                    v-if="item.orderType === 5"
+                    class="gray-2 fz-28 mt-18"
+                >
+                    作者：{{ item.lecturer }}
+                </div>
+                <!-- 图文资料不显示分类，即item.orderType等于5的情况 -->
+                <div v-if="item.orderType !== 5 && item.category2Name" :class="$style.category" v-text="item.category2Name" />
             </div>
             <div :class="$style.learn">
-                <div :class="$style.lecturer" v-if="item.lecturer">{{ item.orderType === 5 ? '作者' : '主讲人' }}：{{ item.lecturer }}</div>
+                <!-- 除图文资料之外的主讲人信息要在此处显示 -->
+                <div
+                    :class="$style.lecturer"
+                    v-if="item.lecturer && item.orderType !== 5"
+                >
+                    主讲人：{{ item.lecturer }}
+                </div>
                 <div :class="$style.bottom">
                     <div :class="$style.studyProgress" v-if="item.recordModels">
                         <!-- 单课程学习进度 -->
