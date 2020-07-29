@@ -445,9 +445,9 @@ export default {
         // 直播互动
         async interactInit () {
             try {
-                await this.$nextTick()
                 if (this.detail.liveType !== 'live') return
-                await this.$refs.LiveInteract.init()
+                await this.$nextTick()
+                this.$refs.LiveInteract.init()
             } catch (e) { throw e }
         },
         // 报名
@@ -1098,7 +1098,7 @@ export default {
                     throw new Error('支付失败')
                 }
 
-                await wechatPay(CREDENTIAL)
+                if (CREDENTIAL.appId) await wechatPay(CREDENTIAL)
                 this.$success('付款成功立即观看')
                 this.submiting = false
                 this.needPay = false
