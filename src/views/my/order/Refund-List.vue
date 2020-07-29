@@ -215,7 +215,7 @@ export default {
                 throw e
             }
         },
-        async deleteOrder (item, index) {
+        async deleteOrder (index) {
             try {
                 const detail = this.orderList[index]
                 await this.$confirm('是否删除当前退单？ 删除后不可找回')
