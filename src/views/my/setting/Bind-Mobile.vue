@@ -133,7 +133,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['mobile', 'smstype', 'openId']),
+        ...mapGetters(['mobile', 'openId', 'smstype']),
         title () {
             if (this.step === 1 && this.mobile) {
                 return '修改手机'

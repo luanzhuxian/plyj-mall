@@ -145,12 +145,14 @@ export default {
             roleCode,
             userId
         } = state.userInfo
+        brokerId = brokerId || userId
         // 缓存分享人的id，sessionStorage中的shareBrokerId在提交订单的时候会携带上
         // 企业管理员，高级管理员，子账号,helper进入页面时使用自己的id作为分享id
+        // 如果没有传递brokerId，则使用userId
         if (roleCode === 'EMPLOYEE' || roleCode === 'ADMIN' || roleCode === 'ENTERPRISE_ADMIN' || roleCode === 'HELPER') {
             state.SHARE_ID = userId
         } else {
-            state.SHARE_ID = brokerId || userId || null
+            state.SHARE_ID = brokerId || null
         }
         sessionStorage.setItem('SHARE_ID', state.SHARE_ID)
     }

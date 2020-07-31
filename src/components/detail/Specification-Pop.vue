@@ -409,6 +409,7 @@ export default {
         },
         setCount () {
             this.min = this.currentSku.minBuyNum || 1
+            this.currentSku.count = this.currentSku.count || 1
             const max = Math.max(this.currentSku.count, this.min)
             this.localCurrentSku.count = max
             this.count = max
@@ -458,6 +459,8 @@ export default {
                 this.$emit('change', this.sku)
                 this.localCurrentSku = this.sku
                 this.count = this.sku.count
+                this.currentSku1 = this.sku.skuCode1
+                this.currentSku2 = this.sku.skuCode2
             }
         },
 

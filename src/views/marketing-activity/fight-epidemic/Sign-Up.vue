@@ -125,7 +125,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['smstype', 'mobile'])
+        ...mapGetters(['mobile', 'smstype'])
     },
     props: {
         id: {

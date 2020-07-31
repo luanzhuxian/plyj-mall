@@ -34,7 +34,8 @@ const externals =
           compressorjs: 'Compressor',
           'vue-lazyload': 'VueLazyload',
           qs: 'Qs',
-          'vue-clipboard2': 'VueClipboard'
+          'vue-clipboard2': 'VueClipboard',
+          'pdfjs-dist': 'pdfjsLib'
       }
       : {}
 module.exports = {
@@ -66,7 +67,6 @@ module.exports = {
 
                 // target: 'https://mall.youpenglai.com'
                 target: `http://192.168.130.${ SERVER || 34 }`
-
                 // target: 'http://192.168.255.14'
             },
             '/live/': {

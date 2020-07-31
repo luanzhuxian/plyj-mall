@@ -29,4 +29,11 @@ export const removeInvoice = id => axios.post('/apis/v1/base/baseUserInvoice/del
 * @data object {invoiceType, invoiceTitle, tin, orderDetails:[], receiverMobile, userId}
 * @orderDetails array [{"orderId":"","orderDetailId":""}]
 * */
-export const applyInvoice = data => axios.post('/apis/v1/invoice/invoice/consumer/applyInvoice', data)
+// export const applyInvoice = data => axios.post('/apis/v1/invoice/invoice/consumer/applyInvoice', data)
+
+/**
+ * 申请发票
+ * @param {Object} data
+ * @return {*}
+ */
+export const applyInvoice = data => axios.post('/apis/v2/order/invoice/apply', data)

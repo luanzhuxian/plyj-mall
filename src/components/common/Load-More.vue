@@ -222,21 +222,21 @@ export default {
                 this.loaded()
             }
         },
-        async loadMore () {
-            this.options.current++
-            try {
-                await this.getData()
-            } catch (e) {
-                throw e
-            }
-        },
+        // async loadMore () {
+        //     this.options.current++
+        //     console.log(this.options.current)
+        //     try {
+        //         await this.getData()
+        //     } catch (e) {
+        //         throw e
+        //     }
+        // },
 
         // 本次请求完成，设置loading的位置为初始状态，并重新求得列表的高度
         loaded () {
             this.$nextTick(() => {
                 this.$nextTick(() => {
                     this.pullLoading.style.transition = 'transform .5s ease-in-out'
-                    this.$emit('update:loading', false)
                     this.top = this.defaultTop
                     this.offsetHeight = this.$el.offsetHeight
 

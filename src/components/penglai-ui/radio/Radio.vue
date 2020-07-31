@@ -1,175 +1,141 @@
 <template>
     <div
         role="radio"
-        class="radio"
+        class="pl-radio"
+        :class="{
+            'pl-radio__inline': inline,
+            [`pl-radio__${size}`]: true
+        }"
+        :style="{ '--align': align }"
         @click="onClick"
     >
-        <div
-            class="radio__icon"
-            :class="{ ['radio__icon--' + shape]: shape, 'radio__icon--disabled': isDisabled, 'radio__icon--checked': checked, 'radio__icon--border': border }"
-            :style="{ fontSize: iconSize / 7.5 + 'vw' }"
-            @click="onClickIcon"
-        >
+        <div v-if="position === 'left'" class="pl-radio-icon pl-radio-icon__left">
             <pl-svg
-                v-if="icon && checked"
-                :name="icon"
-                fill="#FFF"
-            />
-            <slot
-                v-else
-                name="icon"
+                name="icon-weixuanzhong1"
+                width="36"
             />
         </div>
-        <div
-            v-if="$slots.default"
-            class="radio__label"
-            :class="{ ['radio__label--' + labelPosition]: labelPosition, 'radio__icon--disabled': isDisabled }"
-            @click="onClickLabel"
-        >
+        <div class="pl-radio-content">
             <slot />
+        </div>
+        <div v-if="position === 'right'" class="pl-radio__icon pl-radio-icon__right">
+            <pl-svg
+                v-show="!checked"
+                name="icon-weixuanzhong1"
+                width="36"
+            />
+            <pl-svg
+                v-show="checked"
+                name="icon-xuanzhong"
+                width="36"
+            />
         </div>
     </div>
 </template>
 
 <script>
-import { ChildrenMixin } from '../../../mixins/relation'
-
 export default {
-    name: 'RadioComponent',
-    mixins: [ChildrenMixin('RadioGroupComponent')],
+    name: 'PlRadio',
     props: {
-        name: {
-            type: [String, Number],
+        // 选择按钮的位置 left or right
+        position: {
+            type: String,
+            default: 'right'
+        },
+        // 按钮与内容的对齐反射方式
+        align: {
+            type: String,
+            default: 'space-between'
+        },
+        inline: Boolean,
+        // 要绑定的值
+        label: {
+            type: [String, Number, Boolean, Object, Array],
             default () {
                 return null
             }
         },
+        size: {
+            type: String,
+            default: 'small'
+        },
+        // 绑定的值
         value: {
-            type: [String, Number],
+            type: [String, Number, Boolean, Object, Array],
             default () {
                 return null
             }
-        },
-        icon: {
-            type: String,
-            default: 'icon-check'
-        },
-        iconSize: {
-            type: Number,
-            default: 40
-        },
-        checkedColor: {
-            type: String,
-            default: '#FE7700'
-        },
-        labelPosition: {
-            type: String,
-            default: ''
-        },
-        disabled: Boolean,
-        labelDisabled: Boolean,
-        border: Boolean,
-        shape: {
-            type: String,
-            default: 'round'
         }
     },
-    data () {
-        return {
+    inject: {
+        values: {
+            from: 'values',
+            default: null
+        },
+        changeHandler: {
+            from: 'changeHandler',
+            default: null
         }
+    },
+    model: {
+        event: 'change',
+        prop: 'value'
     },
     computed: {
-        isDisabled () {
-            return (this.parent && this.parent.disabled) || this.disabled
-        },
-        tabindex () {
-            if (this.isDisabled || !this.checked) {
-                return -1
-            }
-            return 0
-        },
-        currentValue: {
-            get () {
-                return this.parent ? this.parent.value : this.value
-            },
-            set (val) {
-                (this.parent || this).$emit('input', val)
-            }
+        id () {
+            const { _uid: uid } = this
+            return `pl-radio_${ uid }`
         },
         checked () {
-            return this.currentValue === this.name
+            return this.label === this.value || this.label === (this.values ? this.values.defaultValue : null)
         }
     },
     methods: {
-        onClickIcon () {
-            if (!this.isDisabled) {
-                // 触发setter
-                this.currentValue = this.name
+        onClick () {
+            this.$emit('change', this.label)
+            if (this.changeHandler) {
+                this.changeHandler(this.label)
             }
-        },
-        onClickLabel () {
-            if (!this.isDisabled && !this.labelDisabled) {
-                // 触发setter
-                this.currentValue = this.name
-            }
-        },
-        onClick (event) {
-            this.$emit('click', event)
         }
     }
 }
 </script>
 
 <style lang="scss">
-.radio {
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  user-select: none;
-
-  &__icon {
-    box-sizing: border-box;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-
-    > svg {
-      width: 24px;
+    @import "../assets/scss/config";
+    .pl-radio {
+        display: flex;
+        flex: 1;
+        justify-content: var(--align);
+        align-items: center;
+        > .pl-radio-content {
+            margin-right: 10px;
+            width: 100%;
+        }
+        &__inline {
+            flex: none;
+            display: inline-flex;
+            &:nth-of-type(n+2) {
+                margin-left: 20px;
+            }
+            > .pl-radio-content {
+                width: max-content;
+            }
+        }
+        &__mini {
+            min-height: $--form-min-height;
+        }
+        &__small {
+            min-height: $--form-small-height;
+            > .pl-radio-content {
+                font-size: $--form-small-font-size;
+            }
+        }
+        &__middle {
+            min-height: $--form-middle-height;
+            > .pl-radio-content {
+                font-size: $--form-middle-font-size;
+            }
+        }
     }
-
-    &--round {
-      border-radius: 50%;
-    }
-
-    &--checked {
-      background-color: #FE7700;
-    }
-
-    &--disabled {
-      background-color: #ebedf0;
-      border-color: #c8c9cc !important;
-    }
-
-    &--border {
-      border: 1px solid #FE7700;
-    }
-  }
-
-  &__label {
-    flex: 1;
-    margin-left: 24px;
-    color: #333;
-
-    &--left {
-      float: left;
-      margin: 0 24px 0 0;
-    }
-
-    &--disabled {
-      color: #999;
-    }
-  }
-}
 </style>

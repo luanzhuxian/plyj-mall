@@ -99,19 +99,19 @@ export default {
                         skuCode2: prod.skuCode2,
                         count: prod.count,
                         price: prod.price,
-                        agentUser: ''
+                        agentUser: '',
+                        productType: prod.productType
                     })
                 }
-                sessionStorage.setItem('CONFIRM_LIST', JSON.stringify(confirmList))
-                await this.$router.push({
-                    name: 'SubmitOrder',
-                    query: {
-                        isCart: 'YES',
+                this.$store.commit('submitOrder/setOrderProducts', {
+                    params: {
                         activeProduct: 5,
                         preActivity: 2,
                         activityId: item.id
-                    }
+                    },
+                    products: confirmList
                 })
+                await this.$router.push({ name: 'SubmitOrder' })
             }
         }
     }

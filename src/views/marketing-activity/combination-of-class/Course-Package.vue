@@ -374,18 +374,20 @@ export default {
                     skuCode2: pro.sku2,
                     count: pro.count,
                     price: pro.amount,
-                    agentUser: this.shareId
+                    agentUser: this.shareId,
+                    productType: pro.productType
                 })
             }
-            sessionStorage.setItem('CONFIRM_LIST', JSON.stringify(confirmList))
-            await this.$router.push({
-                name: 'SubmitOrder',
-                query: {
-                    isCart: 'YES',
+            this.$store.commit('submitOrder/setOrderProducts', {
+                params: {
                     activeProduct: 6,
                     preActivity: 2,
                     activityId: data.activityId
-                }
+                },
+                products: confirmList
+            })
+            await this.$router.push({
+                name: 'SubmitOrder'
             })
         },
         // 判断绑定手机

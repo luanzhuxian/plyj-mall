@@ -1,5 +1,10 @@
 <template>
-    <div :class="$style.onlineClassroom">
+    <div
+        :class="{
+            [$style.onlineClassroom]: true,
+            [$style.noCategory]: !category.length
+        }"
+    >
         <CategorySelector
             :category="category"
             @change="classifyChanged"
@@ -25,7 +30,7 @@
                     >
                         <div :class="$style.img">
                             <img :src="item.courseImg + '?x-oss-process=style/thum-small'" alt="">
-                            <div v-if="!(item.orderId || item.isGive)" :class="$style.countDown">
+                            <div v-if="!(item.orderId || item.isGive) && item.isOpenSale" :class="$style.countDown">
                                 <count-down
                                     prefix="距抢课开始仅剩"
                                     :endtime="item.regularSaleTime"
@@ -163,7 +168,7 @@ export default {
         addAtrToItem (list) {
             const currentTimeStamp = Number(moment().valueOf()) + this.duration
             for (const item of list) {
-                item.isNotStart = Number(moment(item.regularSaleTime).valueOf()) > currentTimeStamp
+                item.isNotStart = item.isOpenSale && Number(moment(item.regularSaleTime).valueOf()) > currentTimeStamp
             }
             return list
         },
@@ -179,6 +184,9 @@ export default {
         padding: 20px;
         min-height: 50vh;
         background-color: #fff;
+        &.no-category {
+            margin-top: 28px;
+        }
     }
 
     .course-item {

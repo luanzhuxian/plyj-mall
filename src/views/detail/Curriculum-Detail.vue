@@ -46,12 +46,10 @@
 
             <info-box>
                 <div :class="$style.priceBoxWrapper">
-                    <!-- 公益活动 -->
+                    <!-- 公益活动进入 -->
                     <div :class="$style.priceBox" v-if="productActive === 7">
-                        <template>
-                            <div v-if="detail.priceType === 1" :class="$style.price" v-text="detail.sellingPrice" />
-                            <div v-else :class="$style.free">免费</div>
-                        </template>
+                        <div v-if="detail.priceType === 1" :class="$style.price" v-text="detail.sellingPrice" />
+                        <div v-else :class="$style.free">免费</div>
                         <div :class="$style.original">
                             <div v-if="detail.priceType === 1" class="mr-30">
                                 <template v-if="isPresent">
@@ -63,6 +61,7 @@
                             </div>
                         </div>
                     </div>
+                    <!-- 非公益活动进入 -->
                     <div :class="$style.priceBox" v-else>
                         <template v-if="isPresent">
                             <div :class="$style.free">赠课</div>
@@ -72,19 +71,16 @@
                             <div v-else :class="$style.free">免费</div>
                         </template>
                         <div :class="$style.original">
-                            <div v-if="detail.priceType === 1 && (isPresent || detail.originalPrice && detail.originalPrice !== detail.sellingPrice)" class="mr-30">
-                                <template v-if="isPresent">
+                            <template v-if="detail.priceType === 1">
+                                <div v-if="isPresent" class="mr-30">
                                     售价：<del v-text="detail.sellingPrice" />
-                                </template>
-                                <template v-else-if="detail.originalPrice && detail.originalPrice !== detail.sellingPrice">
+                                </div>
+                                <div v-else-if="detail.originalPrice && detail.originalPrice !== detail.sellingPrice" class="mr-30">
                                     原价：<del v-text="detail.originalPrice" />
-                                </template>
-                            </div>
+                                </div>
+                            </template>
                             <div v-if="Number(detail.showSales) === 1">
                                 <span v-if="detail.sale === 0">正在热销中</span>
-                                <!-- <template v-else-if="detail.sale > 0 && detail.sale < 10">
-                                <span v-text="detail.sale" />人关注
-                            </template> -->
                                 <template v-else>
                                     <span v-text="detail.sale" />人订阅
                                 </template>
@@ -146,33 +142,25 @@
                 :detail="detail.activityBrief"
             />
 
-            <!-- 课程详情 -->
-            <div :class="$style.detailOrComment">
-                <div :class="$style.tabs">
-                    <div :class="{ [$style.activeTab]: tab === 1 }" @click="tab = 1">
-                        课程介绍
-                    </div>
-                    <div :class="{ [$style.activeTab]: tab === 2 }" @click="tab = 2" v-if="courseType === 2">
-                        目录
-                    </div>
-                </div>
-                <div>
-                    <detail-info v-show="tab === 1" :content="detail.details || '暂无详情'" />
-                    <serise-courses
-                        v-show="tab === 2"
-                        :data="videoList"
-                        :course-id="detail.id"
-                        :order-id="detail.orderId"
-                        :is-present="isPresent"
-                        :is-buy="!!detail.isBuy"
-                        :is-finish="!detail.haveNoVideo"
-                        :status="Number(detail.status)"
-                        :is-open-sale="detail.isOpenSale"
-                        :course-status="detail.courseStatus"
-                        @preview="previewCourse"
-                    />
-                </div>
-            </div>
+            <Tabs
+                :tabs="[{ label: '课程介绍', value: 1 }, { label: '目录', value: 2, hidden: courseType === 1 }]"
+                v-model="tab"
+            >
+                <detail-info v-show="tab === 1" :content="detail.details || '暂无详情'" />
+                <serise-courses
+                    v-show="tab === 2"
+                    :data="videoList"
+                    :course-id="detail.id"
+                    :order-id="detail.orderId"
+                    :is-present="isPresent"
+                    :is-buy="!!detail.isBuy"
+                    :is-finish="!detail.haveNoVideo"
+                    :status="Number(detail.status)"
+                    :is-open-sale="detail.isOpenSale"
+                    :course-status="detail.courseStatus"
+                    @preview="previewCourse"
+                />
+            </Tabs>
 
             <!-- 订购须知 -->
             <instructions v-if="detail.payNotice" title="订购须知" :content="detail.payNotice" />
@@ -300,7 +288,7 @@ import Banner from '../../components/detail/Banner.vue'
 import InfoBox from '../../components/detail/Info-Box.vue'
 import DetailTitle from '../../components/detail/Title.vue'
 import DetailDesc from '../../components/detail/Desc.vue'
-import DetailInfo from '../../components/detail/Detail.vue'
+import DetailInfo from './components/Detail.vue'
 import Tags from '../../components/detail/Tags.vue'
 import Contact from '../../components/common/Contact.vue'
 import Field from '../../components/detail/Field.vue'
@@ -316,20 +304,13 @@ import Skeleton from './components/Skeleton.vue'
 import share from '../../assets/js/wechat/wechat-share'
 import Barrage from '../marketing-activity/longmen-festival/action/components/Barrage'
 import VideoPlayer from './components/Video-Player'
+import Tabs from './components/Tabs.vue'
 import { getCourseDetail } from '../../apis/product'
-import {
-    generateQrcode,
-    cutImageCenter,
-    cutArcImage,
-    loadImage,
-    createText
-} from '../../assets/js/util'
 import {
     getPublicBenefitStatistics,
     getPublicBenefitList
 } from '../../apis/longmen-festival/public-benefit'
-
-const avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
+import Poster from './poster/Poster'
 
 export default {
     name: 'CurriculumDetail',
@@ -352,7 +333,8 @@ export default {
         CharityPoster,
         Skeleton,
         Barrage,
-        VideoPlayer
+        VideoPlayer,
+        Tabs
     },
     data () {
         return {
@@ -396,7 +378,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['appId', 'userName', 'avatar', 'mobile', 'mallUrl', 'userId', 'agentUser', 'servicePhoneModels']),
+        ...mapGetters(['appId', 'userName', 'avatar', 'mobile', 'mallUrl', 'userId', 'agentUser', 'servicePhoneModels', 'courseTypeMap']),
 
         // 1 正常進入詳情 2  团购列表进去  3  秒杀列表进去 4  预购商品列表进去 5 从春耘活动进入 6 从组合课活动进入 7 公益棕活动进入
         productActive () {
@@ -410,7 +392,7 @@ export default {
             return this.detail.isBuy || this.isPresent
         },
         activityId () {
-            return this.$route.query.activityId
+            return this.$route.query.activityId || '1'
         }
     },
     watch: {
@@ -590,21 +572,28 @@ export default {
                     .catch(() => {})
                 return
             }
-            this.$router.push({
-                name: 'SubmitCurriculum',
+            this.$store.commit('submitOrder/setOrderProducts', {
                 params: {
-                    productId: this.productId,
-                    count: 1
-                },
-                query: {
-                    productActive: this.productActive,
+                    activeProduct: this.productActive,
+                    preActivity: this.detail.preActivity,
                     activityId: this.activityId
-                }
+                },
+                products: [
+                    {
+                        productId: this.productId,
+                        count: 1,
+                        skuCode1: '',
+                        skuCode2: '',
+                        price: this.detail.sellingPrice,
+                        productType: this.courseTypeMap[this.courseType]
+                    }
+                ]
             })
+            this.$router.push({ name: 'SubmitOrder' })
         },
         // 生成分享
         async createShare () {
-            const { courseName, lecturer, courseImg } = this.detail
+            const { courseName, courseBrief, courseImg } = this.detail
             try {
                 let shareUrl = ''
                 if (this.userId) {
@@ -617,8 +606,8 @@ export default {
                 share({
                     appId: this.appId,
                     title: courseName,
-                    link: this.shareUrl,
-                    desc: lecturer,
+                    link: shareUrl,
+                    desc: courseBrief,
                     imgUrl: courseImg
                 })
             } catch (error) {
@@ -627,131 +616,23 @@ export default {
         },
         // 生成海报
         async createPoster (type) {
-            if (this.loading) {
+            if (this.loading) return
+            if (this.haibao) {
+                this.showHaibao = true
                 return
             }
-
-            let img = await loadImage(this.detail.courseImg)
-            if (!img) {
-                this.$error('图片加载错误')
-                return
-            }
-            // if (this.haibao) {
-            //     this.showHaibao = true
-            //     return
-            // }
-            this.creating = true
-
-            // 截取头像
-            let lodedAvatar
             try {
-                lodedAvatar = await loadImage(this.avatar)
-            } catch (e) {
-                lodedAvatar = await loadImage(avatar)
-            }
-            const arcAvatar = cutArcImage(lodedAvatar)
-
-            // 截取中间部分
-            img = cutImageCenter(img, 750 / 500)
-            const canvas = document.createElement('canvas')
-            canvas.width = 1120
-            canvas.height = 1346
-            const ctx = canvas.getContext('2d')
-
-            // 绘制头部
-            ctx.fillStyle = '#fff'
-            ctx.fillRect(0, 0, 1120, 192)
-            ctx.drawImage(arcAvatar, 32, 32, 128, 128)
-            ctx.font = 'bold 48px Microsoft YaHei UI'
-            ctx.fillStyle = '#000'
-            createText({
-                ctx,
-                x: 192,
-                y: 120,
-                text: this.userName,
-                lineHeight: 68,
-                width: 800
-            })
-            try {
-                // 二维码
-                const qrcode = await generateQrcode({ size: 300, text: this.shareUrl, padding: 15, img, centerPadding: 10, type: 'canvas' })
-
-                // 商品图片
-                ctx.drawImage(img, 0, 0, img.width, img.height, 0, 192, 1120, 746)
-                if (type !== 1 && this.preActivity === 2) {
-                    ctx.fillStyle = '#FA4D2F'
-                } else {
-                    ctx.fillStyle = '#fff'
-                }
-                ctx.fillRect(0, 938, 1120, 408)
-                ctx.drawImage(qrcode, 750, 978, 320, 320)
-
-                // 填充商品名称
-                // let str = this.detail.courseName
-                const line = ((type !== 1 && this.preActivity === 2) || this.courseType === 2) ? 1 : 2
-                const { sellingPrice: price, originalPrice, totalLiveNumber } = this.detail
-                ctx.textBaseline = 'top'
-                ctx.font = '56px Microsoft YaHei UI'
-                ctx.fillStyle = '#000'
-
-                // 商品名称
-                createText({
-                    ctx,
-                    x: 49,
-                    y: 978,
-                    text: this.detail.courseName,
-                    lineHeight: 80,
-                    width: 620,
-                    lineNumber: line
+                this.creating = true
+                const poster = new Poster({
+                    cover: this.detail.courseImg,
+                    productName: this.detail.courseName,
+                    originalPrice: this.detail.originalPrice,
+                    avatar: this.avatar,
+                    nickname: this.userName,
+                    shareUrl: this.shareUrl,
+                    price: this.detail.sellingPrice
                 })
-                if (this.courseType === 2) {
-                    ctx.font = '48px Microsoft YaHei UI'
-                    ctx.fillStyle = '#999'
-                    ctx.fillText(`包含${ totalLiveNumber }节课程`, 48, 1058)
-                }
-
-                // 填充价钱
-                if (price) {
-                    ctx.fillStyle = '#FE7700'
-                    ctx.fillText('¥', 48, 1190 + (76 - 56) / 2)
-                    ctx.font = 'bold 88px Microsoft YaHei UI'
-                    createText({
-                        ctx,
-                        x: 96,
-                        y: 1170 + (104 - 88) / 2,
-                        text: String(price),
-                        lineHeight: 104
-                    })
-                } else {
-                    ctx.fillStyle = '#FE7700'
-                    ctx.font = 'bold 88px Microsoft YaHei UI'
-                    createText({
-                        ctx,
-                        x: 48,
-                        y: 1190 + (76 - 56) / 2,
-                        text: '免费',
-                        lineHeight: 104
-                    })
-                }
-
-                // 绘制原价
-                if (originalPrice && originalPrice !== price) {
-                    const priceWidth = ctx.measureText(price).width
-                    ctx.fillStyle = '#999'
-                    ctx.font = '56px Microsoft YaHei UI'
-                    ctx.fillText(`¥${ originalPrice }`, 96 + priceWidth + 44, 1190 + (80 - 56) / 2)
-                    const originalPriceWidth = ctx.measureText(`¥${ originalPrice }`).width
-                    ctx.save()
-
-                    // 设置删除线
-                    ctx.strokeStyle = '#999'
-                    ctx.beginPath()
-                    ctx.lineWidth = '4'
-                    ctx.moveTo(96 + priceWidth + 44, 1190 + (80 - 56) / 2 + 80 / 3)
-                    ctx.lineTo(96 + priceWidth + 44 + originalPriceWidth, 1190 + (80 - 56) / 2 + 80 / 3)
-                    ctx.stroke()
-                }
-                this.haibao = canvas.toDataURL('image/jpeg', 0.9)
+                this.haibao = await poster.create()
                 this.showHaibao = true
             } catch (e) {
                 throw e
@@ -802,7 +683,7 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 1;
+    z-index: 10;
     &.regular {
         height: 80px !important;
     }
@@ -847,31 +728,10 @@ export default {
 }
 
 .rule,
-.slide-courses,
-.detail-or-comment {
+.slide-courses {
     margin-top: 20px;
 }
 
-.tabs {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    background-color: #fff;
-    border-bottom: 1px solid #e7e7e7;
-    > div {
-        width: max-content;
-        font-size: 26px;
-        color: #999;
-        height: 90px;
-        line-height: 90px;
-        box-sizing: border-box;
-        font-weight: bold;
-        &.active-tab {
-            color: #000;
-            border-bottom: 2px solid #000;
-        }
-    }
-}
 .bottom {
     position: fixed;
     bottom: 0;

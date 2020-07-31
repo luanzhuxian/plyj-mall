@@ -118,7 +118,7 @@ import SubClassify from '../../components/item/Sub-Classify.vue'
 import LoadMore from '../../components/common/Load-More.vue'
 import { getCategoryTree, getProduct, getCourseCategoryTree } from '../../apis/classify'
 import { getActivityProduct } from '../../apis/broker'
-import { getCourse } from '../../apis/online-classroom'
+import { getCourse, getImageTextList } from '../../apis/online-classroom'
 import { mapGetters } from 'vuex'
 import share from '../../assets/js/wechat/wechat-share'
 
@@ -207,11 +207,15 @@ export default {
         },
         // 切换主分类
         classifyClick (classify) {
-            if (this.loading) return
-            if (classify && classify.categoryType) {
+            if (this.loading || !classify) return
+            if (classify.categoryType === 1 || classify.categoryType === 2) {
                 // 点击知识课程
                 this.currentClassify = classify
                 this.requestMethods = getCourse
+            } else if (classify.categoryType === 3) {
+                // 点击知识课程
+                this.currentClassify = classify
+                this.requestMethods = getImageTextList
             } else {
                 // 点击正常商品分类
                 this.requestMethods = getProduct
@@ -286,26 +290,31 @@ export default {
             }
         },
         refreshHandler (list) {
+            // 知识课程数据处理
             if (this.requestMethods === getCourse) {
-                // 知识课程的请求
-                /*
-                * :img="item.productMainImage + '?x-oss-process=style/thum-middle'"
-                                    :title="item.productName"
-                                    :price="item.price"
-                                    :data="item"
-                                    :activity-product="item.activityProduct"
-                                    :rebate="currentClassify.id === '1' ? item.realRebate : ''"
-                * */
                 for (const item of list) {
                     item.productMainImage = item.courseImg
                     item.productName = item.courseName
                     item.price = item.priceType === 1 ? item.sellingPrice : '免费'
-                    item.activityProduct = -1
+                    item.activityProduct = 1
                     item.productType = 'KNOWLEDGE_COURSE'
                 }
                 this.prodList = list
                 return
             }
+            // 图文资料数据处理
+            if (this.requestMethods === getImageTextList) {
+                for (const item of list) {
+                    item.productMainImage = item.graphicMainImg
+                    item.productName = item.graphicName
+                    item.price = item.priceType === 1 ? item.sellingPrice : '免费'
+                    item.activityProduct = 1
+                    item.productType = 'GRAPHIC_DATA'
+                }
+                this.prodList = list
+                return
+            }
+
             // TODO: helper分区里要同时展示普通商品+知识课程
             if (this.currentClassify.id === '1') {
                 for (const item of list) {

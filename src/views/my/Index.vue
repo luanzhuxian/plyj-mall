@@ -56,8 +56,8 @@
                 <pl-svg :class="$style.myRight" name="icon-right" size="18" fill="#ccc" />
             </router-link>
 
-            <div :class="$style.waitPay" v-if="count.prePayOrder" @click="$router.push({ name: 'WaitPayBalance' })">
-                <pl-svg name="icon-dingdan" width="28" height="28" fill="#fff" /> 待付尾款订单 <i>{{ count.prePayOrder }}</i> <pl-svg name="icon-right" fill="#fff" width="24" />
+            <div :class="$style.waitPay" v-if="count.waitPayTailMoney" @click="$router.push({ name: 'WaitPayBalance' })">
+                <pl-svg name="icon-dingdan" width="28" height="28" fill="#fff" /> 待付尾款订单 <i>{{ count.waitPayTailMoney }}</i> <pl-svg name="icon-right" fill="#fff" width="24" />
             </div>
 
             <!-- 我的订单 -->
@@ -67,30 +67,30 @@
                         <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/待付款.png" :style="{ width: 50 / 7.5 + 'vw' }" alt="">
                         <i :class="$style.text">待付款</i>
                         <span
-                            :class="{ [$style.badge]: true, [$style.oval]: count.waitPayment > 99 }"
-                            v-if="count.waitPayment"
-                            v-text="count.waitPayment > 99 ? '99+' : count.waitPayment"
+                            :class="{ [$style.badge]: true, [$style.oval]: count.waitPay + count.waitPayTailMoney > 99 }"
+                            v-if="count.waitPay + count.waitPayTailMoney"
+                            v-text="count.waitPay + count.waitPayTailMoney > 99 ? '99+' : count.waitPay + count.waitPayTailMoney"
                         />
                     </router-link>
                     <router-link :to="{ name: 'Orders', params: { status: 'WAIT_SHIP' } }" :class="$style.orderLink">
                         <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/待发货.png" :style="{ width: 45 / 7.5 + 'vw' }" alt="">
                         <i :class="$style.text">待发货</i>
                         <span
-                            :class="{ [$style.badge]: true, [$style.oval]: count.waitDelivery > 99 }"
-                            v-if="count.waitDelivery"
-                            v-text="count.waitDelivery > 99 ? '99+' : count.waitDelivery"
+                            :class="{ [$style.badge]: true, [$style.oval]: count.waitShip > 99 }"
+                            v-if="count.waitShip"
+                            v-text="count.waitShip > 99 ? '99+' : count.waitShip"
                         />
                     </router-link>
                     <router-link :to="{ name: 'Orders', params: { status: 'WAIT_RECEIVE' } }" :class="$style.orderLink">
                         <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/待收货.png" :style="{ width: 50 / 7.5 + 'vw' }" alt="">
                         <i :class="$style.text">待收货</i>
                         <span
-                            :class="{ [$style.badge]: true, [$style.oval]: count.waitCollect > 99 }"
-                            v-if="count.waitCollect"
-                            v-text="count.waitCollect > 99 ? '99+' : count.waitCollect"
+                            :class="{ [$style.badge]: true, [$style.oval]: count.waitReceive > 99 }"
+                            v-if="count.waitReceive"
+                            v-text="count.waitReceive > 99 ? '99+' : count.waitReceive"
                         />
                     </router-link>
-                    <router-link :to="{ name: 'RefundList', params: { status: 'ALL_ORDER' } }" :class="$style.orderLink">
+                    <router-link :to="{ name: 'RefundList', params: { status: 'ALL' } }" :class="$style.orderLink">
                         <img src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/退款.png" :style="{ width: 45 / 7.5 + 'vw' }" alt="">
                         <i :class="$style.text">退款/售后</i>
                         <span
@@ -150,7 +150,7 @@
                         <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/我的奖学金.png" alt="">
                         <i :class="$style.text">我的奖学金</i>
                     </router-link>
-                    <router-link :to="{ name: 'LiveLibrary'}" :class="$style.welfareItem">
+                    <router-link :to="{ name: 'CourseLibrary'}" :class="$style.welfareItem">
                         <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/我的视频.png" alt="">
                         <i :class="$style.text">我的视频</i>
                     </router-link>
@@ -158,10 +158,10 @@
                         <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/我的兑换码.png" alt="">
                         <i :class="$style.text">我的兑换码</i>
                     </router-link>
-                    <!--<router-link :to="{ name: '' }" :class="$style.welfareItem">
+                    <router-link :to="{ name: 'MyImageText' }" :class="$style.welfareItem">
                         <img :class="$style.icon" src="https://mallcdn.youpenglai.com/static/mall/icons/2.11.0/我的资料.png" alt="">
                         <i :class="$style.text">我的资料</i>
-                    </router-link>-->
+                    </router-link>
                 </div>
             </div>
             <router-link

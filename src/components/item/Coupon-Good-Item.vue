@@ -5,10 +5,10 @@
             @click="handleClick"
         >
             <div :class="$style.goodLeft">
-                <img v-imgError
-                     :class="$style.img"
-                     :src="img"
-                     :key="img"
+                <img
+                    :class="$style.img"
+                    :src="img + '?x-oss-process=style/thum-middle'"
+                    :key="img"
                 >
             </div>
             <div :class="$style.goodRight">

@@ -14,7 +14,7 @@
                     :data="item"
                     :checked="item.checked"
                     @change="selectChange"
-                    :disabled="checked.indexOf(item) === -1 && checked.length === maxCount"
+                    :disabled="checked.indexOf(item) === -1 && checked.length >= maxCount"
                 />
                 <div :class="$style.content">
                     <div :class="$style.name">
@@ -58,6 +58,7 @@
 
 <script>
 import { getList } from '../../../apis/student'
+import { mapMutations, mapGetters } from 'vuex'
 export default {
     name: 'StudentList',
     data () {
@@ -71,12 +72,13 @@ export default {
         }
     },
     computed: {
+        ...mapGetters(['submitOrder/checkedStudents']),
         canSelect () {
             return this.$route.query.select === 'YES'
         },
 
         // 选择的学员所对应的商品
-        proId () {
+        sku () {
             return this.$route.query.sku
         },
 
@@ -87,14 +89,14 @@ export default {
     },
     async activated () {
         await this.getList()
-        this.CHECKED_STUDENT = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || null
-        this.setDefaultChecked(this.list)
+        this.setDefaultChecked()
     },
     deactivated () {
         this.checked = []
         this.$destroy()
     },
     methods: {
+        ...mapMutations([`submitOrder/setCheckedStudent`]),
         async getList () {
             try {
                 const { result } = await getList()
@@ -118,15 +120,10 @@ export default {
             }
         },
         addNew () {
-            if (this.canSelect) {
-                sessionStorage.setItem('CHECKED_STUDENT', JSON.stringify({ [this.proId]: this.checked }))
-            }
             this.$router.push({ name: 'AddStudent', query: this.$route.query })
         },
         confirmSelect () {
-            const checked = JSON.parse(sessionStorage.getItem('CHECKED_STUDENT')) || {}
-            checked[this.proId] = this.checked
-            sessionStorage.setItem('CHECKED_STUDENT', JSON.stringify(checked))
+            this['submitOrder/setCheckedStudent']({ sku: this.sku, student: this.checked })
             const { name, params, query } = JSON.parse(sessionStorage.getItem('SELECT_STUDENT_FROM')) || {}
             if (name) {
                 this.$router.replace({
@@ -156,12 +153,13 @@ export default {
 
             return canvas.toDataURL()
         },
-        setDefaultChecked (list) {
-            if (this.CHECKED_STUDENT && this.CHECKED_STUDENT[this.proId]) {
-                const current = this.CHECKED_STUDENT[this.proId].map(item => item.id)
-                for (const item of list) {
-                    item.checked = current.indexOf(item.id) > -1
-                    if (current.indexOf(item.id) > -1) {
+        setDefaultChecked () {
+            const CURRENT_CHECKED_STUDENT = this['submitOrder/checkedStudents'][this.sku] || []
+            if (CURRENT_CHECKED_STUDENT.length) {
+                for (const item of this.list) {
+                    const HAS = CURRENT_CHECKED_STUDENT.some(checked => item.id === checked.id)
+                    if (HAS) {
+                        item.checked = true
                         this.checked.push(item)
                     }
                 }

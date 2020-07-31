@@ -17,46 +17,6 @@
                 <span>{{ `即将开始 ${futrueCount}` }}</span>
                 <span>{{ `往期直播 ${pastCount}` }}</span>
             </div>
-            <!-- <div :class="$style.live" @click="toLivePage(live)">
-                <div :class="$style.imgWrapper">
-                    <img v-imgError :src="(isNoticeShow ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-middle'">
-                    <div :class="$style.label" v-if="isNoticeShow">
-                        预告
-                    </div>
-                    <pl-svg name="icon-play" width="60" />
-                </div>
-                <div :class="$style.info">
-                    <div :class="$style.top">
-                        {{ live.name }}
-                    </div>
-                    <div :class="$style.bottom" v-if="live.statue !== 0">
-                        <div :class="$style.bottomLeft">
-                            <pl-svg name="icon-clock" fill="#fff" width="26" />
-                        </div>
-                        <div :class="$style.bottomRight">
-                            <span v-if="isNoticeShow">距开始仅剩</span>
-                            <span v-if="live.statue === 4" :class="$style.highlight">正在直播</span>
-                            <span v-if="live.statue === 0" :class="$style.highlight">已结束</span>
-                            <countdown
-                                v-if="isNoticeShow"
-                                :duration="duration"
-                                format="DD天HH:mm:ss"
-                                @finish="done"
-                            />
-                            <span v-if="live.statue === 4" :class="$style.highlight">
-                                {{ `${live.visitTimes}人观看` }}
-                            </span>
-                            <span v-if="live.statue === 0" :class="$style.highlight">
-                                直播已结束，去看回放
-                            </span>
-                        </div>
-                    </div>
-                    <div :class="$style.lock" v-if="live.roomToken">
-                        <pl-svg name="icon-lock-plain-7b5ab" width="30" />
-                        观看需验证口令
-                    </div>
-                </div>
-            </div> -->
             <ul :class="$style.liveList" v-if="data.values.length">
                 <template v-for="(live, index) of data.values">
                     <li :class="$style.first" :key="index" v-if="data.values.length % 2 && index === 0" @click="toLivePage(live)">

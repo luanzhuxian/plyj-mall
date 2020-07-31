@@ -11,6 +11,7 @@
             <live :class="$style.live" :data="LIVE" v-if="isLiveShow" />
             <online-course :class="$style.onlineCourse" :data="COURSE" v-if="isOnlineCourseShow" />
             <series-course :class="$style.seriesCourse" :data="SERIES" v-if="isSeriesCourseShow" />
+            <image-text :class="$style.imageText" :data="ImageText" v-if="isImageTextShow" />
             <campaign v-if="isCampaignShow" />
             <!-- <activity :class="$style.activity" v-if="type === 4 && isNwEventShow" /> -->
             <!-- <d12-activity :class="$style.activity" v-if="type === 4" /> -->
@@ -63,6 +64,7 @@ import Search from './components/Search.vue'
 import Live from './components/Live.vue'
 import OnlineCourse from './components/Online-Course.vue'
 import SeriesCourse from './components/Series-Course.vue'
+import ImageText from './components/Image-Text.vue'
 // import Activity from '../activity/spring/Activity.vue'
 // import D12Activity from './components/Activity.vue'
 import Banner from './components/Banner.vue'
@@ -84,6 +86,7 @@ export default {
         Live,
         OnlineCourse,
         SeriesCourse,
+        ImageText,
         // Activity,
         // D12Activity,
         Banner,
@@ -134,6 +137,9 @@ export default {
         SERIES () {
             return this.data.SERIES || {}
         },
+        ImageText () {
+            return this.data.ImageText || {}
+        },
         POPULAR () {
             return this.data.POPULAR || {}
         },
@@ -157,6 +163,9 @@ export default {
         },
         isSeriesCourseShow () {
             return this.SERIES.showStatue === 1 && this.SERIES.values && this.SERIES.values.length
+        },
+        isImageTextShow () {
+            return this.ImageText.showStatue === 1 && this.ImageText.values && this.ImageText.values.length
         },
         // isNwEventShow () {
         //     return this.parent.nwEvent && this.parent.nwEvent.permissionStatus
@@ -281,7 +290,8 @@ export default {
 
 .live,
 .online-course,
-.series-course {
+.series-course,
+.image-text {
     padding: 24px 24px 0;
 }
 

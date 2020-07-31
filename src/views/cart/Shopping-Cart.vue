@@ -56,7 +56,8 @@
           全场满{{ minFullCutConpon.useLimitAmount }}元减{{ minFullCutConpon.amount }}元,领券立享优惠
         </span>-->
                 <span v-else-if="minFullCutConpon">
-                    全场满{{ minFullCutConpon.useLimitAmount }}元减{{ minFullCutConpon.amount }}元 <i v-if="!minFullCutConpon.count">,领券立享优惠</i>
+                    全场满{{ minFullCutConpon.useLimitAmount }}元减{{ minFullCutConpon.amount }}元 <i
+                        v-if="!minFullCutConpon.count">,领券立享优惠</i>
                 </span>
                 <!-- 满减券（已领取） -->
                 <!--<span v-else-if="minHadFullCutConpon">
@@ -120,7 +121,8 @@
                     </span>
                     <span v-show="!isManage" class="fz-24">
                         合计：
-                        <i v-if="appropriateCoupon" :class="$style.summation + ' rmb'" v-text="((summation * 1000000 - appropriateCoupon.amount * 1000000) / 1000000).toFixed(2)" />
+                        <i v-if="appropriateCoupon" :class="$style.summation + ' rmb'"
+                           v-text="((summation * 1000000 - appropriateCoupon.amount * 1000000) / 1000000).toFixed(2)" />
                         <i v-else :class="$style.summation + ' rmb'" v-text="summation.toFixed(2)" />
                     </span>
                     <button
@@ -183,6 +185,7 @@ import {
 } from '../../apis/shopping-cart'
 import { getCouponList } from '../../apis/product'
 import { mapGetters } from 'vuex'
+
 export default {
     name: 'ShoppingCart',
     components: {
@@ -333,16 +336,16 @@ export default {
             }
         },
 
-        // 单击规格
+        // 单击规格选框
         skuClick (data) {
             this.currentPro = data
 
             /**
-       * 找出合适的规格作为规格弹框组件的默认选中规格
-       * 需满足以下条件
-       * 1. 规格的库存必须大于当前购物车加入的数量
-       * 2. 当前购物车加入的数量必须大于等于规格的最小购买量
-       */
+                 * 找出合适的规格作为规格弹框组件的默认选中规格
+                 * 需满足以下条件
+                 * 1. 规格的库存必须大于当前购物车加入的数量
+                 * 2. 当前购物车加入的数量必须大于等于规格的最小购买量
+                 */
             const currentSku = data.skuModels.find(item => item.stock >= data.cartProductCount && data.cartProductCount >= item.minBuyNum && item.skuCode1 === data.cartSkuCode && item.skuCode2 === data.cartSkuCode2) || {}
             if (currentSku.id) {
                 currentSku.count = data.cartProductCount
@@ -383,8 +386,8 @@ export default {
         },
 
         // 改变规格
-        async specChanged (option, revert, limiting, limit) {
-            if (limiting && option.count > limit) {
+        async specChanged (currentSku, revert, limiting, limit) {
+            /* if (limiting && option.count > limit) {
                 if (limiting === limit) {
                     return this.$warning(`您至多购买${ limit }件`)
                 }
@@ -392,11 +395,11 @@ export default {
                     return this.$warning(`您已购买${ limiting }件，已达购买上限`)
                 }
                 return this.$warning(`您已购买${ limiting - limit }件，您还可以购买${ limit }件`)
-            }
+            } */
             try {
                 // 请求修改
                 this.updating = true
-                const { skuCode1, count, skuCode2 } = option
+                const { skuCode1, count, skuCode2 } = currentSku
                 const isUpdateSku = await updateCartProductSku({
                     id: this.currentPro.id,
                     skuCode: skuCode1,
@@ -418,7 +421,7 @@ export default {
                     this.showSpecifica = false
                     this.$set(this.products, this.products.indexOf(this.currentPro), this.currentPro)
                     this.computeMoney()
-                    this.isDouble(option)
+                    this.isDouble(currentSku)
                     this.setDisabled(this.products)
                     this.setCoupon()
                 } else {
@@ -493,15 +496,20 @@ export default {
                     skuCode2: cartSkuCode2,
                     count: cartProductCount,
                     price: sku.price,
-                    agentUser
+                    agentUser,
+                    productType: pro.goodsType
                 })
             }
-            sessionStorage.setItem('CONFIRM_LIST', JSON.stringify(confirmList))
+            this.$store.commit('submitOrder/setOrderProducts', {
+                params: {
+                    activeProduct: 1
+                },
+                products: confirmList
+            })
             this.$router.push({
                 name: 'SubmitOrder',
                 query: {
-                    isCart: 'YES',
-                    activeProduct: 1
+                    isCart: true
                 }
             })
         },
@@ -540,12 +548,15 @@ export default {
         // 判断当前规格是否已经存在于购物车中，如果存在，删之
         isDouble (options) {
             // 查找此规格对应的商品
-            const currentSkuCount = this.products.filter(cartPro => cartPro.cartSkuCode === options.skuCode1 && cartPro.cartSkuCode2 === options.skuCode2)
-            if (currentSkuCount.length >= 2) {
-                this.products.splice(this.products.indexOf(currentSkuCount[0]), 1)
-                this.checkedList.splice(this.checkedList.indexOf(currentSkuCount[0]), 1)
+            const filter = cartPro => cartPro.cartSkuCode === options.skuCode1 && cartPro.cartSkuCode2 === options.skuCode2
+            // 存在重复规格
+            if (this.products.filter(filter).length === 2) {
+                this.products.splice(this.products.indexOf(this.currentPro, 1))
+                this.checkedList.splice(this.checkedList.indexOf(this.currentPro, 1))
             }
             this.total = this.products.length
+            // 将当前商品切换至留下的那个商品
+            this.currentPro = this.products.find(filter) || {}
         }
     },
     beforeRouteEnter (to, from, next) {
@@ -560,7 +571,8 @@ export default {
                         }))
                         vm.$router.replace({ name: 'BindMobile' })
                     })
-                    .catch(() => {})
+                    .catch(() => {
+                    })
             }
         })
     }
@@ -568,116 +580,134 @@ export default {
 </script>
 
 <style module lang="scss">
-  .shoppingCart {
-    padding-bottom: 200px;
-  }
-  .top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 80px;
-    padding: 0 24px;
-    font-size: 24px;
-    color: #fff;
-    background-color: $--warning-color;
-    .count > i {
-      font-weight: bold;
+    .shoppingCart {
+        padding-bottom: 200px;
     }
-  }
-  .manage {
-    font-size: 28px;
-  }
-  .productList {
-    padding:  20px 24px;
-  }
-  .settlement {
-    position: fixed;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    height: 92px;
-    padding: 0 24px;
-    left: 0;
-    bottom: 88px;
-    background-color: #fff;
-    box-sizing: border-box;
-    z-index: 4;
-    border-bottom: 1px solid #e7e7e7;
-  }
-  .selectedCount {
-    font-size: 22px;
-    color: #b0b0b0;
-  }
-  .control {
-    display: inline-flex;
-    align-items: center;
-    line-height: 50px;
-    .discounts {
-      display: inline-flex;
-      flex-direction: column;
-      justify-content: center;
-      line-height: 30px;
-    }
-    > span {
-      margin-right: 12px;
-    }
-    .settlement-btn {
-      width: 176px;
-      height: 70px;
-      font-size: 24px;
-      color: #fff;
-      background-color: $--warning-color;
-      border-radius: $--radius2;
-      &:disabled {
+
+    .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 80px;
+        padding: 0 24px;
+        font-size: 24px;
         color: #fff;
-        background-color: #ccc;
-      }
+        background-color: $--warning-color;
+
+        .count > i {
+            font-weight: bold;
+        }
     }
-    .summation {
-      color: $--primary-color;
+
+    .manage {
+        font-size: 28px;
     }
-  }
-  .delete {
-    width: 120px;
-    height: 58px;
-    font-size: 24px;
-    color: $--primary-color;
-    border: 2px solid $--primary-color;
-    border-radius: $--radius2;
-    &:disabled {
-      color: #ccc;
-      border-color: #cfcfcf;
+
+    .productList {
+        padding: 20px 24px;
     }
-  }
-  .coupon {
-    position: fixed;
-    left: 0;
-    bottom: 180px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    min-height: 66px;
-    padding: 10px 44px;
-    box-sizing: border-box;
-    font-size: 24px;
-    background-color: #FFE1C7;
-    z-index: 2;
-    .couponTip {
-      flex: 1;
+
+    .settlement {
+        position: fixed;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        height: 92px;
+        padding: 0 24px;
+        left: 0;
+        bottom: 88px;
+        background-color: #fff;
+        box-sizing: border-box;
+        z-index: 4;
+        border-bottom: 1px solid #e7e7e7;
     }
-    .scrapingUp {
-      display: inline-flex;
-      align-items: center;
-      width: 112px;
-      margin-left: 10px;
-      color: #FE7700;
-      > i {
-        margin-right: 14px;
-      }
+
+    .selectedCount {
+        font-size: 22px;
+        color: #b0b0b0;
     }
-  }
+
+    .control {
+        display: inline-flex;
+        align-items: center;
+        line-height: 50px;
+
+        .discounts {
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: center;
+            line-height: 30px;
+        }
+
+        > span {
+            margin-right: 12px;
+        }
+
+        .settlement-btn {
+            width: 176px;
+            height: 70px;
+            font-size: 24px;
+            color: #fff;
+            background-color: $--warning-color;
+            border-radius: $--radius2;
+
+            &:disabled {
+                color: #fff;
+                background-color: #ccc;
+            }
+        }
+
+        .summation {
+            color: $--primary-color;
+        }
+    }
+
+    .delete {
+        width: 120px;
+        height: 58px;
+        font-size: 24px;
+        color: $--primary-color;
+        border: 2px solid $--primary-color;
+        border-radius: $--radius2;
+
+        &:disabled {
+            color: #ccc;
+            border-color: #cfcfcf;
+        }
+    }
+
+    .coupon {
+        position: fixed;
+        left: 0;
+        bottom: 180px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        min-height: 66px;
+        padding: 10px 44px;
+        box-sizing: border-box;
+        font-size: 24px;
+        background-color: #FFE1C7;
+        z-index: 2;
+
+        .couponTip {
+            flex: 1;
+        }
+
+        .scrapingUp {
+            display: inline-flex;
+            align-items: center;
+            width: 112px;
+            margin-left: 10px;
+            color: #FE7700;
+
+            > i {
+                margin-right: 14px;
+            }
+        }
+    }
 </style>
 <style scoped lang="scss">
     .pl-checkbox {

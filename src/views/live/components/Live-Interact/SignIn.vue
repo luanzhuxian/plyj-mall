@@ -42,9 +42,8 @@ export default {
         }
     },
     methods: {
-        async init () {
+        init () {
             try {
-                await this.$nextTick()
                 this.socket.off('message', this.signIn)
                 this.socket.off('message', this.stopSignIn)
 

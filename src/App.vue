@@ -69,7 +69,9 @@ export default {
                 'PaySuccess',
                 'LongmenLottery',
                 'SubmitOrderV2',
-                'OnlineClassroomIndex'
+                'OnlineClassroomIndex',
+                'SubmitOrder',
+                'RefundApply'
             ],
             // 以下路由名称，不显示快速导航
             showNavbar: [
@@ -82,6 +84,7 @@ export default {
                 'InviteNewcomers',
                 'SpringPloughing',
                 'OnlineClassroom',
+                'ImageTextList',
                 'InteractiveLive',
                 'seriesOfCourses'
             ]

@@ -32,5 +32,15 @@ export default {
             index++
         }
         return strArr.join('')
+    },
+
+    /**
+   * 将后台的金额 分 转化为 元
+   * @val 金额
+   * @returns {*}
+   */
+    formatAmount (val) {
+        if (isNaN(Number(val))) return 0
+        return Number((Number(val) / 100).toFixed(2))
     }
 }

@@ -8,7 +8,7 @@
 
 <script>
 export default {
-    name: 'Courses'
+    name: 'VideoCourses'
 }
 </script>
 

@@ -1,5 +1,6 @@
 export default [
     {
+        // 全部订单:ALL_ORDERS 待付款:WAIT_PAY 待发货:WAIT_SHIP 待收货:WAIT_RECEIVE 待评价:FINISHED
         path: '/my/orders/:status?',
         name: 'Orders',
         component: () => import('../views/my/order/Order-List.vue'),
@@ -27,7 +28,7 @@ export default [
         }
     },
     {
-        path: '/my/orders/comment/:orderId/:productId',
+        path: '/my/orders/comment/:orderId',
         name: 'CommentOrder',
         component: () => import('../views/my/order/Comment.vue'),
         props: true,
@@ -36,16 +37,7 @@ export default [
         }
     },
     {
-        path: '/my/orders/invoice/:orderId/detail',
-        name: 'InvoiceDetail',
-        component: () => import('../views/my/order/Invoice-Detail.vue'),
-        props: true,
-        meta: {
-            title: '发票详情'
-        }
-    },
-    {
-        path: '/my/orders/refund/:orderId/:orderProductRId',
+        path: '/my/orders/refund/:orderId',
         name: 'Refund',
         component: () => import('../views/my/order/Refund.vue'),
         props: true,
@@ -54,7 +46,7 @@ export default [
         }
     },
     {
-        path: '/my/orders/refund-apply/:orderId/:orderProductRId/:refundType/:type/:refundId?',
+        path: '/my/orders/refund-apply/:orderId/:refundType/:type/:refundId?',
         name: 'RefundApply',
         component: () => import('../views/my/order/Refund-Apply.vue'),
         props: true,

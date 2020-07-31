@@ -120,6 +120,67 @@ export default [
             title: '优惠劵历史记录'
         }
     },
+
+    /* ************************************ 我 的 资 源 *********************************** */
+    {
+        path: '/my/course',
+        alias: '/lived/library',
+        name: 'CourseLibrary',
+        component: () => import('../views/my/course-lib/Index.vue'),
+        redirect: '/my/course/live',
+        meta: {
+            title: '视频库'
+        },
+        children: [
+            {
+                path: 'live',
+                name: 'MyLive',
+                component: () => import('../views/my/course-lib/video-course/Live.vue'),
+                meta: {
+                    title: '直播课'
+                }
+            },
+            {
+                alias: 'courses/:courseType',
+                path: 'video/:courseType',
+                name: 'VideoCourses',
+                component: () => import('../views/my/course-lib/video-course/Courses.vue'),
+                redirect: '/my/course/video/:courseType/single-course-learning/1',
+                meta: {
+                    // 单课，系列课
+                    title: '我的课程'
+                },
+                children: [
+                    {
+                        path: 'single-course-learning/:learnStatus',
+                        name: 'CourseLearning',
+                        component: () => import('../views/my/course-lib/video-course/Course-Learning.vue'),
+                        meta: {
+                            title: '课程学习'
+                        }
+                    }
+                ]
+            },
+            {
+                path: 'image-text',
+                name: 'MyImageText',
+                component: () => import('../views/my/course-lib/image-text/Index.vue'),
+                meta: {
+                    title: '我的资料'
+                }
+            }
+        ]
+    },
+    {
+        alias: '/lived/course-watch/:courseId',
+        path: '/my/video/watch/:courseId',
+        name: 'CourseWatch',
+        props: true,
+        component: () => import('../views/my/course-lib/video-course/Course-Watch.vue'),
+        meta: {
+            title: '观看课程'
+        }
+    },
     {
         path: '/my/welfare/coupon',
         name: 'MyCoupon',

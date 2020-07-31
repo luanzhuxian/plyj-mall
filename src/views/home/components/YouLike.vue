@@ -10,7 +10,7 @@
             <category-item
                 v-for="(item) in likeProduct"
                 :key="item.id"
-                :img="item.productMainImage + '?x-oss-process=style/thum-middle'"
+                :img="item.productMainImage"
                 :product-id="item.id"
                 :product-name="item.productName"
                 :product-desc="item.productDesc"

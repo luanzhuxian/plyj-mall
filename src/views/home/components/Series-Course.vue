@@ -50,7 +50,7 @@
                                     v-text="course.goodsInfo.originalPrice"
                                     v-if="course.goodsInfo.originalPrice"
                                 />
-                                <div v-if="!course.orderId" :class="$style.bottomBtn">{{ getBtnText(course) }}</div>
+                                <div v-if="!course.orderId" :class="$style.bottomBtn">{{ getBtnText(course.goodsInfo) }}</div>
                                 <div v-else :class="[$style.bottomBtn, $style.bottomStudy]">观看学习</div>
                             </div>
                         </div>
@@ -62,8 +62,6 @@
 </template>
 
 <script>
-import moment from 'moment'
-
 export default {
     name: 'SeriesCourse',
     props: {
@@ -81,7 +79,7 @@ export default {
         getBtnText ({ isOpenSale, regularSaleTime = '' }) {
             let text = '立即订购'
             if (isOpenSale === 1) {
-                const saleTime = moment(regularSaleTime).values()
+                const saleTime = new Date(regularSaleTime).valueOf()
                 if (saleTime > Date.now()) {
                     text = '即将开售'
                 }

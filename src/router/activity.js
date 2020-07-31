@@ -40,8 +40,9 @@ export default [
         }
     },
     {
-        path: '/spring-ploughing',
+        path: '/spring-ploughing/:brokerId?',
         name: 'SpringPloughing',
+        props: true,
         component: () => import('../views/marketing-activity/spring/Spring-Ploughing.vue'),
         meta: {
             title: '春耘计划'

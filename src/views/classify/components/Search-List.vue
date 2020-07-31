@@ -40,7 +40,7 @@
                                 :id="item.id"
                                 :title="item.productName"
                                 :desc="item.productDesc"
-                                :img="item.productMainImage + '?x-oss-process=style/thum-middle'"
+                                :img="item.productMainImage"
                                 :price="item.productSkuModels.length && item.productSkuModels[0].price"
                                 :original-price="item.productSkuModels.length && item.productSkuModels[0].originalPrice"
                             />
@@ -71,7 +71,7 @@
                                 :id="item.id"
                                 :label="item.courseType === 2 ? '系列课' : '单课'"
                                 :title="item.courseName"
-                                :img="item.courseImg + '?x-oss-process=style/thum-middle'"
+                                :img="item.courseImg"
                                 :price="item.sellingPrice"
                                 :original-price="item.originalPrice"
                             >

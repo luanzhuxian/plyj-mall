@@ -12,6 +12,7 @@
             <slot name="prefix" />
         </div>
         <span
+            v-if="label"
             ref="label"
             class="pl-form-item_label"
             v-text="label"
@@ -138,10 +139,11 @@ export default {
       font-weight: bold;
     }
     .pl-form-item_content {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      height: auto;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        height: auto;
+        padding: 0 16px;
     }
   }
 </style>

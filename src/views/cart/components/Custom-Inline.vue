@@ -1,49 +1,22 @@
 <template>
-    <div
-        :class="{
-            [$style.infoItem]: true,
-        }"
-    >
-        <div :class="$style.content">
-            <span :class="$style.itemLabel">{{ label }}</span>
+    <div :class="$style.studentInline">
+        <div :class="$style.studentList">
             <div
-                :class="{ [$style.collapse]: collapse }"
-                @click="collapse = !collapse"
+                v-for="(stu, i) of formList"
+                :key="i"
+                @click="editStudent(stu)"
+                :class="$style.item"
             >
-                <span>请填写</span>
-                <pl-svg
-                    :class="{ [$style.rightArrow]: true }"
-                    name="icon-right" fill="#ccc" height="24"
-                />
+                <span v-text="label + ' ' + (i + 1)" />
+                <span v-if="checkValue(stu)">已完善</span>
+                <span v-else>去完善</span>
             </div>
         </div>
-
-        <ul
-            :class="{
-                [$style.list]: true,
-                [$style.collapse]: collapse,
-                [$style.error]: errorItemId === product.productId,
-            }"
-            v-if="formData.formList"
-        >
-            <li
-                v-for="(item, i) of formData.formList"
-                :key="i"
-                @click="editStudent(i)"
-            >
-                <div>{{ label }}{{ i + 1 }}</div>
-                <div>
-                    <span v-if="isError(i)">未填写</span>
-                    <span v-else-if="Object.keys(item)[0]" v-text="item[Object.keys(item)[0]]" />
-                    <pl-svg :class="$style.rightArrow" name="icon-right" fill="#ccc" height="24" />
-                </div>
-            </li>
-        </ul>
 
         <CustomForm
             :show.sync="showForm"
             :form="currentForm"
-            :rules="currentRules"
+            :rules="rules"
             @confirm="confirm"
             :title="label"
         />
@@ -52,6 +25,7 @@
 
 <script>
 import CustomForm from './Custom-Form.vue'
+import { checkLength } from '../../../assets/js/validate'
 
 export default {
     name: 'CustomInline',
@@ -60,11 +34,11 @@ export default {
     },
     data () {
         return {
-            collapse: false,
             showForm: false,
             currentForm: {},
-            currentRules: {},
-            formData: {}
+            // 自定义表单的所有信息，包括字段值和字段描述
+            formList: [],
+            rules: {}
         }
     },
     props: {
@@ -74,199 +48,181 @@ export default {
                 return {}
             }
         },
-        customList: {
-            type: Array,
-            default () {
-                return []
-            }
-        },
         label: {
             type: String,
             default: '学员信息'
+        }
+    },
+    computed: {
+        count () {
+            // 实体商品只需要填写一个自定义表单，其它商品按照商品数量填写多个表单
+            return this.product.goodsType === 'PHYSICAL_GOODS' ? 1 : this.product.count
         },
-        // 报错的项目id（该项未填写）
-        errorItemId: {
-            type: String,
-            default: ''
-        },
-        count: {
-            type: Number,
-            default: 0
+        customList () {
+            return this.product.skuCustoms || []
         }
     },
     watch: {
-        product: {
-            handler () {
-                this.setFormData()
+        count: {
+            handler (val) {
+                if (val) this.initFormData()
             },
             immediate: true
-        },
-        errorItemId () {
-            this.$nextTick(() => {
-                const list = document.querySelector(`.${ this.$style.error }`)
-                if (list) {
-                    list.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'center',
-                        inline: 'nearest'
-                    })
-                }
-            })
         }
     },
     methods: {
 
-        // 单商品
-        setFormData () {
+        /**
+         * 提交多个实体商品
+         * 多个实体商品要将每个商品的自定义表单进行合并，最终只得到一个表单，就像对待一个商品那样
+         * 最后提交时会按照每个商品需要的自定义字段进行拆分，不考虑商品数量
+         * 数据结构如：
+         * {
+         *   formList: [{ field1: '', field2: '', field3: '' }],
+         *   rules: []
+         * }
+         */
+        initFormData () {
+            const CUSTOM_FORM_CACHE = JSON.parse(localStorage.getItem('CUSTOM_FORM_CACHE')) || {}
             const formList = []
-            const rules = []
-            const count = this.product.productType === 'PHYSICAL_GOODS' ? 1 : this.count
-
-            // 获取上次填写的数据，尝试回填
-            const oldFormList = JSON.parse(sessionStorage.getItem(`CUSTOM_FORM_${ this.product.productId }`)) || []
-            for (let i = 0; i < count; i++) {
+            const rules = {}
+            const COUNT = this.count
+            // 缓存的表单字段属性和值的列表, 这是一个二维数组
+            const CACHE_FORM = CUSTOM_FORM_CACHE[this.product.sku1 + this.product.sku2] || []
+            // 每个数组代表一个表单, 表单也是数组，存储着字段的所有信息
+            for (const cacheForm of CACHE_FORM) {
                 const form = {}
-                const rule = {}
-                for (const cus of this.customList) {
-                    const key = cus.fieldName
-
-                    // 回填数据
-                    if (oldFormList[i]) {
-                        form[key] = oldFormList[i][key] || ''
-                    } else {
-                        form[key] = ''
-                    }
-                    rule[key] = [{
-                        required: Boolean(cus.required),
-                        message: `请输入${ cus.fieldName }`,
-                        trigger: 'none'
-                    }]
+                for (const custom of this.customList) {
+                    const CACHE_VALUE = cacheForm.find(item => item.fieldName === custom.fieldName)
+                    form[custom.fieldName] = CACHE_VALUE ? CACHE_VALUE.fieldValue || '' : ''
                 }
                 formList.push(form)
-                rules.push(rule)
+                if (formList.length === COUNT) {
+                    break
+                }
             }
-            this.formData = { formList, rules }
+            for (const custom of this.customList) {
+                rules[custom.fieldName] = [
+                    {
+                        required: Boolean(custom.required),
+                        message: `请输入${ custom.fieldName }`,
+                        trigger: 'none',
+                        length: custom.length,
+                        sort: custom.sort,
+                        valueType: custom.valueType
+                    },
+                    {
+                        validator: checkLength(custom.length),
+                        message: `最多输入${ custom.length }个字符`,
+                        trigger: 'none'
+                    }
+                ]
+            }
+            let i = 0
+            const surplus = COUNT - formList.length
+            for (; i < surplus; i++) {
+                const form = {}
+                for (const custom of this.customList) {
+                    form[custom.fieldName] = ''
+                }
+                formList.push(form)
+            }
+            this.formList = formList
+            this.rules = rules
             this.confirm()
         },
-        selectStudent () {
-            const { product } = this
-            sessionStorage.setItem('SELECT_STUDENT_FROM', JSON.stringify({
-                name: this.$route.name,
-                query: this.$route.query,
-                params: this.$route.params
-            }))
-            this.$router.push({
-                name: 'StudentList',
-                query: {
-                    select: 'YES',
-                    sku: product.skuCode1 + product.skuCode2,
-                    count: product.count
-                }
-            })
-        },
-        editStudent (index) {
-            this.currentForm = this.formData.formList[index]
-            this.currentRules = this.formData.rules[index]
+        // 编辑某个信息
+        editStudent (stu) {
+            this.currentForm = stu
             this.showForm = true
         },
-        isError (index) {
-            const form = this.formData.formList[index]
-            const rule = this.formData.rules[index]
-            for (const key of Object.keys(form)) {
-                if (rule[key][0].required && !form[key]) {
-                    return true
+        // 不管必填还是非必填，全部都填写为 已完善，否则就是 去完善
+        checkValue (stu) {
+            for (const k of Object.keys(stu)) {
+                if (!stu[k]) {
+                    return false
                 }
             }
+            return true
         },
-        confirm (e) {
-            const { rules, formList } = this.formData
-            const data = []
-            for (const [i, form] of formList.entries()) {
-                const fields = []
-                for (const key of Object.keys(form)) {
-                    fields.push({
-                        fieldName: key,
-                        fieldValue: form[key],
-                        required: Number(rules[i][key][0].required)
-                    })
-                }
-                data.push(fields)
-            }
-            this.product.customForm = data
 
-            // 确定后，将当前表单列表保存起来
-            sessionStorage.setItem(`CUSTOM_FORM_${ this.product.productId }`, JSON.stringify(this.formData.formList))
-            this.$emit('confirm', e)
+        /**
+         * 提交多个实体商品，提交的时候要拆分
+         * 拆分时要注意一点，表单中的每个字段，要转成一个对象，对象包括 fieldName， fieldValue 属性
+         * 所以会形成如下的数据结构
+         * {
+         *   [proId]: [{ fieldName: 'field1', fieldValue: 'a', reuqired: 1  }, { fieldName: 'field2', fieldValue: 'b', reuqired: 1  }]
+         * }
+         */
+        confirm () {
+            /*
+              将数据缓存起来，以便下次遇到相同商品时使用
+              每组数据与之商品id一一对应
+             */
+            const CONFIRM_FORM = []
+            const CUSTOM_FORM_CACHE = JSON.parse(localStorage.getItem('CUSTOM_FORM_CACHE')) || {}
+            const proId = this.product.sku1 + this.product.sku2
+            for (const form of this.formList) {
+                const FORM = []
+                for (const k of Object.keys(form)) {
+                    const rule = this.rules[k][0]
+                    const FIELD = {
+                        fieldName: k,
+                        fieldValue: form[k],
+                        required: Number(rule.required),
+                        length: rule.length,
+                        sort: rule.sort,
+                        valueType: rule.valueType
+                    }
+                    FORM.push(FIELD)
+                }
+                CONFIRM_FORM.push(FORM)
+            }
+            this.$emit('confirm', this.product.goodsId, CONFIRM_FORM)
+            this.CONFIRM_FORM = CONFIRM_FORM
+            // 缓存已经填写的表单
+            CUSTOM_FORM_CACHE[proId] = CONFIRM_FORM
+            localStorage.setItem('CUSTOM_FORM_CACHE', JSON.stringify(CUSTOM_FORM_CACHE))
+        },
+        checkForm () {
+            if (this.CONFIRM_FORM.length < this.count) {
+                this.$warning(`请选择${ this.count }名学员信息`)
+                return false
+            }
+            for (const form of this.CONFIRM_FORM) {
+                for (const field of form) {
+                    if (field.required && !field.fieldValue) {
+                        this.$warning(`请填写${ this.label }`)
+                        return false
+                    }
+                }
+            }
+            return true
         }
     }
 }
 </script>
 
 <style module lang="scss">
-    .infoItem {
-        line-height: 88px;
-        font-size: 24px;
-        border: 2px solid #fff;
-    }
-
-    .rightArrow {
-        margin-left: 10px;
-        vertical-align: -4px;
-        transition: transform .2s linear;
-        transform: rotate(90deg);
-    }
-
-    .collapse {
-        > .rightArrow {
-            transform: rotate(0);
-        }
-    }
-
-    .list {
-        padding: 40px 24px 40px 68px;
-        background-color: #F8F8F8;
-        overflow: hidden;
-        transition: max-height .2s linear;
-
-        > li {
+    .student-inline {
+        .header {
             display: flex;
-            flex: 1;
             justify-content: space-between;
-            margin-bottom: 48px;
-            line-height: 36px;
+            line-height: 50px;
+        }
 
-            &:nth-last-of-type(1) {
-                margin-bottom: 0;
+        .rightArrow {
+            vertical-align: -4px;
+        }
+
+        .studentList {
+            line-height: 50px;
+            color: #999;
+            > .item {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
             }
-
-            .rightArrow {
-                transform: rotate(0);
-            }
         }
-
-        &.collapse {
-            height: 0;
-            padding: 0;
-        }
-
-        &.error {
-            animation: bordrFlicker .15s ease;
-            animation-iteration-count: 8;
-            border: 2px solid red;
-            box-sizing: border-box;
-        }
-    }
-
-    .content {
-        display: flex;
-        flex: 1;
-        justify-content: space-between;
-        padding-left: 68px;
-        padding-right: 28px;
-    }
-    @keyframes bordrFlicker {
-        0% { border-color: #F24724 }
-        50% { border-color: transparent }
-        100% { border-color: #F24724 }
     }
 </style>

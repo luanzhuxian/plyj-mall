@@ -18,7 +18,9 @@
                 <span :class="$style.price">
                     <b v-if="sellingPrice">{{ Number((sellingPrice / 100).toFixed(2)) }}</b>
                     <span v-else>免费</span>
-                    <del v-if="originPrice && sellingPrice !== originPrice">{{ Number((originPrice / 100).toFixed(2)) }}</del>
+                    <div>
+                        <del :class="$style.del" v-if="originPrice && sellingPrice !== originPrice">{{ Number((originPrice / 100).toFixed(2)) }}</del>
+                    </div>
                 </span>
                 <button v-if="exhcangeStatus === 1" :class="[$style.btn, $style.usedBtn]">已购买</button>
                 <button v-else-if="exhcangeStatus === 2" :class="[$style.btn, $style.usedBtn]">已兑换</button>
@@ -93,17 +95,6 @@ export default {
         },
         receive () {
             this.$emit('receive', this.id)
-            this.$router.push({
-                name: 'SubmitCurriculum',
-                params: {
-                    productId: this.id,
-                    count: 1
-                },
-                query: {
-                    productActive: 1,
-                    activityId: ''
-                }
-            })
         }
     }
 }
@@ -188,7 +179,7 @@ export default {
           font-size:32px;
           color: #FE7700;
         }
-        > del {
+        .del {
           margin-left: 6px;
           font-size:20px;
           color: #999;

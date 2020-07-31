@@ -68,9 +68,8 @@ export default {
         }
     },
     methods: {
-        async init () {
+        init () {
             try {
-                await this.$nextTick()
                 this.socket.off('message', this.receive)
 
                 this.socket.on('message', this.receive)

@@ -71,3 +71,8 @@ export const getCouponDetail = id => axios.get(`/apis/v1/coupon/selectById/${ id
  * 根据商品价格获取合适的红包
  * */
 export const getRedEnvelopeListByPrice = _ => axios.get('/apis/v1/scholarship/buyScholarshipList')
+
+/**
+ * 根据商品id列表获取对应的兑换码列表
+ * */
+export const getExchangeCodeMap = params => axios.post('/apis/v1/exchange/me/list', params)

@@ -4,13 +4,13 @@
             :class="$style.tabBar"
             size="small"
             :tabs="tabs"
-            :active-id.sync="form.returnStatus"
+            :active-id.sync="status"
             @change="onTabChange"
         >
             <div
                 :class="$style.tabPane"
-                v-for="(item, i) of tabs"
-                :key="i"
+                v-for="i of tabs"
+                :key="'tab' + i"
                 :slot="'tab-pane-' + i"
             />
         </pl-tab>
@@ -25,83 +25,29 @@
             >
                 <template v-slot="{ list }">
                     <router-link
-                        :class="$style.listItem"
                         tag="div"
                         v-for="(item, i) of orderList"
-                        :key="i"
+                        :key="item.id"
                         :to="{ name: 'RefundDetail', params: { id: item.id } }"
                     >
-                        <div>
-                            <div :class="$style.listItemLeft">
-                                <span
-                                    :class="$style.tag"
-                                    v-text="orderTypeMap[item.orderType]"
-                                />
-                                <pl-list
-                                    title="退单号："
-                                    :content="item.id"
-                                />
-                            </div>
-                            <p
-                                :class="$style.status"
-                                v-text="item.returnStatusText"
-                            />
-                        </div>
-                        <order-item
-                            :img="item.productPic + '?x-oss-process=style/thum'"
-                            :name="item.productName"
-                            :option="item.skuName2 ? `${item.skuName},${item.skuName2}` : item.skuName"
-                            :count="item.productCount"
-                            :price="item.productPrice"
-                            border
+                        <RefundListItem
+                            :index="i"
+                            :order-id="item.id"
+                            :order-type="item.orderType"
+                            :order-status="item.orderStatus"
+                            :refund-type="item.type"
+                            :refund-status="item.businessStatus"
+                            :audit-status="item.status"
+                            :goods-images="item.goodsImage"
+                            :goods-name="item.goodsName"
+                            :sku-name="item.skuName"
+                            :sub-sku-name="item.subSkuName"
+                            :count="item.count"
+                            :unit-price="item.displayUnitPrice"
+                            :refund-amount="item.displayRefundAmount"
+                            @cancelApplication="cancelApplication"
+                            @deleteOrder="deleteOrder"
                         />
-                        <div :class="$style.listItemBottom">
-                            <div :class="$style.priceWrapper">
-                                <span :class="$style.totalCount">{{ `共${item.productCount}件商品` }}</span>
-                                <span :class="$style.bold">总价：</span>
-                                <span :class="$style.price">{{ item.actualRefund }}</span>
-                            </div>
-                            <div :class="$style.buttons">
-                                <span
-                                    :class="$style.reundType"
-                                    v-text="refundTypeMap[item.refundType]"
-                                />
-                                <pl-button
-                                    v-if="item.returnStatus === 'WAIT_CHECK'"
-                                    round
-                                    plain
-                                    @click="cancelApplication(item, i)"
-                                >
-                                    取消申请
-                                </pl-button>
-                                <pl-button
-                                    v-if="~['FINISHED', 'CLOSED', 'CANCEL', 'REJECT'].indexOf(item.returnStatus)"
-                                    round
-                                    plain
-                                    @click="deleteOrder(item, i)"
-                                >
-                                    删除
-                                </pl-button>
-                                <pl-button
-                                    v-if="~['WAIT_CHECK', 'REFUND_PRODUCT', 'FINISHED', 'REFUNDING'].indexOf(item.returnStatus)"
-                                    round
-                                    plain
-                                    @click="$router.push({ name: 'RefundDetail', params: { id: item.id } })"
-                                >
-                                    查看详情
-                                </pl-button>
-                                <pl-button
-                                    :class="$style.large"
-                                    v-if="item.returnStatus === 'REFUND_PRODUCT_WAIT_RETURN'"
-                                    type="warning"
-                                    plain
-                                    round
-                                    @click="$router.push({ name: 'RefundDetail', params: { id: item.id } })"
-                                >
-                                    寄件运单号
-                                </pl-button>
-                            </div>
-                        </div>
                     </router-link>
                 </template>
             </load-more>
@@ -110,57 +56,59 @@
 </template>
 
 <script>
-import OrderItem from '../../../components/item/Order-Item.vue'
+import { mapGetters, mapMutations } from 'vuex'
+import filter from '../../../filter/index'
 import LoadMore from '../../../components/common/Load-More.vue'
+import RefundListItem from './components/Refund-List-Item'
 import {
     getRefundOrderList,
     cancelRefundApplication,
     deleteRefundOrder
 } from '../../../apis/order-manager'
-import { mapGetters } from 'vuex'
 
-const tabs = [{
-    name: '全部',
-    id: 'ALL_ORDER'
-}, {
-    name: '待审核',
-    id: 'WAIT_CHECK'
-}, {
-    name: '退换货',
-    id: 'REFUND_PRODUCT'
-}, {
-    name: '退款成功',
-    id: 'FINISHED'
-}]
+const TAB_KEY = {
+    ALL: 'ALL',
+    WAIT_CHECK: 'WAIT_CHECK',
+    REFUND_PRODUCT: 'REFUND_PRODUCT',
+    REFUNDING: 'REFUNDING',
+    FINISHED: 'FINISHED'
+}
 
 export default {
     name: 'RefundList',
     components: {
         LoadMore,
-        OrderItem
+        RefundListItem
     },
-    props: {
-        status: {
-            type: String,
-            default: null
-        }
+    computed: {
+        ...mapGetters(['refundOperatedList', 'orderActionMap'])
     },
     data () {
         return {
-            tabs,
+            getRefundOrderList,
+            status: '',
+            tabs: [
+                // auditStatus '' businessStatus ''
+                { name: '全部', id: TAB_KEY.ALL },
+                // auditStatus 1  businessStatus ''
+                { name: '待审核', id: TAB_KEY.WAIT_CHECK },
+                // auditStatus 2  businessStatus 1
+                { name: '退换货', id: TAB_KEY.REFUND_PRODUCT },
+                // auditStatus 2  businessStatus 2
+                { name: '退款中', id: TAB_KEY.REFUNDING },
+                //  auditStatus 2  businessStatus 3
+                { name: '退款成功', id: TAB_KEY.FINISHED }
+            ],
             orderList: [],
             form: {
                 current: 1,
                 size: 10,
-                returnStatus: ''
+                auditStatus: '',
+                businessStatus: ''
             },
-            getRefundOrderList,
             loading: false,
             $refresh: null
         }
-    },
-    computed: {
-        ...mapGetters(['orderTypeMap', 'refundTypeMap'])
     },
     beforeRouteEnter (to, from, next) {
         to.meta.noRefresh = from.name === 'RefundDetail'
@@ -170,49 +118,42 @@ export default {
         this.$refresh = this.$refs.loadMore.refresh
     },
     activated () {
-        const handler = action => {
-            if (action === 'cancel') {
-                return (order, index) => {
-                    if (this.status === 'ALL_ORDER') {
-                        order.returnStatus = 'CANCEL'
-                    } else if (this.status === 'WAIT_CHECK') {
-                        this.orderList.splice(index, 1)
-                    }
-                }
-            }
-            if (action === 'ship') {
-                return (order, index) => {
-                    if (this.status === 'ALL_ORDER') {
-                        order.returnStatus = 'REFUND_PRODUCT'
-                    } else if (this.status === 'WAIT_CHECK') {
-                        this.orderList.splice(index, 1)
-                    }
-                }
-            }
-            if (action === 'delete') {
-                return (order, index) => {
-                    this.orderList.splice(index, 1)
-                }
-            }
-        }
-
+        this.status = this.$route.params.status
         if (this.orderList.length && this.$router.currentRoute.meta.noRefresh) {
-            const arr = JSON.parse(localStorage.getItem('UPDATE_REFUND_LIST') || '[]')
-            if (!arr.length) return
-            for (const item of arr) {
-                const index = this.orderList.findIndex(order => order.id === item.id)
-                if (index === -1) continue
-                handler(item.action)(this.orderList[index], index)
-            }
-            localStorage.removeItem('UPDATE_REFUND_LIST')
-            this.orderList.length ? this.$forceUpdate() : this.$refresh()
+            if (!this.refundOperatedList.length) return
+            this.handleCurrentOrder(this.refundOperatedList)
             return
         }
-
-        this.form.returnStatus = this.status
         this.$refresh()
     },
+    watch: {
+        status (val) {
+            switch (val) {
+                case TAB_KEY.ALL:
+                    this.form.auditStatus = ''
+                    this.form.businessStatus = ''
+                    break
+                case TAB_KEY.WAIT_CHECK:
+                    this.form.auditStatus = '1'
+                    this.form.businessStatus = ''
+                    break
+                case TAB_KEY.REFUND_PRODUCT:
+                    this.form.auditStatus = '2'
+                    this.form.businessStatus = '1'
+                    break
+                case TAB_KEY.REFUNDING:
+                    this.form.auditStatus = '2'
+                    this.form.businessStatus = '2'
+                    break
+                case TAB_KEY.FINISHED:
+                    this.form.auditStatus = '2'
+                    this.form.businessStatus = '3'
+                    break
+            }
+        }
+    },
     methods: {
+        ...mapMutations(['clearRefundOperatedList']),
         onTabChange (item) {
             this.$nextTick(() => {
                 this.$router.replace({ name: 'RefundList', params: { status: item.id } })
@@ -220,22 +161,65 @@ export default {
             })
         },
         onRefresh (list, total) {
+            for (const item of list) {
+                item.displayUnitPrice = filter.formatAmount(item.unitPrice)
+                item.displayRefundAmount = filter.formatAmount(item.refundAmount)
+            }
             this.orderList = list
         },
-        async cancelApplication (item, index) {
+        handleCurrentOrder (arr) {
+            const handler = action => {
+                if (action === this.orderActionMap.cancel) {
+                    // 退换货状态businessStatus 1:待退货 2:待收货 3:退货完成 4:待退款 5:退款中 6:退款成功 7:退款失败
+                    return (order, index) => {
+                        if (this.status === TAB_KEY.ALL) {
+                            order.businessStatus = 7
+                        }
+                        if (this.status === TAB_KEY.WAIT_CHECK) {
+                            this.orderList.splice(index, 1)
+                        }
+                    }
+                }
+                if (action === this.orderActionMap.ship) {
+                    return (order, index) => {
+                        if (this.status === TAB_KEY.ALL) {
+                            order.businessStatus = 2
+                        }
+                        if (this.status === TAB_KEY.WAIT_CHECK) {
+                            this.orderList.splice(index, 1)
+                        }
+                    }
+                }
+                if (action === this.orderActionMap.delete) {
+                    return (order, index) => {
+                        this.orderList.splice(index, 1)
+                    }
+                }
+            }
+            for (const item of arr) {
+                const index = this.orderList.findIndex(order => order.id === item.id)
+                if (index === -1) continue
+                handler(item.action)(this.orderList[index], index)
+            }
+            this.$store.commit('clearRefundOperatedList')
+            this.orderList.length ? this.$forceUpdate() : this.$refresh()
+        },
+        async cancelApplication (index) {
             try {
-                await this.$confirm('退单正在审核中，确定要取消？')
-                await cancelRefundApplication({ id: item.id })
+                const detail = this.orderList[index]
+                await this.$confirm('退单正在进行中，确定要取消？')
+                await cancelRefundApplication(detail.id)
                 this.$success('取消申请成功')
                 this.orderList.splice(index, 1)
             } catch (e) {
                 throw e
             }
         },
-        async deleteOrder (item, index) {
+        async deleteOrder (index) {
             try {
-                await this.$confirm('是否删除当前订单？ 删除后不可找回')
-                await deleteRefundOrder({ id: item.id })
+                const detail = this.orderList[index]
+                await this.$confirm('是否删除当前退单？ 删除后不可找回')
+                await deleteRefundOrder(detail.id)
                 this.orderList.splice(index, 1)
                 this.$forceUpdate()
                 this.$success('删除成功')
@@ -272,99 +256,6 @@ export default {
   }
   .list {
     padding: 22px 24px 120px;
-  }
-  .list-item {
-    margin-bottom: 20px;
-    padding: 0 24px 28px;
-    border-radius: 20px;
-    background-color: #fff;
-    > div {
-      &:nth-of-type(1) {
-        position: relative;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 22px 0 36px;
-      }
-    }
-    .status {
-      color: $--primary-color;
-      font-size: 24px;
-      line-height: 34px;
-    }
-  }
-  .list-item-bottom {
-    margin-top: 16px;
-    > div {
-      display: flex;
-      justify-content: flex-end;
-      align-items: baseline;
-    }
-    .price-wrapper {
-      display: flex;
-      align-items: center;
-    }
-    .total-count {
-      font-size: 20px;
-      font-family: MicrosoftYaHeiUI;
-      color: #999999;
-      margin-right: 12px;
-    }
-    .bold {
-      font-size: 30px;
-      font-weight: bold;
-      color: #333333;
-    }
-    .price {
-      align-self: flex-end;
-      font-size: 32px;
-      color: #FE7700;
-      &:before {
-        // margin-right: 10px;
-        padding-bottom: 4px;
-        font-size: 20px;
-        content: '¥';
-      }
-    }
-    .buttons {
-      margin-top: 24px;
-      button {
-        box-sizing: border-box;
-        margin-left: 24px;
-        width: 136px;
-        padding: 0;
-        &:nth-of-type(1) {
-          margin-left: 40px;
-        }
-      }
-      .large {
-        width: auto;
-        padding: 0 25px;
-        // background-color: #FFF !important;
-        // border: 1px solid #FE7700 !important;
-        // color: #FE7700 !important;
-      }
-    }
-    .reund-type {
-      font-size: 24px;
-      color: #FE7700;
-      line-height: 32px;
-    }
-  }
-  .list-item-left {
-    display: inline-flex;
-    align-items: center;
-    .tag {
-      width: 104px;
-      height: 28px;
-      background: #F2B036;
-      border-radius: 14px;
-      font-size: 20px;
-      color: #FFFFFF;
-      line-height: 28px;
-      margin-right: 12px;
-      text-align: center;
-    }
   }
 </style>
 <style lang="scss">

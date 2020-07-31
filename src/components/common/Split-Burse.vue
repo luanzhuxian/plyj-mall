@@ -53,16 +53,22 @@ export default {
             list: []
         }
     },
+    async created () {
+        try { await this.init() } catch (e) { throw e }
+    },
     async activated () {
-        try {
-            const { status, result } = await getDelayBurseList()
-            if (status === 200) {
-                this.list = result
-                this.list.length === 0 ? this.show = false : this.show = true
-            }
-        } catch (e) { throw e }
+        try { await this.init() } catch (e) { throw e }
     },
     methods: {
+        async init () {
+            try {
+                const { status, result } = await getDelayBurseList()
+                if (status === 200) {
+                    this.list = result
+                    this.list.length === 0 ? this.show = false : this.show = true
+                }
+            } catch (e) { throw e }
+        },
         async dispatchBurse (row) {
             try {
                 await dispatchBurse({ id: row.id, activityId: row.activityId })

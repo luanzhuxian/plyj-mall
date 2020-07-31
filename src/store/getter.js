@@ -1,15 +1,10 @@
 export default {
     theme: state => state.theme,
-    smstype: state => state.smstype,
     addressList: state => state.addressList,
     selectedAddress: state => state.selectedAddress ||
       state.addressList.find(item => item.defaultAddress === 'YES') ||
       state.addressList[0] ||
       {},
-    orderStatusMap: state => state.orderStatusMap,
-    orderTypeMap: state => state.orderTypeMap,
-    refundTypeMap: state => state.refundTypeMap,
-
     avatar: state => state.userInfo.img,
     userName: state => state.userInfo.userName,
     realName: state => state.userInfo.realName,
@@ -72,7 +67,7 @@ export default {
     currentTime: state => state.currentTime,
 
     // 全局数据
-    shareId: state => state.SHARE_ID,
+    shareId: state => state.SHARE_ID || state.userInfo.userId,
 
     // 杂项
     // 是否禁止支付

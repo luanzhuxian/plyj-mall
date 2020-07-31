@@ -202,9 +202,11 @@
                         <img v-imgError :src="detail.coverImg + '?x-oss-process=style/thum-middle'" alt="">
                         <div :class="$style.topRight">
                             <div :class="$style.title" v-text="detail.name" />
-                            <div :class="$style.time" v-text=" detail.livestartedDuration" />
+                            <div :class="$style.time">
+                                {{ detail.liveStartTime | dateFormat('YYYY.MM.DD HH:mm:ss') }} ~ {{ detail.liveEndTime | dateFormat('YYYY.MM.DD HH:mm:ss') }}
+                            </div>
                             <div :class="$style.price" v-text="detail.paidAmount" />
-                            <div :class="$style.liveTip">
+                            <div v-if="detail.paidAmount" :class="$style.liveTip">
                                 <p>该直播为付费项目，不支持退换，</p>
                                 <p>付费即可观看；一场计费一次，任何时间可观看</p>
                             </div>
@@ -268,32 +270,34 @@ import LiveInteract from './components/Live-Interact/Index'
 import {
     getRoomStatus,
     getActiveCompleteInfo,
-    pay,
     hasPied,
-    cancelOrder,
     setComeInConut,
     getVideoMesById,
     // 查询直播是否开始
     isLiveStart,
     sign,
-    // setcCverImg,
     // 是否有权限观看
     hasPermission
-    // setWarmup
 } from '../../apis/live'
+import {
+    submitOrder,
+    getOrderPayData,
+    cancleOrderListByBatchNumber
+} from '../../apis/order-manager'
 import {
     receiveCouponForLive
 } from '../../apis/my-coupon'
 import io from 'socket.io-client'
 import moment from 'moment'
-import wechatPay from '../../assets/js/wechat/wechat-pay'
 import {
     generateQrcode,
     cutArcImage,
     loadImage,
-    createText
+    createText,
+    setTimeoutSync
     // throttle
 } from '../../assets/js/util'
+import wechatPay from '../../assets/js/wechat/wechat-pay'
 const POSTER_BG = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/live/live-poster.png'
 const PolyvLiveSdk = window.PolyvLiveSdk
 export default {
@@ -315,7 +319,9 @@ export default {
         }
     },
     data () {
+        this.requestPayDataCount = 0
         return {
+            submiting: false,
             liveSdk: null,
             showInteract: false,
             showEmoticon: false,
@@ -439,9 +445,9 @@ export default {
         // 直播互动
         async interactInit () {
             try {
-                await this.$nextTick()
                 if (this.detail.liveType !== 'live') return
-                await this.$refs.LiveInteract.init()
+                await this.$nextTick()
+                this.$refs.LiveInteract.init()
             } catch (e) { throw e }
         },
         // 报名
@@ -498,21 +504,20 @@ export default {
             if (this.isGive) {
                 return
             }
-            if (this.detail.isPay) {
-                if (!this.mchId) {
-                    this.$confirm('商家未开通支付，请联系管理员')
+            // 免费直播也需要产生订单
+            if (!this.mchId) {
+                this.$confirm('商家未开通支付，请联系管理员')
+                throw false
+            }
+            try {
+                const needPay = await hasPied(this.detail.id)
+                if (!needPay) {
+                    // 还没支付
+                    this.needPay = true
                     throw false
                 }
-                try {
-                    const needPay = await hasPied(this.detail.id)
-                    if (!needPay) {
-                        // 还没支付
-                        this.needPay = true
-                        throw false
-                    }
-                } catch (e) {
-                    throw e
-                }
+            } catch (e) {
+                throw e
             }
         },
         // 访问记录 0第一次插入 1修改记录信息
@@ -717,7 +722,9 @@ export default {
                 await this.initPlayer()
                 // 直播互动
                 await this.interactInit()
-            } catch (e) { throw e }
+            } catch (e) {
+                throw e
+            }
         },
         async initPlayer () {
             // 默认在线直播
@@ -1013,8 +1020,103 @@ export default {
          */
         async submitOrder () {
             try {
-                const res = await pay(this.detail.id)
-                await this.pay(res)
+                if (this.submiting) return
+                this.submiting = true
+                const form = {
+                    activityId: '',
+                    helper: '',
+                    // 商品来源：1 正常购买下单， 2 团购商品购买下单，3秒杀商品购买下单，4.预购商品下单确认，5春耘，6组合商品，7公益， 8兑换码
+                    source: 1,
+                    // 其中的goodType包括: PHYSICAL_GOODS VIRTUAL_GOODS SERIES_OF_COURSE EXPERIENCE_CLASS KNOWLEDGE_COURSE SERIES_OF_COURSE LIVE_GOODS
+                    skus: [
+                        {
+                            count: 1,
+                            goodsId: this.detail.id,
+                            goodsType: this.detail.liveType === 'live' ? 'LIVE_GOODS' : 'VIDEO_GOODS',
+                            productCustomInfo: '',
+                            sku1: '',
+                            sku2: '',
+                            // 留言
+                            orderPostscript: ''
+                        }
+                    ],
+                    // 地址信息
+                    userAddress: null,
+                    // 奖学金
+                    scholarshipModel: null,
+                    // 优惠券
+                    cartCouponModel: null,
+                    // 发票
+                    invoiceInfoModel: null
+                }
+                const { result: orderBatchNumber } = await submitOrder(form)
+                await this.requestPayData(orderBatchNumber)
+                // 在订单提交的过程中若切换页面，手动关闭订单
+                this.$once('hook:beforeRouteLeave', async () => {
+                    if (this.submiting) await this.handlepayError(orderBatchNumber)
+                })
+            } catch (e) {
+                throw e
+            } finally {
+                this.submiting = false
+            }
+        },
+        async requestPayData (orderBatchNumber) {
+            try {
+                // 每500ms请求一次支付数据，如果请求次数超过20次，就终止请求
+                // 下次请求的开始时间 =  500ms + 当前请求时间
+                if (this.requestPayDataCount >= 20) {
+                    this.requestPayDataCount = 0
+                    this.submiting = false
+                    throw new Error('支付失败')
+                }
+                await setTimeoutSync(500)
+                // 如果没有拿到请求数据，再次尝试发起请求
+                // 如果有，则发起支付
+                const { result: payData } = await getOrderPayData(orderBatchNumber)
+                if (!payData) {
+                    this.requestPayDataCount++
+                    await this.requestPayData(orderBatchNumber)
+                } else {
+                    await this.pay(payData)
+                }
+            } catch (e) {
+                this.requestPayDataCount = 0
+                await this.handlepayError(orderBatchNumber)
+                throw e
+            }
+        },
+
+        /**
+       * 支付
+       * @param CREDENTIAL {Object} 支付数据
+       * @returns {Promise<*>}
+       */
+        async pay (CREDENTIAL) {
+            try {
+                if (!CREDENTIAL.appId && this.detail.paidAmount !== 0) {
+                    throw new Error('支付失败')
+                }
+
+                if (CREDENTIAL.appId) await wechatPay(CREDENTIAL)
+                this.$success('付款成功立即观看')
+                this.submiting = false
+                this.needPay = false
+
+                // 支付成功，请求直播信息
+                await this.handleByLiveType()
+                await this.init()
+                await this.setComeInConut(1)
+            } catch (e) {
+                throw e
+            }
+        },
+        // 处理支付失败的场景
+        async handlepayError (orderBatchNumber) {
+            try {
+                // 支付失败，先关闭当前订单，才可重新点击
+                await cancleOrderListByBatchNumber(orderBatchNumber)
+                this.submiting = false
             } catch (e) {
                 throw e
             }
@@ -1123,45 +1225,6 @@ export default {
             } catch (e) {
                 this.$error(e.message)
             }
-        },
-
-        /**
-         * 调起微信支付接口
-         * @param CREDENTIAL {Object} 支付数据
-         * @returns {Promise<*>}
-         */
-        async pay (CREDENTIAL) {
-            return new Promise(async (resolve, reject) => {
-                try {
-                    await wechatPay(CREDENTIAL)
-                    await this.handleByLiveType()
-                    await this.init()
-                    this.$success('付款成功立即观看')
-                    this.needPay = false
-                    await this.setComeInConut(1)
-                } catch (e) {
-                    this.needPay = false
-                    this.$confirm({
-                        message: '支付失败',
-                        viceMessage: '<p>若要正常观看</p><p>请重新发起支付</p>',
-                        confirmText: '重新支付',
-                        useDangersHtml: true
-                    })
-                        .then(() => {
-                            this.needPay = true
-                        })
-                        .catch(() => {
-                            this.cancelPay()
-                        })
-                    await cancelOrder(this.detail.id)
-                        .then(res => {
-                            reject(e)
-                        })
-                        .catch(err => {
-                            reject(err)
-                        })
-                }
-            })
         },
         // 判断元素是否在可视区域内
         isElementInViewport (el) {

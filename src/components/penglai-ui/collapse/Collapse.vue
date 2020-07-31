@@ -10,7 +10,6 @@ export default {
     name: 'Collapse',
     mixins: [ParentMixin('Collapse')],
     props: {
-
         // 为true时，只能同时打开一个collepse-item
         accordion: Boolean,
         value: {

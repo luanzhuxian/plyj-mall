@@ -2,11 +2,8 @@
     <div :class="$style.applyInvoice">
         <div :class="$style.tips">
             <div :class="$style.top">
-                <pl-svg
-                    :class="$style.warning"
-                    name="icon-warning2"
-                />
-                <p v-text="type === 1 ? '自营产品订单完成后24小时内开具，点击“我的订单”查看。' : '发票将会与商品同时邮寄，单商品仅支持一次开票服务，请确保填写开票信息真实有效。'" />
+                <pl-svg :class="$style.warning" name="icon-warning2" />
+                <p>实体商品发票将会与商品同时邮寄，虚拟、课程自提商品发票到店自取，单商品仅支持一次开票服务，请确保填写开票信息真实有效。</p>
             </div>
             <button
                 @click="showInvioceIntro = true"
@@ -42,20 +39,34 @@
                 </button>
             </div>
 
-            <div
-                :class="$style.personInvioce"
-                v-show="type === 1"
+            <!--个人发票-->
+            <pl-form
+                :class="$style.firmInvioce"
+                v-if="type === 1"
+                :model="personalInfo"
+                :rules="personalInfoRules"
+                ref="personalInfo"
             >
-                <div :class="$style.personName">
-                    <span>姓名：</span>
-                    <span v-text="receiveName || realName" />
-                </div>
-                <div :class="$style.personMobile">
-                    <span>手机号：</span>
-                    <span>{{ mobile || receiveMobile | formatAccount }}</span>
-                </div>
-            </div>
+                <pl-form-item
+                    border
+                    prop="name"
+                >
+                    <pl-input
+                        size="middle"
+                        placeholder="姓名"
+                        v-model="personalInfo.name"
+                    />
+                </pl-form-item>
+                <pl-form-item prop="mobile">
+                    <pl-input
+                        size="middle"
+                        placeholder="手机号"
+                        v-model="personalInfo.mobile"
+                    />
+                </pl-form-item>
+            </pl-form>
 
+            <!--单位发票-->
             <pl-form
                 :class="$style.firmInvioce"
                 v-if="type === 2 && invoiceList.length === 0"
@@ -88,7 +99,7 @@
                     />
                 </pl-form-item>
             </pl-form>
-
+            <!--单位发票附加信息-->
             <pl-form
                 :class="$style.firmInvioce"
                 v-if="type === 2 && invoiceList.length > 0"
@@ -103,7 +114,7 @@
                 >
                     <pl-radio
                         :key="i"
-                        :label="item.id"
+                        :label="item"
                         v-model="currentInvoice"
                     >
                         <InvoiceItem :data="item" />
@@ -123,6 +134,30 @@
             </button>
         </div>
 
+        <div :class="$style.receiveInfo">
+            <pl-form>
+                <pl-form-item label="收票方式">
+                    <pl-radio v-model="receiveInfo.mailingMethod" align="flex-start" inline :label="1">自提</pl-radio>
+                    <!--当前订单列表中若没有实体商品,不支持邮寄-->
+                    <pl-radio v-if="hasPhysicalGoods()" v-model="receiveInfo.mailingMethod" align="flex-start" inline :label="0">邮寄</pl-radio>
+                </pl-form-item>
+                <template v-if="receiveInfo.mailingMethod === 0">
+                    <pl-form-item label="收票人姓名">
+                        <pl-input v-model="receiveInfo.userName" placeholder="收票人姓名" />
+                    </pl-form-item>
+                    <pl-form-item label="联系电话">
+                        <pl-input v-model="receiveInfo.mobile" placeholder="联系电话" />
+                    </pl-form-item>
+                    <pl-form-item label="选择区域">
+                        <pl-input v-model="receiveInfo.city" readonly placeholder="选择区域" @click="showCitySelector = true" />
+                    </pl-form-item>
+                    <pl-form-item label="详细地址">
+                        <pl-input v-model="receiveInfo.address" placeholder="详细地址" />
+                    </pl-form-item>
+                </template>
+            </pl-form>
+        </div>
+
         <div :class="$style.selectProducts">
             <p :class="$style.title">
                 选择开票商品
@@ -132,7 +167,6 @@
                 <li
                     v-for="(prod, i) of applyInvoice"
                     :key="i"
-                    v-show="prod.returnStatus === 0 || prod.returnStatus === 3 || prod.returnStatus === 6 || prod.returnStatus === ''"
                 >
                     <label>
                         <input
@@ -141,11 +175,11 @@
                             :checked="isSelected(prod)"
                             @change="e => { selectChange(e, prod) }"
                         >
-                        <img v-imgError
-                             :class="$style.proImg"
-                             :src="prod.productImg"
-                             v-img-error
-                             alt=""
+                        <img
+                            :class="$style.proImg"
+                            :src="prod.goodsImage"
+                            v-img-error
+                            alt=""
                         >
                         <pl-svg
                             :class="$style.selectIcon"
@@ -164,6 +198,8 @@
         >
             确定
         </pl-button>
+
+        <!--发票须知-->
         <pl-popup :show.sync="showInvioceIntro">
             <h2
                 :class="$style.invioceIntroTitle"
@@ -174,10 +210,11 @@
             <div :class="$style.invioceIntroContent">
                 <p><strong>第一条：</strong>发票金额不含优惠券和其余优惠支付部分。 </p>
                 <p><strong>第二条：</strong>第三方卖家销售的商品／服务的发票由卖家自行出具、提供，发票类型和内容由卖家根据实际商品、服务情况决定。 </p>
-                <p><strong>第三条：</strong>实体商品发票将会与商品同时邮寄，虚拟、课程自提商品发票到店自取，单商品仅支持一次开票服务，请确保填写开票信息真实有效</p>
+                <p><strong>第三条：</strong>实体商品发票将会与商品同时邮寄，虚拟、课程自提商品发票到店自取，单商品仅支持一次开票服务，请确保填写开票信息真实有效。</p>
             </div>
         </pl-popup>
 
+        <!--发票税号说明-->
         <pl-popup :show.sync="showInvioceNum">
             <h2
                 :class="$style.invioceIntroTitle"
@@ -194,37 +231,75 @@
                 <p> 您可向贵单位的财务部门索取；另外也可以根据单位名称在国家企业信用信息公示系统 <a href="https://www.gsxt.gov.cnlindex.html">（https://www.gsxt.gov.cnlindex.html）</a>查询统一社会信用代码。</p>
             </div>
         </pl-popup>
+
+        <!--选择城市-->
+        <CitySelector
+            :show.sync="showCitySelector"
+            @select="selectCity"
+            ref="citySelector"
+        />
     </div>
 </template>
 
 <script>
+/* eslint-disable */
 import { mapGetters } from 'vuex'
+import { isPhone } from '../../../assets/js/validate'
 import {
     addInvoice,
     getInvoiceList,
     applyInvoice
 } from '../../../apis/invoice'
 import InvoiceItem from '../../../components/item/Invoice-Item'
+import CitySelector from '../../../components/common/City-Selector.vue'
 export default {
     name: 'ApplyInvoice',
     components: {
-        InvoiceItem
+        InvoiceItem,
+        CitySelector
     },
     data () {
         return {
+            // 是否显示 发票须知
             showInvioceIntro: false,
+            // 发票税号说明
             showInvioceNum: false,
+            // 选择城市
+            showCitySelector: false,
             // 待开票商品
             applyInvoice: [],
+            // 选择的开票商品
             checkedList: [],
             // 已添加的发票信息列表
             invoiceList: [],
+            // 默认开具 个人发票
             type: 1,
             // 当前选中的发票信息
-            currentInvoice: '',
+            currentInvoice: null,
+            defaultName:'',
+            defaultMobile:'',
+            personalInfo:{
+              name: '',
+              mobile: ''
+            },
+            personalInfoRules:{
+              name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
+              mobile: [
+                { required: true, message: '请输入手机号', trigger: 'blur'  },
+                { validator: isPhone, message: '手机号格式错误', trigger: 'blur' }
+              ],
+            },
             form: {
-                tin: '',
-                firmName: ''
+                firmName: '', // 单位名称
+                tin: '' // 纳税人识别号
+            },
+            // 收票方式
+            receiveInfo: {
+                userName: '',
+                mobile: '',
+                city: '',
+                address: '',
+                mailingMethod: 1 //  0-邮寄 1-自提
             },
             rules: {
                 firmName: [{ required: true, message: '请输入单位名称', trigger: 'blur' }],
@@ -234,7 +309,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['selectedAddress', 'userId']),
+        ...mapGetters(['selectedAddress', 'userId', 'orderTypeKeyMap', 'submitOrder/invoiceProducts', 'submitOrder/invoiceFromRoute']),
         realName () {
             return this.selectedAddress.realName
         },
@@ -254,26 +329,47 @@ export default {
             return this.$route.query.receiveName || ''
         }
     },
-    activated () {
-        const APPLY_INVOICE = JSON.parse(sessionStorage.getItem('APPLY_INVOICE'))
-        if (!APPLY_INVOICE) {
+    async activated () {
+      try {
+        this.init()
+      } catch (e) {
+        throw e
+      }
+    },
+    methods: {
+        async init(){
+          const APPLY_INVOICE = this['submitOrder/invoiceProducts']
+          if (!APPLY_INVOICE.length) {
             this.$router.go(-1)
             this.$destroy()
             return
-        }
-        this.checkedList = [...APPLY_INVOICE]
-        this.applyInvoice = APPLY_INVOICE
-        try {
-            this.getInvoiceList()
-        } catch (e) {
+          }
+          this.checkedList = [...APPLY_INVOICE]
+          // 根据开具发票的第一个商品决定，第一个实体-默认邮寄 + 虚拟-自提
+          this.receiveInfo.mailingMethod = this.checkedList && this.checkedList[0] && this.checkedList[0].goodsType === this.orderTypeKeyMap.PHYSICAL_GOODS ? 0 : 1
+          this.applyInvoice = APPLY_INVOICE
+          // 设置默认邮寄信息
+          this.receiveInfo.userName = this.receiveName || this.realName
+          this.receiveInfo.mobile = this.mobile || this.receiveMobile
+          this.receiveInfo.city = this.selectedAddress.addressPrefix
+          this.receiveInfo.address = this.selectedAddress.agencyAddress
+          // 设置默认信息
+          this.defaultName = this.receiveName || this.realName
+          this.defaultMobile = this.mobile || this.receiveMobile
+          // 设置默认个人信息
+          this.personalInfo.name = this.defaultName
+          this.personalInfo.mobile =  this.defaultMobile
+          try {
+            await this.getInvoiceList()
+          } catch (e) {
             throw e
-        }
-    },
-    methods: {
+          }
+        },
+        hasPhysicalGoods(){
+          return this.applyInvoice.some(item => item.goodsType === 'PHYSICAL_GOODS')
+        },
         isSelected (pro) {
-            return this.checkedList.some(item => item.skuCode1 === pro.skuCode1 &&
-          item.skuCode2 === pro.skuCode2 &&
-          (item.returnStatus === 0 || item.returnStatus === 3 || pro.returnStatus === 6 || pro.returnStatus === ''))
+            return this.checkedList.some(item => item.sku1 === pro.sku1 && item.sku2 === pro.sku2)
         },
         change (type) {
             this.type = type
@@ -282,18 +378,12 @@ export default {
             try {
                 const { result } = await getInvoiceList(this.userId)
                 this.invoiceList = result
-                if (result[0]) {
-                    this.currentInvoice = this.$route.query.id || this.currentInvoice || result[0].id
-                } else {
-                    this.currentInvoice = this.$route.query.id || this.currentInvoice
-                }
+                this.currentInvoice = result[0]
             } catch (e) {
                 throw e
             }
         },
-        getCurrentInvoice () {
-            return this.invoiceList.find(item => item.id === this.currentInvoice)
-        },
+      // 选择开票商品
         selectChange (e, prod) {
             const { checked } = e.target
             if (checked) {
@@ -311,34 +401,79 @@ export default {
             this.$router.push({ name: 'AddInvoice' })
         },
         async confirm () {
+            // 校验是否选择商品
             if (this.checkedList.length === 0) {
                 this.$warning('请选择要开票的商品')
                 return
             }
+            // 个人发票内容校验
+            if(this.type === 1){
+              if(!this.personalInfo.name) return this.$warning('请输入姓名')
+              if(!this.personalInfo.mobile) return this.$warning('请输入手机号')
+              if(!isPhone(this.personalInfo.mobile)) return this.$warning('手机号格式错误')
+            }
+            // 单位发票内容校验
+            if(this.type === 2){
+              if(!this.form.firmName && !this.currentInvoice.entName) return this.$warning('请输入单位名称')
+              if(!this.form.tin && !this.currentInvoice.tin) return this.$warning('请输入纳税人识别号')
+            }
+            // 选择邮寄时,以下内容必填
+            if(this.receiveInfo.mailingMethod === 0){
+              if(!this.receiveInfo.userName) return this.$warning('请填写收票人姓名')
+              if(!this.receiveInfo.mobile) return this.$warning('请填写联系电话')
+              if(!this.receiveInfo.city) return this.$warning('请选择区域')
+              if(!this.receiveInfo.address) return this.$warning('请填写详细地址')
+            }
+            const { userName, mailingMethod, mobile, city, address} = this.receiveInfo
             let invoiceModel = null
-            let invoiceAmount = 0
-            const orderDetails = []
             if (this.type === 1) {
-                invoiceModel = {
-                    invoiceType: 1,
-                    invoiceTitle: this.realName || this.receiveName,
-                    receiverMobile: this.mobile || this.receiveMobile,
-                    userAddressId: this.selectedAddress.sequenceNbr
-                }
-            } else {
-                const currentInvoice = this.getCurrentInvoice()
-                if (currentInvoice) {
-                    this.form.tin = currentInvoice.tin
-                    this.form.firmName = currentInvoice.entName
+              // 个人发票
+              invoiceModel = {
+                // 发票类型0：个人发票 1：企业增值税普票 2：企业增值税专票：
+                invoiceType: 0,
+                // 发票抬头
+                invoiceTitle: this.personalInfo.name,
+                // 纳税人识别号
+                taxpayerNumber: '',
+                // 公司电话, 注：个人电话也放入此
+                companyPhone: this.personalInfo.mobile,
+                // 邮寄方式：0邮寄，1自提
+                mailingMethod: mailingMethod,
+                // 收货人姓名
+                recvName: mailingMethod === 0 ? userName : '',
+                // 收货人手机号
+                recvMobile: mailingMethod === 0 ? mobile : '',
+                // 收货地址
+                recvAddr: mailingMethod === 0 ? `${city}${address}` : ''
+              }
+            }
+            if (this.type === 2) {
+                // 单位发票
+                if (this.currentInvoice) {
+                    this.form.tin = this.currentInvoice.tin
+                    this.form.firmName = this.currentInvoice.entName
                 }
                 if (!this.$refs.form.validate()) return
                 invoiceModel = {
-                    invoiceType: 2,
-                    tin: this.form.tin,
-                    invoiceTitle: this.form.firmName,
-                    userAddressId: this.selectedAddress.sequenceNbr
+                  // 发票类型0：个人发票 1：企业增值税普票 2：企业增值税专票：
+                  invoiceType: 1,
+                  // 发票抬头
+                  invoiceTitle: this.form.firmName,
+                  // 纳税人识别号
+                  taxpayerNumber: this.form.tin,
+                  // 公司电话
+                  companyPhone: mobile,
+                  // 邮寄方式：0邮寄，1自提
+                  mailingMethod: mailingMethod,
+                  // 收货人姓名
+                  recvName: mailingMethod === 0 ? userName : '',
+                  // 收货人手机号
+                  recvMobile: mailingMethod === 0 ? mobile : '',
+                  // 收货地址
+                  recvAddr: mailingMethod === 0 ? `${city}${address}` : ''
                 }
-                if (!currentInvoice || !currentInvoice.id) {
+                // 一个发票都没有，把填的发票保存起来
+                if (!this.currentInvoice || !this.currentInvoice.id) {
                     addInvoice({
                         userId: this.userId,
                         entName: this.form.firmName,
@@ -347,45 +482,31 @@ export default {
                 }
             }
 
-            for (const prod of this.checkedList) {
-                invoiceAmount += Number(prod.amount) * 100
-                orderDetails.push({
-                    productId: prod.productId,
-                    skuCode1: prod.skuCode1,
-                    skuCode2: prod.skuCode2
-                })
-            }
-            invoiceModel.orderDetails = orderDetails
-            invoiceModel.invoiceAmount = invoiceAmount / 100
-
             if (this.orderId) {
                 // 二次申请发票
-                const orderDetailsTemp = []
-                for (const item of this.checkedList) {
-                    orderDetailsTemp.push({
-                        orderId: this.orderId,
-                        orderDetailId: item.orderProductRId
-                    })
-                }
                 try {
                     this.loading = true
-                    await applyInvoice({
-                        invoiceType: this.type,
-                        invoiceTitle: this.type === 1 ? this.receiveName : this.form.firmName,
-                        tin: this.type === 2 ? this.form.tin : '',
-                        orderDetails: orderDetailsTemp,
-                        ...(this.orderType ? { logisticStatus: this.orderType === 'PHYSICAL' ? 0 : 1 } : null)
-                    })
+                    await applyInvoice({...invoiceModel, orderIds: [this.orderId]})
                 } catch (e) {
                     throw e
                 } finally {
                     this.loading = false
                 }
             } else {
-                sessionStorage.setItem('INVOICE_MODEL', JSON.stringify(invoiceModel))
+                const skus = []
+                for (const prod of this.checkedList) {
+                  skus.push({
+                    goodsId: prod.goodsId,
+                    goodsType: prod.goodsType,
+                    count: prod.count,
+                    sku1: prod.sku1,
+                    sku2: prod.sku2
+                  })
+                }
+                this.$store.commit('submitOrder/setInvoiceInfo', {...invoiceModel, skus })
             }
 
-            const APPLY_INVOICE_FROM = JSON.parse(sessionStorage.getItem('APPLY_INVOICE_FROM')) || {}
+            const APPLY_INVOICE_FROM = this['submitOrder/invoiceFromRoute']
             if (APPLY_INVOICE_FROM.name) {
                 this.$router.replace({
                     name: APPLY_INVOICE_FROM.name,
@@ -395,12 +516,15 @@ export default {
             } else {
                 this.$router.go(-1)
             }
+        },
+        // 选择城市
+        selectCity (data) {
+            this.receiveInfo.city = data.map(item => item.name).join('')
         }
     },
     beforeRouteLeave (to, from, next) {
         if (to.name !== 'AddInvoice') {
-            sessionStorage.removeItem('APPLY_INVOICE')
-            sessionStorage.removeItem('APPLY_INVOICE_FROM')
+            this.$store.commit('submitOrder/removeInvoiceProducts')
         }
         next()
     }
@@ -500,7 +624,6 @@ export default {
     }
   }
   .firmInvioce {
-    padding-left: 40px;
   }
   .invioceIntroTitle {
     font-size: 36px;
@@ -575,5 +698,20 @@ export default {
     width: 36px;
     height: 36px;
   }
+    .receiveInfo {
+        margin-top: 30px;
+        background-color: #fff;
+        border-radius: 20px;
+        overflow: hidden;
+        > .title {
+            padding: 0 26px;
+            font-size: 28px;
+            line-height: 80px;
+            border-bottom: 1px solid #e7e7e7;
+        }
+        > form {
+            padding: 0 25px;
+        }
+    }
 
 </style>

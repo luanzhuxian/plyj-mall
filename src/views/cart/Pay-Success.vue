@@ -73,9 +73,6 @@ export default {
         ...mapGetters(['mallId', 'serverTime']),
         orderType () {
             return this.$route.query.orderType
-        },
-        productType () {
-            return this.$route.query.productType
         }
     },
     methods: {

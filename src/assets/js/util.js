@@ -152,6 +152,10 @@ export function isIOS () {
     return !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
 }
 
+export function isAndroid  () {
+    return navigator.userAgent.indexOf('Android') > -1 || navigator.userAgent.indexOf('Linux') > -1
+}
+
 /**
  * 生成商品二维码
  * @param size {number} 二维码尺寸，必填
@@ -284,8 +288,8 @@ export function cutArcImage (img) {
 
 export function setTimeoutSync (duration) {
     return new Promise(resolve => {
-        setTimeout(() => {
-            resolve()
+        const timer = setTimeout(() => {
+            resolve(timer)
         }, duration)
     })
 }
@@ -300,7 +304,7 @@ export function setTimeoutSync (duration) {
  * @param lineHeight {Number} 行高
  * @param lineNumber {Number} 行数（超过行数时，以...结尾）
  */
-export function createText ({ctx, x, y, text, lineHeight, width= 0, lineNumber = 1}) {
+export function createText ({ctx, x, y, text, lineHeight = 1, width= 0, lineNumber = 1}) {
     // 填充商品名称
     let charArr = []
     const strArr = []

@@ -13,26 +13,26 @@
         <div :class="$style.content">
             <div :class="$style.text" v-text="detail.content" />
             <div :class="$style.imgs">
-                <img v-imgError v-for="(item, i) of detail.mediaInfoEntityList" :key="i" :src="item.mediaUrl" v-imger:comment alt="">
+                <img v-imgError v-for="(item, i) of detail.url" :key="i" :src="item" v-imger:comment alt="">
             </div>
-            <div :class="$style.reply" v-if="detail.childs.length">
+            <div :class="$style.reply" v-if="detail.child.length">
                 <span>商家回复：</span>
-                {{ detail.childs[0].content }}
+                {{ detail.child[0].content }}
             </div>
         </div>
 
         <div :class="$style.product">
             <div :class="$style.sku">
-                {{ detail.orderProductREntity.attribute1 }} “{{ detail.orderProductREntity.skuName }}”
-                <template v-if="detail.orderProductREntity.skuName2">
-                    ，{{ detail.orderProductREntity.attribute2 }} “{{ detail.orderProductREntity.skuName2 }}”
+                {{ detail.attribute }} “{{ detail.skuCode1Name }}”
+                <template v-if="detail.skuCode2Name">
+                    ，{{ detail.subAttribute }} “{{ detail.skuCode2Name }}”
                 </template>
             </div>
             <div :class="$style.detail">
-                <img v-imgError v-img-error :src="detail.orderProductREntity.productImg" alt="">
+                <img v-imgError v-img-error :src="detail.productImg" alt="">
                 <div>
-                    <p :class="$style.name" v-text="orderProductREntity.productName" />
-                    <p :class="$style.price" v-text="orderProductREntity.price" />
+                    <p :class="$style.name" v-text="detail.productName" />
+                    <p :class="$style.price">{{ detail.productPrice || 0 | formatAmount }}</p>
                 </div>
             </div>
         </div>
@@ -56,11 +56,6 @@ export default {
     },
     deactivated () {
         sessionStorage.removeItem('comment')
-    },
-    computed: {
-        orderProductREntity () {
-            return this.detail.orderProductREntity
-        }
     },
     methods: {
         getDetail () {
@@ -140,7 +135,6 @@ export default {
     }
     > img {
       width: 164px;
-      height: 164px;
       margin-right: 18px;
       border-radius: 10px;
     }

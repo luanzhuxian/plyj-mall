@@ -9,10 +9,10 @@
         }"
         @click="handleClick"
     >
-        <img v-imgError
-             :src="img"
-             :key="img"
-             alt="商品图片"
+        <img
+            :src="img + '?x-oss-process=style/thum-middle'"
+            v-imgError
+            alt="商品图片"
         >
         <div :class="$style.right">
             <div>
@@ -69,23 +69,36 @@
                 />
             </div>
         </div>
-        <div v-if="activeProduct === 2 && preActive === 2" :class="$style.activeTag">团购</div>
-        <div v-else-if="activeProduct === 3 && preActive === 2" :class="$style.activeTag">限时秒杀</div>
-        <div v-else-if="activeProduct === 4 && preActive === 2" :class="$style.activeTag">预购</div>
-        <div v-else-if="activeProduct === 5 && preActive === 2" :class="$style.activeTag">春耘</div>
-        <div v-else-if="activeProduct === 6 && preActive === 2" :class="$style.activeTag">组合课</div>
-        <div v-else-if="activeProduct === 7 && preActive === 2" :class="[$style.activeTag, $style.publicBenefitTag]">公益助力</div>
+        <div
+            v-if="([2,3,4,5,6,7].includes(activeProduct) && preActive === 2) || activeProduct === 8"
+            :class="{
+                [$style.activeTag]: true,
+                [$style.publicBenefitTag]: activeProduct === 7
+            }">
+            {{ skuSourceMap[activeProduct] }}
+        </div>
     </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+const routeNameMap = {
+    PHYSICAL_GOODS: 'Product',
+    VIRTUAL_GOODS: 'Product',
+    FORMAL_CLASS: 'Product',
+    EXPERIENCE_CLASS: 'Product',
+    KNOWLEDGE_COURSE: 'Curriculum',
+    SERIES_OF_COURSE: 'Curriculum',
+    LIVE_GOODS: 'CourseLibrary',
+    VIDEO_GOODS: 'CourseLibrary',
+    GRAPHIC_DATA: 'ImageTextDetail'
+}
 export default {
     name: 'OrderItem',
     data () {
         return {
             loading: false,
-            // 2团购 3限时秒杀 4预购 这三种状态的商品 --> 暂不支持退换货 + 不支持线上发票
+            // 2团购 3限时秒杀 4预购 6-组合聚惠学 --> 暂不支持退换货 + 不支持线上发票
             notSupportActiveProductStatus: [2, 3, 4, 6]
         }
     },
@@ -171,20 +184,16 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['userId', 'agentUser'])
+        ...mapGetters(['userId', 'agentUser', 'skuSourceMap'])
     },
     methods: {
         handleClick (e) {
             if (this.productId) {
                 e.stopPropagation()
                 const query = {}
-                // 公益活动
-                if (Number(this.activeProduct) === 7 && this.activityStatus === 1) {
-                    query.currentProductStatus = 7
-                    query.activityId = this.activityId
-                }
+                const routeName = routeNameMap[this.orderType]
                 this.$router.push({
-                    name: this.routeName,
+                    name: this.routeName || routeName,
                     params: {
                         productId: this.productId,
                         brokerId: this.userId || null

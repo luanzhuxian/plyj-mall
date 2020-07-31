@@ -149,6 +149,11 @@ export default {
         iconHeight: {
             type: Number,
             default: 50
+        },
+        // 是否支持点击
+        canClick: {
+            type: Boolean,
+            default: true
         }
     },
     computed: {
@@ -164,18 +169,22 @@ export default {
     },
     methods: {
         handleClick () {
-            this.$emit('click')
-            if (this.route) {
-                this.$router.push(this.route)
+            if (this.canClick) {
+                this.$emit('click')
+                if (this.route) {
+                    this.$router.push(this.route)
+                }
             }
         },
         fieldsRightClick () {
-            this.$emit('click')
-            if (this.route) {
-                this.$router.push(this.route)
-            }
-            if (this.canCollapse) {
-                this.collapse = !this.collapse
+            if (this.canClick) {
+                this.$emit('click')
+                if (this.route) {
+                    this.$router.push(this.route)
+                }
+                if (this.canCollapse) {
+                    this.collapse = !this.collapse
+                }
             }
         }
     }

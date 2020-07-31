@@ -3,21 +3,14 @@
         class="comment"
         :class="$style.comment"
     >
-        <top-text
-            title="发表评论"
-            tip="说说您本次购买的感受吧"
-        />
+        <top-text title="发表评论" tip="说说您本次购买的感受吧" />
         <main class="radius-20 bg-white mt-28">
             <div :class="$style.grade">
-                <img v-imgError
-                     v-img-error
-                     :src="productImg + '?x-oss-process=style/thum'"
-                     alt=""
-                >
+                <img v-img-error :src="productImg + '?x-oss-process=style/thum'">
                 <span class="fz-26 gray-2">本次感受</span>
                 <Grade
                     size="middle"
-                    :grade.sync="form.goodsScore"
+                    :grade.sync="form.score"
                     selectable
                 />
             </div>
@@ -59,12 +52,18 @@ import TopText from '../../../components/common/Top-Text.vue'
 import Grade from '../../../components/common/Grade.vue'
 import { submitComment } from '../../../apis/comment'
 import { resetForm } from '../../../assets/js/util'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 
-const updateLocalStorage = (key, value) => {
-    const arr = JSON.parse(localStorage.getItem(key) || '[]')
-    arr.push(value)
-    localStorage.setItem(key, JSON.stringify(arr))
+// eslint-disable-next-line func-style
+function getProductImg () {
+    return sessionStorage.getItem('commentProductImg') || ''
+}
+// eslint-disable-next-line func-style
+function switchProductImg (productImg) {
+    if (productImg) {
+        return sessionStorage.setItem('commentProductImg', productImg)
+    }
+    sessionStorage.removeItem('commentProductImg')
 }
 
 export default {
@@ -77,77 +76,61 @@ export default {
         orderId: {
             type: String,
             default: null
-        },
-        productId: {
-            type: String,
-            default: null
         }
     },
     data () {
         return {
             loading: false,
             productInfo: {},
+            productImg: '',
             form: {
                 orderId: '',
-                productId: '',
-                goodsScore: 5,
+                score: 5,
                 content: '',
-                mediaInfoModels: [],
-                skuCode1: '',
-                skuCode2: ''
+                url: []
             },
-            productImg: '',
             images: [],
             maxLength: 100
         }
     },
     computed: {
-        ...mapGetters(['openId'])
+        ...mapGetters(['orderActionMap'])
     },
     watch: {
         images (val) {
-            this.form.mediaInfoModels = []
+            this.form.url = []
             for (const url of val) {
-                const obj = {
-                    mediaType: 'image',
-                    mediaFilename: url.split('/').splice(-1, 1)[0],
-                    mediaUrl: url
-                }
-                this.form.mediaInfoModels.push(obj)
+                this.form.url.push(url)
             }
         }
     },
     activated () {
         this.form.orderId = this.orderId
-        this.form.productId = this.productId
-        this.form.skuCode1 = this.$route.query.skuCode1 || ''
-        this.form.skuCode2 = this.$route.query.skuCode2 || ''
-        this.productImg = this.$route.query.productImg || ''
+        this.productImg = this.$route.params.productImg || getProductImg() || ''
+        switchProductImg(this.productImg)
     },
     deactivated () {
         resetForm(this.form, {
-            goodsScore: 5
+            score: 5
         })
+        switchProductImg()
         this.images = []
     },
     methods: {
+        ...mapMutations(['setOrderOperatedList']),
         alert () {
             this.$toast(`最多输入${ this.maxLength }个字`)
         },
         async confirm () {
             if (!this.form.content.trim()) return this.$warning('请输入评价内容')
-
             try {
                 this.loading = true
-                const { form: { skuCode2, ...rest } } = this
-                const params = {
-                    ...rest,
-                    ...(skuCode2 ? { skuCode2 } : null)
-                }
-                await submitComment(this.openId, params)
+                const params = JSON.parse(JSON.stringify(this.form))
+                params.score = params.score * 2
+                await submitComment(params)
                 this.loading = false
                 this.$success('评价成功')
-                updateLocalStorage('UPDATE_ORDER_LIST', { id: this.orderId, pid: this.productId, action: 'comment' })
+                this.$store.commit('setOrderOperatedList', { id: this.orderId, action: this.orderActionMap.comment })
                 setTimeout(() => {
                     this.$router.go(-1)
                 }, 2000)

@@ -52,7 +52,7 @@
                     <CouponGoodItem
                         :key="index"
                         :id="item.id"
-                        :img="item.productMainImage + '?x-oss-process=style/thum-middle'"
+                        :img="item.productMainImage"
                         :title="item.productName"
                         :original-price="item.productSkuModels.length && item.productSkuModels[0].originalPrice"
                         :sales-volume="item.salesVolume"

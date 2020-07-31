@@ -69,20 +69,28 @@ export default {
                 this.emitChange(val)
             } else {
                 e.target.value = this.localCount
+                if (val > this.max) {
+                    // 超出最大值
+                    this.$emit('maxOverflow', val, this.max)
+                }
+                if (val < this.min) {
+                    // 超出最小值
+                    this.$emit('minOverflow', val, this.min)
+                }
             }
         },
 
         /**
-     * 数值改变事件
-     * @param count {number} 即将改变的值
-     */
+             * 数值改变事件
+             * @param count {number} 即将改变的值
+             */
         emitChange (count) {
             this.loading = true
 
             /**
-       * 触发change事件，在外部调用回调函数后，再改变localCount，并且可以指定localCount
-       * 如果err存在，则不改变当前数值
-       */
+             * 触发change事件，在外部调用回调函数后，再改变localCount，并且可以指定localCount
+             * 如果err存在，则不改变当前数值
+             */
             this.$emit('change', count, err => {
                 if (!err) {
                     this.localCount = count
@@ -95,63 +103,72 @@ export default {
 </script>
 
 <style module lang="scss">
-  .count {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    width: 146px;
-    line-height: 66px;
-    box-sizing: border-box;
-    border-radius: 8px;
-    border: 1px solid #e7e7e7;
-    background-color: #f6f6f6;
-    overflow: hidden;
-    .input {
-      flex: 1;
-      width: 100%;
-      height: 90%;
-      font-size: 22px;
-      text-align: center;
-      z-index: 2;
-      color: #000;
-      background-color: transparent;
-      &:disabled {
-        color: #aaa;
-      }
+    .count {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        width: 146px;
+        line-height: 66px;
+        box-sizing: border-box;
+        border-radius: 8px;
+        border: 1px solid #e7e7e7;
+        background-color: #f6f6f6;
+        overflow: hidden;
+
+        .input {
+            flex: 1;
+            width: 100%;
+            height: 90%;
+            font-size: 22px;
+            text-align: center;
+            z-index: 2;
+            color: #000;
+            background-color: transparent;
+
+            &:disabled {
+                color: #aaa;
+            }
+        }
+
+        .subtract, .add {
+            position: relative;
+            width: 40px;
+            height: 36px;
+            z-index: 2;
+            vertical-align: -5px;
+            font-weight: bold;
+
+            &:disabled {
+                opacity: 0.3;
+            }
+
+            &:before {
+                position: absolute;
+                top: 0;
+                left: 50%;
+                line-height: 34px;
+                transform: translateX(-50%);
+                width: 20px;
+                font-size: 24px;
+            }
+        }
+
+        .subtract {
+            border-right: 1px solid #e7e7e7;
+            background-color: #fff;
+
+            &:before {
+                content: '-';
+            }
+        }
+
+        .add {
+            border-left: 1px solid #e7e7e7;
+            background-color: #fff;
+
+            &:before {
+                content: '+';
+            }
+        }
     }
-    .subtract, .add {
-      position: relative;
-      width: 40px;
-      height: 36px;
-      z-index: 2;
-      vertical-align: -5px;
-      font-weight: bold;
-      &:disabled {
-        opacity: 0.3;
-      }
-      &:before {
-        position: absolute;
-        top: 0;
-        left: 50%;
-        line-height: 34px;
-        transform: translateX(-50%);
-        width: 20px;
-        font-size: 24px;
-      }
-    }
-    .subtract {
-      border-right: 1px solid #e7e7e7;
-      background-color: #fff;
-      &:before {
-        content: '-';
-      }
-    }
-    .add {
-      border-left: 1px solid #e7e7e7;
-      background-color: #fff;
-      &:before {
-        content: '+';
-      }
-    }
-  }
 </style>

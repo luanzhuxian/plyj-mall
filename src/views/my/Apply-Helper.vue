@@ -264,7 +264,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['smstype', 'isAdmin', 'mobile', 'mallId', 'roleCode']),
+        ...mapGetters(['isAdmin', 'mobile', 'mallId', 'roleCode', 'smstype']),
         isNameValid () {
             return hasValue(this.form.name) && isName(this.form.name)
         },

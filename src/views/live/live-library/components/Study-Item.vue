@@ -1,5 +1,5 @@
 <template>
-    <div :class="$style.studyItem" @click="target(item)">
+    <div :class="$style.studyItem" @click.capture="target(item)">
         <div :class="$style.img">
             <div :class="$style.give" v-if="item.transactionId === 0">送课</div>
             <div :class="$style.validity" v-if="item.validityType === 1">
@@ -9,19 +9,38 @@
         </div>
         <div :class="$style.content">
             <div :class="$style.description">
-                <div>{{ item.courseName }}</div>
-                <div>{{ item.category2Name }}</div>
+                <div v-if="item.courseName" :class="$style.name" v-text="item.courseName" />
+                <!-- 图文资料的作者信息要在此处显示 -->
+                <div
+                    v-if="item.orderType === 5"
+                    class="gray-2 fz-28 mt-18"
+                >
+                    作者：{{ item.lecturer }}
+                </div>
+                <!-- 图文资料不显示分类，即item.orderType等于5的情况 -->
+                <div v-if="item.orderType !== 5 && item.category2Name" :class="$style.category" v-text="item.category2Name" />
             </div>
             <div :class="$style.learn">
-                <div v-show="item.lecturer">主讲人：{{ item.lecturer }}</div>
-                <div>
-                    <!-- 单课程学习进度 -->
-                    <span v-if="courseType === '1'">已学习{{ (item.recordModels && item.recordModels[0] && item.recordModels[0].learnProgress) || 0 }}%</span>
-                    <!-- 系列课学习进度 -->
-                    <span v-else>已学习{{ item.learnedNumber || 0 }}节/{{ item.totalLiveNumber || 1 }}节课</span>
+                <!-- 除图文资料之外的主讲人信息要在此处显示 -->
+                <div
+                    :class="$style.lecturer"
+                    v-if="item.lecturer && item.orderType !== 5"
+                >
+                    主讲人：{{ item.lecturer }}
                 </div>
-                <div v-if="$route.params.learnStatus !== '3'">
-                    去学习
+                <div :class="$style.bottom">
+                    <div :class="$style.studyProgress" v-if="item.recordModels">
+                        <!-- 单课程学习进度 -->
+                        <span v-if="courseType === '1'">已学习{{ (item.recordModels && item.recordModels[0] && item.recordModels[0].learnProgress) || 0 }}%</span>
+                        <!-- 系列课学习进度 -->
+                        <span v-else>已学习{{ item.learnedNumber || 0 }}节/{{ item.totalLiveNumber || 1 }}节课</span>
+                    </div>
+                    <pl-button
+                        v-if="$route.params.learnStatus !== '3'"
+                        size="small"
+                        type="warning"
+                        v-text="item.orderType === 5 ? '查看资料' : '去学习'"
+                    />
                 </div>
             </div>
         </div>
@@ -71,6 +90,11 @@ export default {
                         return this.$warning('您不是该课程的适用用户')
                     }
                 }
+                // 图文资料
+                if (item.orderType === 5) {
+                    this.$router.push({ name: 'ImageTextDetail', params: { productId: item.courseId } })
+                    return
+                }
                 if (this.courseType === '1') {
                     this.$router.push({
                         name: 'CourseWatch',
@@ -83,9 +107,9 @@ export default {
                             progress: item.learnProgress
                         }
                     })
-                } else {
-                    this.$router.push({ name: 'Curriculum', params: { productId: item.courseId } })
+                    return
                 }
+                this.$router.push({ name: 'Curriculum', params: { productId: item.courseId } })
             } catch (e) { throw e }
         }
     },
@@ -149,23 +173,21 @@ export default {
         }
     }
     > .content {
-        display: flex;
-        flex-wrap: wrap;
-        align-content: space-between;
-        width: calc(100% - 304px);
+        display: inline-flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex: 1;
+        padding-left: 24px;
         > .description {
             width: 100%;
             font-size: 24px;
             color: #666;
-            > div:nth-of-type(1) {
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                font-size: 32px;
-                font-weight: 800;
+            > .name {
+                font-size: 28px;
                 color: #373737;
+                @include elps-wrap(1);
             }
-            > div:nth-of-type(2) {
+            > .category {
                 display: inline-block;
                 margin: 14px 0;
                 padding: 0 14px;
@@ -177,31 +199,25 @@ export default {
         }
         > .learn {
             display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
+            flex-direction: column;
             align-items: center;
             width: 100%;
-            > div:nth-of-type(1) {
+            > .lecturer {
                 width: 100%;
-                margin-bottom: 4px;
-                overflow: hidden;
-                text-overflow: ellipsis;
+                margin-bottom: 8px;
                 font-size: 24px;
-                white-space: nowrap;
                 color: #666;
+                @include elps-wrap(1);
             }
-            > div:nth-of-type(2) {
+            .bottom {
+                width: 100%;
+                display: inline-flex;
+                justify-content: flex-end;
+            }
+            .study-progress {
+                flex: 1;
                 font-size: 28px;
                 color: #f2b036;
-            }
-            > div:nth-of-type(3) {
-                font-size: 26px;
-                text-align: center;
-                background-color: #f2b036;
-                color: #fff;
-                width: 120px;
-                line-height: 48px;
-                border-radius: 8px;
             }
         }
     }

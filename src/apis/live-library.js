@@ -47,3 +47,13 @@ export const setLivePaidData = data => axios.post(`/apis/v1/mall/live/cost/recor
  * @returns {*}
  */
 export const checkRateOfFlow = () => axios.get('/apis/v1/mall/live/cost/flowData/check')
+
+/**
+ * 获取我的图文资料
+ * @param params {Object}
+ * @property params.size {Number}
+ * @property params.current {Number}
+ * @property params.courseType
+ * @return {*}
+ */
+export const getMyImageText = params => axios.get('/apis/v1/graphic/myGraphic', { params })

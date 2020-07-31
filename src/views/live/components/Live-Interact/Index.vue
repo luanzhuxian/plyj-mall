@@ -48,7 +48,6 @@ export default {
     methods: {
         async init () {
             try {
-                await this.$nextTick()
                 const { notice, signIn, lottery, answer, questions } = this.$refs
 
                 notice.init()
