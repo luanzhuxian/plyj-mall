@@ -181,12 +181,12 @@
                 <!--优惠券-->
                 <p v-if="detail.couponAmount">
                     <span>优惠券</span>
-                    <span>-¥{{ detail.couponAmount | formatAmount }}</span>
+                    <span>-¥{{ goodsModel.couponeAmount | formatAmount }}</span>
                 </p>
                 <!--奖学金-->
                 <p v-if="detail.scholarship">
                     <span>奖学金（红包）</span>
-                    <span>-¥{{ detail.scholarship | formatAmount }}</span>
+                    <span>-¥{{ goodsModel.scholarship | formatAmount }}</span>
                 </p>
                 <!--春耘减免-->
                 <p v-if="detail.orderSource === skuSourceKeyMap.SPRINGPLOUGHING">
