@@ -239,7 +239,7 @@ export const cancelRefundApplication = id => axios.get(`/apis/v2/order/refunds/c
  * @param {Object} id - 售后单id
  * @return {*}
  */
-export const deleteRefundOrder = id => axios.delete(`/apis/v2/order/refunds/delete?orderId=${ id }`)
+export const deleteRefundOrder = id => axios.delete(`/apis/v2/order/refunds/delete?id=${ id }`)
 
 /**
  * 查看每种订单的数量
