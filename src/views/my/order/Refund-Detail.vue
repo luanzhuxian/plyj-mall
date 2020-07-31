@@ -271,7 +271,7 @@ export default {
             isPickerShow: false,
             // 1: 待退货 2:待收货 3:退货完成 4:待退款 5:退款中 6:退款成功 7:退款失败
             refundStatus: '',
-            // 1:仅退款 2:退货退款
+            // 1:退货退款 2:仅退款
             refundType: '',
             // 退换货详情
             refundDetail: {
