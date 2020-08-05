@@ -1,6 +1,7 @@
 import { router } from '../../router'
 import store from '../../store'
 import share from '../js/wechat/wechat-share'
+import qs from 'qs'
 // 自定义微信分享，需要自己在页面配置分享信息
 const customShare = [
     'Product',
@@ -69,6 +70,14 @@ export const beforeEach = function (to, from, next) {
     next()
 }
 export const beforeResolve = async function (to, from, next) {
+    if (to.query.code) {
+        delete to.query.code
+        const search = qs.stringify(to.query)
+        if (search) {
+            return next(`${ to.path }?${ search }`)
+        }
+        return next(to.path)
+    }
     await next()
     setShare(to)
     if (to.name === 'Home') {
