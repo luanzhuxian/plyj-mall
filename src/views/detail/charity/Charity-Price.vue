@@ -2,7 +2,7 @@
     <div :class="$style.tuan">
         <div v-if="detail.preActivity === 2">
             <div :class="$style.price">活动价： <span v-text="detail.activityProductModel.price" /></div>
-            <div :class="$style.original">原价：<del v-text="maxOriginalPrice" /></div>
+            <div :class="$style.original">原价：<del v-text="maxPrice" /></div>
         </div>
         <div>
             <!-- 用户头像 -->
