@@ -5,6 +5,16 @@
             :class="$style.container"
             :options="swiperOptionBanner"
         >
+            <!-- 820 -->
+            <swiper-slide v-if="mallDomain === 'pljs'">
+                <a href="https://mall.youpenglai.com/1291610408512991232/home">
+                    <img
+                        v-imgError
+                        :class="$style.img"
+                        src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/820/820qwerty.jpg"
+                    >
+                </a>
+            </swiper-slide>
             <swiperSlide v-for="(item, i) of data.values" :key="i">
                 <count-down
                     v-if="item.shoppingStatus === 1"
@@ -12,16 +22,6 @@
                     :fields="{ start: 'serverTime', end: 'shoppingTime' }"
                 />
                 <img v-imgError :class="$style.img" :src="item.image" :alt="item.name" @click="handelClick(item)">
-            </swiperSlide>
-            <!-- 820 -->
-            <swiperSlide v-if="mallDomain === 'pljs'">
-                <a href="https://mall.youpenglai.com/1291610408512991232/home?t=1596960315066&state=STATE&appid=wx77c59731368f7e5e">
-                    <img
-                        v-imgError
-                        :class="$style.img"
-                        src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/820/820qwerty.jpg"
-                    >
-                </a>
             </swiperSlide>
             <div v-show="data.values.length + 1 > 1" class="swiper-pagination" slot="pagination" />
         </swiper>
@@ -66,7 +66,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['campaignReport', 'campaignBook', 'dragonGateCharity', 'dragonGateSign', 'dragonGatePlay']),
+        ...mapGetters(['campaignReport', 'campaignBook', 'dragonGateCharity', 'dragonGateSign', 'dragonGatePlay', 'mallDomain']),
         isReportShow () {
             return !!this.campaignReport && this.campaignReport.isReportShow && this.campaignReport.id
         },

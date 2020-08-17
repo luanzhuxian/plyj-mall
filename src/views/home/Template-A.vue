@@ -8,6 +8,16 @@
             :class="$style.banner"
             :options="swiperOptionBanner"
         >
+             <!-- 820 -->
+             <swiper-slide v-if="mallDomain === 'pljs'">
+                 <a href="https://mall.youpenglai.com/1291610408512991232/home?t=1596960315066&state=STATE&appid=wx77c59731368f7e5e">
+                     <img
+                         v-imgError
+                         :class="$style.img"
+                         src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/820/820qwerty.jpg"
+                     >
+                 </a>
+             </swiper-slide>
             <swiper-slide v-for="(item, index) of data['BANNER'].values" :key="index">
                 <router-link
                     :class="$style.img"
@@ -22,16 +32,6 @@
                      :src="item.image"
                 >
             </swiper-slide>
-            <!-- 820 -->
-            <swiperSlide v-if="mallDomain === 'pljs'">
-                <a href="https://mall.youpenglai.com/1291610408512991232/home?t=1596960315066&state=STATE&appid=wx77c59731368f7e5e">
-                    <img
-                        v-imgError
-                        :class="$style.img"
-                        src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/820/820qwerty.jpg"
-                    >
-                </a>
-            </swiperSlide>
             <div class="home-banner-pagination" slot="pagination" />
         </swiper>
         <div :class="$style.gift" v-if="data['MODULE_A'].values.length">
@@ -192,7 +192,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['agencyCode', 'agentUser', 'mallName', 'userId', 'mallId']),
+        ...mapGetters(['agencyCode', 'agentUser', 'mallName', 'userId', 'mallId', 'mallDomain']),
         ...mapState(['data88'])
     },
     methods: {
