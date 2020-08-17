@@ -4,7 +4,7 @@
             <top-text :title="mallName + ' 欢迎您'" :tip="date" />
         </div>
         <swiper
-            v-if="data['BANNER'].values.length"
+            v-if="data['BANNER'].values.length + 1"
             :class="$style.banner"
             :options="swiperOptionBanner"
         >
@@ -22,6 +22,16 @@
                      :src="item.image"
                 >
             </swiper-slide>
+            <!-- 820 -->
+            <swiperSlide v-if="mallDomain === 'pljs'">
+                <a href="https://mall.youpenglai.com/1291610408512991232/home?t=1596960315066&state=STATE&appid=wx77c59731368f7e5e">
+                    <img
+                        v-imgError
+                        :class="$style.img"
+                        src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/820/820qwerty.jpg"
+                    >
+                </a>
+            </swiperSlide>
             <div class="home-banner-pagination" slot="pagination" />
         </swiper>
         <div :class="$style.gift" v-if="data['MODULE_A'].values.length">

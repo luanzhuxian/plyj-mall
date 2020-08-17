@@ -1,7 +1,7 @@
 <template>
     <div :class="$style.banner">
         <swiper
-            v-if="data.values.length"
+            v-if="data.values.length + 1"
             :class="$style.container"
             :options="swiperOptionBanner"
         >
@@ -13,7 +13,17 @@
                 />
                 <img v-imgError :class="$style.img" :src="item.image" :alt="item.name" @click="handelClick(item)">
             </swiperSlide>
-            <div v-show="data.values.length > 1" class="swiper-pagination" slot="pagination" />
+            <!-- 820 -->
+            <swiperSlide v-if="mallDomain === 'pljs'">
+                <a href="https://mall.youpenglai.com/1291610408512991232/home?t=1596960315066&state=STATE&appid=wx77c59731368f7e5e">
+                    <img
+                        v-imgError
+                        :class="$style.img"
+                        src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/820/820qwerty.jpg"
+                    >
+                </a>
+            </swiperSlide>
+            <div v-show="data.values.length + 1 > 1" class="swiper-pagination" slot="pagination" />
         </swiper>
     </div>
 </template>
