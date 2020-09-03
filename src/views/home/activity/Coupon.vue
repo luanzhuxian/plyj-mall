@@ -29,9 +29,11 @@
                             <div :class="$style.price">
                                 ￥<span :class="$style.number">{{ item.goodsInfo.amount }}</span>
                             </div>
-                            <div :class="$style.rule">{{ `满${item.goodsInfo.useLimitAmount}减${item.goodsInfo.amount}` }}</div>
-                            <div :class="$style.date">
-                                <span>{{ `${getDate(item.goodsInfo.useStartTime, 'MM/DD')}-${getDate(item.goodsInfo.useEndTime, 'MM/DD')}` }}</span>
+                            <div>
+                                <div :class="$style.rule">{{ `满${item.goodsInfo.useLimitAmount}减${item.goodsInfo.amount}` }}</div>
+                                <div :class="$style.date">
+                                    <span>{{ `${getDate(item.goodsInfo.useStartTime, 'MM/DD')}-${getDate(item.goodsInfo.useEndTime, 'MM/DD')}` }}</span>
+                                </div>
                             </div>
                         </div>
                         <div :class="$style.couponListItemCover">
@@ -118,6 +120,7 @@ export default {
                 font-size: 28px;
                 .coupon-list-item-wrapper {
                     display: flex;
+                    flex-direction: row;
                     justify-content: space-around;
                     align-items: center;
                     padding-right: 44px;
