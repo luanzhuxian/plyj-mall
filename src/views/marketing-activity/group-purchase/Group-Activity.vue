@@ -65,10 +65,10 @@ export default {
             return !this.ongoingList.length && !this.incomingList.length
         }
     },
-    created () {
+    async created () {
         try {
             this.loaded = false
-            this.getList()
+            await this.getList()
         } catch (e) {
             throw e
         }
