@@ -5,16 +5,6 @@
             :class="$style.container"
             :options="swiperOptionBanner"
         >
-            <!-- 820 -->
-            <swiper-slide v-if="mallDomain === 'pljs'">
-                <a href="https://mall.youpenglai.com/1291610408512991232/home">
-                    <img
-                        v-imgError
-                        :class="$style.img"
-                        src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/820/820qwerty.jpg"
-                    >
-                </a>
-            </swiper-slide>
             <swiperSlide v-for="(item, i) of data.values" :key="i">
                 <count-down
                     v-if="item.shoppingStatus === 1"
