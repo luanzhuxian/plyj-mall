@@ -84,7 +84,7 @@ export const submitExpressInfo = params => axios.post(`/apis/v2/order/refunds/re
 // export const deleteRefundOrder = params => axios.post(`/apis/v1/refund/refund/admin/delete`, params)
 
 // 查看申请helper进度
-export const getHelperApplicationProgress = () => axios.get(`/apis/v1/agent/user/info/audit/status`)
+export const getHelperApplicationProgress = () => axios.get(`/apis/v2/agent/user/info/audit/status`)
 
 // 获取是否核销
 export const getVerificationStatus = orderId => axios.get(`/apis/v2/redeem/jumpafter?orderId=${ orderId }`)

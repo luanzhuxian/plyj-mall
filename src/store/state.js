@@ -45,7 +45,7 @@ export default {
         userId: ''
     },
     mallInfo: {
-        appid: '',
+        appId: '',
         componentAppid: '',
         address: '',
         logoUrl: '',

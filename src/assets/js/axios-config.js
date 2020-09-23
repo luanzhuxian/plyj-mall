@@ -10,6 +10,12 @@ class ResponseError extends Error {
     this.name = 'ResponseError'
   }
 }
+
+/* code码 */
+const SUCCESS_CODE = 2000
+// const EXCEPTION_CODE = 5000
+const TOKEN_TIME_OUT = 4002
+
 // 添加请求拦截器
 axios.interceptors.request.use(request, reqError)
 // 添加响应拦截器
@@ -31,8 +37,11 @@ function reqError (error) {
 
 async function response (response) {
   const data = response.data
+  data.result = data.data
+  delete data.data
+  console.log(data)
   const config = response.config
-  if (data.status !== 200) {
+  if (data.code !== SUCCESS_CODE) {
     let msg = data.message
     let loginInvalid = msg.indexOf('登录信息失效') >= 0
     if (msg.indexOf('运行时') > -1) {
