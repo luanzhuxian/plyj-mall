@@ -12,7 +12,7 @@ export const checkMobileCode = (smsType, mobile, verifyCode) => axios.get(`/apis
 // 根据域名获取商城id
 export const getMallInfo = domainName => axios.get(`/apis/v2/mall/query/appid?domainName=${ domainName }`)
 
-export const getOpenId = (appid, code) => axios.post(`/apis/v1/base/baseUserInfo/${ appid }/greet?code=${ code }`)
+export const getOpenId = (appid, code) => axios.post(`/apis/v2/base/baseUserInfo/${ appid }/greet?code=${ code }`)
 
 // openId登录
 export const login = openId => axios.post(`/apis/v2/privilege/auth/openId`, { openId })
@@ -38,10 +38,10 @@ export const getOpenIdByCode = code => axios.get(`/apis/v1/agency/AgencyMall/pen
 export const getPenglaiAppid = () => axios.get(`/apis/v1/agency/AgencyMall/penglai/appid`)
 
 // 用户绑定手机号
-export const bindMobile = data => axios.put('/apis/v1/base/baseUserInfo/mobile/bind', data)
+export const bindMobile = data => axios.put('/apis/v2/base/baseUserInfo/mobile/bind', data)
 
 // 用户修改手机号
-export const updateMobile = data => axios.put('/apis/v1/base/baseUserInfo/mobile/update', data)
+export const updateMobile = data => axios.put('/apis/v2/base/baseUserInfo/mobile/update', data)
 
 //
 export const saveLog = data => axios.post('/apis/v1/systemctl/log', data)
@@ -50,7 +50,7 @@ export const saveLog = data => axios.post('/apis/v1/systemctl/log', data)
 export const refreshToken = refreshToken => axios.get(`/apis/v1/privilege/auth/refresh?refreshToken=${ refreshToken }`)
 
 // 修改用户头像，昵称
-export const userInfoSettings = data => axios.post('/apis/v1/base/baseUserInfo/settings', data)
+export const userInfoSettings = data => axios.post('/apis/v2/base/baseUserInfo/settings', data)
 
 // 获取购物车数量
 export const getCartCount = () => axios.get('/apis/v1/mall/shopping_cart/query/count')
@@ -75,4 +75,4 @@ export const errorlog = data => axios.post('/apis/v1/log/web/error', data)
  * @property data.idCard
  * @return {*}
  */
-export const bindIdCard = data => axios.post('/apis/v1/base/baseUserInfo/idCard/bind', data)
+export const bindIdCard = data => axios.post('/apis/v2/base/baseUserInfo/idCard/bind', data)
