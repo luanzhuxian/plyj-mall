@@ -11,7 +11,9 @@ export default {
         document.body.id = theme
     },
     [type.GET_MALL_INFO] (state, payload) {
+        console.log(payload)
         copyFields(state.mallInfo, payload)
+        console.log(state.mallInfo)
         sessionStorage.setItem('mallName', payload.mallName)
         // 缓存10周
         Cookie.set('mallId', payload.id, {
