@@ -116,8 +116,8 @@ export default {
             }
             const search = parseSearch()
             delete search.code
-            const { appSecret, componentAppid, appid } = state.mallInfo
-            location.href = getWeixinURL(appSecret, appid, componentAppid, search)
+            const { appSecret, componentAppid, appId } = state.mallInfo
+            location.href = getWeixinURL(appSecret, appId, componentAppid, search)
             return null
         } catch (e) {
             throw e
