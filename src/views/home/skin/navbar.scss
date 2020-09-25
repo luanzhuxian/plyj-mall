@@ -12,6 +12,8 @@
 .skin-children-day,
 .skin-fathers-day,
 .skin-dragon-boat,
+.skin-mid-autumn-festival,
+.skin-national-day,
 .skin-campaign {
     .route {
         padding: 0 0 4px;
@@ -99,6 +101,20 @@
     .route {
         &.active > .tab-name {
             color: #258d6b;
+        }
+    }
+}
+.skin-mid-autumn-festival {
+    .route {
+        &.active > .tab-name {
+            color: #D96B20;
+        }
+    }
+}
+.skin-national-day {
+    .route {
+        &.active > .tab-name {
+            color: #FD7803;
         }
     }
 }
