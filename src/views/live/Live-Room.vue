@@ -505,10 +505,10 @@ export default {
                 return
             }
             // 免费直播也需要产生订单
-            if (!this.mchId) {
+            /* if (!this.mchId) {
                 this.$confirm('商家未开通支付，请联系管理员')
                 throw false
-            }
+            } */
             try {
                 const needPay = await hasPied(this.detail.id)
                 if (!needPay) {
