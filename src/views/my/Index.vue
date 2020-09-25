@@ -107,33 +107,33 @@
                         <i :class="$style.text">全部订单</i>
                     </router-link>
                 </div>
-                <div v-if="newFreight.length > 0" :class="$style.newLogistics">
-                    <div :class="$style.logisticsTitle">
-                        最新物流
-                    </div>
-                    <swiper :options="swiperOption" style="overflow: hidden;">
-                        <swiper-slide
-                            :class="$style.swiperSlide"
-                            v-for="(item, i) of newFreight"
-                            :key="i"
-                        >
-                            <router-link
-                                :class="$style.logisticsContent"
-                                :to="{ name: 'Freight', params: { orderId: item.orderId }, query: { img: item.productImageUrls[0] } }"
-                            >
-                                <div :class="$style.contentLeft">
-                                    <img v-imgError v-img-error :src="item.productImageUrls[0]">
-                                </div>
-                                <div :class="$style.contentRight">
-                                    <div :class="$style.deliveryStatus">
-                                        派送中
-                                    </div>
-                                    <div :class="$style.deliveryDetails" v-text="item.orderLogisticTrackModel.content" />
-                                </div>
-                            </router-link>
-                        </swiper-slide>
-                    </swiper>
-                </div>
+                <!--                <div v-if="newFreight.length > 0" :class="$style.newLogistics">-->
+                <!--                    <div :class="$style.logisticsTitle">-->
+                <!--                        最新物流-->
+                <!--                    </div>-->
+                <!--                    <swiper :options="swiperOption" style="overflow: hidden;">-->
+                <!--                        <swiper-slide-->
+                <!--                            :class="$style.swiperSlide"-->
+                <!--                            v-for="(item, i) of newFreight"-->
+                <!--                            :key="i"-->
+                <!--                        >-->
+                <!--                            <router-link-->
+                <!--                                :class="$style.logisticsContent"-->
+                <!--                                :to="{ name: 'Freight', params: { orderId: item.orderId }, query: { img: item.productImageUrls[0] } }"-->
+                <!--                            >-->
+                <!--                                <div :class="$style.contentLeft">-->
+                <!--                                    <img v-imgError v-img-error :src="item.productImageUrls[0]">-->
+                <!--                                </div>-->
+                <!--                                <div :class="$style.contentRight">-->
+                <!--                                    <div :class="$style.deliveryStatus">-->
+                <!--                                        派送中-->
+                <!--                                    </div>-->
+                <!--                                    <div :class="$style.deliveryDetails" v-text="item.orderLogisticTrackModel.content" />-->
+                <!--                                </div>-->
+                <!--                            </router-link>-->
+                <!--                        </swiper-slide>-->
+                <!--                    </swiper>-->
+                <!--                </div>-->
             </div>
             <!-- 优惠劵 -->
             <div :class="$style.panel">
@@ -246,7 +246,6 @@ import Modal from '../../components/penglai-ui/Modal.vue'
 import Progress from '../../components/common/Progress.vue'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { orderPhysicalorderSummary, getHelperApplicationProgress } from '../../apis/order-manager'
-import { getNewFreight } from '../../apis/my'
 import { getAduitNotice, updateNoticeStatus } from '../../apis/broker-manager'
 import { mapGetters, mapActions } from 'vuex'
 import { Get_ADUIT_NOTICE } from '../../store/mutation-type'
@@ -279,7 +278,7 @@ export default {
                 autoplay: true,
                 height: window.innerWidth / 750 * 88
             },
-            newFreight: [],
+            // newFreight: [],
             progress: [],
             applyStatus: 'NOT_APPLY',
             isModalShow: false
@@ -313,7 +312,7 @@ export default {
             this.loaded = true
         } else {
             this.loaded = false
-            this.getRecentExpressInfo()
+            // this.getRecentExpressInfo()
             this.getNotice()
         }
     },
@@ -358,15 +357,15 @@ export default {
             }
         },
 
-        // 获取物流信息
-        async getRecentExpressInfo () {
-            try {
-                const { result } = await getNewFreight()
-                this.newFreight = result
-            } catch (e) {
-                throw e
-            }
-        },
+        // // 获取物流信息
+        // async getRecentExpressInfo () {
+        //     try {
+        //         const { result } = await getNewFreight()
+        //         this.newFreight = result
+        //     } catch (e) {
+        //         throw e
+        //     }
+        // },
 
         // 获取helper申请进度
         async getProgress () {
