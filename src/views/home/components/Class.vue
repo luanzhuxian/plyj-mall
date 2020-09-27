@@ -1,5 +1,5 @@
 <template>
-    <div :class="$style.best">
+    <div :class="$style.class">
         <ul :class="$style.proList">
             <template v-for="(item, i) of data.values">
                 <li
@@ -56,7 +56,7 @@
 import CountDown from '../../../components/product/Count-Down.vue'
 
 export default {
-    name: 'Best',
+    name: 'Class',
     components: {
         CountDown
     },

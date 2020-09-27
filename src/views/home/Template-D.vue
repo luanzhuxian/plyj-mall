@@ -79,7 +79,7 @@
                     :skin-id="skinId"
                 />
                 <div v-else-if="skinId !== null" :class="$style.title" v-text="POPULAR.moduleName" />
-                <hot-item :data="POPULAR" />
+                <popular :data="POPULAR" />
             </div>
             <!-- 课程 -->
             <div :class="$style.class" v-if="isClassShow">
@@ -90,7 +90,7 @@
                     :skin-id="skinId"
                 />
                 <div v-else-if="skinId !== null" :class="$style.title" v-text="CLASS.moduleName" />
-                <best :data="CLASS" />
+                <class :data="CLASS" />
             </div>
             <!-- 精品推荐 -->
             <div :class="$style.recommend" v-if="RECOMMEND.values && RECOMMEND.values.length">
@@ -126,11 +126,10 @@ import Miaosha from './activity/Miaosha.vue'
 import Pintuan from './activity/Pintuan.vue'
 import Yugou from './activity/Yugou.vue'
 import Package from './activity/Package.vue'
-import HotItem from './components/Hot-Item.vue'
-import Best from './components/Best.vue'
+import Popular from './components/Popular.vue'
+import Class from './components/Class.vue'
 import Recommend from './components/Recommend.vue'
 import SkinTitle from './skin/Skin-Title.vue'
-// import Campaign from './components/Campaign.vue'
 import { skinClassNameMap } from './skin/map'
 
 export default {
@@ -151,11 +150,10 @@ export default {
         Pintuan,
         Yugou,
         Package,
-        HotItem,
-        Best,
+        Popular,
+        Class,
         Recommend,
         SkinTitle
-        // Campaign
     },
     props: {
         type: {

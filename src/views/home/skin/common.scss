@@ -1,8 +1,8 @@
 /*  common */
 .skin-common {
     .banner,
-    .hot-item,
-    .best {
+    .popular,
+    .class {
         padding: 0 24px !important;
         background: transparent !important;
     }
@@ -156,8 +156,8 @@
         margin: 0 -24px 14px;
     }
     .teachers,
-    .hot-item,
-    .best,
+    .popular,
+    .class,
     .recommend {
         background: #d6922d !important;
         padding-bottom: 26px !important;

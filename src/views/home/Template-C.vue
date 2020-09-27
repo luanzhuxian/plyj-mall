@@ -23,7 +23,7 @@
                     :skin-id="skinId"
                 />
                 <div v-else-if="skinId !== null" :class="$style.title" v-text="POPULAR.moduleName" />
-                <hot-item :data="POPULAR" />
+                <popular :data="POPULAR" />
             </div>
             <div :class="$style.teachers" v-if="isTeachersShow">
                 <skin-title
@@ -43,7 +43,7 @@
                     :skin-id="skinId"
                 />
                 <div v-else-if="skinId !== null" :class="$style.title" v-text="CLASS.moduleName" />
-                <best :data="CLASS" />
+                <class :data="CLASS" />
             </div>
             <div :class="$style.recommend" v-if="RECOMMEND.values && RECOMMEND.values.length">
                 <skin-title
@@ -71,14 +71,13 @@ import SeriesCourse from './components/Series-Course.vue'
 import ImageText from './components/Image-Text.vue'
 // import Activity from '../activity/spring/Activity.vue'
 // import D12Activity from './components/Activity.vue'
-import HotItem from './components/Hot-Item.vue'
-import Best from './components/Best.vue'
+import Popular from './components/Popular.vue'
+import Class from './components/Class.vue'
 import Recommend from './components/Recommend.vue'
 import Appointment from './components/Appointment.vue'
 import Propagate from './components/Propagate.vue'
 import Teachers from './components/Teachers'
 import SkinTitle from './skin/Skin-Title.vue'
-// import Campaign from './components/Campaign'
 import { skinClassNameMap } from './skin/map'
 
 export default {
@@ -92,14 +91,13 @@ export default {
         ImageText,
         // Activity,
         // D12Activity,
-        HotItem,
-        Best,
+        Popular,
+        Class,
         Recommend,
         Appointment,
         Propagate,
         Teachers,
         SkinTitle
-        // Campaign
     },
     props: {
         type: {
@@ -217,7 +215,7 @@ export default {
     position: relative;
     padding: 0 20px;
 }
-.hot-item {
+.popular {
     position: relative;
     .title {
         &:after {

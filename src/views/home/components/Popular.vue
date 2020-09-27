@@ -1,5 +1,5 @@
 <template>
-    <div :class="$style.hotItem">
+    <div :class="$style.popular">
         <ul :class="$style.proList">
             <template v-for="(item, i) of data.values">
                 <li
@@ -58,7 +58,7 @@ import Tags from './Tags.vue'
 import CountDown from '../../../components/product/Count-Down.vue'
 
 export default {
-    name: 'HotItem',
+    name: 'Popular',
     components: {
         Tags,
         CountDown

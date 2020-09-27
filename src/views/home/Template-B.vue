@@ -23,7 +23,7 @@
                     :skin-id="skinId"
                 />
                 <div v-else-if="skinId !== null" :class="$style.title" v-text="POPULAR.moduleName" />
-                <hot-item :data="POPULAR" />
+                <popular :data="POPULAR" />
             </div>
             <appointment :class="$style.appointment" :data="APPOINTMENT" :slides-per-view="2" v-if="APPOINTMENT.showStatue === 1" />
             <propagate :class="$style.propagate" :data="PROPAGATE" v-if="PROPAGATE.showStatue === 1" />
@@ -35,7 +35,7 @@
                     :skin-id="skinId"
                 />
                 <div v-else-if="skinId !== null" :class="$style.title" v-text="CLASS.moduleName" />
-                <best :data="CLASS" />
+                <class :data="CLASS" />
             </div>
             <div :class="$style.recommend" v-if="RECOMMEND.values && RECOMMEND.values.length">
                 <skin-title
@@ -69,8 +69,8 @@ import ImageText from './components/Image-Text.vue'
 // import D12Activity from './components/Activity.vue'
 import Banner from './components/Banner.vue'
 import Adv from './components/Adv.vue'
-import HotItem from './components/Hot-Item.vue'
-import Best from './components/Best.vue'
+import Popular from './components/Popular.vue'
+import Class from './components/Class.vue'
 import Recommend from './components/Recommend.vue'
 import Appointment from './components/Appointment.vue'
 import Propagate from './components/Propagate-Small.vue'
@@ -91,8 +91,8 @@ export default {
         // D12Activity,
         Banner,
         Adv,
-        HotItem,
-        Best,
+        Popular,
+        Class,
         Recommend,
         Appointment,
         Propagate,
