@@ -121,12 +121,12 @@ export default {
     [type.SET_DRAGON_GATE_PLAY] (state, payload = {}) {
         state.dragonGatePlay = payload
     },
-    [type.SET_CAMPAIGN_REPORT] (state, payload) {
-        state.campaignReport = payload
-    },
-    [type.SET_CAMPAIGN_BOOK] (state, payload) {
-        state.campaignBook = payload
-    },
+    // [type.SET_CAMPAIGN_REPORT] (state, payload) {
+    //     state.campaignReport = payload
+    // },
+    // [type.SET_CAMPAIGN_BOOK] (state, payload) {
+    //     state.campaignBook = payload
+    // },
     [type.SET_MALL_QRCODE_INFO] (state, payload = {}) {
         if (!payload) payload = {}
 

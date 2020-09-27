@@ -15,7 +15,7 @@
         <title-dragon-boat v-if="skinId === 13" :data="data" />
         <title-mid-autumn-festival v-if="skinId === 14" :data="data" />
         <title-national-day v-if="skinId === 15" :data="data" />
-        <title-campaign v-if="skinId === 99" :data="data" />
+        <!-- <title-campaign v-if="skinId === 99" :data="data" /> -->
     </div>
 </template>
 
@@ -35,7 +35,7 @@ import TitleFathersDay from './Title-Fathers-Day.vue'
 import TitleDragonBoat from './Title-Dragon-Boat.vue'
 import TitleMidAutumnFestival from './Title-Mid-Autumn-Festival.vue'
 import TitleNationalDay from './Title-National-Day.vue'
-import TitleCampaign from './Title-Campaign.vue'
+// import TitleCampaign from './Title-Campaign.vue'
 
 export default {
     name: 'SkinTitle',
@@ -54,8 +54,8 @@ export default {
         TitleFathersDay,
         TitleDragonBoat,
         TitleMidAutumnFestival,
-        TitleNationalDay,
-        TitleCampaign
+        TitleNationalDay
+        // TitleCampaign
     },
     props: {
         data: {

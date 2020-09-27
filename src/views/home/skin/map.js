@@ -15,7 +15,7 @@ export const skinClassNameMap = {
     13: 'skinDragonBoat',
     14: 'skinMidAutumnFestival',
     15: 'skinNationalDay',
-    99: 'skinCampaign',
+    // 99: 'skinCampaign',
     has (id) {
         return Reflect.has(this, id)
     }
