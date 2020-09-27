@@ -13,6 +13,8 @@
         <title-children-day v-if="skinId === 11" :data="data" />
         <title-fathers-day v-if="skinId === 12" :data="data" />
         <title-dragon-boat v-if="skinId === 13" :data="data" />
+        <title-mid-autumn-festival v-if="skinId === 14" :data="data" />
+        <title-national-day v-if="skinId === 15" :data="data" />
         <title-campaign v-if="skinId === 99" :data="data" />
     </div>
 </template>
@@ -31,6 +33,8 @@ import TitleMothersDay from './Title-Mothers-Day.vue'
 import TitleChildrenDay from './Title-Children-Day.vue'
 import TitleFathersDay from './Title-Fathers-Day.vue'
 import TitleDragonBoat from './Title-Dragon-Boat.vue'
+import TitleMidAutumnFestival from './Title-Mid-Autumn-Festival.vue'
+import TitleNationalDay from './Title-National-Day.vue'
 import TitleCampaign from './Title-Campaign.vue'
 
 export default {
@@ -49,6 +53,8 @@ export default {
         TitleChildrenDay,
         TitleFathersDay,
         TitleDragonBoat,
+        TitleMidAutumnFestival,
+        TitleNationalDay,
         TitleCampaign
     },
     props: {

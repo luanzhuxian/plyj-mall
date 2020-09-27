@@ -340,6 +340,50 @@
     }
 }
 
+// 中秋
+.skin-mid-autumn-festival {
+    @extend .skin-common;
+    background-color: #22ADB2 !important;
+    .container {
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/mid-autumn-festival/bg.jpg';
+        @include container(130px, $background-image);
+        .search {
+            margin-bottom: 17px;
+            padding: 0 92px;
+            height: 55px !important;
+        }
+        .footer {
+            @include footer(90px, #1b8864);
+            padding-top: 10px;
+        }
+        .skin-title {
+            margin: 22px -24px 20px;
+        }
+    }
+}
+
+// 国庆
+.skin-national-day {
+    @extend .skin-common;
+    background-color: #BA0909 !important;
+    .container {
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/national-day/bg.jpg';
+        @include container(180px, $background-image);
+        .search {
+            margin-bottom: 12px;
+            padding: 0 92px;
+            height: 55px !important;
+        }
+        .footer {
+            @include footer(87px, #FD7803);
+            padding-top: 10px;
+        }
+        .skin-title {
+            margin: 40px -24px 24px;
+        }
+    }
+}
+
 // 共战疫
 .skin-campaign {
     @extend .skin-common;

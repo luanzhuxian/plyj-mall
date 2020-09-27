@@ -13,6 +13,8 @@ export const skinClassNameMap = {
     11: 'skinChildrenDay',
     12: 'skinFathersDay',
     13: 'skinDragonBoat',
+    14: 'skinMidAutumnFestival',
+    15: 'skinNationalDay',
     99: 'skinCampaign',
     has (id) {
         return Reflect.has(this, id)
@@ -149,6 +151,26 @@ export const skinNavMap = {
         shoppingCartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/dragon-boat/cart.png',
         my: 'https://mallcdn.youpenglai.com/static/admall/skin/dragon-boat/my.png',
         myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/dragon-boat/my.png'
+    },
+    14: {
+        home: 'https://mallcdn.youpenglai.com/static/admall/skin/mid-autumn-festival/home.png',
+        homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/mid-autumn-festival/home.png',
+        classify: 'https://mallcdn.youpenglai.com/static/admall/skin/mid-autumn-festival/classify.png',
+        classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/mid-autumn-festival/classify.png',
+        shoppingCart: 'https://mallcdn.youpenglai.com/static/admall/skin/mid-autumn-festival/cart.png',
+        shoppingCartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/mid-autumn-festival/cart.png',
+        my: 'https://mallcdn.youpenglai.com/static/admall/skin/mid-autumn-festival/my.png',
+        myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/mid-autumn-festival/my.png'
+    },
+    15: {
+        home: 'https://mallcdn.youpenglai.com/static/admall/skin/national-day/home.png',
+        homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/national-day/home.png',
+        classify: 'https://mallcdn.youpenglai.com/static/admall/skin/national-day/classify.png',
+        classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/national-day/classify.png',
+        shoppingCart: 'https://mallcdn.youpenglai.com/static/admall/skin/national-day/cart.png',
+        shoppingCartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/national-day/cart.png',
+        my: 'https://mallcdn.youpenglai.com/static/admall/skin/national-day/my.png',
+        myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/national-day/my.png'
     },
     99: {
         home: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/98e32f2b-679b-485d-8a9a-6e62659f91b1.png',
