@@ -928,12 +928,12 @@ export default {
                             originalPriceIcon: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yuanjia.png'
                         })
                     } else if (type === 4) {
-                        // 秒杀海报
+                        // 预购海报
                         poster = new PreorderPoster({
                             ...data,
                             price: this.detail.activityProductModel.price,
                             originalPrice: this.detail.activityProductModel.depositTotal,
-                            headerBg: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/poster2.png',
+                            headerBg: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/poster1.png',
                             yujiaoIcon: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yujiao.png',
                             yuanIcon: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/yuan.png',
                             dikouIcon: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/yugou/dikou.png'
