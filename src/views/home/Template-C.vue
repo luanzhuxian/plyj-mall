@@ -11,7 +11,7 @@
             <online-course :class="$style.onlineCourse" :data="COURSE" v-if="isOnlineCourseShow" />
             <series-course :class="$style.seriesCourse" :data="SERIES" v-if="isSeriesCourseShow" />
             <image-text :class="$style.imageText" :data="ImageText" v-if="isImageTextShow" />
-            <campaign v-if="isCampaignShow" />
+            <!-- <campaign v-if="isCampaignShow" /> -->
             <!-- <activity :class="$style.activity" v-if="isNwEventShow" /> -->
             <!-- <d12-activity :class="$style.activity" /> -->
             <appointment :class="$style.appointment" :data="APPOINTMENT" :style-type="2" v-if="APPOINTMENT.showStatue === 1" />
@@ -78,7 +78,7 @@ import Appointment from './components/Appointment.vue'
 import Propagate from './components/Propagate.vue'
 import Teachers from './components/Teachers'
 import SkinTitle from './skin/Skin-Title.vue'
-import Campaign from './components/Campaign'
+// import Campaign from './components/Campaign'
 import { skinClassNameMap } from './skin/map'
 
 export default {
@@ -98,8 +98,8 @@ export default {
         Appointment,
         Propagate,
         Teachers,
-        SkinTitle,
-        Campaign
+        SkinTitle
+        // Campaign
     },
     props: {
         type: {
@@ -169,9 +169,9 @@ export default {
         // isNwEventShow () {
         //     return this.parent.nwEvent && this.parent.nwEvent.permissionStatus
         // },
-        isCampaignShow () {
-            return this.parent.isReportShow || this.parent.isBookShow
-        },
+        // isCampaignShow () {
+        //     return this.parent.isReportShow || this.parent.isBookShow
+        // },
         isPopularShow () {
             return this.POPULAR.showStatue === 1 && this.POPULAR.values && this.POPULAR.values.length
         },

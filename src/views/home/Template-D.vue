@@ -21,7 +21,7 @@
             <!-- 图文资料 -->
             <image-text :class="$style.imageText" :data="ImageText" v-if="isImageTextShow" />
             <!-- 疫情 -->
-            <campaign v-if="isCampaignShow" />
+            <!-- <campaign v-if="isCampaignShow" /> -->
             <!-- 预约 -->
             <appointment :class="$style.appointment" :data="APPOINTMENT" :slides-per-view="2" v-if="APPOINTMENT.showStatue === 1" />
             <!-- 秒杀 -->
@@ -130,7 +130,7 @@ import HotItem from './components/Hot-Item.vue'
 import Best from './components/Best.vue'
 import Recommend from './components/Recommend.vue'
 import SkinTitle from './skin/Skin-Title.vue'
-import Campaign from './components/Campaign.vue'
+// import Campaign from './components/Campaign.vue'
 import { skinClassNameMap } from './skin/map'
 
 export default {
@@ -154,8 +154,8 @@ export default {
         HotItem,
         Best,
         Recommend,
-        SkinTitle,
-        Campaign
+        SkinTitle
+        // Campaign
     },
     props: {
         type: {
@@ -240,9 +240,9 @@ export default {
         isImageTextShow () {
             return this.ImageText.showStatue === 1 && this.ImageText.values && this.ImageText.values.length
         },
-        isCampaignShow () {
-            return this.parent.isReportShow || this.parent.isBookShow
-        },
+        // isCampaignShow () {
+        //     return this.parent.isReportShow || this.parent.isBookShow
+        // },
         isCouponShow () {
             return this.COUPON.values && this.COUPON.values.length
         },

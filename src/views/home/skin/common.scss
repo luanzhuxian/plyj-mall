@@ -385,21 +385,21 @@
 }
 
 // 共战疫
-.skin-campaign {
-    @extend .skin-common;
-    background-color: #d1e5fe !important;
-    .container {
-        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/847981f6-e571-4dcd-a105-ee1a6a8ccddc.png';
-        @include container(136px, $background-image);
-    }
-    .search {
-        padding: 0 92px;
-    }
-    .footer {
-        @include footer(90px, #fff);
-    }
-    .skin-title {
-        margin: 42px -24px 22px;
-    }
-}
+// .skin-campaign {
+//     @extend .skin-common;
+//     background-color: #d1e5fe !important;
+//     .container {
+//         $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/847981f6-e571-4dcd-a105-ee1a6a8ccddc.png';
+//         @include container(136px, $background-image);
+//     }
+//     .search {
+//         padding: 0 92px;
+//     }
+//     .footer {
+//         @include footer(90px, #fff);
+//     }
+//     .skin-title {
+//         margin: 42px -24px 22px;
+//     }
+// }
 

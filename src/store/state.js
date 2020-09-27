@@ -93,9 +93,9 @@ export default {
     // 龙门节抽奖
     dragonGatePlay: null,
     // 疫情战报
-    campaignReport: null,
+    // campaignReport: null,
     // 疫情签到
-    campaignBook: null,
+    // campaignBook: null,
     // 公众号二维码信息
     mallQRCodeInfo: null,
     // 服务器时间

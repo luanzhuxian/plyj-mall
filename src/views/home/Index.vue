@@ -39,8 +39,8 @@
 <script>
 /* eslint-disable no-multi-assign */
 
-import { mapGetters, mapMutations } from 'vuex'
-import moment from 'moment'
+import { mapGetters } from 'vuex'
+// import moment from 'moment'
 import 'swiper/dist/css/swiper.css'
 import TemplateB from './Template-B.vue'
 import TemplateC from './Template-C.vue'
@@ -49,8 +49,8 @@ import InviteNewcomersHomeEntry from '../marketing-activity/double-12/invitenewc
 import SplitBurse from './../../components/common/Split-Burse.vue'
 import SendLive from './../../components/common/Send-Live.vue'
 import { getTemplate } from '../../apis/home'
-import { getReportActivity, getBookActivity } from '../../apis/fight-epidemic'
-import { SET_CAMPAIGN_REPORT, SET_CAMPAIGN_BOOK } from '../../store/mutation-type'
+// import { getReportActivity, getBookActivity } from '../../apis/fight-epidemic'
+// import { SET_CAMPAIGN_REPORT, SET_CAMPAIGN_BOOK } from '../../store/mutation-type'
 
 export default {
     name: 'Home',
@@ -105,48 +105,48 @@ export default {
     async created () {
         try {
             // 疫情战报
-            getReportActivity().then(({ result = {} }) => {
-                if (!result) {
-                    result = {}
-                }
+            // getReportActivity().then(({ result = {} }) => {
+            //     if (!result) {
+            //         result = {}
+            //     }
 
-                const { id = '', status = 0 } = result
+            //     const { id = '', status = 0 } = result
 
-                this.isReportShow = result.isReportShow = !!status
-                this.reportId = id
-                this.setCampaignReport(result)
-            })
+            //     this.isReportShow = result.isReportShow = !!status
+            //     this.reportId = id
+            //     this.setCampaignReport(result)
+            // })
             // 疫情签到
-            getBookActivity().then(({ result = {} }) => {
-                if (!result) {
-                    result = {}
-                }
+            // getBookActivity().then(({ result = {} }) => {
+            //     if (!result) {
+            //         result = {}
+            //     }
 
-                const { systemTime, status, activityId = '' } = result
-                let { startTime, endTime } = result
-                const isActive = status === 0
+            //     const { systemTime, status, activityId = '' } = result
+            //     let { startTime, endTime } = result
+            //     const isActive = status === 0
 
-                if (isActive) {
-                    startTime = moment(startTime, 'YYYY-MM-DD HH:mm:ss').valueOf()
-                    endTime = moment(endTime, 'YYYY-MM-DD HH:mm:ss').valueOf()
-                }
-                this.isBookShow = result.isBookShow = isActive
-                    ? Number(systemTime) >= Number(startTime) && Number(systemTime) < Number(endTime)
-                    : false
+            //     if (isActive) {
+            //         startTime = moment(startTime, 'YYYY-MM-DD HH:mm:ss').valueOf()
+            //         endTime = moment(endTime, 'YYYY-MM-DD HH:mm:ss').valueOf()
+            //     }
+            //     this.isBookShow = result.isBookShow = isActive
+            //         ? Number(systemTime) >= Number(startTime) && Number(systemTime) < Number(endTime)
+            //         : false
 
-                this.bookId = activityId
-                this.setCampaignBook(result)
-            })
+            //     this.bookId = activityId
+            //     this.setCampaignBook(result)
+            // })
             this.getTemplate()
         } catch (e) {
             throw e
         }
     },
     methods: {
-        ...mapMutations({
-            setCampaignReport: SET_CAMPAIGN_REPORT,
-            setCampaignBook: SET_CAMPAIGN_BOOK
-        }),
+        // ...mapMutations({
+        //     setCampaignReport: SET_CAMPAIGN_REPORT,
+        //     setCampaignBook: SET_CAMPAIGN_BOOK
+        // }),
         async getTemplate () {
             try {
                 const { result } = await getTemplate({ type: 1 })

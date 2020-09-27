@@ -114,13 +114,13 @@ export default {
         },
         show () {
             return this.list.length
-        },
-        isReportShow () {
-            return !!this.campaignReport && this.campaignReport.isReportShow && this.campaignReport.id
-        },
-        isBookShow () {
-            return !!this.campaignBook && this.campaignBook.isBookShow && this.campaignBook.activityId
         }
+        // isReportShow () {
+        //     return !!this.campaignReport && this.campaignReport.isReportShow && this.campaignReport.id
+        // },
+        // isBookShow () {
+        //     return !!this.campaignBook && this.campaignBook.isBookShow && this.campaignBook.activityId
+        // }
     },
     methods: {
         jump ({ value }) {
@@ -177,15 +177,15 @@ export default {
                     id = this.dragonGatePlay.id
                     break
 
-                case 'report':
-                    if (!this.isReportShow) return this.$warning('活动已结束')
-                    id = this.campaignReport.id
-                    break
+                    // case 'report':
+                    //     if (!this.isReportShow) return this.$warning('活动已结束')
+                    //     id = this.campaignReport.id
+                    //     break
 
-                case 'sign':
-                    if (!this.isBookShow) return this.$warning('活动已结束')
-                    id = this.campaignBook.activityId
-                    break
+                    // case 'sign':
+                    //     if (!this.isBookShow) return this.$warning('活动已结束')
+                    //     id = this.campaignBook.activityId
+                    //     break
 
                 default:
                     break
