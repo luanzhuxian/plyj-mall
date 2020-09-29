@@ -3,7 +3,7 @@ import App from './App.vue'
 import { router } from './router/index'
 import store from './store/index'
 import { USER_INFO, LOGIN, GET_MALL_INFO } from './store/mutation-type'
-import './assets/js/axios-config'
+import './assets/js/axios'
 import 'moment/locale/zh-cn'
 import './assets/scss/index.scss'
 import directive from './directive'
@@ -61,6 +61,7 @@ const render = () => {
 
     /* 处理所有组件抛出的错误 */
     Vue.config.errorHandler = async function (err, vm, info) {
+        console.log(err)
         if (err) {
             if (err.name === 'ResponseError') {
                 // 响应出错

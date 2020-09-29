@@ -16,7 +16,6 @@ import Newcomers from './newcomers'
 import InviteNewcomers from './invitenewcomers'
 import roadlearning from './roadlearning'
 import NewYear from './new-year.js'
-import FightEpidemic from './fight-epidemic.js'
 import OnlineClassroom from './online-classroom.js'
 import LongmenFestival from './longmen-festival.js'
 const NetError = require('../views/Net-Error.vue')
@@ -110,7 +109,6 @@ const allRoutes = [
     ...InviteNewcomers,
     ...roadlearning,
     ...NewYear,
-    ...FightEpidemic,
     ...OnlineClassroom,
     ...LongmenFestival
 ]

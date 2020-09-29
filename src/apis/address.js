@@ -12,4 +12,4 @@ export const updateAddress = (data, sequenceNbr) => axios.put(`/apis/v2/publicus
 
 export const deleteAddress = sequenceNbr => axios.delete(`/apis/v2/publicuser/address/${ sequenceNbr }?type=2`)
 
-export const getCityListByParentId = parentCode => axios.get(`/apis/v1/systemctl/location/parent/${ parentCode }`)
+export const getCityListByParentId = parentCode => axios.get(`/apis/v2/base/location/parent/${ parentCode }`)
