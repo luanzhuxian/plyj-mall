@@ -292,7 +292,7 @@ export default {
 
         // applyStatus: NOT_APPLY: 未申请 , AWAIT：待审核, PASS：审核通过, REJECT：审核驳回
         isApplyBtnShow () {
-            return this.roleCode === 'MEMBERSHIP' && (this.applyStatus !== 'AWAIT')
+            return this.roleCode === 'MEMBERSHIP' && (this.applyStatus === 'NOT_APPLY' || this.applyStatus === 'REJECT')
         },
 
         // 是否可查询helper申请进度
