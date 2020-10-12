@@ -1,12 +1,5 @@
 /* eslint-disable */
-import Axios from 'axios'
-export const axios = Axios.create({
-  timeout: 15000,
-  headers: {
-    'Content-Type': 'application/json;charset=UTF-8'
-  },
-  responseType: 'text'
-})
+import axios from 'axios'
 import store from '../../store'
 import { LOGIN } from '../../store/mutation-type'
 import Cookie from '../../assets/js/storage-cookie'
@@ -23,6 +16,10 @@ const SUCCESS_CODE = 2000
 const EXCEPTION_CODE = 5000
 const TOKEN_TIME_OUT = 4002
 
+axios.defaults.timeout = 200000
+axios.defaults.headers = {
+  'Content-type': 'application/json'
+}
 // 添加请求拦截器
 axios.interceptors.request.use(request, reqError)
 // 添加响应拦截器

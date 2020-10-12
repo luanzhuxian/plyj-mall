@@ -1,4 +1,4 @@
-import { axios } from '../assets/js/axios'
+import axios from 'axios'
 
 // 获取商品详情
 export const getProductDetail = (goodsId, productStatus) => axios.get(`/apis/v1/product/detail/${ goodsId }?source=1&productStatus=${ productStatus }`)

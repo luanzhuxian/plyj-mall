@@ -61,7 +61,6 @@ const render = () => {
 
     /* 处理所有组件抛出的错误 */
     Vue.config.errorHandler = async function (err, vm, info) {
-        console.log(err)
         if (err) {
             if (err.name === 'ResponseError') {
                 // 响应出错

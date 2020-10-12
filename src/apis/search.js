@@ -1,4 +1,4 @@
-import { axios } from '../assets/js/axios'
+import axios from 'axios'
 
 // 全局搜索商品
 export const searchProduct = params => axios.get('/apis/v1/product/search', { params })

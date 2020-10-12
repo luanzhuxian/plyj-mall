@@ -1,4 +1,4 @@
-import { axios } from '../assets/js/axios'
+import axios from 'axios'
 
 // C端根据ID查询学霸活动
 export const getRoadLearningDetail = () => axios.get(`/apis/v1/mallCheckIn/currActivity/baseInfo`)

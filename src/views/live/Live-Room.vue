@@ -564,7 +564,7 @@ export default {
         // 获取直播详情
         async getDetail () {
             try {
-                const data = await getActiveCompleteInfo(this.id)
+                const { result: data } = await getActiveCompleteInfo(this.id)
                 if (!data) {
                     return null
                 }

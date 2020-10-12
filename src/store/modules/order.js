@@ -185,7 +185,6 @@ export default {
             const arr = JSON.parse(localStorage.getItem('UPDATE_REFUND_LIST') || '[]')
             arr.push(actionInfo)
             state.refundOperatedList = arr
-            console.log(arr)
             localStorage.setItem('UPDATE_REFUND_LIST', JSON.stringify(arr))
         },
         // 更新订单列表后，清楚配置项

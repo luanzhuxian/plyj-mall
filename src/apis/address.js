@@ -1,4 +1,4 @@
-import { axios } from '../assets/js/axios'
+import axios from 'axios'
 
 // 创建地址
 export const createAddress = data => axios.post('/apis/v2/publicuser/address', Object.assign(data, { type: 2 }))
