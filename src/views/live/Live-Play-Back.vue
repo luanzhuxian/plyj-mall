@@ -180,7 +180,7 @@ export default {
         async hasPermission () {
             try {
                 // isGive 是否被送 isRange 是否有权限观看
-                const { isGive, isRange } = await hasPermission(this.activityId)
+                const { result: { isGive, isRange } } = await hasPermission(this.activityId)
                 this.isGive = isGive
                 if (!isRange) {
                     await this.$warning('您没有权限观看该场直播')
@@ -239,7 +239,7 @@ export default {
                 this.$confirm('商家未开通支付，请联系管理员')
             } */
             try {
-                const needPay = await hasPied(this.activityId)
+                const { result: needPay } = await hasPied(this.activityId)
                 if (!needPay) {
                     // 还没支付
                     this.needPay = true
@@ -250,7 +250,7 @@ export default {
         },
         async getDetail () {
             try {
-                const result = await getActiveCompleteInfo(this.activityId)
+                const { result } = await getActiveCompleteInfo(this.activityId)
                 // 直播已经删除
                 if (result.statue === 3) {
                     await this.$warning('该直播已经删除')
