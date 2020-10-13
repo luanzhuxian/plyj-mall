@@ -54,7 +54,7 @@ export const invoiceDetail = orderNo => axios.get(`/apis/v1/invoice/OrderInvoice
 export const getFreightData = orderId => axios.get(`/apis/v1/order/logistics/${ orderId }`)
 
 // GET 获取数据字典
-export const getMap = code => axios.get(`/apis/v1/systemctl/sysdictionary/detail/list/${ code }`)
+export const getMap = code => axios.get(`/apis/v2/systemctl/sysdictionary/detail/list/${ code }`)
 
 // 获取最大退款值
 // export const getMaxRefund = orderProductRId => axios.get(`/apis/v1/refund/refund/getAmountOfRefundable/${ orderProductRId }`)
