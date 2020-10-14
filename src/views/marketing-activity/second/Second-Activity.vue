@@ -76,9 +76,9 @@ export default {
     methods: {
         async getList () {
             try {
-                const { result = { 0: [], 1: [] } } = await secondActivityPage()
+                const { result = { map0: [], map1: [] } } = await secondActivityPage()
 
-                if (!result[0].length && !result[1].length) {
+                if (!result.map0.length && !result.map1.length) {
                     return this.$alert({
                         message: '暂无秒杀商品',
                         viceMessage: '再逛逛吧~',
@@ -88,7 +88,7 @@ export default {
                     })
                 }
 
-                for (const list of [result[0], result[1]]) {
+                for (const list of [result.map0, result.map1]) {
                     for (const item of list) {
                         item.goodsInfo = {
                             ...item,
@@ -108,8 +108,8 @@ export default {
                         }
                     }
                 }
-                this.ongoingList = result[1]
-                this.incomingList = result[0]
+                this.ongoingList = result.map1
+                this.incomingList = result.map0
                 return result
             } catch (e) {
                 throw e
