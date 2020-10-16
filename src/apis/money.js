@@ -10,7 +10,7 @@ export const getWithdrawDepositOfUser = params => axios.get(`/apis/v1/agent/user
 export const getWithdrawDepositDetail = sequenceNbr => axios.get(`/apis/v1/agent/user/withdraw/deposit/${ sequenceNbr }`)
 
 // 提现
-export const withdrawDeposit = data => axios.post('/apis/v1/agent/user/withdraw/deposit', data)
+export const withdrawDeposit = data => axios.post('/apis/v2/agent/user/withdraw/deposit', data)
 
 // 佣金明细列表
 export const getBrokerageList = params => axios.get(`/apis/v1/agent/user/share/price/record/page/user`, { params })
