@@ -200,7 +200,7 @@ export default {
                 width: 0;
                 height: 0;
                 border-top: 30px solid transparent;
-                border-left: 20px solid #F78E13;
+                border-left: 21px solid #F78E13;
                 border-right: 0 solid transparent;
                 border-bottom: 30px solid transparent;
             }

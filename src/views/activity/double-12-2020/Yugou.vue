@@ -335,6 +335,7 @@ export default {
                 }
                 .countdown-wrapper {
                     padding-left: 26px;
+                    line-height: 32px;
                     font-size: 20px;
                     color: #FFFFFF;
                 }
