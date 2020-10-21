@@ -4,45 +4,47 @@
             <div :class="$style.container" v-if="allLoaded">
                 <!-- 优惠券 -->
                 <div :class="[$style.coupon, $style.module]" v-if="COUPON.values.length">
-                    <coupon :data="COUPON" />
+                    <Coupon :data="COUPON" />
                 </div>
                 <!-- 直播-->
                 <div :class="[$style.live, $style.module]" v-if="isLiveShow">
-                    <live :data="parent.liveInfo" />
+                    <Panel :title="livePanelTitle" @click="$router.push({ name: 'InteractiveLive' })">
+                        <Live :data="parent.liveInfo" />
+                    </Panel>
                 </div>
                 <!-- 公益-->
                 <div :class="[$style.charity, $style.module]" v-if="CHARITY.showStatue === 1 && CHARITY.values.length">
-                    <charity :data="CHARITY" />
+                    <Charity :data="CHARITY" />
                 </div>
                 <!-- 活动-->
                 <div :class="[$style.activity, $style.module]" v-if="ACTIVITY.showStatue === 1 && ACTIVITY.values.length && (ACTIVITY.values[0].haveSigninActivity || ACTIVITY.values[0].haveLuckDrawActivity)">
-                    <activity :data="ACTIVITY" />
+                    <Activity :data="ACTIVITY" />
                 </div>
                 <!-- 秒杀 -->
                 <div :class="[$style.miaosha, $style.module]" v-if="MIAO_SHA.showStatue === 1 && MIAO_SHA.values.length">
-                    <miaosha :data="MIAO_SHA" />
+                    <Miaosha :data="MIAO_SHA" />
                 </div>
                 <!-- 分销 -->
                 <div :class="[$style.distribution, $style.module]" v-if="DISTRIBUTION.showStatue === 1 && DISTRIBUTION.values.length">
-                    <distribution :data="DISTRIBUTION" />
+                    <Distribution :data="DISTRIBUTION" />
                 </div>
                 <!-- 拼团 -->
                 <div :class="[$style.pintuan, $style.module]" v-if="PIN_TUAN.showStatue === 1 && PIN_TUAN.values.length">
-                    <pintuan :data="PIN_TUAN" />
+                    <Pintuan :data="PIN_TUAN" />
                 </div>
                 <!-- 预购 -->
                 <div :class="[$style.yugou, $style.module]" v-if="YU_GOU.showStatue === 1 && YU_GOU.values.length">
-                    <yugou :data="YU_GOU" />
+                    <Yugou :data="YU_GOU" />
                 </div>
                 <!-- 组合课 -->
                 <div :class="[$style.package, $style.module]" v-if="PACKAGE.showStatue === 1 && PACKAGE.values.length">
-                    <package :data="PACKAGE" />
+                    <Package :data="PACKAGE" />
                 </div>
                 <!-- 精品推荐 -->
                 <div :class="[$style.recommend, $style.module]" v-if="RECOMMEND.values.length">
-                    <panel :custom-class="$style.panel" :title="panelTitle" hide-button>
-                        <recommend :data="RECOMMEND" btn-color="#FF341B" border="4px solid #222222" />
-                    </panel>
+                    <Panel :class="$style.panel" :title="recommendPanelTitle" hide-button>
+                        <Recommend :data="RECOMMEND" btn-color="#FF341B" border="4px solid #222222" />
+                    </Panel>
                 </div>
                 <footer :class="$style.footer">
                     — 技术支持 朋来科技 —
@@ -95,7 +97,12 @@ export default {
     },
     data () {
         return {
-            panelTitle: {
+            livePanelTitle: {
+                name: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/zbfys.png',
+                width: 368,
+                height: 80
+            },
+            recommendPanelTitle: {
                 name: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/jptj.png',
                 width: 326,
                 height: 80

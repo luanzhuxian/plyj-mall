@@ -1,80 +1,74 @@
 <template>
-    <panel :custom-class="$style.livePanel" :title="panelTitle" @click="$router.push({ name: 'InteractiveLive' })">
-        <ul :class="$style.liveList">
-            <template v-for="(live, index) of liveModel.slice(0, 3)">
-                <li
-                    v-if="~(liveModel.length > 2 ? [0] : [0, 1]).indexOf(index)"
-                    :class="$style.first"
-                    :key="index"
-                    @click="toLivePage(live)"
-                >
-                    <label>
-                        <span v-if="live.isNoticeShow">即将开始</span>
-                        <span v-if="live.statue === 4">直播中</span>
-                        <span v-if="live.statue === 0">看回放</span>
-                    </label>
-                    <div :class="$style.imgWrapper">
-                        <img :src="(live.isNoticeShow ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-middle'">
-                    </div>
-                    <div :class="$style.liveInfo">
-                        <h4 v-text="live.name" />
-                        <p>
-                            <template v-if="live.isNoticeShow">
-                                <span>{{ `直播时间 ${getTime(live.liveStartTime)}` }}</span>
-                            </template>
-                            <template v-if="live.statue === 4">
-                                <span>正在直播</span>
-                                <span>|</span>
-                                <span>{{ `${live.visitTimes}人观看` }}</span>
-                            </template>
-                            <template v-if="live.statue === 0">
-                                <span>直播已结束</span>
-                            </template>
-                        </p>
-                    </div>
-                </li>
-                <li
-                    v-else
-                    :class="$style.others"
-                    :key="index"
-                    @click="toLivePage(live)"
-                >
-                    <label>
-                        <span v-if="live.isNoticeShow">即将开始</span>
-                        <span v-if="live.statue === 4">直播中</span>
-                        <span v-if="live.statue === 0">看回放</span>
-                    </label>
-                    <div :class="$style.imgWrapper">
-                        <img :src="(live.isNoticeShow ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-small'">
-                    </div>
-                    <div :class="$style.liveInfo">
-                        <h4 v-text="live.name" />
-                        <p v-if="live.isNoticeShow">
-                            {{ `直播时间 ${getTime(live.liveStartTime)}` }}
-                        </p>
-                        <p v-if="live.statue === 4">
-                            {{ `${live.visitTimes}人正在观看` }}
-                        </p>
-                        <p v-if="live.statue === 0">
-                            直播已结束
-                        </p>
-                    </div>
-                </li>
-            </template>
-        </ul>
-    </panel>
+    <ul :class="$style.liveList">
+        <template v-for="(live, index) of liveModel.slice(0, 3)">
+            <li
+                v-if="~(liveModel.length > 2 ? [0] : [0, 1]).indexOf(index)"
+                :class="$style.first"
+                :key="index"
+                @click="toLivePage(live)"
+            >
+                <label>
+                    <span v-if="live.isNoticeShow">即将开始</span>
+                    <span v-if="live.statue === 4">直播中</span>
+                    <span v-if="live.statue === 0">看回放</span>
+                </label>
+                <div :class="$style.imgWrapper">
+                    <img :src="(live.isNoticeShow ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-middle'">
+                </div>
+                <div :class="$style.liveInfo">
+                    <h4 v-text="live.name" />
+                    <p>
+                        <template v-if="live.isNoticeShow">
+                            <span>{{ `直播时间 ${getTime(live.liveStartTime)}` }}</span>
+                        </template>
+                        <template v-if="live.statue === 4">
+                            <span>正在直播</span>
+                            <span>|</span>
+                            <span>{{ `${live.visitTimes}人观看` }}</span>
+                        </template>
+                        <template v-if="live.statue === 0">
+                            <span>直播已结束</span>
+                        </template>
+                    </p>
+                </div>
+            </li>
+            <li
+                v-else
+                :class="$style.others"
+                :key="index"
+                @click="toLivePage(live)"
+            >
+                <label>
+                    <span v-if="live.isNoticeShow">即将开始</span>
+                    <span v-if="live.statue === 4">直播中</span>
+                    <span v-if="live.statue === 0">看回放</span>
+                </label>
+                <div :class="$style.imgWrapper">
+                    <img :src="(live.isNoticeShow ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-small'">
+                </div>
+                <div :class="$style.liveInfo">
+                    <h4 v-text="live.name" />
+                    <p v-if="live.isNoticeShow">
+                        {{ `直播时间 ${getTime(live.liveStartTime)}` }}
+                    </p>
+                    <p v-if="live.statue === 4">
+                        {{ `${live.visitTimes}人正在观看` }}
+                    </p>
+                    <p v-if="live.statue === 0">
+                        直播已结束
+                    </p>
+                </div>
+            </li>
+        </template>
+    </ul>
 </template>
 
 <script>
 import moment from 'moment'
-import Panel from './Panel.vue'
 import { getLiveViewers } from '../../../apis/home'
 
 export default {
     name: 'Live',
-    components: {
-        Panel
-    },
     props: {
         data: {
             type: Object,
@@ -84,13 +78,7 @@ export default {
         }
     },
     data () {
-        return {
-            panelTitle: {
-                name: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/zbfys.png',
-                width: 368,
-                height: 80
-            }
-        }
+        return {}
     },
     computed: {
         liveModel () {
@@ -187,7 +175,7 @@ export default {
         height: 426px;
         > label {
             position: absolute;
-            top: -12px;
+            top: -8px;
             left: 20px;
             box-sizing: border-box;
             padding: 12px 20px 0 0;

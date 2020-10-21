@@ -56,6 +56,11 @@
                 :class="$style.iconDragonGate"
                 src="https://mallcdn.youpenglai.com/static/admall/mall-management/dragon-gate/main-icon.png"
             >
+            <img
+                v-if="activityId === 11"
+                :class="$style.iconDouble12"
+                src="https://mallcdn.youpenglai.com/static/mall/double-12-2020/logo.png"
+            >
         </router-link>
 
         <!-- 购物车 -->
@@ -214,6 +219,7 @@ export default {
     background-color: #d2524c;
     border-radius: 50%;
 }
+// 主会场icon
 .icon-d12 {
     box-sizing: content-box;
     padding-bottom: 10px;
@@ -230,6 +236,13 @@ export default {
     display: block;
     width: 125px !important;
     height: 104px !important;
+}
+.icon-double-12 {
+    position: relative;
+    top: -26px;
+    display: block;
+    width: 153px !important;
+    height: 118px !important;
 }
 
 </style>

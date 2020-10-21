@@ -37,10 +37,7 @@
 </template>
 
 <script>
-/* eslint-disable no-multi-assign */
-
 import { mapGetters } from 'vuex'
-// import moment from 'moment'
 import 'swiper/dist/css/swiper.css'
 import TemplateB from './Template-B.vue'
 import TemplateC from './Template-C.vue'
@@ -49,8 +46,6 @@ import InviteNewcomersHomeEntry from '../marketing-activity/double-12/invitenewc
 import SplitBurse from './../../components/common/Split-Burse.vue'
 import SendLive from './../../components/common/Send-Live.vue'
 import { getTemplate } from '../../apis/home'
-// import { getReportActivity, getBookActivity } from '../../apis/fight-epidemic'
-// import { SET_CAMPAIGN_REPORT, SET_CAMPAIGN_BOOK } from '../../store/mutation-type'
 
 export default {
     name: 'Home',
@@ -81,20 +76,6 @@ export default {
     computed: {
         ...mapGetters(['mallId', 'serverTime', 'agentUser', 'userId', 'isActivityAuth', 'skinId', 'mallDomain', 'mallQRCodeInfo']),
         allLoaded () {
-            // let result
-            // if (this.type === 3) {
-            //     result = this.loaded &&
-            //     this.skinId !== null
-            // }
-            // if (this.type === 4) {
-            //     result = this.loaded &&
-            //     this.skinId !== null
-            // }
-            // if (this.type === -1 || this.type === 9) {
-            //     result = this.loaded &&
-            //     this.skinId !== null
-            // }
-            // return result
             return this.loaded &&
                 this.skinId !== null &&
                 this.mallQRCodeInfo !== null
@@ -137,16 +118,12 @@ export default {
             //     this.bookId = activityId
             //     this.setCampaignBook(result)
             // })
-            this.getTemplate()
+            await this.getTemplate()
         } catch (e) {
             throw e
         }
     },
     methods: {
-        // ...mapMutations({
-        //     setCampaignReport: SET_CAMPAIGN_REPORT,
-        //     setCampaignBook: SET_CAMPAIGN_BOOK
-        // }),
         async getTemplate () {
             try {
                 const { result } = await getTemplate({ type: 1 })

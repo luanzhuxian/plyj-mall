@@ -1,15 +1,6 @@
 <template>
     <div :class="$style.activity">
-        <template-xinchun
-            v-if="type === 8"
-            :data="modules"
-            :type="type"
-        />
-        <template-dragon-gate
-            v-if="type === 10"
-            :data="modules"
-            :type="type"
-        />
+        <!-- 双十二 2019 -->
         <div :class="$style.d12" v-if="~[5, 6, 7].indexOf(type)">
             <div :class="$style.background">
                 <search placeholder="搜索商品" />
@@ -42,6 +33,24 @@
             </div>
             <invite-newcomers-home-entry />
         </div>
+        <!-- 新春 -->
+        <template-xinchun
+            v-if="type === 8"
+            :data="modules"
+            :type="type"
+        />
+        <!-- 龙门节 -->
+        <template-dragon-gate
+            v-if="type === 10"
+            :data="modules"
+            :type="type"
+        />
+        <!-- 双十二 2020 -->
+        <template-double-12
+            v-if="type === 11"
+            :data="modules"
+            :type="type"
+        />
         <pl-svg :class="$style.loading" name="icon-loading" fill="#FFF" width="90" v-if="!allLoaded" />
     </div>
 </template>
@@ -54,6 +63,7 @@ import TemplateBaofa from './templates/Template-Baofa.vue'
 import TemplateFanchang from './templates/Template-Fanchang.vue'
 import TemplateXinchun from './templates/Template-Xinchun.vue'
 import TemplateDragonGate from './templates/Template-Dragon-Gate.vue'
+import TemplateDouble12 from './templates/Template-Double-12.vue'
 import InviteNewcomersHomeEntry from '../marketing-activity/double-12/invitenewcomers/InviteNewcomersHomeEntry.vue'
 
 export default {
@@ -65,6 +75,7 @@ export default {
         TemplateFanchang,
         TemplateXinchun,
         TemplateDragonGate,
+        TemplateDouble12,
         InviteNewcomersHomeEntry
     },
     provide () {
@@ -75,15 +86,7 @@ export default {
     data () {
         return {
             type: 0,
-            modules: {
-                COUPON: null,
-                MAI_SONG: null,
-                PIN_TUAN: null,
-                YU_GOU: null,
-                MIAO_SHA: null,
-                FENG_QIANG: null,
-                RECOMMEND: null
-            }
+            modules: {}
         }
     },
     computed: {
@@ -93,7 +96,7 @@ export default {
             return this.couponToReceive ? 1 : 2
         },
         allLoaded () {
-            let result
+            let result = false
 
             // 双十二
             if ([5, 6, 7].includes(this.activityId)) {
@@ -108,7 +111,7 @@ export default {
             }
 
             // 龙门节
-            if (this.activityId === 10) {
+            if (this.activityId === 10 || this.activityId === 11) {
                 result = (this.liveInfo !== null && !!this.liveInfo)
             }
             return result
@@ -129,6 +132,13 @@ export default {
             try {
                 const { activityId, activityData } = this
                 const { type, moduleModels } = activityData
+                // 找到指定模块
+                const findModule = function (modules) {
+                    return function (id) {
+                        return modules.find(module => module.moduleType === id)
+                    }
+                }
+                const findModuleById = findModule(moduleModels)
 
                 if (activityId === 0) {
                     this.noFinish = true
@@ -186,6 +196,14 @@ export default {
                     this.modules.YU_GOU = moduleModels[6]
                     this.modules.PACKAGE = moduleModels[7]
                     this.modules.RECOMMEND = moduleModels[8]
+                }
+                if (type === 11) {
+                    this.modules.COUPON = findModuleById(9)
+                    this.modules.MIAO_SHA = findModuleById(10)
+                    this.modules.PIN_TUAN = findModuleById(8)
+                    this.modules.YU_GOU = findModuleById(11)
+                    this.modules.PACKAGE = findModuleById(16)
+                    this.modules.POPULAR = findModuleById(2)
                 }
                 this.type = type
             } catch (e) {

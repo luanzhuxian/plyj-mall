@@ -9,7 +9,7 @@
                         [$style.large]: i === 0 && isOdd
                     }"
                     :key="i"
-                    @click="jump(item)"
+                    @click="handleClick(item)"
                 >
                     <div :class="$style.img">
                         <count-down
@@ -92,7 +92,7 @@ export default {
             const priceList = skuList.filter(item => item.status === 1).map(item => item.price)
             return Math.max(...priceList)
         },
-        jump (item) {
+        handleClick (item) {
             const { type, value } = item
             if (type === 1) {
                 this.$router.push({ name: 'Classify', params: { optionId: value || null } })
