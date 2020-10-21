@@ -267,9 +267,9 @@ export default {
         },
         async getVideoMes () {
             try {
-                const mes = await getVideoMesById(this.id)
-                mes.fileSize = Number(mes.fileSize) || 0
-                this.videoMes = mes
+                const { result } = await getVideoMesById(this.id)
+                result.fileSize = Number(result.fileSize) || 0
+                this.videoMes = result
             } catch (e) { throw e }
         },
         async submitOrder () {
