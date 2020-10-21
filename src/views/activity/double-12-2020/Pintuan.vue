@@ -152,9 +152,6 @@ export default {
             line-height: 38px;
             color: #333333;
             > b {
-                // position: relative;
-                // top: 1px;
-                // margin-left: 2px;
                 font-size: 40px;
                 color: #D80000;
                 @include elps();
