@@ -4,10 +4,10 @@ import axios from 'axios'
  * 发送验证码
  * smstype AGENCY_MOBILE_REGISTER | AGENCY_MOBILE_UPDATE | AGENCY_MOBILE_PASSWD_REST
  * */
-export const sendCode = (smsType, mobile) => axios.post(`/apis/v1/systemctl/sms/${ smsType }/verify/${ mobile }`)
+export const sendCode = (smsType, mobile) => axios.post(`/apis/v2/systemctl/sms/${ smsType }/verify/${ mobile }`)
 
 // 验证手机短信
-export const checkMobileCode = (smsType, mobile, verifyCode) => axios.get(`/apis/v1/systemctl/sms/${ smsType }/verify/${ mobile }/${ verifyCode }/verification`)
+export const checkMobileCode = (smsType, mobile, verifyCode) => axios.get(`/apis/v2/systemctl/sms/${ smsType }/verify/${ mobile }/${ verifyCode }/verification`)
 
 // 根据域名获取商城id
 export const getMallInfo = domainName => axios.get(`/apis/v2/mall/query/appid?domainName=${ domainName }`)
