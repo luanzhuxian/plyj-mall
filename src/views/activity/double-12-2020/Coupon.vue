@@ -59,7 +59,27 @@ export default {
     padding: 0 40px 24px;
     background: #FFFBF1;
     border-radius: 20px;
-    overflow: hidden;
+    // overflow: hidden;
+    &::before {
+        content: '';
+        position: absolute;
+        top: 114px;
+        left: -12px;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background-color: #DB451B;
+    }
+    &::after {
+        content: '';
+        position: absolute;
+        top: 114px;
+        right: -12px;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background-color: #DB451B;
+    }
     &-title {
         display: flex;
         flex-direction: column;

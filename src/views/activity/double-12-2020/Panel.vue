@@ -79,7 +79,7 @@ export default {
         padding-bottom: 4px;
         width: 518px;
         height: 82px;
-        background: url('https://mallcdn.youpenglai.com/static/mall/double-12-2020/title.png') no-repeat center;
+        background: url('https://mallcdn.youpenglai.com/static/mall/double-12-2020/title-orange.png') no-repeat center;
         background-size: 100%;
         border-radius: 20px 20px 0px 0px;
         > span {
@@ -94,7 +94,7 @@ export default {
         justify-content: center;
         align-items: flex-end;
         height: 54px;
-        background: linear-gradient(180deg, #760B0E 0%, #812225 100%);
+        background: linear-gradient(180deg, #C34400 0%, #DB451B 100%);
         border-radius: 40px 40px 0px 0px;
         font-size: 28px;
         font-family: Microsoft YaHei;

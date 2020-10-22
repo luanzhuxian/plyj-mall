@@ -55,7 +55,7 @@
                 <img src="https://mallcdn.youpenglai.com/static/admall/mall-management/dragon-gate/main-icon.png">
             </div>
             <div v-if="activityId === 11" :class="$style.iconDouble12">
-                <img src="https://mallcdn.youpenglai.com/static/mall/double-12-2020/logo.png">
+                <img src="https://mallcdn.youpenglai.com/static/mall/double-12-2020/logo-orange.png">
             </div>
         </router-link>
 

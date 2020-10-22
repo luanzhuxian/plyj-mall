@@ -130,7 +130,7 @@ export default {
 <style lang="scss">
 .template-double-12 {
     .live-panel {
-        background: #7A1417;
+        background: #FFC70C;
         border-radius: 16px;
         .double-12-panel-title {
             padding-top: 20px;
@@ -159,6 +159,11 @@ export default {
                 background: url('https://mallcdn.youpenglai.com/static/mall/double-12-2020/diandian.png') no-repeat center;
                 background-size: 100%;
             }
+            > span {
+                font-family: Microsoft YaHei;
+                font-weight: 600;
+                color: #7A1417;
+            }
         }
         .double-12-panel-container {
             padding-top: 0px;
@@ -173,6 +178,10 @@ export default {
                     }
                 }
             }
+        }
+        .double-12-panel-button {
+            border: 2px solid #7A1417;
+            color: #7A1417;
         }
     }
     .back-to-top {
@@ -192,7 +201,7 @@ export default {
 </style>
 <style module lang="scss">
 .template-double-12 {
-    background-color: #812225;
+    background-color: #DB451B;
 }
 .background {
     position: relative;
@@ -205,7 +214,7 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 414px 0 88px;
+    padding: 494px 0 88px;
 }
 .module {
     margin-top: 80px;
