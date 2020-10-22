@@ -1,5 +1,5 @@
 <template>
-    <transition name="fade">
+    <transition name="slide-bottom-fade">
         <div
             v-if="show"
             class="back-to-top"
@@ -116,5 +116,19 @@ export default {
 .back-to-top {
     position: fixed;
     z-index: 1;
+}
+.slide-bottom-fade-enter-active {
+    transition: all .2s ease-in;
+}
+.slide-bottom-fade-leave-active {
+    transition: all .2s ease-out;
+}
+.slide-bottom-fade-enter, .slide-bottom-fade-leave-to {
+    transform: translateY(100%);
+    opacity: 0;
+}
+.slide-bottom-fade-enter-to, .slide-bottom-fade-leave {
+    transform: translateY(0);
+    opacity: 1;
 }
 </style>

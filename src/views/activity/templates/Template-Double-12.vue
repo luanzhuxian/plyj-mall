@@ -35,7 +35,7 @@
                 <footer :class="$style.footer">
                     — 技术支持 朋来科技 —
                 </footer>
-                <BackToTop ref="backToTop" :threshold="threshold">
+                <BackToTop ref="backToTop">
                     <img class="back-to-top__icon" src="https://mallcdn.youpenglai.com/static/mall/double-12-2020/arrow-up.png" alt="">
                 </BackToTop>
             </div>
@@ -81,9 +81,7 @@ export default {
         }
     },
     data () {
-        return {
-            threshold: 0
-        }
+        return {}
     },
     computed: {
         COUPON () {
@@ -115,15 +113,15 @@ export default {
         allLoaded () {
             return this.parent.allLoaded
         }
-    },
-    mounted () {
-        const SCREEN_HEIGHT = window.innerHeight
-        const DPR = window.devicePixelRatio
-        const BTN_BOTTOM = 60 * 2
-        const BTN_HEIGHT = 48 * 2
-        const transform = val => val * (window.innerWidth / 750) * DPR
-        this.threshold = SCREEN_HEIGHT - transform(BTN_BOTTOM + BTN_HEIGHT)
     }
+    // mounted () {
+    //     const SCREEN_HEIGHT = window.innerHeight
+    //     const DPR = window.devicePixelRatio
+    //     const BTN_BOTTOM = 60 * 2
+    //     const BTN_HEIGHT = 48 * 2
+    //     const transform = val => val * (window.innerWidth / 750) * DPR
+    //     this.threshold = SCREEN_HEIGHT - transform(BTN_BOTTOM + BTN_HEIGHT)
+    // }
 }
 </script>
 
