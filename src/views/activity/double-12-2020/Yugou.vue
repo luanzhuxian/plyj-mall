@@ -39,7 +39,7 @@
                         <div :class="$style.price">
                             到手价：<b>{{ getTotalPrice(first) }}</b>
                         </div>
-                        <del :class="$style.original">{{ `现价 ：¥${getPrice(first.goodsInfo.productSkuModels)('originalPrice')}` }}</del>
+                        <del :class="$style.original">{{ `现价：¥${getPrice(first.goodsInfo.productSkuModels)('originalPrice')}` }}</del>
                         <span :class="$style.count">{{ `${first.goodsInfo.activityInfo.number}人预交` }}</span>
                     </div>
                 </div>
@@ -244,7 +244,7 @@ export default {
                     }
                     .sub {
                         display: flex;
-                        align-items: center;
+                        align-items: baseline;
                         margin-top: 1px;
                         font-size: 24px;
                         @include elps();

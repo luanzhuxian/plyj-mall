@@ -105,11 +105,11 @@ export default {
             }
             &-name {
                 position: absolute;
-                top: 10px;
+                top: 14px;
                 left: -8px;
                 box-sizing: border-box;
                 padding: 0 16px 0 8px;
-                width: 194px;
+                width: 192px;
                 line-height: 32px;
                 text-align: center;
                 background: #D80000;
@@ -128,10 +128,13 @@ export default {
                     border-left: 8px solid transparent;
                     border-right: 8px solid #F8E8C5;
                     border-bottom: 16px solid transparent;
+                    z-index: 1;
 
                 }
             }
             &-left {
+                position: relative;
+                top: 6px;
                 flex: 1;
                 @include elps();
                 > .price {

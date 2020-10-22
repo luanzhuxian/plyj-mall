@@ -275,6 +275,7 @@ export default {
             }
         }
         .saled {
+            margin-top: 8px;
             font-size: 20px;
             color: #A58B54;
         }

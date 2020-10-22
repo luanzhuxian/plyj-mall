@@ -169,7 +169,7 @@ export default {
             font-size: 24px;
             line-height: 32px;
             color: #333333;
-            > i {
+            i {
                 color: #D80000;
             }
         }
