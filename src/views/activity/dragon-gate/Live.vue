@@ -163,6 +163,7 @@ export default {
     justify-content: space-between;
     > li {
         position: relative;
+        box-sizing: border-box;
         margin-top: 16px;
         border: 4px solid #222;
         border-radius: 20px;
@@ -234,6 +235,7 @@ export default {
         flex-direction: column;
         width: 320px;
         height: 320px;
+        background-color: #fff;
         overflow: hidden;
         > label {
             position: absolute;
