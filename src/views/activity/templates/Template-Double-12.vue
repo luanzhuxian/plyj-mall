@@ -35,6 +35,9 @@
                 <footer :class="$style.footer">
                     — 技术支持 朋来科技 —
                 </footer>
+                <BackToTop ref="backToTop" :threshold="threshold">
+                    <img class="back-to-top__icon" src="https://mallcdn.youpenglai.com/static/mall/double-12-2020/arrow-up.png" alt="">
+                </BackToTop>
             </div>
         </div>
     </div>
@@ -49,6 +52,7 @@ import Yugou from '../double-12-2020/Yugou.vue'
 import Package from '../double-12-2020/Package.vue'
 import Popular from '../double-12-2020/Popular.vue'
 import Panel from '../double-12-2020/Panel.vue'
+import BackToTop from '../components/BackToTop.vue'
 
 export default {
     name: 'TemplateDragonGate',
@@ -61,7 +65,8 @@ export default {
         Yugou,
         Package,
         Popular,
-        Panel
+        Panel,
+        BackToTop
     },
     props: {
         data: {
@@ -76,7 +81,9 @@ export default {
         }
     },
     data () {
-        return {}
+        return {
+            threshold: 0
+        }
     },
     computed: {
         COUPON () {
@@ -108,6 +115,14 @@ export default {
         allLoaded () {
             return this.parent.allLoaded
         }
+    },
+    mounted () {
+        const SCREEN_HEIGHT = window.innerHeight
+        const DPR = window.devicePixelRatio
+        const BTN_BOTTOM = 60 * 2
+        const BTN_HEIGHT = 48 * 2
+        const transform = val => val * (window.innerWidth / 750) * DPR
+        this.threshold = SCREEN_HEIGHT - transform(BTN_BOTTOM + BTN_HEIGHT)
     }
 }
 </script>
@@ -158,6 +173,19 @@ export default {
                     }
                 }
             }
+        }
+    }
+    .back-to-top {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 96px;
+        height: 96px;
+        background: #FFFFFF;
+        border-radius: 50%;
+        &__icon {
+            width: 31.6px;
+            height: 37.5px;
         }
     }
 }
