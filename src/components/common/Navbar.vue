@@ -51,16 +51,12 @@
                 :class="$style.iconXinchun"
                 src="https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/87033906-c3d9-412f-b504-e9f777f334d4.png"
             >
-            <img
-                v-if="activityId === 10"
-                :class="$style.iconDragonGate"
-                src="https://mallcdn.youpenglai.com/static/admall/mall-management/dragon-gate/main-icon.png"
-            >
-            <img
-                v-if="activityId === 11"
-                :class="$style.iconDouble12"
-                src="https://mallcdn.youpenglai.com/static/mall/double-12-2020/logo.png"
-            >
+            <div v-if="activityId === 10" :class="$style.iconDragonGate">
+                <img src="https://mallcdn.youpenglai.com/static/admall/mall-management/dragon-gate/main-icon.png">
+            </div>
+            <div v-if="activityId === 11" :class="$style.iconDouble12">
+                <img src="https://mallcdn.youpenglai.com/static/mall/double-12-2020/logo.png">
+            </div>
         </router-link>
 
         <!-- 购物车 -->
@@ -233,16 +229,25 @@ export default {
 .icon-dragon-gate {
     position: relative;
     top: -20px;
-    display: block;
     width: 125px !important;
     height: 104px !important;
+    > img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 }
 .icon-double-12 {
     position: relative;
     top: -26px;
-    display: block;
     width: 153px !important;
     height: 118px !important;
+    > img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 }
 
 </style>
