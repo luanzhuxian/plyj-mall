@@ -12,6 +12,9 @@ export const checkMobileCode = (smsType, mobile, verifyCode) => axios.get(`/apis
 // 根据域名获取商城id
 export const getMallInfo = domainName => axios.get(`/apis/v2/mall/query/appid?domainName=${ domainName }`)
 
+// 快速导航是否显示云课堂入口
+export const getLiveOpenStatus = () => axios.get('/apis/v2/live/open/status')
+
 export const getOpenId = (appid, code) => axios.post(`/apis/v2/base/baseUserInfo/${ appid }/greet?code=${ code }`)
 
 // openId登录

@@ -6,7 +6,8 @@ import {
     login,
     // refreshToken,
     getCartCount,
-    userInfoSettings
+    userInfoSettings,
+    getLiveOpenStatus
 } from '../apis/base-api'
 import {
     getAddress
@@ -65,6 +66,8 @@ export default {
             // 商城名称
             const mallDomain = window.location.pathname.split('/')[1] || ''
             const { result } = await getMallInfo(mallDomain)
+            const data = await getLiveOpenStatus()
+            result.liveRoomEnable = data.result
             commit(type.GET_MALL_INFO, result)
             return result
         } catch (e) {
