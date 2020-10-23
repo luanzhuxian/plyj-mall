@@ -147,9 +147,6 @@ export default {
             return this.mallDomain === 'pljs' ? '组合聚会购' : '组合聚会学'
         }
     },
-    created () {
-        console.log(window.path)
-    },
     methods: {
         getDuration
     }
