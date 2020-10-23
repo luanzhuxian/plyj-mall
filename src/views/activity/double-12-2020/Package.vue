@@ -1,5 +1,5 @@
 <template>
-    <Panel custom-class="package-panel" title="组合聚会学" subtitle="邀请好友一起瓜分团购奖励" @click="$router.push({ name: 'CoursePackage' })">
+    <Panel custom-class="package-panel" :title="title" subtitle="邀请好友一起瓜分团购奖励" @click="$router.push({ name: 'CoursePackage' })">
         <ul :class="$style.packageList" v-if="data.values.length">
             <template v-for="(item, i) of data.values">
                 <router-link
@@ -102,6 +102,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import Panel from './Panel.vue'
 import Countdown from '../components/Countdown.vue'
@@ -139,6 +140,15 @@ export default {
                 SERIES_OF_COURSE: '系列课'
             }
         }
+    },
+    computed: {
+        ...mapGetters(['mallDomain']),
+        title () {
+            return this.mallDomain === 'pljs' ? '组合聚会购' : '组合聚会学'
+        }
+    },
+    created () {
+        console.log(window.path)
     },
     methods: {
         getDuration
