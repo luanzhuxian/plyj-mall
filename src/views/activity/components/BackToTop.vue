@@ -118,10 +118,10 @@ export default {
     z-index: 1;
 }
 .slide-bottom-fade-enter-active {
-    transition: all .2s ease-in;
+    transition: all .3s ease-in;
 }
 .slide-bottom-fade-leave-active {
-    transition: all .2s ease-out;
+    transition: all .3s ease-out;
 }
 .slide-bottom-fade-enter, .slide-bottom-fade-leave-to {
     transform: translateY(100%);
