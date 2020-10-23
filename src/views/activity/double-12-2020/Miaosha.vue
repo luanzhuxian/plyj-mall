@@ -152,7 +152,7 @@ export default {
             right: 0;
             bottom: 0;
             height: 126px;
-            background: url('https://mallcdn.youpenglai.com/static/mall/double-12-2020/bar.png') no-repeat;
+            background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/double-12-2020/bar.png') no-repeat;
             background-size: 100%;
             box-sizing: border-box;
             padding: 0 24px 16px 28px;
@@ -179,7 +179,7 @@ export default {
                 margin-left: 16px;
                 width: 22px;
                 height: 34px;
-                background: url('https://mallcdn.youpenglai.com/static/mall/double-12-2020/thunder.png') no-repeat;
+                background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/double-12-2020/thunder.png') no-repeat;
                 background-size: 100%;
             }
         }

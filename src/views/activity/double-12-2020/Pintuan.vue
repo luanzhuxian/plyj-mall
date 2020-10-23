@@ -114,7 +114,7 @@ export default {
             right: 20px;
             width: 60px;
             height: 16px;
-            background: url('https://mallcdn.youpenglai.com/static/mall/double-12-2020/logo-mini.png') no-repeat center;
+            background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/double-12-2020/logo-mini.png') no-repeat center;
             background-size: 100%;
             z-index: 1;
         }

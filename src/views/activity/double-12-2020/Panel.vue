@@ -79,7 +79,7 @@ export default {
         padding-bottom: 4px;
         width: 518px;
         height: 82px;
-        background: url('https://mallcdn.youpenglai.com/static/mall/double-12-2020/title-orange.png') no-repeat center;
+        background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/double-12-2020/title-orange.png') no-repeat center;
         background-size: 100%;
         border-radius: 20px 20px 0px 0px;
         > span {

@@ -88,7 +88,7 @@ export default {
         box-sizing: border-box;
         height: 128px;
         border-bottom: 4px solid #F0CEAC;
-        background: url('https://mallcdn.youpenglai.com/static/mall/double-12-2020/logo-large.png') no-repeat center bottom;
+        background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/double-12-2020/logo-large.png') no-repeat center bottom;
         background-size: 452px 120px;
         > h3 {
             font-size: 40px;

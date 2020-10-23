@@ -178,7 +178,7 @@ export default {
                         padding: 12px 20px 0 0;
                         width: 136px;
                         height: 76px;
-                        background: url('https://mallcdn.youpenglai.com/static/mall/double-12-2020/ribbon.png') no-repeat center;
+                        background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/double-12-2020/ribbon.png') no-repeat center;
                         background-size: 100%;
                     }
                 }

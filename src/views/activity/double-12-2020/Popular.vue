@@ -139,7 +139,7 @@ export default {
                     margin-right: 12px;
                     width: 22px;
                     height: 28px;
-                    background: url('https://mallcdn.youpenglai.com/static/mall/double-12-2020/fire.png') no-repeat center;
+                    background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/double-12-2020/fire.png') no-repeat center;
                     background-size: 100%;
                 }
             }

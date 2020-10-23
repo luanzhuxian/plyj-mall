@@ -36,7 +36,7 @@
                     — 技术支持 朋来科技 —
                 </footer>
                 <BackToTop ref="backToTop">
-                    <img class="back-to-top__icon" src="https://mallcdn.youpenglai.com/static/mall/double-12-2020/arrow-up.png" alt="">
+                    <img class="back-to-top__icon" src="https://mallcdn.youpenglai.com/static/admall/mall-management/double-12-2020/arrow-up-orange.png" alt="">
                 </BackToTop>
             </div>
         </div>
@@ -142,7 +142,7 @@ export default {
                 content: '';
                 width: 44px;
                 height: 12px;
-                background: url('https://mallcdn.youpenglai.com/static/mall/double-12-2020/diandian.png') no-repeat center;
+                background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/double-12-2020/diandian.png') no-repeat center;
                 background-size: 100%;
                 transform: rotateY(180deg);
             }
@@ -154,7 +154,7 @@ export default {
                 content: '';
                 width: 44px;
                 height: 12px;
-                background: url('https://mallcdn.youpenglai.com/static/mall/double-12-2020/diandian.png') no-repeat center;
+                background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/double-12-2020/diandian.png') no-repeat center;
                 background-size: 100%;
             }
             > span {
@@ -191,8 +191,8 @@ export default {
         background: #FFFFFF;
         border-radius: 50%;
         &__icon {
-            width: 31.6px;
-            height: 37.5px;
+            width: 40.6px;
+            height: 45.5px;
         }
     }
 }
@@ -203,7 +203,7 @@ export default {
 }
 .background {
     position: relative;
-    background: url('https://mallcdn.youpenglai.com/static/mall/double-12-2020/bg.png') no-repeat center top;
+    background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/double-12-2020/bg.png') no-repeat center top;
     background-size: 100% auto;
     min-height: 100vh;
 }
