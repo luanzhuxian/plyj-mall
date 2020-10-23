@@ -56,13 +56,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['campaignReport', 'campaignBook', 'dragonGateCharity', 'dragonGateSign', 'dragonGatePlay', 'mallDomain'])
-        // isReportShow () {
-        //     return !!this.campaignReport && this.campaignReport.isReportShow && this.campaignReport.id
-        // },
-        // isBookShow () {
-        //     return !!this.campaignBook && this.campaignBook.isBookShow && this.campaignBook.activityId
-        // }
+        ...mapGetters(['dragonGateCharity', 'dragonGateSign', 'dragonGatePlay'])
     },
     methods: {
         // 根据装修时添加的信息做相应的跳转
@@ -141,16 +135,6 @@ export default {
             if (type === 3) {
                 return this.$router.push({ name: 'Curriculum', params: { productId: value } })
             }
-            // 防疫情报站
-            // if (type === 46) {
-            //     if (!this.isReportShow) return false
-            //     return this.$router.push({ name: 'BattlefieldReport', params: { id: this.campaignReport.id } })
-            // }
-            // 疫情签到
-            // if (type === 47) {
-            //     if (!this.isBookShow) return false
-            //     return this.$router.push({ name: 'EpidemicSignIn', params: { id: this.campaignBook.activityId } })
-            // }
             // 公益棕行动
             if (type === 48) {
                 const { dragonGateCharity } = this
