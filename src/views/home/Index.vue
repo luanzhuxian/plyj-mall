@@ -83,41 +83,8 @@ export default {
     },
     watch: {
     },
-    async created () {
+    async activated () {
         try {
-            // 疫情战报
-            // getReportActivity().then(({ result = {} }) => {
-            //     if (!result) {
-            //         result = {}
-            //     }
-
-            //     const { id = '', status = 0 } = result
-
-            //     this.isReportShow = result.isReportShow = !!status
-            //     this.reportId = id
-            //     this.setCampaignReport(result)
-            // })
-            // 疫情签到
-            // getBookActivity().then(({ result = {} }) => {
-            //     if (!result) {
-            //         result = {}
-            //     }
-
-            //     const { systemTime, status, activityId = '' } = result
-            //     let { startTime, endTime } = result
-            //     const isActive = status === 0
-
-            //     if (isActive) {
-            //         startTime = moment(startTime, 'YYYY-MM-DD HH:mm:ss').valueOf()
-            //         endTime = moment(endTime, 'YYYY-MM-DD HH:mm:ss').valueOf()
-            //     }
-            //     this.isBookShow = result.isBookShow = isActive
-            //         ? Number(systemTime) >= Number(startTime) && Number(systemTime) < Number(endTime)
-            //         : false
-
-            //     this.bookId = activityId
-            //     this.setCampaignBook(result)
-            // })
             await this.getTemplate()
         } catch (e) {
             throw e

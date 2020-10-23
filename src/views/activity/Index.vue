@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import Search from './components/Search.vue'
 import TemplateFengqiang from './templates/Template-Fengqiang.vue'
 import TemplateBaofa from './templates/Template-Baofa.vue'
@@ -65,6 +65,7 @@ import TemplateXinchun from './templates/Template-Xinchun.vue'
 import TemplateDragonGate from './templates/Template-Dragon-Gate.vue'
 import TemplateDouble12 from './templates/Template-Double-12.vue'
 import InviteNewcomersHomeEntry from '../marketing-activity/double-12/invitenewcomers/InviteNewcomersHomeEntry.vue'
+import { GET_ACTIVITY_DATA } from '../../store/mutation-type'
 
 export default {
     name: 'Activity',
@@ -119,15 +120,20 @@ export default {
     },
     watch: {
         activityId: {
-            handler (id) {
+            async handler (id) {
                 if (!id && id !== 0) return
-                this.getTemplate()
+                await this.getTemplate()
             },
             immediate: true
         }
     },
-    async created () {},
+    async activated () {
+        if (this.activityId) {
+            await this.getMainCenter()
+        }
+    },
     methods: {
+        ...mapActions({ getMainCenter: GET_ACTIVITY_DATA }),
         async getTemplate () {
             try {
                 const { activityId, activityData } = this

@@ -39,7 +39,7 @@
                         <div :class="$style.price">
                             到手价：<b>{{ getTotalPrice(first) }}</b>
                         </div>
-                        <del :class="$style.original">{{ `现价：¥${getPrice(first.goodsInfo.productSkuModels)('originalPrice')}` }}</del>
+                        <del :class="$style.original">{{ `现价：¥${getPrice(first.goodsInfo.productSkuModels)('price')}` }}</del>
                         <span :class="$style.count">{{ `${first.goodsInfo.activityInfo.number}人预交` }}</span>
                     </div>
                 </div>
@@ -88,7 +88,7 @@
                             到手价：<b>{{ getTotalPrice(item) }}</b>
                         </div>
                         <div :class="$style.sub">
-                            <del :class="$style.original">{{ `现价 ¥${getPrice(item.goodsInfo.productSkuModels)('originalPrice')}` }}</del>
+                            <del :class="$style.original">{{ `现价 ¥${getPrice(item.goodsInfo.productSkuModels)('price')}` }}</del>
                             <span :class="$style.count">{{ `${item.goodsInfo.activityInfo.number}人预交` }}</span>
                         </div>
                     </div>

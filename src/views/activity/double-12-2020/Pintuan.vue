@@ -42,7 +42,7 @@
                                 </b>
                             </template>
                             <b :class="$style.barLabel" v-else>
-                                参团最高瓜分
+                                超值团购 爱团才会赢
                             </b>
                             <div :class="$style.countdownWrapper">
                                 <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 0">距开始：</span>
