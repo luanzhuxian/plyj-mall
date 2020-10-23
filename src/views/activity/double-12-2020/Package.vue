@@ -15,7 +15,7 @@
                     <div :class="$style.imgWrapper">
                         <img :src="item.combinationDetailList[0].imageUrl + '?x-oss-process=style/thum-middle'">
                         <div :class="$style.rule">
-                            <b>{{ `活动到手价：¥${item.combinationDetailList[0].discountTotalPrice}` }}</b>
+                            <span>活动到手价：<b>{{ item.combinationDetailList[0].discountTotalPrice }}</b></span>
                         </div>
                         <div :class="$style.countdownWrapper">
                             <span :class="$style.text" v-if="item.combinationDetailList[0].status === 0">距开始</span>
@@ -204,6 +204,10 @@ export default {
                 max-width: 430px;
                 line-height: 70px;
                 text-align: center;
+                font-family: Microsoft YaHei;
+                font-weight: 600;
+                font-size: 28px;
+                color: #D00C06;
                 background: linear-gradient(180deg, #FFEB12 0%, #FFC26F 100%);
                 z-index: 1;
                 &::after {
@@ -215,11 +219,16 @@ export default {
                     height: 76px;
                     background: linear-gradient(-105deg, transparent 24px, #FFEB12 26px, #FFC26F 100%);
                 }
-                > b {
+                > span {
                     display: block;
-                    font-size: 28px;
-                    color: #D00C06;
                     @include elps();
+                    > b {
+                        font-size: 36px;
+                        &::before {
+                            content: '￥';
+                            font-size: 28px;
+                        }
+                    }
                 }
             }
             .countdown-wrapper {
@@ -339,7 +348,7 @@ export default {
                         color: #D00C06;
                         @include elps();
                         > b {
-                            font-size: 36px;
+                            font-size: 28px;
                             &::before {
                                 content: '￥';
                                 font-size: 24px;;
