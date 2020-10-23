@@ -33,11 +33,16 @@
                             </span>
                         </div>
                         <div :class="$style.bar">
-                            <b :class="$style.barLabel" v-if="item.goodsInfo.activityInfo.prizePool">
+                            <template v-if="item.goodsInfo.activityInfo.prizePool">
+                                <b :class="$style.barLabel">
+                                    参团最高瓜分
+                                </b>
+                                <b :class="$style.barAmount">
+                                    {{ item.goodsInfo.activityInfo.prizePool }}元
+                                </b>
+                            </template>
+                            <b :class="$style.barLabel" v-else>
                                 参团最高瓜分
-                            </b>
-                            <b :class="$style.barAmount" v-if="item.goodsInfo.activityInfo.prizePool">
-                                {{ item.goodsInfo.activityInfo.prizePool }}元
                             </b>
                             <div :class="$style.countdownWrapper">
                                 <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 0">距开始：</span>

@@ -164,7 +164,7 @@ export default {
             display: flex;
             flex-direction: column;
             width: 100%;
-            height: 1012px;
+            height: 1032px;
             margin-top: 40px;
             background: #ffffff;
             border-radius: 40px;
@@ -277,7 +277,7 @@ export default {
                 }
             }
             &-prod-list {
-                margin-top: 20px;
+                margin-top: 40px;
             }
             &-prod {
                 display: flex;
