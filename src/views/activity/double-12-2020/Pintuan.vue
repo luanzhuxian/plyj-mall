@@ -1,5 +1,5 @@
 <template>
-    <Panel custom-class="pintuan-panel" title="众志成团" subtitle="邀请好友一起瓜分团购奖励" @click="$router.push({ name: 'GroupActivity' })">
+    <Panel custom-class="pintuan-panel" title="众志成团" subtitle="邀请好友一起瓜分奖励" @click="$router.push({ name: 'GroupActivity' })">
         <ul :class="$style.pintuanList" v-if="data.values.length">
             <template v-for="(item, i) of data.values">
                 <router-link
