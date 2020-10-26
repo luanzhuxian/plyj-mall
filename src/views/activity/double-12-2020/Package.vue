@@ -1,5 +1,5 @@
 <template>
-    <Panel custom-class="package-panel" :title="title" subtitle="邀请好友一起瓜分团购奖励" @click="$router.push({ name: 'CoursePackage' })">
+    <Panel custom-class="package-panel" :title="title" subtitle="双十二组合产品特惠，折扣不停歇" @click="$router.push({ name: 'CoursePackage' })">
         <ul :class="$style.packageList" v-if="data.values.length">
             <template v-for="(item, i) of data.values">
                 <router-link
@@ -144,7 +144,7 @@ export default {
     computed: {
         ...mapGetters(['mallDomain']),
         title () {
-            return this.mallDomain === 'pljs' ? '组合聚会购' : '组合聚会学'
+            return this.mallDomain === 'pljs' ? '组合聚惠购' : '组合聚惠学'
         }
     },
     methods: {

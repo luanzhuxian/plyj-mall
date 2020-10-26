@@ -55,7 +55,7 @@
                 <img src="https://mallcdn.youpenglai.com/static/admall/mall-management/dragon-gate/main-icon.png">
             </div>
             <div v-if="activityId === 11" :class="$style.iconDouble12">
-                <img src="https://mallcdn.youpenglai.com/static/mall/double-12-2020/logo-orange.png">
+                <img src="https://mallcdn.youpenglai.com/static/admall/mall-management/double-12-2020/logo-orange.png">
             </div>
         </router-link>
 
@@ -181,7 +181,7 @@ export default {
     width: 100%;
     background-color: #fff;
     z-index: 9;
-    // overflow: hidden;
+    overflow: visible;
 }
 .route {
     position: relative;
@@ -240,12 +240,16 @@ export default {
 }
 .icon-double-12 {
     position: relative;
-    top: -26px;
     width: 153px !important;
-    height: 118px !important;
+    height: 100% !important;
+    overflow: visible;
     > img {
-        width: 100%;
-        height: 100%;
+        position: absolute;
+        top: -40px;
+        left: 0;
+        display: block;
+        width: 153px !important;
+        height: 118px !important;
         object-fit: cover;
     }
 }

@@ -98,7 +98,7 @@ export default {
                                 multiple: item.multiple,
                                 multipleNumber: item.multipleNumber,
                                 price: item.price,
-                                activityPrice: item.price * item.multipleNumber,
+                                activityPrice: item.price * (item.multiple ? item.multipleNumber : 1),
                                 activityStartTime: item.activityStartTime,
                                 activityEndTime: item.activityEndTime
                             },

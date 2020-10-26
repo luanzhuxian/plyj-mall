@@ -66,12 +66,12 @@
                                 </template>
                             </Countdown>
                         </div>
-                        <button :class="{
+                        <div :class="{
                             [$style.miaoshaListItemBtn]: true,
                             [$style.disabled]: item.goodsInfo.activityInfo.status !== 1
                         }">
                             <span>抢</span>
-                        </button>
+                        </div>
                     </div>
                 </router-link>
             </template>

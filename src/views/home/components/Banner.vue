@@ -94,14 +94,14 @@ export default {
                     name: '组合聚惠学',
                     path: 'CoursePackage'
                 },
-                46: {
-                    name: '防疫情报站',
-                    path: 'BattlefieldReport'
-                },
-                47: {
-                    name: '疫情签到',
-                    path: 'EpidemicSignIn'
-                },
+                // 46: {
+                //     name: '防疫情报站',
+                //     path: 'BattlefieldReport'
+                // },
+                // 47: {
+                //     name: '疫情签到',
+                //     path: 'EpidemicSignIn'
+                // },
                 48: {
                     name: '公益棕行动',
                     path: 'LongmenAction'
@@ -166,6 +166,18 @@ export default {
                 if (startTime > Date.now() || endTime < Date.now()) return false
 
                 return this.$router.push({ name: 'LongmenLottery', params: { id: this.dragonGatePlay.id } })
+            }
+            // 自定义
+            if (type === 7 && value && typeof value === 'string') {
+                const reg = /(http|https):\/\/([\w.]+\/?)\S*/ig
+
+                if (!value.match(reg)) {
+                    value = `http://${ value }`
+                }
+                const a = document.createElement('a')
+                a.href = value
+                a.click()
+                return
             }
             // 其他
             if (type in routeMap) {
