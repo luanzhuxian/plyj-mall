@@ -144,7 +144,7 @@ export default {
     computed: {
         ...mapGetters(['mallDomain']),
         title () {
-            return this.mallDomain === 'pljs' ? '组合聚会购' : '组合聚会学'
+            return this.mallDomain === 'pljs' ? '组合聚惠购' : '组合聚惠学'
         }
     },
     methods: {

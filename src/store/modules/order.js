@@ -43,7 +43,7 @@ export default {
             BOOKING: 4,
             // 春耘
             SPRINGPLOUGHING: 5,
-            // 组合聚会学
+            // 组合聚惠学
             COURSEPACKAGE: 6,
             // 公益助力
             WELFARE: 7,

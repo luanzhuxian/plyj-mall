@@ -35,7 +35,7 @@
                 <span :class="$style.price + ' fz-30 rmb'">{{ (orderStatus === orderStatuskeyMap.WAIT_PAY_TAIL_MONEY ? amount + orderAmountTailMoney : amount) | formatAmount }}</span>
             </div>
             <div :class="$style.buttons">
-                <!--正常待付款 支持 付款(目前只区别于预购的待付尾款), 组合聚会学 + 春耘 不支持二次付款-->
+                <!--正常待付款 支持 付款(目前只区别于预购的待付尾款), 组合聚惠学 + 春耘 不支持二次付款-->
                 <pl-button
                     v-if="skuSource !== skuSourceKeyMap.SPRINGPLOUGHING && skuSource !== skuSourceKeyMap.COURSEPACKAGE && orderStatus === orderStatuskeyMap.WAIT_PAY"
                     type="warning"
