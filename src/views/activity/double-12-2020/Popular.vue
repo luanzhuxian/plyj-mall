@@ -1,5 +1,5 @@
 <template>
-    <Panel custom-class="popular-panel" title="学子推荐榜HOT" subtitle="双十二特色课程，推荐学子必学榜单" hide-button>
+    <Panel custom-class="popular-panel" :title="title" subtitle="双十二特色课程，推荐学子必学榜单" hide-button>
         <ul :class="$style.popularList" v-if="data.values.length">
             <li :class="[$style.popularListItem, $style.large]" v-if="isOdd" @click.stop="handleClick(first)">
                 <div :class="$style.imgWrapper">
@@ -65,6 +65,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Panel from './Panel.vue'
 import { getPrice } from '../helper'
 
@@ -82,6 +83,10 @@ export default {
         }
     },
     computed: {
+        ...mapGetters(['mallDomain']),
+        title () {
+            return this.mallDomain === 'pljs' ? '君学严选' : '学子推荐榜HOT'
+        },
         isOdd () {
             return !!(this.data.values.length % 2)
         },
