@@ -4,9 +4,9 @@
             <search :class="$style.search" placeholder="搜索商品" />
             <!-- banner -->
             <banner :class="$style.banner" :data="BANNER" />
-            <!-- 820 -->
-            <a href="https://m.youpenglai.com/new/activity/22449" :class="$style.wwec" v-if="mallDomain === 'pljs'">
-                <img src="https://mallcdn.youpenglai.com/static/820/wwec2020.jpg" alt="wwec2020">
+            <!-- 双12 -->
+            <a href="https://insure.youpenglai.com/" :class="$style.wwec" v-if="mallDomain === 'pljs'">
+                <img src="https://mallcdn.youpenglai.com/static/admall/mall-management/double-12-2020/jiaoyubao.jpg" alt="君学教育保">
             </a>
             <!-- 优惠券 -->
             <coupon :class="$style.coupon" :data="COUPON" v-if="isCouponShow" />
