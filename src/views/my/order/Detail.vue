@@ -165,7 +165,7 @@
                     </p>
                     <p v-else>
                         <span>尾款</span>
-                        <span class="rmb">{{ detail.amount - detail.orderIntentionAmount * detail.orderIntentionAmountDouble - (detail.freight || 0) | formatAmount }}</span>
+                        <span class="rmb">{{ detail.amount - detail.orderIntentionAmount - (detail.freight || 0) | formatAmount }}</span>
                     </p>
                 </template>
                 <!-- 其他商品价格 -->
