@@ -62,17 +62,14 @@ export default {
 
     /* 获取商城信息 */
     [type.GET_MALL_INFO]: async ({ commit, dispatch }) => {
-        try {
-            // 商城名称
-            const mallDomain = window.location.pathname.split('/')[1] || ''
-            const { result } = await getMallInfo(mallDomain)
-            const data = await getLiveOpenStatus()
-            result.liveRoomEnable = data.result
-            commit(type.GET_MALL_INFO, result)
-            return result
-        } catch (e) {
-            throw e
-        }
+        // 商城名称
+        const mallDomain = window.location.pathname.split('/')[1] || ''
+        const { result } = await getMallInfo(mallDomain)
+        commit(type.GET_MALL_INFO, result)
+        const data = await getLiveOpenStatus()
+        result.liveRoomEnable = data.result
+        commit(type.GET_MALL_INFO, result)
+        return result
     },
 
     // 获取openid并登录
