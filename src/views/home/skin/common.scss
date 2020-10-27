@@ -361,11 +361,91 @@
             @include search();
         }
         .footer {
-            @include footer(87px, #FD7803);
+            @include footer(90px, #FD7803);
             padding-top: 10px;
         }
         .skin-title {
             margin: 40px -24px 24px;
+        }
+    }
+}
+
+// 双十二文化类
+.skin-culture {
+    @extend .skin-common;
+    background-color: #FF9904 !important;
+    .container {
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/culture/bg.jpg';
+        @include container(130px, $background-image);
+        .search {
+            @include search();
+        }
+        .footer {
+            @include footer(150px, #FFFFFF);
+            padding-top: 10px;
+        }
+        .skin-title {
+            margin: 28px -24px 20px;
+        }
+    }
+}
+
+// 双十二运动类
+.skin-sports {
+    @extend .skin-common;
+    background-color: #2D88F2 !important;
+    .container {
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/sports/bg.jpg';
+        @include container(130px, $background-image);
+        .search {
+            @include search();
+        }
+        .footer {
+            @include footer(150px, #FFFFFF);
+            padding-top: 10px;
+        }
+        .skin-title {
+            margin: 40px -24px 35px;
+        }
+    }
+}
+
+// 双十二文艺类
+.skin-arts {
+    @extend .skin-common;
+    background-color: #70D5A3 !important;
+    .container {
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/art/bg.jpg';
+        @include container(130px, $background-image);
+        .search {
+            @include search();
+        }
+        .footer {
+            @include footer(150px, #FFFFFF);
+            padding-top: 10px;
+        }
+        .skin-title {
+            margin: 30px -24px 25px;
+        }
+    }
+}
+
+// 双十二
+.skin-double-12 {
+    @extend .skin-common;
+    background: linear-gradient(90deg, #DA5D1A 0%, #CC2714 100%) !important;
+    .container {
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/double-12/bg.jpg';
+        @include container(130px, $background-image);
+        .search {
+            @include search();
+        }
+        .footer {
+            @include footer(150px, #FFFFFF);
+            padding-top: 10px;
+        }
+        .skin-title {
+            margin: 34px -24px 30px;
         }
     }
 }

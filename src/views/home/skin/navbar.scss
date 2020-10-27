@@ -118,6 +118,34 @@
         }
     }
 }
+.skin-culture {
+    .route {
+        &.active > .tab-name {
+            color: #FD7803;
+        }
+    }
+}
+.skin-sports {
+    .route {
+        &.active > .tab-name {
+            color: #E54728;
+        }
+    }
+}
+.skin-arts {
+    .route {
+        &.active > .tab-name {
+            color: #E54728;
+        }
+    }
+}
+.skin-double-12 {
+    .route {
+        &.active > .tab-name {
+            color: #D12C19;
+        }
+    }
+}
 // .skin-campaign {
 //     background: url('https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/0ab57391-3717-43c2-bc47-549f7b1a94a3.png') no-repeat center;
 //     background-size: 100%;
