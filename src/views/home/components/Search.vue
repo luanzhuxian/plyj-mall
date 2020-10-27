@@ -35,23 +35,23 @@ export default {
 <style module lang="scss">
 .search {
     display: flex;
-    height: 110px;
-    width: 100%;
     align-items: center;
     box-sizing: border-box;
+    width: 100%;
+    height: 110px;
     z-index: 9;
 }
 .search-box {
     position: relative;
     display: flex;
     align-items: center;
+    box-sizing: border-box;
     padding: 0 20px;
     flex: 1;
     width: 0;
     height: 60px;
     background-color: #fff;
     border-radius: 30px;
-    box-sizing: border-box;
     svg {
         position: absolute;
         top: 50%;
