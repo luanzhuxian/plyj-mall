@@ -1,4 +1,5 @@
-/****************** 皮肤 start ******************/
+// navbar 皮肤样式
+
 .skin-xmas,
 .skin-yuan-dan,
 .skin-new-year,
@@ -13,8 +14,11 @@
 .skin-fathers-day,
 .skin-dragon-boat,
 .skin-mid-autumn-festival,
-.skin-national-day {
-// .skin-campaign {
+.skin-culture,
+.skin-sports,
+.skin-arts,
+.skin-national-day,
+.skin-double-12 {
     .route {
         padding: 0 0 4px;
         &.active > .tab-name {
@@ -158,4 +162,3 @@
 //         }
 //     }
 // }
-/****************** 皮肤 end ******************/
