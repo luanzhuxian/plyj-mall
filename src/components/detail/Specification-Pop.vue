@@ -105,7 +105,7 @@
                                 <input
                                     v-model.number="count"
                                     type="number"
-                                    @input="countChange"
+                                    @blur="countChange"
                                 >
                                 <!-- 公益活动 -->
                                 <button
@@ -299,9 +299,9 @@ export default {
         },
 
         /**
-     * 如果不是活动商品 或者活动未开始，返回1（按正常商品处理）
-     * 如果是活动商品，且不是预购活动，当活动库存不足时返回 1
-     */
+         * 如果不是活动商品 或者活动未开始，返回1（按正常商品处理）
+         * 如果是活动商品，且不是预购活动，当活动库存不足时返回 1
+         */
         activeType () {
             if (this.activeProduct !== 1 && this.preActivity === 2) {
                 if (this.activeAllResidue <= 0 && this.activeProduct !== 4) {
@@ -419,23 +419,33 @@ export default {
         },
         countChange () {
             if (this.count === '') return
+            if (this.count > this.localCurrentSku.stock) {
+                this.count = this.localCurrentSku.stock
+                this.$warning(`购买的宝贝数超过剩余库存`)
+                return
+            }
             if (this.activeType === 1) {
                 if (this.count < this.min) {
                     this.count = this.min
                     this.$warning(`此规格最小购买量为${ this.min }`)
                 }
-                if (this.count > this.localCurrentSku.stock) {
-                    this.count = this.localCurrentSku.stock
-                    this.$warning(`购买的宝贝数超过剩余库存`)
+                if (this.limiting && this.count > this.limiting) {
+                    this.count = this.limiting
+                    this.$warning(`每账号限购${ this.limiting }件`)
                 }
             } else {
                 if (this.count < 1) {
                     this.count = 1
                     this.$warning(`此规格最小购买量为1`)
                 }
-                if (this.count > this.activityProductModel.buyCount) {
-                    this.count = this.activityProductModel.buyCount
-                    this.$warning(`购买的宝贝数超过剩余库存`)
+                if (this.activityProductModel) {
+                    if (this.count > this.activityProductModel.buyCount) {
+                        this.count = this.activityProductModel.buyCount
+                        this.$warning(`购买的宝贝数超过剩余库存`)
+                    } else if (this.activityProductModel.activityLimit === 1 && this.count > this.activityProductModel.activityLimitNumber) {
+                        this.count = this.activityProductModel.activityLimitNumber
+                        this.$warning(`每账号限购${ this.activityProductModel.activityLimitNumber }件`)
+                    }
                 }
             }
             this.count = Number.parseInt(this.count)
