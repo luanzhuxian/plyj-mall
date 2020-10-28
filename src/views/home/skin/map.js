@@ -15,6 +15,10 @@ export const skinClassNameMap = {
     13: 'skinDragonBoat',
     14: 'skinMidAutumnFestival',
     15: 'skinNationalDay',
+    16: 'skinCulture',
+    17: 'skinSports',
+    18: 'skinArts',
+    19: 'skinDouble12',
     // 99: 'skinCampaign',
     has (id) {
         return Reflect.has(this, id)
@@ -172,14 +176,54 @@ export const skinNavMap = {
         my: 'https://mallcdn.youpenglai.com/static/admall/skin/national-day/my.png',
         myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/national-day/my.png'
     },
-    99: {
-        home: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/98e32f2b-679b-485d-8a9a-6e62659f91b1.png',
-        homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/98e32f2b-679b-485d-8a9a-6e62659f91b1.png',
-        classify: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/0961a842-6724-45d2-b804-33bf81278b54.png',
-        classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/0961a842-6724-45d2-b804-33bf81278b54.png',
-        shoppingCart: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/f3f17e23-c82d-405f-848f-e7ba14b49d43.png',
-        shoppingCartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/f3f17e23-c82d-405f-848f-e7ba14b49d43.png',
-        my: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/8a291b28-fb88-4292-968b-c1f02de91e03.png',
-        myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/8a291b28-fb88-4292-968b-c1f02de91e03.png'
+    16: {
+        home: 'https://mallcdn.youpenglai.com/static/admall/skin/culture/home.png',
+        homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/culture/home.png',
+        classify: 'https://mallcdn.youpenglai.com/static/admall/skin/culture/classify.png',
+        classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/culture/classify.png',
+        shoppingCart: 'https://mallcdn.youpenglai.com/static/admall/skin/culture/cart.png',
+        shoppingCartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/culture/cart.png',
+        my: 'https://mallcdn.youpenglai.com/static/admall/skin/culture/my.png',
+        myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/culture/my.png'
+    },
+    17: {
+        home: 'https://mallcdn.youpenglai.com/static/admall/skin/sports/home.png',
+        homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/sports/home.png',
+        classify: 'https://mallcdn.youpenglai.com/static/admall/skin/sports/classify.png',
+        classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/sports/classify.png',
+        shoppingCart: 'https://mallcdn.youpenglai.com/static/admall/skin/sports/cart.png',
+        shoppingCartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/sports/cart.png',
+        my: 'https://mallcdn.youpenglai.com/static/admall/skin/sports/my.png',
+        myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/sports/my.png'
+    },
+    18: {
+        home: 'https://mallcdn.youpenglai.com/static/admall/skin/art/home.png',
+        homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/art/home.png',
+        classify: 'https://mallcdn.youpenglai.com/static/admall/skin/art/classify.png',
+        classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/art/classify.png',
+        shoppingCart: 'https://mallcdn.youpenglai.com/static/admall/skin/art/cart.png',
+        shoppingCartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/art/cart.png',
+        my: 'https://mallcdn.youpenglai.com/static/admall/skin/art/my.png',
+        myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/art/my.png'
+    },
+    19: {
+        home: 'https://mallcdn.youpenglai.com/static/admall/skin/double-12/home.png',
+        homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/double-12/home.png',
+        classify: 'https://mallcdn.youpenglai.com/static/admall/skin/double-12/classify.png',
+        classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/double-12/classify.png',
+        shoppingCart: 'https://mallcdn.youpenglai.com/static/admall/skin/double-12/cart.png',
+        shoppingCartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/double-12/cart.png',
+        my: 'https://mallcdn.youpenglai.com/static/admall/skin/double-12/my.png',
+        myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/double-12/my.png'
     }
+//     99: {
+//         home: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/98e32f2b-679b-485d-8a9a-6e62659f91b1.png',
+//         homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/98e32f2b-679b-485d-8a9a-6e62659f91b1.png',
+//         classify: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/0961a842-6724-45d2-b804-33bf81278b54.png',
+//         classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/0961a842-6724-45d2-b804-33bf81278b54.png',
+//         shoppingCart: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/f3f17e23-c82d-405f-848f-e7ba14b49d43.png',
+//         shoppingCartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/f3f17e23-c82d-405f-848f-e7ba14b49d43.png',
+//         my: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/8a291b28-fb88-4292-968b-c1f02de91e03.png',
+//         myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/8a291b28-fb88-4292-968b-c1f02de91e03.png'
+//     }
 }
