@@ -64,7 +64,7 @@ module.exports = {
             // 测试37 开发34 王恩74 李宾哲132 牛昌昌92 张涛149 刘兵227 任钊64 崔璐115 杜花171 river 127
             '/apis': {
                 // target: 'https://yumall.youpenglai.com'
-                target: `http://192.168.130.${ SERVER || 34 }`
+                target: `http://192.168.50.${ SERVER || 134 }`
                 // target: 'http://192.168.255.14'
             },
             '/live/': {
