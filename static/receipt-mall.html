@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商家小票</title>
+    <script src="https://wx.gtimg.com/pay_h5/goldplan/js/jgoldplan-1.0.0.js"></script>
+    <script>
+        var devicePixelRatio = window.devicePixelRatio;
+        var initialScale = 1 / devicePixelRatio;
+        var maximumScale = 1 / devicePixelRatio;
+        var minimumScale = 1 / devicePixelRatio;
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width,initial-scale=' + initialScale + ',maximum-scale=' + maximumScale + ',minimum-scale=' + minimumScale + ',user-scalable=no';
+        document.head.appendChild(meta);
+    </script>
+    <style>
+        body, div, p, button, ul, li {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            color: #333;
+            --orange: #FF7702;
+        }
+        button:focus {
+            outline: none;
+        }
+        body {
+            width: 100vw;
+            height: 93.75vw;
+            padding: 4.6875vw 6.25vw;
+            box-sizing: border-box;
+        }
+        .fz-24 {
+            font-size: 3.75vw;
+        }
+        .fz-28 {
+            font-size: 4.375vw;
+        }
+        .mt-18 {
+            margin-top: 2.8125vw;
+        }
+        .gray-2 {
+            color: #666;
+        }
+        .gray-3 {
+            color: #999;
+        }
+        .gray-6 {
+            color: #fff;
+        }
+        .bg-orange {
+            background-color: var(--orange);
+        }
+        .bg-white {
+            background-color: #fff;
+        }
+        .border {
+            border: 1px solid #ddd !important;
+        }
+
+        .flex {
+            display: flex;
+        }
+        .space-between {
+            justify-content: space-between;
+        }
+
+        .mall {
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 4.6875vw;
+        }
+        .mall > img {
+            width: 18vw;
+        }
+
+        .buttons > button {
+            width: 35.625vw;
+            line-height: 10vw;
+            border: none;
+        }
+
+        .order-info {
+            line-height: 6.25vw;
+            margin-bottom: 4.6875vw;
+        }
+        .order-info > li:nth-last-of-type(1) {
+            margin-top: 3.125vw;
+            padding-top: 3.125vw;
+            border-top: 1px solid #ddd;
+        }
+        .error {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 4.6875vw 0;
+        }
+        .error > img {
+            width: 25vw;
+        }
+    </style>
+</head>
+<body>
+    <div id="error" class="error fz-24">
+        <img src="https://mallcdn.youpenglai.com/static/admall-new/3.0.0/no-data.png" alt="">
+        <span class="mt-18">订单加载错误</span>
+    </div>
+    <div id="content" class="fz-24"></div>
+    <div id="buttons" class="buttons flex space-between mt-18">
+        <button id="go-home" class="fz-28 bg-white border">返回商城</button>
+        <button id="go-detail" class="gray-6 fz-28 bg-orange">查看详情</button>
+    </div>
+    <script src="https://mallcdn.youpenglai.com/cdn/qs/qs_v6.9.1.js"></script>
+    <script src="https://mallcdn.youpenglai.com/cdn/art-template/4.13.2/index.js"></script>
+    <script src="https://mallcdn.youpenglai.com/cdn/js-md5/2.18.0/md5.min.js"></script>
+    <script id="tpl" type="text/html">
+        <div class="mall flex">
+            <img src="{{ data.logo }}" alt="">
+            <strong class="fz-24 mt-18">{{ data.mallName }}</strong>
+        </div>
+        <ul class="order-info fz-24 gray-3">
+            <li class="flex space-between">
+                <span class="gray-2">订单编号：</span>
+                <span>{{ data.serialNo }}</span>
+            </li>
+            <li class="flex space-between">
+                <span class="gray-2">订单金额：</span>
+                <span>{{ data.goodsPriceTotal }}</span>
+            </li>
+            <li class="flex space-between">
+                <span class="gray-2">商品数量：</span>
+                <span>{{ data.countTotal }}</span>
+            </li>
+            <li class="flex space-between">
+                <span class="gray-2">支付总额：</span>
+                <span>{{ data.amountTotal }}</span>
+            </li>
+        </ul>
+    </script>
+    <script>
+        (function () {
+            var content = document.getElementById('content')
+            var goHome = document.getElementById('go-home');
+            var goDetail = document.getElementById('go-detail');
+            var error = document.getElementById('error')
+            var buttons = document.getElementById('buttons')
+            var MAIN_URL = 'https://mall.youpenglai.com';
+            var RECEIPT_URL = `${MAIN_URL}/receipt-mall.html`
+            var search = Qs.parse(location.search.substring(1));
+            // md5
+            var check_code = search.check_code;
+            // 商户订单号
+            var out_trade_no = search.out_trade_no;
+            // 特约商户号
+            var sub_mch_id = search.sub_mch_id;
+
+            var orderData = null
+
+            var params = Qs.stringify({
+                mchId: sub_mch_id,
+                serialNo: out_trade_no
+            });
+
+            // content.innerHTML = template('tpl', { data: {
+            //     logo: '',
+            //     amountTotal: '1',
+            //     countTotal: 2,
+            //     goodsPriceTotal: '222',
+            //     serialNo: '123'
+            // }});
+
+
+            fetch(`${MAIN_URL}/apis/v2/order/pay/goldplan/order/detail?${params}`, {
+                method: 'GET',
+                headers: {
+                    'content-type': 'application/json'
+                }
+            })
+                .then(function (res) {
+                    error.style.display = 'none'
+                    res.json().then(function (data) {
+                        orderData = data.result
+                        orderData.goodsPriceTotal = orderData.goodsPriceTotal / 100
+                        orderData.amountTotal = orderData.amountTotal / 100
+                        var md5Params = Qs.stringify({
+                            sub_mch_id,
+                            out_trade_no,
+                            transaction_id: orderData.transactionId
+                        })
+                        var hash = md5(`${RECEIPT_URL}?${md5Params}`)
+                        if (hash === check_code) {
+                            content.innerHTML = template('tpl', { data: orderData });
+                        } else {
+                            error.style.display = 'flex'
+                            error.querySelector('span').innerText = '订单核验错误'
+                        }
+                    })
+                })
+                .catch(function (err) {
+                    error.style.display = 'flex'
+                    error.querySelector('span').innerText = '订单加载错误'
+                    buttons.style.display = 'none'
+                })
+
+            parent.postMessage(JSON.stringify({
+                action: 'onIframeReady',
+                displayStyle: 'SHOW_CUSTOM_PAGE',
+                height: '600px'
+            }), 'https://payapp.weixin.qq.com')
+
+            goHome.addEventListener('click', function () {
+                if (orderData) {
+                    parent.postMessage(JSON.stringify({
+                        action: 'jumpOut',
+                        jumpOutUrl: `${MAIN_URL}/${orderData.mallDomain}`
+                    }), 'https://payapp.weixin.qq.com')
+                }
+            })
+
+            goDetail.addEventListener('click', function () {
+                if (orderData) {
+                    parent.postMessage(JSON.stringify({
+                        action: 'jumpOut',
+                        jumpOutUrl:  `${MAIN_URL}/${orderData.mallDomain}/my/orders/ALL_ORDER`
+                    }), 'https://payapp.weixin.qq.com')
+                }
+            })
+        })()
+    </script>
+</body>
+</html>
