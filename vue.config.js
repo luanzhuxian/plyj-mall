@@ -70,7 +70,7 @@ module.exports = {
                 target: 'http://api.polyv.net'
             }
         },
-        disableHostCheck: false
+        disableHostCheck: true
     },
 
     css: {
