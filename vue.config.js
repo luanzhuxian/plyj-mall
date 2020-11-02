@@ -69,7 +69,8 @@ module.exports = {
                 // target: 'http://mall.youpenglai.com'
                 target: 'http://api.polyv.net'
             }
-        }
+        },
+        disableHostCheck: false
     },
 
     css: {
