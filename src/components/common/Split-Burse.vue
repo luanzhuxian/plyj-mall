@@ -62,12 +62,12 @@ export default {
     methods: {
         async init () {
             try {
-                const { status, result } = await getDelayBurseList()
-                if (status === 200) {
-                    this.list = result
-                    this.list.length === 0 ? this.show = false : this.show = true
-                }
-            } catch (e) { throw e }
+                const { result } = await getDelayBurseList()
+                this.list = result
+                this.show = this.list.length === 0
+            } catch (e) {
+                throw e
+            }
         },
         async dispatchBurse (row) {
             try {
