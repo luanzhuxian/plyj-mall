@@ -64,7 +64,7 @@ export default {
             try {
                 const { result } = await getDelayBurseList()
                 this.list = result
-                this.show = this.list.length === 0
+                this.show = this.list.length > 0
             } catch (e) {
                 throw e
             }
