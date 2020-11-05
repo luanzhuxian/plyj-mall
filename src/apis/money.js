@@ -4,7 +4,7 @@ import axios from 'axios'
 export const getWithdrawDeposit = params => axios.get(`/apis/v2/agent/user/withdraw/deposit/page`, { params })
 
 // 分页查询当前登录用户提现记录
-export const getWithdrawDepositOfUser = params => axios.get(`/apis/v2/agent/user/withdraw/deposit/page/user`, { params })
+export const getWithdrawDepositOfUser = params => axios.get('/apis/v2/agent/user/withdraw/deposit/page/user', { params })
 
 // 提现详情
 export const getWithdrawDepositDetail = sequenceNbr => axios.get(`/apis/v2/agent/user/withdraw/deposit/${ sequenceNbr }`)
