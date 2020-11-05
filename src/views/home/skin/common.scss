@@ -140,7 +140,7 @@
         @include search();
     }
     .footer {
-        @include footer(90px, #f2e2ba, #ff8401);
+        @include footer(140px, #f2e2ba, #ff8401);
     }
 }
 
@@ -156,7 +156,7 @@
         @include search();
     }
     .footer {
-        @include footer(90px, #f2e2ba, #d6922d);
+        @include footer(140px, #f2e2ba, #d6922d);
     }
     .skin-title {
         margin: 0 -24px 14px;
@@ -181,7 +181,7 @@
             @include search(13px);
         }
         .footer {
-            @include footer(90px, #ea615f);
+            @include footer(140px, #ea615f);
             padding-top: 10px;
         }
         .skin-title {
@@ -201,7 +201,7 @@
             @include search(24px);
         }
         .footer {
-            @include footer(90px, #f35815);
+            @include footer(140px, #f35815);
             padding-top: 10px;
         }
         .skin-title {
@@ -221,7 +221,7 @@
             @include search(24px);
         }
         .footer {
-            @include footer(90px, #19b47b);
+            @include footer(140px, #19b47b);
             padding-top: 10px;
         }
         .skin-title {
@@ -241,7 +241,7 @@
             @include search(12px);
         }
         .footer {
-            @include footer(90px, #efc573);
+            @include footer(140px, #efc573);
             padding-top: 10px;
         }
         .skin-title {
@@ -261,7 +261,7 @@
             @include search(13px);
         }
         .footer {
-            @include footer(90px, #ea615f);
+            @include footer(140px, #ea615f);
             padding-top: 10px;
         }
         .skin-title {
@@ -281,7 +281,7 @@
             @include search(12px);
         }
         .footer {
-            @include footer(90px, #fd7803);
+            @include footer(140px, #fd7803);
             padding-top: 10px;
         }
         .skin-title {
@@ -301,7 +301,7 @@
             @include search(12px);
         }
         .footer {
-            @include footer(90px, #1764c7);
+            @include footer(140px, #1764c7);
             padding-top: 10px;
         }
         .skin-title {
@@ -321,7 +321,7 @@
             @include search();
         }
         .footer {
-            @include footer(90px, #1b8864);
+            @include footer(140px, #1b8864);
             padding-top: 10px;
         }
         .skin-title {
@@ -341,7 +341,7 @@
             @include search(12px);
         }
         .footer {
-            @include footer(90px, #1b8864);
+            @include footer(140px, #1b8864);
             padding-top: 10px;
         }
         .skin-title {
@@ -361,7 +361,7 @@
             @include search();
         }
         .footer {
-            @include footer(90px, #FD7803);
+            @include footer(140px, #FD7803);
             padding-top: 10px;
         }
         .skin-title {
