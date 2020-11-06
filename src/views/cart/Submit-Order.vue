@@ -671,7 +671,7 @@ export default {
                     this.requestPayDataCount++
                     await this.requestPayData(orderBatchNumber)
                 } else {
-                    await this.pay(payData, payData.orderIds, payData.orderIds.length)
+                    await this.pay(payData, payData.orderIds, payData.orderIds.length, orderBatchNumber)
                 }
             } catch (e) {
                 this.requestPayDataCount = 0
@@ -698,9 +698,10 @@ export default {
          * @param CREDENTIAL {Object} 支付数据
          * @param orderIds {Array} 订单Id
          * @param orderCount {Number} 订单数量
+         * @param orderBatchNumber {string} 支付批次号，支付失败时用来关闭此次订单
          * @returns {Promise<*>}
          */
-        async pay (CREDENTIAL, orderIds, orderCount) {
+        async pay (CREDENTIAL, orderIds, orderCount, orderBatchNumber) {
             const firstOrder = orderIds[0]
             // 订单是否位课程类型
             const FORMALS = ['FORMAL_CLASS', 'EXPERIENCE_CLASS', 'KNOWLEDGE_COURSE', 'SERIES_OF_COURSE']
@@ -715,6 +716,7 @@ export default {
                     throw new Error('支付失败')
                 }
             } catch (e) {
+                await this.handlepayError(orderBatchNumber)
                 throw e
             }
         },

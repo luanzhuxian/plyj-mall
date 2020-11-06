@@ -27,8 +27,10 @@ export default function wechatPay ({ appId, timeStamp, nonceStr, packageValue, p
                             resolve('ok')
                         }, 1000)
                     } else if (res.err_msg.indexOf('cancel') > -1) {
+                        console.warn(res.err_msg)
                         reject(new ResponseError(JSON.stringify({ message: '取消支付' })))
                     } else if (res.err_msg.indexOf('fail') > -1) {
+                        console.warn(res.err_msg)
                         reject(new ResponseError(JSON.stringify({ message: `支付失败: ${ res.err_msg }` })))
                     }
                 })
