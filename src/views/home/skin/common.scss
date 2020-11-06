@@ -375,7 +375,7 @@
     @extend .skin-common;
     background-color: #FF9904 !important;
     .container {
-        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/culture/bg.jpg';
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/culture/bg-new.jpg';
         @include container(130px, $background-image);
         .search {
             @include search();
@@ -395,7 +395,7 @@
     @extend .skin-common;
     background-color: #2D88F2 !important;
     .container {
-        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/sports/bg.jpg';
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/sports/bg-new.jpg';
         @include container(130px, $background-image);
         .search {
             @include search();
@@ -415,7 +415,7 @@
     @extend .skin-common;
     background-color: #70D5A3 !important;
     .container {
-        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/art/bg.jpg';
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/art/bg-new.jpg';
         @include container(130px, $background-image);
         .search {
             @include search();
@@ -435,7 +435,7 @@
     @extend .skin-common;
     background: linear-gradient(90deg, #DA5D1A 0%, #CC2714 100%) !important;
     .container {
-        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/double-12/bg.jpg';
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/double-12/bg-new.jpg';
         @include container(130px, $background-image);
         .search {
             @include search();
