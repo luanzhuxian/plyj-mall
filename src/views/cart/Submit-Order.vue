@@ -644,10 +644,6 @@ export default {
                 }
                 const { result: orderBatchNumber } = await submitOrder(form)
                 await this.requestPayData(orderBatchNumber)
-                // 在订单提交的过程中若切换页面，手动关闭订单
-                this.$once('hook:beforeRouteLeave', async () => {
-                    if (this.submiting) await this.handlepayError(orderBatchNumber)
-                })
             } catch (e) {
                 throw e
             } finally {
@@ -736,7 +732,7 @@ export default {
             return true
         }
     },
-    beforeRouteLeave (to, from, next) {
+    async beforeRouteLeave (to, from, next) {
         const customRouteName = ['ApplyInvoice', 'Address', 'AddAddress', 'StudentList']
         if (customRouteName.includes(to.name)) {
             this.setDiscountModel()
@@ -744,6 +740,9 @@ export default {
             this.$store.commit('submitOrder/removeOrderProducts')
             this.$store.commit('submitOrder/removeCurExchangeCode')
             this.$store.commit('submitOrder/removeInvoiceInfo')
+        }
+        if (this.submiting) {
+            return next(false)
         }
         next()
     }
