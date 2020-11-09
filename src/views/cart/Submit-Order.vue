@@ -705,8 +705,10 @@ export default {
             try {
                 if (CREDENTIAL.appId) {
                     await wechatPay(CREDENTIAL)
+                    this.submiting = false
                     this.$router.replace({ name: 'PaySuccess', params: { orderId: firstOrder, orderCount }, query: { orderType } })
                 } else if (this.totalAmount === 0) {
+                    this.submiting = false
                     this.$router.replace({ name: 'PaySuccess', params: { orderId: firstOrder, orderCount }, query: { orderType } })
                 } else {
                     throw new Error('支付失败')
@@ -714,6 +716,8 @@ export default {
             } catch (e) {
                 await this.handlepayError(orderBatchNumber)
                 throw e
+            } finally {
+                this.submiting = false
             }
         },
         // 校验数据
