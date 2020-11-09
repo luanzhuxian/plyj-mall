@@ -101,7 +101,7 @@ const render = () => {
                 if ('message' in event && !event.message) {
                     return null
                 }
-                if (event.exception.values.some(item => item.value.match('登录信息失效，请重新获取') || item.type === 'UnhandledRejection')) {
+                if (event.exception.values.some(item => item.value.match('4002') || item.type === 'UnhandledRejection')) {
                     return null
                 }
                 if (event.exception.values.some(item => item.type === 'ResponseError')) {

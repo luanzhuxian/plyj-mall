@@ -55,7 +55,8 @@ async function response (response) {
       data: config.data ? JSON.parse(config.data) : null,
       params: config.params || null,
       devMessage: data.devMessage || '',
-      message: data.message
+      message: data.message,
+      resCode: data.code
     }, null, 4)))
   }
   // 登录信息过期
@@ -111,6 +112,8 @@ async function response (response) {
 }
 
 function resError (error) {
+  const { method, url, data: reqData, params } = error.config
+  const { data: { devMessage, code } } = error.response
   let msg = error.message
   if (msg.indexOf('timeout') > -1) {
     msg = '请求超时◔̯◔'
@@ -125,7 +128,13 @@ function resError (error) {
     msg = '网络不给力'
   }
   return Promise.reject(new ResponseError(JSON.stringify({
-    message: msg
+    message: msg,
+    method,
+    url,
+    data: reqData,
+    params,
+    devMessage,
+    resCode: code
   }, null, 4)))
 }
 // 将数据中存在的资源http协议改成https协议
