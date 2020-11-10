@@ -360,9 +360,11 @@ export default {
                 this.products = skus
                 this.customList = skus.filter(item => item.skuCustoms.length)
             } catch (e) {
-                setTimeout(() => {
-                    this.$router.go(-1)
-                }, 2000)
+                if ((e.name === 'ResponseError' && JSON.parse(e.message).resCode !== 5050) || e.name !== 'ResponseError') {
+                    setTimeout(() => {
+                        this.$router.go(-1)
+                    }, 2000)
+                }
                 throw e
             }
         },
