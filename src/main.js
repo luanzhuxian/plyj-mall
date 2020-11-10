@@ -3,7 +3,7 @@ import App from './App.vue'
 import { router } from './router/index'
 import store from './store/index'
 import { USER_INFO, LOGIN, GET_MALL_INFO } from './store/mutation-type'
-import './assets/js/axios-config'
+import './assets/js/axios'
 import 'moment/locale/zh-cn'
 import './assets/scss/index.scss'
 import directive from './directive'
@@ -101,7 +101,7 @@ const render = () => {
                 if ('message' in event && !event.message) {
                     return null
                 }
-                if (event.exception.values.some(item => item.value.match('登录信息失效，请重新获取') || item.type === 'UnhandledRejection')) {
+                if (event.exception.values.some(item => item.value.match('4002') || item.type === 'UnhandledRejection')) {
                     return null
                 }
                 if (event.exception.values.some(item => item.type === 'ResponseError')) {

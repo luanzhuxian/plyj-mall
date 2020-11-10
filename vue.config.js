@@ -7,17 +7,15 @@ const assetsDir = MODEL === 'development' ? 'static' : `${ VERSION }/static`
 process.env.VUE_APP_VERSION = VERSION
 process.env.VUE_APP_MODEL = MODEL
 
-/* ********************************************* 环境 *************************************** */
-console.log(`------------------------- ${ NODE_ENV } -------------------------`)
-
-/* ********************************************* 模式 *************************************** */
-console.log(`------------------------- model: ${ MODEL } -------------------------`)
-
-/* ********************************************* 服务 *************************************** */
-console.log(`------------------------- server: ${ SERVER } -------------------------`)
-
-console.log(`------------------------- assetsDir: ${ assetsDir } -------------------------`)
-console.log(`------------------------- version: ${ VERSION } -------------------------`)
+console.table([
+    {
+        NODE_ENV,
+        MODEL,
+        SERVER: `http://192.168.130.${ SERVER }`,
+        assetsDir,
+        VERSION
+    }
+])
 
 const externals =
   // 生产环境或者开发模式，使用CDN库依赖
@@ -71,7 +69,9 @@ module.exports = {
                 // target: 'http://mall.youpenglai.com'
                 target: 'http://api.polyv.net'
             }
-        }
+        },
+        // 禁止检查域名
+        disableHostCheck: true
     },
 
     css: {
@@ -109,7 +109,7 @@ module.exports = {
             noSources: false
         }
     },
-    productionSourceMap: true,
+    productionSourceMap: MODEL === 'production',
 
     lintOnSave: true
 }

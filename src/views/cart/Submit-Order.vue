@@ -360,9 +360,11 @@ export default {
                 this.products = skus
                 this.customList = skus.filter(item => item.skuCustoms.length)
             } catch (e) {
-                setTimeout(() => {
-                    this.$router.go(-1)
-                }, 2000)
+                if ((e.name === 'ResponseError' && JSON.parse(e.message).resCode !== 5050) || e.name !== 'ResponseError') {
+                    setTimeout(() => {
+                        this.$router.go(-1)
+                    }, 2000)
+                }
                 throw e
             }
         },
@@ -644,10 +646,6 @@ export default {
                 }
                 const { result: orderBatchNumber } = await submitOrder(form)
                 await this.requestPayData(orderBatchNumber)
-                // 在订单提交的过程中若切换页面，手动关闭订单
-                this.$once('hook:beforeRouteLeave', async () => {
-                    if (this.submiting) await this.handlepayError(orderBatchNumber)
-                })
             } catch (e) {
                 throw e
             } finally {
@@ -709,8 +707,10 @@ export default {
             try {
                 if (CREDENTIAL.appId) {
                     await wechatPay(CREDENTIAL)
+                    this.submiting = false
                     this.$router.replace({ name: 'PaySuccess', params: { orderId: firstOrder, orderCount }, query: { orderType } })
                 } else if (this.totalAmount === 0) {
+                    this.submiting = false
                     this.$router.replace({ name: 'PaySuccess', params: { orderId: firstOrder, orderCount }, query: { orderType } })
                 } else {
                     throw new Error('支付失败')
@@ -718,6 +718,8 @@ export default {
             } catch (e) {
                 await this.handlepayError(orderBatchNumber)
                 throw e
+            } finally {
+                this.submiting = false
             }
         },
         // 校验数据
@@ -736,7 +738,7 @@ export default {
             return true
         }
     },
-    beforeRouteLeave (to, from, next) {
+    async beforeRouteLeave (to, from, next) {
         const customRouteName = ['ApplyInvoice', 'Address', 'AddAddress', 'StudentList']
         if (customRouteName.includes(to.name)) {
             this.setDiscountModel()
@@ -744,6 +746,9 @@ export default {
             this.$store.commit('submitOrder/removeOrderProducts')
             this.$store.commit('submitOrder/removeCurExchangeCode')
             this.$store.commit('submitOrder/removeInvoiceInfo')
+        }
+        if (this.submiting) {
+            return next(false)
         }
         next()
     }

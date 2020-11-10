@@ -1,5 +1,5 @@
 
-import { axios } from '../../assets/js/axios'
+import axios from 'axios'
 
 /**
  * 公益活动详情

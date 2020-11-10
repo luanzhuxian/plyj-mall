@@ -1,4 +1,4 @@
-import { axios } from '../assets/js/axios'
+import axios from 'axios'
 
 // 获取知识课程列表
 export const getCourse = params => axios.get('/apis/v1/knowledgeCourse/onlineClassroom', { params })

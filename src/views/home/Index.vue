@@ -175,14 +175,7 @@ export default {
     },
     beforeRouteEnter (to, from, next) {
         to.meta.from = from.name
-        next(vm => {
-            if (vm.noFinish) {
-                vm.$alert('商城还在装修中哦，请您先看看我们都有哪些商品吧 😘')
-                    .finally(() => {
-                        vm.$router.replace({ name: 'Classify' })
-                    })
-            }
-        })
+        next()
     }
 }
 </script>

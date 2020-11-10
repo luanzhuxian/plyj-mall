@@ -1,4 +1,4 @@
-import { axios } from '../assets/js/axios'
+import axios from 'axios'
 
 /**
  * 获取经纪人分享所有商品

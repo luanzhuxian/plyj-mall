@@ -320,7 +320,6 @@ export default {
             const touches = Array.from(e.touches)
             if (touches.length > 1) return
             const finger = touches.find(item => item.identifier === this.identifier)
-
             const deltaY = (finger.clientY - this.startY) / 3
 
             // console.log(deltaY)

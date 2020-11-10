@@ -10,7 +10,7 @@
             <div class="current-price" style="margin-bottom: 4px;">
                 <span>预售到手价</span>&nbsp;
                 <span class="rmb">
-                    <template v-if="detail.activityProductModel.lowestPrice">
+                    <template v-if="detail.activityProductModel.lowestPrice && detail.activityProductModel.highestPrice !== detail.activityProductModel.lowestPrice">
                         <i v-text="detail.activityProductModel.lowestPrice" />
                         <i>~</i>
                     </template>

@@ -6,7 +6,8 @@ import {
     login,
     // refreshToken,
     getCartCount,
-    userInfoSettings
+    userInfoSettings,
+    getLiveOpenStatus
 } from '../apis/base-api'
 import {
     getAddress
@@ -61,20 +62,19 @@ export default {
 
     /* 获取商城信息 */
     [type.GET_MALL_INFO]: async ({ commit, dispatch }) => {
-        try {
-            // 商城名称
-            const mallDomain = window.location.pathname.split('/')[1] || ''
-            const { result } = await getMallInfo(mallDomain)
-            commit(type.GET_MALL_INFO, result)
-            return result
-        } catch (e) {
-            throw e
-        }
+        // 商城名称
+        const mallDomain = window.location.pathname.split('/')[1] || ''
+        const { result } = await getMallInfo(mallDomain)
+        commit(type.GET_MALL_INFO, result)
+        const data = await getLiveOpenStatus()
+        result.liveRoomEnable = data.result
+        commit(type.GET_MALL_INFO, result)
+        return result
     },
 
     // 获取openid并登录
     [type.GET_OPENID]: async ({ commit, dispatch, state }) => {
-        const { appSecret, mallDomain, componentAppid, appid: appId } = state.mallInfo
+        const { appSecret, mallDomain, componentAppid, appId } = state.mallInfo
         if (!appId) {
             throw new Error('商城还未授权给雅集')
         }
@@ -116,8 +116,8 @@ export default {
             }
             const search = parseSearch()
             delete search.code
-            const { appSecret, componentAppid, appid } = state.mallInfo
-            location.href = getWeixinURL(appSecret, appid, componentAppid, search)
+            const { appSecret, componentAppid, appId } = state.mallInfo
+            location.href = getWeixinURL(appSecret, appId, componentAppid, search)
             return null
         } catch (e) {
             throw e

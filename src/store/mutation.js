@@ -14,10 +14,10 @@ export default {
         copyFields(state.mallInfo, payload)
         sessionStorage.setItem('mallName', payload.mallName)
         // 缓存10周
-        Cookie.set('mallId', payload.sequenceNbr, {
+        Cookie.set('mallId', payload.id, {
             expires: CalcCookieTime(6048000)
         })
-        Cookie.set('agencyCode', payload.agencyCode, {
+        Cookie.set('agencyCode', payload.enterpriseId, {
             expires: CalcCookieTime(6048000)
         })
     },
@@ -27,7 +27,7 @@ export default {
         // 向sentry设置用户信息，以便在日志中展示
         // 只有生产环境
         if (VUE_APP_MODEL === NODE_ENV) {
-            const { mallName, sequenceNbr: mallId, mallDomain, appid: appId } = state.mallInfo
+            const { mallName, sequenceNbr: mallId, mallDomain, appId } = state.mallInfo
             // 用户信息搜索只支持以下两个字段
             setUser({
                 id: payload.userId,

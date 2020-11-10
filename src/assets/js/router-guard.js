@@ -44,14 +44,14 @@ const setShare = to => {
             console.warn('默认分享')
         }
         const {
-            appid,
+            appId,
             mallName,
             mallDesc,
             logoUrl
         } = store.state.mallInfo
-        if (appid) {
+        if (appId) {
             share({
-                appId: appid,
+                appId,
                 title: `${ mallName }-${ to.meta.title }`,
                 desc: mallDesc,
                 imgUrl: logoUrl || 'http://wx.qlogo.cn/mmhead/Q3auHgzwzM5CU6yfkSWRHJcwP0BibLpr75V8Qc8bpjmP6FfSto1Mrog/0'

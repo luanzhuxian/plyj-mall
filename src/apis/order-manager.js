@@ -1,4 +1,4 @@
-import { axios } from '../assets/js/axios'
+import axios from 'axios'
 
 // 微信用户-提交订单
 // export function physicalorderWechat (openId, data) {
@@ -54,7 +54,7 @@ export const invoiceDetail = orderNo => axios.get(`/apis/v1/invoice/OrderInvoice
 export const getFreightData = orderId => axios.get(`/apis/v1/order/logistics/${ orderId }`)
 
 // GET 获取数据字典
-export const getMap = code => axios.get(`/apis/v1/systemctl/sysdictionary/detail/list/${ code }`)
+export const getMap = code => axios.get(`/apis/v2/systemctl/sysdictionary/detail/list/${ code }`)
 
 // 获取最大退款值
 // export const getMaxRefund = orderProductRId => axios.get(`/apis/v1/refund/refund/getAmountOfRefundable/${ orderProductRId }`)
@@ -84,7 +84,7 @@ export const submitExpressInfo = params => axios.post(`/apis/v2/order/refunds/re
 // export const deleteRefundOrder = params => axios.post(`/apis/v1/refund/refund/admin/delete`, params)
 
 // 查看申请helper进度
-export const getHelperApplicationProgress = () => axios.get(`/apis/v1/agent/user/info/audit/status`)
+export const getHelperApplicationProgress = () => axios.get(`/apis/v2/agent/user/info/audit/status`)
 
 // 获取是否核销
 export const getVerificationStatus = orderId => axios.get(`/apis/v2/redeem/jumpafter?orderId=${ orderId }`)

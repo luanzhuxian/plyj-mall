@@ -117,7 +117,6 @@ export default {
                     } = from
                     vm.$router.replace({ name, params, query })
                 } else {
-                    console.log(123)
                     vm.$router.replace({ name: 'Home' })
                 }
             }

@@ -80,11 +80,9 @@ export default {
             } else {
                 try {
                     const ids = this.checkList.map(({ id }) => id)
-                    const mes = await deleteBurse(ids)
-                    if (mes.status === 200) {
-                        this.$success('删除成功')
-                        this.$refresh()
-                    }
+                    await deleteBurse(ids)
+                    this.$success('删除成功')
+                    this.$refresh()
                 } catch (e) { throw e }
             }
         }

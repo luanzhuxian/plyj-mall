@@ -176,9 +176,8 @@ export default {
     async activated () {
         try {
             await this.getSpringCombination()
-            const t = await Countdown.getServerTime()
+            await Countdown.getServerTime()
             this.share()
-            console.log(t)
         } catch (e) {
             throw e
         }

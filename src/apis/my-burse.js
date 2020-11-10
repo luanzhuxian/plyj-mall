@@ -1,5 +1,5 @@
 // 我的奖学金
-import { axios } from '../assets/js/axios'
+import axios from 'axios'
 
 // 主页弹窗奖学金列表
 export const getDelayBurseList = () => axios.get('/apis/v1/scholarship/waitReveive')

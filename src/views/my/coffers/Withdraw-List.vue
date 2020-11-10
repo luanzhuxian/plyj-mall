@@ -45,7 +45,6 @@
             :form="form"
             ref="loadMore"
             @refresh="refreshHandler"
-            @more="more"
             no-content-tip="暂无提现记录"
             icon="icon-no-content2"
         >
@@ -91,6 +90,7 @@
 <script>
 import { getWithdrawDepositOfUser, getDepositCount } from '../../../apis/money'
 import LoadMore from '../../../components/common/Load-More.vue'
+import moment from 'moment'
 export default {
     name: 'WithdrawList',
     components: {
@@ -166,7 +166,7 @@ export default {
         // 批处理数据，增加年月属性
         batching (list, total) {
             for (const item of list) {
-                item.createTimestamp = Number(item.createTimestamp)
+                item.createTimestamp = moment(item.createTime).valueOf()
                 const date = new Date(item.createTimestamp)
                 item.month = date.getMonth() + 1
                 item.year = date.getFullYear()

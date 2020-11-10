@@ -76,7 +76,7 @@ export default {
             try {
                 const validate = this.validatePass()
                 if (validate) {
-                    const result = await inputLivePassword({
+                    const { result } = await inputLivePassword({
                         activityId: this.activityId,
                         roomToken: this.value
                     })

@@ -1,5 +1,5 @@
 
-import { axios } from '../assets/js/axios'
+import axios from 'axios'
 
 // 获取直播观看列表
 export const getLibraryList = params => axios.get('/apis/v1/mall/live/lib/my_lookback', { params })

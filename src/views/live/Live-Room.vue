@@ -482,7 +482,7 @@ export default {
             /* eslint-disable no-throw-literal */
             try {
                 // isGive 是否被送 isRange 是否有权限观看
-                const { isGive, isRange } = await hasPermission(this.detail.id)
+                const { result: { isGive, isRange } } = await hasPermission(this.detail.id)
                 this.isGive = isGive
                 if (!isRange) {
                     await this.$warning('您没有权限观看该场直播')
@@ -510,7 +510,7 @@ export default {
                 throw false
             } */
             try {
-                const needPay = await hasPied(this.detail.id)
+                const { result: needPay } = await hasPied(this.detail.id)
                 if (!needPay) {
                     // 还没支付
                     this.needPay = true
@@ -553,7 +553,7 @@ export default {
         // 获取直播状态
         async getRoomStatus () {
             try {
-                const data = await getRoomStatus()
+                const { result: data } = await getRoomStatus()
                 const { appId, appUserId } = data
                 this.liveAppId = appId
                 this.channeUserId = appUserId
@@ -564,7 +564,7 @@ export default {
         // 获取直播详情
         async getDetail () {
             try {
-                const data = await getActiveCompleteInfo(this.id)
+                const { result: data } = await getActiveCompleteInfo(this.id)
                 if (!data) {
                     return null
                 }
@@ -616,7 +616,7 @@ export default {
             const isStart = async stream => {
                 try {
                     // end 未直播 live 正在直播
-                    const result = await isLiveStart(stream)
+                    const { result } = await isLiveStart(stream)
                     return result.trim()
                 } catch (e) {
                     throw e
@@ -667,7 +667,7 @@ export default {
         // 视频直播情况下获取视频信息
         async getVideoMesById () {
             try {
-                let recorded = await getVideoMesById(this.detail.videoLibId)
+                let { result: recorded } = await getVideoMesById(this.detail.videoLibId)
                 recorded = recorded || {}
                 recorded.ended = true
                 recorded.fileSize = Number(recorded.fileSize) || 0
@@ -731,7 +731,7 @@ export default {
             if (this.detail.liveType === 'live') {
                 const { channelId, avatar, liveAppId: appId, userId, userName } = this
                 const timestamp = Date.now()
-                const signStr = await sign({
+                const { result: signStr } = await sign({
                     roomId: channelId,
                     signMsg: `appId${ appId }channelId${ channelId }timestamp${ timestamp }`
                 })

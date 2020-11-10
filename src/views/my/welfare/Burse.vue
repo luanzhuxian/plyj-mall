@@ -77,13 +77,11 @@ export default {
     },
     async activated () {
         try {
-            const { status, result } = await getBurseMes({})
-            if (status === 200) {
-                this.burseMes = result
-                await this.$nextTick()
-                this.$refresh = this.$refs.loadMore.refresh
-                this.$refresh()
-            }
+            const { result } = await getBurseMes()
+            this.burseMes = result
+            await this.$nextTick()
+            this.$refresh = this.$refs.loadMore.refresh
+            this.$refresh()
         } catch (e) { throw e }
     },
     methods: {
