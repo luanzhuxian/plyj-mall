@@ -1,10 +1,10 @@
 {
   "name": "plyj-mall",
-  "version": "2.12.7",
+  "version": "2.12.8",
   "private": true,
   "scripts": {
     "start": "vue-cli-service serve --model local --s",
-    "build": "vue-cli-service build --model production",
+    "build": "vue-cli-service build --model production && npm run sentry",
     "build:dev": "vue-cli-service build --model development",
     "sentry": "node ./sentry.js --model production",
     "lint": "vue-cli-service lint",

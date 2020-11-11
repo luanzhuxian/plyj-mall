@@ -73,42 +73,6 @@ async function response (response) {
       }
     })
   }
-  // if (data.code !== SUCCESS_CODE) {
-  //   let msg = data.message
-  //   let loginInvalid = msg.indexOf('登录信息失效') >= 0
-  //   if (msg.indexOf('运行时') > -1) {
-  //     msg = '蓬莱岛人太多啦~( ˶‾᷄࿀‾᷅˵ )'
-  //   }
-  //   // 非登录失效的错误
-  //   if (!loginInvalid) {
-  //     return Promise.reject(new ResponseError(JSON.stringify({
-  //       method: config.method,
-  //       url: config.url,
-  //       data: config.data ? JSON.parse(config.data) : null,
-  //       params: config.params || null,
-  //       devMessage: data.devMessage || '',
-  //       message: msg || ''
-  //     }, null, 4)))
-  //   }
-  //   // 重新登录, 登录完成后尝试上次发起的请求
-  //   try {
-  //     await store.dispatch(LOGIN)
-  //     let { method, data, headers, url, params } = config
-  //     const res = await axios({
-  //       method,
-  //       data,
-  //       params,
-  //       url,
-  //       headers: {
-  //         openId: headers.openId
-  //       }
-  //     })
-  //     return httpToHttps(res)
-  //   } catch (e) {
-  //     return Promise.reject(e)
-  //   }
-  // }
-  // return data
 }
 
 function resError (error) {
@@ -136,15 +100,4 @@ function resError (error) {
     devMessage,
     resCode: code
   }, null, 4)))
-}
-// 将数据中存在的资源http协议改成https协议
-function httpToHttps (data) {
-  try {
-    let temp = JSON.stringify(data)
-    temp = temp.replace(/http:\/\/mallcdn.youpenglai.com/g, 'https://mallcdn.youpenglai.com')
-    temp = temp.replace(/http:\/\/penglai-weimall.oss-cn-hangzhou.aliyuncs.com/g, 'https://mallcdn.youpenglai.com')
-    return JSON.parse(temp)
-  } catch (e) {
-    return data
-  }
 }
