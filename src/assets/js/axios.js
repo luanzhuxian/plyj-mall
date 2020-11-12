@@ -13,7 +13,7 @@ class ResponseError extends Error {
 
 /* code码 */
 const SUCCESS_CODE = 2000
-const EXCEPTION_CODE = 5000
+const EXCEPTION_CODE = [5000, 5050]
 const TOKEN_TIME_OUT = 4002
 
 axios.defaults.timeout = 200000
@@ -48,7 +48,7 @@ async function response (response) {
     return data
   }
   // 异常信息
-  if (data.code === EXCEPTION_CODE) {
+  if (EXCEPTION_CODE.includes(data.code)) {
     return Promise.reject(new ResponseError(JSON.stringify({
       method: config.method,
       url: config.url,

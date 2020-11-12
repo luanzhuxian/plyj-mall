@@ -8,7 +8,7 @@
                     :href="'tel:' + item.contactWay"
                 >
                     <span>
-                        {{ item.contactUserName }}：
+                        {{ item.contactUsername }}：
                     </span>
                     <span v-text="item.contactWay" />
                 </a>

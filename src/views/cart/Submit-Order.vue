@@ -333,7 +333,7 @@ export default {
             }
         },
         // 根据初始化的商品基本信息，获取商品详情和价格
-        async getProductDetail () {
+        async getProductDetail (noBack = false) {
             try {
                 const form = JSON.parse(JSON.stringify(this.form))
                 // 使用兑换码后，修改部分参数
@@ -360,7 +360,7 @@ export default {
                 this.products = skus
                 this.customList = skus.filter(item => item.skuCustoms.length)
             } catch (e) {
-                if ((e.name === 'ResponseError' && JSON.parse(e.message).resCode !== 5050) || e.name !== 'ResponseError') {
+                if (!noBack && e.name === 'ResponseError') {
                     setTimeout(() => {
                         this.$router.go(-1)
                     }, 2000)
@@ -612,7 +612,7 @@ export default {
                 }
             }
             try {
-                await this.getProductDetail()
+                await this.getProductDetail(true)
                 // 修改成功后需要更新缓存中的数据
                 cache.count = count
                 this.$store.commit('submitOrder/setOrderProducts', {
