@@ -67,12 +67,13 @@ export default {
     props: {
 
         /**
-     * 绑定的值
-     * 一般用于checkbox-group，将作为已选数据中的一个值
-     * 如果绑定了值，则认为有一组待选的值，使用checkbox-group监听整体变化
-     */
+         * 绑定的值
+         * 一般用于checkbox-group，将作为已选数据中的一个值
+         * 如果绑定了值，则认为有一组待选的值，使用checkbox-group监听整体变化
+         * { checked: boolean, [k: string]: any }
+         */
         data: {
-            type: [Object, String, Number],
+            type: Object,
             default () {
                 return null
             }
@@ -113,10 +114,10 @@ export default {
         },
 
         /*
-    * 数据
-    * 可添加属性checked来规定默认选中的项
-    * 如果数据时对象且不是数组，且有checked属性，则更加当前的checkd数据来判断选中状态
-    * */
+        * 数据
+        * 可添加属性checked来规定默认选中的项
+        * 如果数据时对象且不是数组，且有checked属性，则更加当前的checkd数据来判断选中状态
+        * */
         data: {
             handler (val) {
                 // TODO 需要优化
@@ -131,8 +132,7 @@ export default {
             immediate: true
         }
     },
-    computed: {
-    },
+    computed: {},
     methods: {
         handleChange (e) {
             const { checked } = e.currentTarget
@@ -150,100 +150,110 @@ export default {
             }
         }
 
-    // 选中方法
-    // selected () {
-    //   if (typeof this.$parent.change === 'function') {
-    //     this.$parent.change(true, this.data)
-    //   }
-    //   // this.localChecked = true
-    //   // 调用回调，可使状态回到未选择
-    //   // this.$emit('change', true, this.data)
-    //   if (this.data && this.data.hasOwnProperty('checked')) {
-    //     this.data.checked = true
-    //   }
-    // },
-    // 取消选中方法
-    // cancel () {
-    //   if (this.$parent.change) {
-    //     this.$parent.change(false, this.data)
-    //   }
-    //   this.localChecked = false
-    //   this.$emit('change', false, this.data)
-    //   if (this.data && this.data.hasOwnProperty('checked')) {
-    //     this.data.checked = false
-    //   }
-    // }
+        // 选中方法
+        // selected () {
+        //   if (typeof this.$parent.change === 'function') {
+        //     this.$parent.change(true, this.data)
+        //   }
+        //   // this.localChecked = true
+        //   // 调用回调，可使状态回到未选择
+        //   // this.$emit('change', true, this.data)
+        //   if (this.data && this.data.hasOwnProperty('checked')) {
+        //     this.data.checked = true
+        //   }
+        // },
+        // 取消选中方法
+        // cancel () {
+        //   if (this.$parent.change) {
+        //     this.$parent.change(false, this.data)
+        //   }
+        //   this.localChecked = false
+        //   this.$emit('change', false, this.data)
+        //   if (this.data && this.data.hasOwnProperty('checked')) {
+        //     this.data.checked = false
+        //   }
+        // }
     }
 }
 </script>
 
 <style lang="scss">
-  .pl-checkbox {
-    align-items: center;
-    align-self: center;
-    &:nth-last-of-type(1) {
-      margin-bottom: 0 !important;
-      margin-right: 0 !important;
+    .pl-checkbox {
+        align-items: center;
+        align-self: center;
+
+        &:nth-last-of-type(1) {
+            margin-bottom: 0 !important;
+            margin-right: 0 !important;
+        }
+
+        > label {
+            display: inline-flex;
+            align-items: center;
+        }
     }
-    > label {
-      display: inline-flex;
-      align-items: center;
-    }
-  }
-  .pl-checkbox-inner {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 18px;
-    box-sizing: border-box;
-    > .pl-checkbox__inner {
-      display: inline-block;
-      width: 36px;
-      height: 36px;
-      border-radius: 18px;
-      border: 2px solid #ccc;
-      box-sizing: border-box;
-      &.checked {
+
+    .pl-checkbox-inner {
         position: relative;
-        background-color: #F2B036;
-        border: none;
-        &:before {
-          position: absolute;
-          top: 20px;
-          left: 7px;
-          content: '';
-          width: 10px;
-          height: 3px;
-          transform: rotate(45deg);
-          background-color: #fff;
-          border-radius: 2px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: 18px;
+        box-sizing: border-box;
+
+        > .pl-checkbox__inner {
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            border-radius: 18px;
+            border: 2px solid #ccc;
+            box-sizing: border-box;
+
+            &.checked {
+                position: relative;
+                background-color: #F2B036;
+                border: none;
+
+                &:before {
+                    position: absolute;
+                    top: 20px;
+                    left: 7px;
+                    content: '';
+                    width: 10px;
+                    height: 3px;
+                    transform: rotate(45deg);
+                    background-color: #fff;
+                    border-radius: 2px;
+                }
+
+                &:after {
+                    position: absolute;
+                    top: 18px;
+                    left: 12px;
+                    content: '';
+                    width: 20px;
+                    height: 3px;
+                    transform: rotate(-45deg);
+                    background-color: #fff;
+                    border-radius: 2px;
+                }
+            }
+
+            &.disabled {
+                background-color: #ddd;
+            }
         }
-        &:after {
-          position: absolute;
-          top: 18px;
-          left: 12px;
-          content: '';
-          width: 20px;
-          height: 3px;
-          transform: rotate(-45deg);
-          background-color: #fff;
-          border-radius: 2px;
+
+        > .weixuanzhong1 {
+            display: none;
         }
-      }
-      &.disabled {
-        background-color: #ddd;
-      }
+
+        &.border {
+            > .weixuanzhong1 {
+                display: inline-block;
+            }
+        }
     }
-    > .weixuanzhong1 {
-      display: none;
-    }
-    &.border {
-      > .weixuanzhong1 {
-        display: inline-block;
-      }
-    }
-  }
 </style>
