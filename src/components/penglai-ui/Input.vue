@@ -235,6 +235,7 @@ export default {
         },
         clear () {
             this.$emit('input', '')
+            this.$emit('change', '')
             this.$emit('clear')
         },
         setAlign () {
