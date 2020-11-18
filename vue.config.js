@@ -11,7 +11,7 @@ console.table([
     {
         NODE_ENV,
         MODEL,
-        SERVER: `http://192.168.130.${ SERVER }`,
+        SERVER: `http://192.168.50.${ SERVER }`,
         assetsDir,
         VERSION
     }
@@ -59,7 +59,7 @@ module.exports = {
         // 如果设置为true，devServer会把编译后的文件存入磁盘，而不是存入内存，这样热刷新会慢一点，但是会节省内存
         writeToDisk: false,
         proxy: {
-            // 测试37 开发34 王恩74 李宾哲132 牛昌昌92 张涛149 刘兵227 任钊64 崔璐115 杜花171 river 127
+            // 测试37 开发34 王恩74 牛昌昌92 张涛126 任钊64 杜花171 river 148 wilson 146
             '/apis': {
                 // target: 'https://yumall.youpenglai.com'
                 target: `http://192.168.50.${ SERVER || 134 }`

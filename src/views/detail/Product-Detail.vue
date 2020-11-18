@@ -199,9 +199,11 @@
                     :activity-product-model="detail.activityProductModel || null"
                     :pre-activity="preActivity"
                     :product-type="productType"
+                    @addToCart="addToCart"
+                    @buyNow="buyNow"
                 />
 
-                <!-- 规格弹框 -->
+                <!-- 详情页面选择规格 - 弹框 -->
                 <specification-pop
                     :default-count="defaultCount"
                     :sku-list="detail.productSkuModels"
@@ -257,7 +259,7 @@
                             </button>
                         </div>
                         <!-- 预购商品下单 -->
-                        <div :class="$style.button" v-else-if="activeProduct === 4 && preActivity === 2">
+                        <div :class="$style.button" v-else-if="activeProduct === 4 && preActivity === 2 && currentSku.activityProduct">
                             <button
                                 :class="$style.preBtn"
                                 :disabled="activeStock <= 0"

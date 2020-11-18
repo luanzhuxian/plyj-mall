@@ -103,6 +103,7 @@
                 <span>{{ confirmText }}</span>
             </button>
         </div>
+        <!-- 底部按钮规格 - 弹框 -->
         <specification-pop
             :product-image="image"
             :visible.sync="showSpecifica"
@@ -115,15 +116,36 @@
             :activity-product-model="activityProductModel"
         >
             <template v-slot:footer="{ currentSku, limiting, limit, publicBenefitActiveStock }">
-                <pl-button
-                    type="warning"
-                    size="large"
-                    :loading="loading"
-                    :disabled="activeProduct === 7 && publicBenefitActiveStock <= 0"
-                    @click="confirm(currentSku, limiting, limit)"
-                >
-                    确定
-                </pl-button>
+                <div>
+                    <div :class="$style.buttons2" v-if="activeProduct === 4 && !currentSku.activityProduct">
+                        <button
+                            :class="$style.add"
+                            @click="$emit('addToCart', currentSku, limiting, limit)"
+                            :disabled="loading || allDisabled"
+                            :style="{'line-height': 80 / 7.5 + 'vw'}"
+                        >
+                            <span>加入购物车</span>
+                        </button>
+                        <button
+                            :class="$style.buy"
+                            @click="$emit('buyNow', currentSku, 1, limiting, limit)"
+                            :disabled="loading || allDisabled || disableConfirm"
+                            :style="{'line-height': 80 / 7.5 + 'vw'}"
+                        >
+                            <span>{{ confirmText }}</span>
+                        </button>
+                    </div>
+                    <pl-button
+                        type="warning"
+                        size="large"
+                        :loading="loading"
+                        :disabled="activeProduct === 7 && publicBenefitActiveStock <= 0"
+                        @click="confirm(currentSku, limiting, limit)"
+                        v-else
+                    >
+                        {{ (activeProduct === 4 && currentSku.activityProduct) ? `定金购买 ¥ ${currentSku.activityPrice}` : '确定' }}
+                    </pl-button>
+                </div>
             </template>
         </specification-pop>
 
@@ -498,6 +520,62 @@ export default {
         > button {
             flex: 1;
         }
+    }
+    .buttons2 {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      > button {
+        flex: 1;
+        width: 340px;
+        line-height: 34px;
+        padding: 6px 0;
+        color: #fff;
+        font-size: 30px;
+        border-radius: $--radius2;
+        &:nth-last-of-type(1) {
+          margin-left: 20px;
+        }
+      }
+      .add {
+        background-color: $--warning-color;
+        &:disabled {
+          color: rgba(255, 255, 255, .4);
+          .btn-text {
+            background-color: #e7e7e7;
+            color: #ccc;
+          }
+        }
+      }
+      .buy {
+        background-color: $--primary-color;
+        &:disabled {
+          color: #fea455;
+        }
+      }
+      .add, .buy {
+        height: 80px;
+        color: #fff;
+        font-size: 30px;
+        &:disabled {
+          color: rgba(255, 255, 255, .4);
+          .btn-text {
+            background-color: #e7e7e7;
+            color: #ccc;
+          }
+        }
+      }
+      .btn-text{
+        margin: 4px auto 0;
+        width: 100px;
+        text-align: center;
+        height: 28px;
+        line-height: 28px;
+        background: #ffffff;
+        border-radius: 304px;
+        font-size: 20px;
+        color: #FE7700;
+      }
     }
 
     .addToCart, .buyNowBtn {

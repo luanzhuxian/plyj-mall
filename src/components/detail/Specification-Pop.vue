@@ -25,10 +25,11 @@
                                     v-text="publicBenefitActivePrice"
                                 />
                                 <p
-                                    v-else-if="activeType === 1"
+                                    v-else-if="activeType === 1 || activeType === 4"
                                     :class="$style.price"
                                     v-text="currentSku.price"
                                 />
+                                <!-- 如果是预购的话，取当前选中规格的价格 -->
                                 <p
                                     v-else-if="activeType !== 1"
                                     :class="$style.price"
@@ -137,6 +138,12 @@
                                     </template>
                                 </p>
                             </div>
+                        </div>
+                    </div>
+                    <div :class="$style.bookPrice" v-if="activeProduct === 4 && currentSku.activityProduct">
+                        定金<span>{{ currentSku.activityPrice }}</span>
+                        <div class="deposit">
+                            抵<span>{{ currentSku.depositTotal }}</span>
                         </div>
                     </div>
                     <div :class="$style.footer" v-if="localCurrentSku.id" @click.capture="slotClickHandler">
@@ -529,6 +536,23 @@ export default {
             margin-right: 22px;
             object-fit: cover;
         }
+    }
+  }
+  .book-price {
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 500;
+    .deposit{
+      margin-left: 10px;
+    }
+    span {
+      color: #FE7700;
+      &:before {
+        content: '¥';
+        font-size: 24px;
+      }
     }
   }
   .base-info-right {
