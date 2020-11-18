@@ -59,20 +59,20 @@ export default {
                     width: '70',
                     path: 'NewYearActivity'
                 },
-                report: {
-                    main: '防疫情报站',
-                    sub: '众志成城抗击疫情',
-                    icon: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/document.png',
-                    width: '64',
-                    path: 'BattlefieldReport'
-                },
-                sign: {
-                    main: '抗疫签到',
-                    sub: '共携手抗战疫',
-                    icon: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/medicine.png',
-                    width: '64',
-                    path: 'EpidemicSignIn'
-                },
+                // report: {
+                //     main: '防疫情报站',
+                //     sub: '众志成城抗击疫情',
+                //     icon: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/document.png',
+                //     width: '64',
+                //     path: 'BattlefieldReport'
+                // },
+                // sign: {
+                //     main: '抗疫签到',
+                //     sub: '共携手抗战疫',
+                //     icon: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/medicine.png',
+                //     width: '64',
+                //     path: 'EpidemicSignIn'
+                // },
                 distribution: {
                     main: '全民来分销',
                     sub: 'Helper福利享不停',
