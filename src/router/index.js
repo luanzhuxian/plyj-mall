@@ -12,12 +12,7 @@ import Appointment from './appointment'
 import NotFound from '../views/404.vue'
 import Live from './live'
 import Activity from './activity'
-import Newcomers from './newcomers'
-import InviteNewcomers from './invitenewcomers'
-import roadlearning from './roadlearning'
-import NewYear from './new-year.js'
 import OnlineClassroom from './online-classroom.js'
-import LongmenFestival from './longmen-festival.js'
 const NetError = require('../views/Net-Error.vue')
 Vue.use(Router)
 
@@ -105,12 +100,7 @@ const allRoutes = [
     ...Appointment,
     ...Live,
     ...Activity,
-    ...Newcomers,
-    ...InviteNewcomers,
-    ...roadlearning,
-    ...NewYear,
-    ...OnlineClassroom,
-    ...LongmenFestival
+    ...OnlineClassroom
 ]
 
 export const router = new Router({
