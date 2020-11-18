@@ -10,7 +10,7 @@
         <div :class="$style.imgWrapper">
             <img v-imgError :src="data.imageUrl" alt="">
         </div>
-        <div :class="$style.countDownWrapper" v-if="size === 'small'">
+        <div :class="$style.countdownWrapper" v-if="size === 'small'">
             <span v-if="data.status === 0">距开始</span>
             <span v-if="data.status === 1">距结束</span>
             <span v-if="data.status === 2">已结束</span>
@@ -147,7 +147,7 @@ export default {
       margin-top: 20px;
       height: 208px;
     }
-    .count-down-wrapper {
+    .countdown-wrapper {
       display: flex;
       justify-content: space-around;
       align-items: center;

@@ -14,7 +14,7 @@
                     >
                         <div :class="$style.imgWrapper">
                             <img v-imgError :src="data.values[0].goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">
-                            <div :class="$style.countDownWrapper">
+                            <div :class="$style.countdownWrapper">
                                 <span :class="$style.text" v-if="data.values[0].goodsInfo.activityInfo.status === 0">距开始</span>
                                 <span :class="$style.text" v-if="data.values[0].goodsInfo.activityInfo.status === 1">距结束</span>
                                 <span :class="$style.text" v-if="data.values[0].goodsInfo.activityInfo.status === 2">已结束</span>
@@ -152,7 +152,7 @@ export default {
           margin-right: 16px;
           width: 280px;
           height: 188px;
-          .count-down-wrapper {
+          .countdown-wrapper {
             display: flex;
             justify-content: space-around;
             align-items: center;

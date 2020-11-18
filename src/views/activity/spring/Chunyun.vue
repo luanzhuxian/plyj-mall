@@ -1,7 +1,7 @@
 <template>
     <div :class="$style.chunyun" class="chunyun">
         <router-link :class="$style.chunyunBg" tag="div" :to="{ name: 'SpringPloughing' }">
-            <div :class="$style.countDownWrapper">
+            <div :class="$style.countdownWrapper">
                 <span v-if="data.values[0].status === 0">距活动开始：</span>
                 <span v-if="data.values[0].status === 1">距活动结束：</span>
                 <span v-if="data.values[0].status === 2">活动已结束</span>
@@ -167,7 +167,7 @@ export default {
         background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/c6bd4a18-d557-4dbd-9270-edab7a0f30b1.png') no-repeat center top;
         background-size: 100% auto;
         height: 682px;
-        .count-down-wrapper {
+        .countdown-wrapper {
             position: absolute;
             top: 293px;
             left: 50%;
@@ -269,7 +269,7 @@ export default {
 
 <style lang="scss" scoped>
 .chunyun {
-    ::v-deep .count-down > .time > span {
+    ::v-deep .countdown > .time > span {
         padding: 0 8px;
         font-size: 24px;
         line-height: 40px;

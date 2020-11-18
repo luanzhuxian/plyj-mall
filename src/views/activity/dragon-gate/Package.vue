@@ -22,7 +22,7 @@
                                 </div>
                                 <div :class="$style.imgWrapper">
                                     <img :src="combination.imageUrl + '?x-oss-process=style/thum-middle'" alt="">
-                                    <div :class="$style.countDownWrapper">
+                                    <div :class="$style.countdownWrapper">
                                         <span v-if="combination.status === 0">距开始</span>
                                         <span v-if="combination.status === 1">距结束</span>
                                         <span v-if="combination.status === 2">已结束</span>
@@ -208,7 +208,7 @@ export default {
                 object-fit: cover;
             }
         }
-        .count-down-wrapper {
+        .countdown-wrapper {
             display: flex;
             justify-content: space-around;
             align-items: center;

@@ -134,7 +134,7 @@ export default {
 </style>
 <style lang="scss" scoped>
 .item {
-  ::v-deep .count-down {
+  ::v-deep .countdown {
     font-size: 26px;
   }
 }

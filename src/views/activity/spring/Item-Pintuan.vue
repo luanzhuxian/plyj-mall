@@ -15,7 +15,7 @@
                 {{ `${data.goodsInfo.activityInfo.number}人参团` }}
             </span>
         </div>
-        <div :class="$style.countDownWrapper">
+        <div :class="$style.countdownWrapper">
             <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 0">距开始：</span>
             <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 1">距结束：</span>
             <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 2">已成功</span>
@@ -120,7 +120,7 @@ export default {
       color: #724E12;
       @include elps();
     }
-    .count-down-wrapper {
+    .countdown-wrapper {
       position: absolute;
       top: -32px;
       right: 0px;
@@ -219,7 +219,7 @@ export default {
 </style>
 <style lang="scss" scoped>
 .item {
-    ::v-deep .count-down {
+    ::v-deep .countdown {
     font-size: 26px;
   }
 }
