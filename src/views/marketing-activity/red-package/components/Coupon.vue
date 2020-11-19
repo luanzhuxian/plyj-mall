@@ -33,7 +33,7 @@
                         {{ '威巴克专属' }}
                     </p>
                 </div>
-                <button v-if="false">20元抢购</button>
+                <button v-if="true">20元抢购</button>
                 <!-- <button v-else-if="true">立即领取</button> -->
                 <!-- <button v-else-if="true" :class="$style.disabled">活动结束</button> -->
             </div>
@@ -185,7 +185,7 @@ export default {
     }
     > button {
         margin-right: 40px;
-        width: 142px;
+        padding: 0 20px;
         height: 44px;
         line-height: 44px;
         text-align: center;
