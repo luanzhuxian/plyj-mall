@@ -12,7 +12,6 @@ import PenglaiUI from './components/penglai-ui'
 import VueLazyload from 'vue-lazyload'
 import VueClipboard from 'vue-clipboard2'
 import filters from './filter'
-import animated from 'animate.css'
 import './assets/css/quill.css'
 import './assets/css/fonts.css'
 import PlSvg from './components/common/Pl-Svg.vue'
@@ -29,7 +28,6 @@ Vue.use(VueLazyload, {
     lazyComponent: true,
     throttleWait: 150
 })
-Vue.use(animated)
 Vue.use(VueClipboard)
 Vue.component('pl-svg', PlSvg)
 
