@@ -143,9 +143,6 @@ export default {
     created () {
         console.log('created', this.id)
     },
-    activited  () {
-        console.log('activited')
-    },
     methods: {
         getDuration () {
             return Date.now().valueOf() - 1599999999999
@@ -241,11 +238,13 @@ export default {
         }
     }
 }
+
 .container {
     position: relative;
     box-sizing: border-box;
-    padding: 478px 24px 100px;
+    padding: 478px 24px 80px;
 }
+
 .logo-wrapper {
     position: absolute;
     top: 0;
@@ -262,19 +261,18 @@ export default {
         overflow: hidden;
     }
 }
+
 .top-btn-wrapper {
     position: absolute;
     top: 26px;
     right: 0;
     width: 120px;
-    border-radius: 48px 0px 0px 48px;
-    overflow: hidden;
-}
-.top-btn-wrapper {
     height: 48px;
     line-height: 48px;
     text-align: center;
     background: #000000;
+    border-radius: 48px 0px 0px 48px;
+    overflow: hidden;
     opacity: .5;
     font-size: 22px;
     color: #FFFFFF;
@@ -412,7 +410,6 @@ export default {
             }
         }
     }
-
 }
 
 </style>
