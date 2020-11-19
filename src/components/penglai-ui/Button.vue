@@ -75,6 +75,7 @@ export default {
     border: none;
     outline: none;
     text-align: center;
+      box-sizing: border-box;
     span {
       display: inline-block;
       vertical-align: bottom;
@@ -160,7 +161,7 @@ export default {
     &__mini {
       padding: 0 18px;
       height: 40px;
-      font-size: 20px;
+      font-size: 16px;
       border-radius: 10px;
       &.round {
         border-radius: 20px;
@@ -178,9 +179,10 @@ export default {
     }
     /* small */
     &__small {
-      padding: 0 14px;
-      line-height: 44px;
-      font-size: 24px;
+      padding: 0 22px;
+      line-height: 50px;
+        height: 50px;
+      font-size: 22px;
       border-radius: 10px;
       &:nth-of-type(n + 1) {
         margin-right: 10px;
@@ -200,8 +202,9 @@ export default {
     }
     /* middle */
     &__middle {
-      padding: 0 22px;
+      padding: 0 32px;
       line-height: 60px;
+        height: 60px;
       font-size: 28px;
       border-radius: 12px;
       &:nth-of-type(n + 1) {
@@ -223,6 +226,7 @@ export default {
     &__large {
       width: 100%;
       height: 80px;
+        line-height: 80px;
       font-size: 28px;
       border-radius: 20px;
       text-align: center;
@@ -257,6 +261,7 @@ export default {
     &__huge {
       width: 100%;
       height: 108px;
+        line-height: 108px;
       font-size: 36px;
       border-radius: 20px;
       text-align: center;

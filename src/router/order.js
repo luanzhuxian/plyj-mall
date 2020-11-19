@@ -28,6 +28,15 @@ export default [
         }
     },
     {
+        path: '/my/orders/red-packet-detail/:orderId',
+        name: 'RedPacketOrderDetail',
+        component: () => import('../views/my/order/Red-Packet-Detail.vue'),
+        props: true,
+        meta: {
+            title: '订单详情'
+        }
+    },
+    {
         path: '/my/orders/comment/:orderId',
         name: 'CommentOrder',
         component: () => import('../views/my/order/Comment.vue'),
