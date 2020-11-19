@@ -3,7 +3,7 @@
         <div :class="$style.background">
             <div :class="$style.container">
                 <div :class="$style.topBtnWrapper">
-                    <div :class="$style.topBtn">使用说明</div>
+                    <div :class="$style.topBtn" @click="$router.push({ name: 'RedPackageIntro' })">使用说明</div>
                 </div>
                 <div :class="$style.subtitle">
                     小金额 大额券 边逛边优惠
