@@ -7,13 +7,13 @@
         >
             <pl-fields
                 size="middle"
-                text="奖学金（红包）"
-                icon="icon-RedEnvelope"
-                :icon-gap="12"
-                show-right-icon
                 :right-text="!currentRedEnvelope.id ? '有可用' : '-¥' + currentRedEnvelope.amount"
-                left-text-weight="bold"
-            />
+            >
+                <div>
+                    <pl-svg class="mr-10" name="icon-RedEnvelope" width="40" :vertical-align="-8" />
+                    <span>奖学金（红包）</span>
+                </div>
+            </pl-fields>
         </div>
         <pl-popup
             :show.sync="showRedEnvelopePopup"
@@ -115,7 +115,7 @@ export default {
 <style module lang="scss">
     .item-selector {
         margin-bottom: 20px;
-        padding-left: 24px;
+        padding: 0 24px;
         background-color: #fff;
         border-radius: 20px;
         overflow: hidden;

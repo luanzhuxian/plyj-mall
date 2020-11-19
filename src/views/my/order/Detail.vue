@@ -238,16 +238,12 @@
 
         <!-- 实体订单-用户信息 -->
         <div :class="[$style.panel, $style.customBlockField]" v-if="detail.orderType === orderTypeKeyMap.PHYSICAL_GOODS && studentInfo.length">
-            <pl-fields
-                size="middle"
-                text="用户信息"
-                icon="icon-user-7bd73"
-                title-color="#F2B036"
-                :icon-width="40"
-                :icon-gap="12"
-                left-text-weight="bold"
-            >
-                <div :class="$style.detail">
+            <pl-fields size="middle">
+                <div>
+                    <pl-svg class="mr-10" name="icon-user-7bd73" width="40" :vertical-align="-8" />
+                    <span>用户信息</span>
+                </div>
+                <div :class="$style.detail" slot="collapse">
                     <div :class="$style.item" v-for="(item, i) of studentInfo[0]" :key="i">
                         <span>{{ item.fieldName }}：</span>
                         <span v-if="item.fieldValue">{{ item.fieldValue }}</span>
@@ -260,17 +256,16 @@
         <!-- 虚拟订单-学员信息 -->
         <template v-if="needCodeOrderTypeList.includes(detail.orderType) && studentInfo.length">
             <div :class="[$style.panel, $style.customBlockField]" v-for="(studentItem, i) of studentInfo" :key="i">
-                <pl-fields
-                    size="middle"
-                    :text="`学员信息${i + 1}`"
-                    :right-text="!isRefundsFinalStage && ([orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status) || (detail.paymentMethod === 1 && orderStatuskeyMap.WAIT_PAY_TAIL_MONEY === detail.status)) && i < redeemCodeModels.length && redeemCodeModels[i].code ? `核销码：${localSeparator(redeemCodeModels[i].code,' ', 4)}`: ''"
-                    icon="icon-name-card"
-                    title-color="#F2B036"
-                    :icon-width="40"
-                    :icon-gap="12"
-                    left-text-weight="bold"
-                >
-                    <div :class="$style.detail">
+                <pl-fields size="middle">
+                    <div>
+                        <pl-svg class="mr-10" name="icon-name-card" width="40" />
+                        <span v-text="`学员信息${i + 1}`" />
+                    </div>
+                    <span
+                        slot="right-content"
+                        v-text="!isRefundsFinalStage && ([orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status) || (detail.paymentMethod === 1 && orderStatuskeyMap.WAIT_PAY_TAIL_MONEY === detail.status)) && i < redeemCodeModels.length && redeemCodeModels[i].code ? `核销码：${localSeparator(redeemCodeModels[i].code,' ', 4)}`: ''"
+                    />
+                    <div :class="$style.detail" slot="collapse">
                         <div :class="$style.item" v-for="(item, j) of studentItem" :key="j">
                             <span>{{ item.fieldName }}：</span>
                             <span v-if="item.fieldValue">{{ item.fieldValue }}</span>
@@ -283,15 +278,12 @@
 
         <!-- 联系人信息 -->
         <div :class="[$style.panel, $style.contact]" v-if="detail.orderType !== orderTypeKeyMap.PHYSICAL_GOODS && receiverModel.name && receiverModel.mobile">
-            <pl-fields
-                size="middle"
-                text="联系人信息"
-                icon="icon-contact"
-                :icon-width="40"
-                :icon-gap="12"
-                left-text-weight="bold"
-            >
-                <div :class="$style.contactDetail">
+            <pl-fields size="middle">
+                <div>
+                    <pl-svg class="mr-10" name="icon-contact" width="40" />
+                    <span>联系人信息</span>
+                </div>
+                <div :class="$style.contactDetail" slot="collapse">
                     <span class="fz-28" v-text="receiverModel.name" />
                     <span class="fz-28">
                         {{ receiverModel.mobile | formatAccount }}
@@ -1184,9 +1176,9 @@ export default {
   }
   /** 用户信息 **/
   .custom-block-field {
-    padding-left: 24px;
+    padding: 0 24px;
     .detail {
-      padding: 14px 24px 24px 0;
+      padding: 14px 0;
       .item {
         display: flex;
         justify-content: space-between;

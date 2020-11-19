@@ -41,7 +41,6 @@
                 text="快递公司："
                 :right-text="form.expressName || '请选择'"
                 right-text-weight="bold"
-                show-right-icon
                 @click="isPickerShow=true"
             />
             <pl-form-item>

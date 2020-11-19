@@ -25,28 +25,24 @@
         </div>
 
         <div :class="$style.set">
-            <pl-fields
-                text="我的地址"
-                icon="icon-my-address"
-                :icon-gap="24"
-                :icon-width="40"
-                color="#387af6"
-                :route="{ name: 'Address' }"
-            />
-            <pl-fields
-                text="我的发票"
-                icon="icon-my-invoice"
-                :icon-width="40"
-                :icon-gap="24"
-                :route="{ name: 'Invoice' }"
-            />
-            <pl-fields
-                text="学员管理"
-                icon="icon-student-manage"
-                :icon-width="40"
-                :icon-gap="24"
-                :route="{ name: 'StudentList' }"
-            />
+            <pl-fields :route="{ name: 'Address' }">
+                <div>
+                    <pl-svg class="mr-24" name="icon-my-address" width="40" :vertical-align="-8" />
+                    <span>我的地址</span>
+                </div>
+            </pl-fields>
+            <pl-fields :route="{ name: 'Invoice' }">
+                <div>
+                    <pl-svg class="mr-24" name="icon-my-invoice" width="40" :vertical-align="-8" />
+                    <span>我的发票</span>
+                </div>
+            </pl-fields>
+            <pl-fields :route="{ name: 'StudentList' }">
+                <div>
+                    <pl-svg class="mr-24" name="icon-student-manage" width="40" :vertical-align="-8" />
+                    <span>学员管理</span>
+                </div>
+            </pl-fields>
         </div>
     </div>
 </template>
@@ -118,7 +114,7 @@ export default {
     .set {
         width: 670px;
         margin: 28px auto;
-        padding-left: 28px;
+        padding: 0 28px;
         border-radius: $--radius1;
         overflow: hidden;
         background-color: #fff;

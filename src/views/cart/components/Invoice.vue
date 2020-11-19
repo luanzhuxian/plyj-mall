@@ -2,17 +2,19 @@
     <div>
         <div
             v-if="totalAmount > 0 && activeProduct === 1 && showInvoiceSelector"
-            :class="$style.itemSelector" @click.capture="selectInvoice"
+            :class="$style.itemSelector"
+            @click.capture="selectInvoice"
         >
             <pl-fields
                 size="middle"
-                text="发票"
-                icon="icon-invoice"
-                :icon-gap="12"
-                show-right-icon
                 :right-text="disabled ? '不支持' : invioceType === 0 ? '不需要' : '纸质发票'"
                 left-text-weight="bold"
-            />
+            >
+                <div>
+                    <pl-svg class="mr-10" name="icon-invoice" width="40" :vertical-align="-8" />
+                    <span>发票</span>
+                </div>
+            </pl-fields>
         </div>
         <pl-popup :show.sync="showPopup">
             <div :class="$style.invioceBox">
@@ -129,7 +131,7 @@ export default {
 <style module lang="scss">
     .item-selector {
         margin-bottom: 20px;
-        padding-left: 24px;
+        padding: 0 24px;
         background-color: #fff;
         border-radius: 20px;
         overflow: hidden;

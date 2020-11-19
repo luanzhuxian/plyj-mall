@@ -3,14 +3,13 @@
         <div :class="$style.itemSelector" @click.capture="chooseContact">
             <pl-fields
                 size="middle"
-                text="联系人信息"
-                icon="icon-contact"
-                :icon-gap="12"
                 :right-text="contactInfoModel.name && contactInfoModel.mobile ? '已选择' : `未选择`"
-                show-right-icon
-                left-text-weight="bold"
             >
-                <div v-show="contactInfoModel.name && contactInfoModel.mobile" :class="$style.contactDetail">
+                <div>
+                    <pl-svg class="mr-10" name="icon-contact" width="40" :vertical-align="-8" />
+                    <span>联系人信息</span>
+                </div>
+                <div slot="collapse" v-show="contactInfoModel.name && contactInfoModel.mobile" :class="$style.contactDetail">
                     <span class="fz-28" v-text="contactInfoModel.name" />
                     <span class="fz-28" v-text="contactInfoModel.mobile" />
                 </div>
@@ -103,7 +102,7 @@ export default {
 <style module lang="scss">
     .item-selector {
         margin-bottom: 20px;
-        padding-left: 24px;
+        padding: 0 24px;
         background-color: #fff;
         border-radius: 20px;
         overflow: hidden;

@@ -22,19 +22,11 @@
                     class="right-text--bold"
                     text="服务类型："
                     :right-text="refundTypeMap[form.type] || '请选择'"
-                    show-right-icon
                     @click="chooseRefundType"
                 />
-                <!--<pl-fields
-                    text="货物状态："
-                    v-if="form.goodsType === orderTypeKeyMap.PHYSICAL_GOODS"
-                    show-right-icon
-                    @click="showGoodsType = true"
-                />-->
                 <pl-fields
                     :text="refundGoodsInfo.orderType === orderTypeKeyMap.PHYSICAL_GOODS ? '退货原因：' : '退款原因：'"
                     :right-text="form.reasonForReturn ? form.reasonForReturn : '请选择'"
-                    show-right-icon
                     @click="chooseRefundReason"
                 />
                 <div :class="$style.item">

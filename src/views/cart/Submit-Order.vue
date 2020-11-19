@@ -49,12 +49,15 @@
             >
                 <pl-fields
                     size="middle"
-                    text="普通快递"
-                    icon="icon-express"
-                    :icon-gap="12"
                     :right-text="freight ? '¥' + freight : '包邮'"
                     left-text-weight="bold"
-                />
+                    :can-click="false"
+                >
+                    <div>
+                        <pl-svg class="mr-10" name="icon-express" width="40" :vertical-align="-10" />
+                        <span>普通快递</span>
+                    </div>
+                </pl-fields>
             </div>
 
             <!--知识课程暂时不支持使用优惠券-->
@@ -90,7 +93,7 @@
             />
 
             <ContactInfo
-                v-if="!physicalProducts.length"
+                v-if="physicalProducts.length"
                 :physical-products="physicalProducts"
                 @change="contactInfoChange"
             />

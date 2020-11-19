@@ -12,19 +12,12 @@
         :disabled="disabled || loading"
         @click.stop="handleClick"
     >
+        <slot name="prefix" />
         <span>
-            <pl-svg
-                v-show="loading"
-                class="pl-button__loading"
-                name="icon-btn-loading"
-            />
-            <pl-svg
-                class="pl-button__prefix-icon"
-                v-if="prefixIcon"
-                :name="prefixIcon"
-            />
+            <i v-show="loading" class="yaji-icon icon-loading pl-button__loading" />
             <slot>{{ text }}</slot>
         </span>
+        <slot name="suffix" />
     </button>
 </template>
 
@@ -47,10 +40,6 @@ export default {
 
         // 是否朴素
         plain: Boolean,
-        prefixIcon: {
-            type: String,
-            default: ''
-        },
         text: {
             type: String,
             default: ''
@@ -161,6 +150,7 @@ export default {
     &__mini {
       padding: 0 18px;
       height: 40px;
+        line-height: 40px;
       font-size: 16px;
       border-radius: 10px;
       &.round {
@@ -171,10 +161,10 @@ export default {
         border-radius: 20px;
       }
       .pl-button__prefix-icon, .pl-button__loading {
-        width: 20px;
-        height: 20px;
-        vertical-align: -1px;
-        fill: currentColor;
+          font-size: 20px;
+          margin-right: 6px;
+        vertical-align: -4px;
+        color: currentColor;
       }
     }
     /* small */
@@ -194,10 +184,10 @@ export default {
         border-radius: 25px;
       }
       .pl-button__prefix-icon, .pl-button__loading {
-        width: 24px;
-        height: 24px;
-        vertical-align: -3px;
-        fill: currentColor;
+          font-size: 24px;
+          margin-right: 6px;
+          vertical-align: -4px;
+          color: currentColor;
       }
     }
     /* middle */
@@ -217,9 +207,10 @@ export default {
         border-radius: 31px;
       }
       .pl-button__prefix-icon, .pl-button__loading {
-        width: 26px;
-        height: 26px;
-        fill: currentColor;
+          font-size: 26px;
+          margin-right: 8px;
+          vertical-align: -4px;
+        color: currentColor;
       }
     }
     /* large */
@@ -231,27 +222,10 @@ export default {
       border-radius: 20px;
       text-align: center;
       .pl-button__prefix-icon, .pl-button__loading {
-        width: 35px;
-        height: 35px;
-        margin-right: 5px;
-        fill: currentColor;
-        vertical-align: -7px;
-      }
-      &.round {
-        border-radius: 40px;
-      }
-    }
-    &__squarelarge {
-      width: 100%;
-      height: 80px;
-      font-size: 28px;
-      text-align: center;
-      .pl-button__prefix-icon, .pl-button__loading {
-        width: 35px;
-        height: 35px;
-        margin-right: 5px;
-        fill: currentColor;
-        vertical-align: -7px;
+          font-size: 35px;
+        margin-right: 10px;
+        color: currentColor;
+        vertical-align: -8px;
       }
       &.round {
         border-radius: 40px;
@@ -266,11 +240,10 @@ export default {
       border-radius: 20px;
       text-align: center;
       .pl-button__prefix-icon, .pl-button__loading {
-        width: 35px;
-        height: 35px;
-        margin-right: 5px;
+          font-size: 35px;
+        margin-right: 10px;
         vertical-align: -5px;
-        fill: currentColor;
+        color: currentColor;
       }
     }
     /* larger */
@@ -290,8 +263,9 @@ export default {
     }
   }
 
-  .pl-button__loading {
-    animation: rotate 1s linear infinite;
+  .pl-button__loading:before {
+      display: inline-block;
+    animation: rotate 1.5s linear infinite;
   }
   @keyframes rotate {
     from { transform: rotate(0) }
