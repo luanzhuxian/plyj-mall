@@ -91,14 +91,27 @@ export default {
 .subtitle {
     position: absolute;
     top: 134px;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 36px;
+    color: #ffef7e;
 }
 .red-package {
     padding: 66px 20px 36px;
     // width: 100%;
     background: #FFFFFF;
     border-radius: 20px;
+    &-list {
+        // margin-top: 44px;
+        // padding: 0 20px;
+        &-item {
+            margin-top: 46px;
+            &:nth-of-type(1) {
+                margin-top: 0;
+            }
+        }
+    }
 }
 .button-wrapper {
     text-align: center;
