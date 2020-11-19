@@ -62,13 +62,9 @@ module.exports = {
             // 测试37 开发34 王恩74 牛昌昌92 张涛126 任钊64 杜花171 river 148 wilson 146
             '/apis': {
                 // target: 'https://yumall.youpenglai.com'
-                target: 'https://mall.youpenglai.com'
-                // target: `http://192.168.50.${ SERVER || 134 }`
+                // target: 'https://mall.youpenglai.com'
+                target: `http://192.168.50.${ SERVER || 134 }`
                 // target: 'http://192.168.255.14'
-            },
-            '/live/': {
-                // target: 'http://mall.youpenglai.com'
-                target: 'http://api.polyv.net'
             }
         },
         // 禁止检查域名

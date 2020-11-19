@@ -1,18 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import my from './my'
-import classify from './classify'
-import home from './home'
-import yaji from './yaji'
-import detail from './detail'
-import order from './order'
-import setting from './setting'
-import Cart from './cart'
-import Appointment from './appointment'
 import NotFound from '../views/404.vue'
-import Live from './live'
-import Activity from './activity'
-import OnlineClassroom from './online-classroom.js'
+import { importFiles } from '../assets/js/util'
+
+const context = require.context('./', true, /\/((?!index).)+\.js$/)
+importFiles(context)
+
 const NetError = require('../views/Net-Error.vue')
 Vue.use(Router)
 
@@ -85,28 +78,14 @@ export const routes = [
         meta: {
             title: '无网络'
         }
-    }
-]
-const allRoutes = [
-    ...routes,
-    ...home,
-    ...my,
-    ...classify,
-    ...yaji,
-    ...detail,
-    ...order,
-    ...setting,
-    ...Cart,
-    ...Appointment,
-    ...Live,
-    ...Activity,
-    ...OnlineClassroom
+    },
+    ...importFiles(context)
 ]
 
 export const router = new Router({
     mode: 'history',
     base: window.location.pathname.split('/')[1] || '',
-    routes: allRoutes,
+    routes,
     scrollBehavior (to, from, savedPosition) {
         return { x: 0, y: 0 }
     }
