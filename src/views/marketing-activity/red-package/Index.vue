@@ -22,6 +22,11 @@
                         </li>
                     </ul>
                 </section>
+
+                <section :class="$style.barrage">
+                    <Barrage :list="bulletList" :get-template="getBulletTemplate" />
+                </section>
+
                 <section :class="$style.redPackage">
                     <ul :class="$style.redPackageList">
                         <Coupon :class="$style.redPackageListItem" v-for="(item, index) of 3" :key="index" />
@@ -36,32 +41,43 @@
 </template>
 
 <script>
+import Barrage from '../longmen-festival/action/components/Barrage.vue'
 import Coupon from './components/Coupon.vue'
 
 const giftModel1 = {
-    img: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/gift.png',
+    img: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/奖品.png',
     name: '神秘大礼一',
     rule: '',
     isGift: false
 }
 
 const giftModel2 = {
-    img: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/gift.png',
+    img: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/奖品.png',
     name: '神秘大礼二',
     rule: '',
     isGift: false
 }
 
 const giftModel = {
-    img: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/gift.png',
+    img: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/奖品.png',
     name: '平衡车',
     rule: '抢券抵10000',
     isGift: true
 }
 
+const bulletModel = {
+    avatar: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/gift.png',
+    name: '张三',
+    phone: '13333331111',
+    donationAmount: '0.0001'
+}
+
+const bulletList = Array(10).fill(bulletModel)
+
 export default {
     name: 'RedPackage',
     components: {
+        Barrage,
         Coupon
     },
     props: {
@@ -72,7 +88,8 @@ export default {
     },
     data () {
         return {
-            giftList: []
+            giftList: [],
+            bulletList: []
         }
     },
     created () {
@@ -82,12 +99,84 @@ export default {
             giftModel,
             giftModel2
         ]
+        this.bulletList = Object.freeze(bulletList)
     },
     methods: {
+        getBulletTemplate (bullet, vm) {
+            const { avatar, name, phone } = bullet
+            const message = `${ name }****${ phone.slice(-4) }刚刚领取满${ 10 }元抵${ 100 }的储备金`
+            const template = `
+                <div class="my-bullet">
+                    <div class="my-bullet__avatar">
+                        <img src="${ avatar }" alt="${ name }">
+                    </div>
+                    <div class="my-bullet__message">
+                        ${ message }
+                    </div>
+                </div>
+            `
+            return template
+        },
         share () {}
     }
 }
 </script>
+
+<style lang="scss">
+.my-bullet {
+    position: absolute;
+    top: 0;
+    display: flex;
+    align-items: center;
+    height: 56px;
+    width: max-content;
+    animation: run 3s ease-out;
+    transform-origin: 0 0;
+    &__avatar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 56px;
+        height: 56px;
+        background: #FFFFFF;
+        border-radius: 50%;
+        overflow: hidden;
+        z-index: 99;
+        > img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+    &__message {
+        display: inline-block;
+        box-sizing: border-box;
+        padding: 0 26px 0 74px;
+        line-height: 56px;
+        background: #000000;
+        opacity: .7;
+        border-radius: 40px;
+        font-size: 20px;
+        color: #FFFFFF;
+    }
+
+    @keyframes run {
+        0% {
+            opacity: 0;
+            transform: translate3d(0px, 100px, 0px) scale(0.8);
+        }
+        50% {
+            opacity: 1;
+            transform: translate3d(0, 0, 0px) scale(1);
+        }
+        100% {
+            opacity: 0;
+            transform: translate3d(0, -100px, 0px) scale(1);
+        }
+    }
+}
+</style>
 
 <style lang="scss" module>
 .red-package-main {
@@ -197,6 +286,11 @@ export default {
 
         }
     }
+}
+
+.barrage {
+    margin: 50px 0 20px;
+    width: 100%;
 }
 
 .red-package {

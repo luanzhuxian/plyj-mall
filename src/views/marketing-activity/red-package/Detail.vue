@@ -45,6 +45,9 @@
                     {{ `144人已领取 仅剩10张` }}
                 </div>
                 <div :class="$style.mainWrapper">
+                    <section :class="$style.barrage">
+                        <Barrage :list="bulletList" :get-template="getBulletTemplate" />
+                    </section>
                     <!-- 红包 -->
                     <section :class="$style.redPackage">
                         <div :class="$style.redPackageHeader">
@@ -74,7 +77,7 @@
                             </PlForm>
                         </div>
                         <button :class="[$style.redPackageBtn, $style.disabled]" @click="check">
-                            <span v-if="true">仅需￥1  敬请期待</span>
+                            <span v-if="true" @click="onClick">仅需￥1  敬请期待</span>
                             <!-- <span v-else-if="">仅需￥1  立即领取</span>
                             <span v-else-if="">您已领取  立即查看</span>
                             <span v-else-if="">领取更多福利</span> -->
@@ -96,14 +99,25 @@
 </template>
 
 <script>
+import Barrage from '../longmen-festival/action/components/Barrage.vue'
 import Countdown from '../../activity/components/Countdown.vue'
 import Coupon from './components/Coupon.vue'
 import Product from './components/Product.vue'
 import { checkLength, isPhone } from '../../../assets/js/validate'
 
+const bulletModel = {
+    avatar: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/gift.png',
+    name: '张三',
+    phone: '13333331111',
+    donationAmount: '0.0001'
+}
+
+const bulletList = Array.from({ length: 10 }).fill(bulletModel)
+
 export default {
     name: 'RedPackageDetail',
     components: {
+        Barrage,
         Countdown,
         Coupon,
         Product
@@ -118,6 +132,7 @@ export default {
         return {
             backgroundId: 0,
             status: 0,
+            bulletList: [],
             form: {
                 number: 1,
                 name: '',
@@ -142,8 +157,24 @@ export default {
     },
     created () {
         console.log('created', this.id)
+        this.bulletList = Object.freeze(bulletList)
     },
     methods: {
+        getBulletTemplate (bullet, vm) {
+            const { avatar, name, phone } = bullet
+            const message = `${ name }****${ phone.slice(-4) }刚刚领取满${ 10 }元抵${ 100 }的储备金`
+            const template = `
+                <div class="my-bullet">
+                    <div class="my-bullet__avatar">
+                        <img src="${ avatar }" alt="${ name }">
+                    </div>
+                    <div class="my-bullet__message">
+                        ${ message }
+                    </div>
+                </div>
+            `
+            return template
+        },
         getDuration () {
             return Date.now().valueOf() - 1599999999999
         },
@@ -162,10 +193,117 @@ export default {
         check () {
             const result = this.$refs.form.validate()
             console.log(result)
+        },
+        async onClick () {
+            try {
+                const Image = this.$createElement('img', {
+                    attrs: {
+                        src: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/弹框1.png'
+                    }
+                })
+                const Text1 = this.$createElement('p', '领取成功，可在订单或')
+                const Text2 = this.$createElement('p', '领券中心查看')
+                // const Text3 = this.$createElement('p', '下手慢了，去看看其他活动吧')
+                const Content = this.$createElement(
+                    'div', {
+                        class: 'message-box__content'
+                    },
+                    [Image, Text1, Text2]
+                )
+
+                await this.$confirm({
+                    message: '恭喜您',
+                    slot: Content,
+                    confirmText: '查看活动',
+                    hasCancelButton: false,
+                    confirmStyle: {
+                        color: '#F23D00',
+                        borderTop: '2px solid #E7E7E7'
+                    }
+                })
+            } catch (error) {
+                throw error
+            }
         }
     }
 }
 </script>
+
+<style lang="scss">
+.my-bullet {
+    position: absolute;
+    top: 0;
+    display: flex;
+    align-items: center;
+    height: 56px;
+    width: max-content;
+    animation: run 3s ease-out;
+    transform-origin: 0 0;
+    &__avatar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 56px;
+        height: 56px;
+        background: #FFFFFF;
+        border-radius: 50%;
+        overflow: hidden;
+        z-index: 99;
+        > img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+    &__message {
+        display: inline-block;
+        box-sizing: border-box;
+        padding: 0 26px 0 74px;
+        line-height: 56px;
+        background: #000000;
+        opacity: .7;
+        border-radius: 40px;
+        font-size: 20px;
+        color: #FFFFFF;
+    }
+
+    @keyframes run {
+        0% {
+            opacity: 0;
+            transform: translate3d(0px, 100px, 0px) scale(0.8);
+        }
+        50% {
+            opacity: 1;
+            transform: translate3d(0, 0, 0px) scale(1);
+        }
+        100% {
+            opacity: 0;
+            transform: translate3d(0, -100px, 0px) scale(1);
+        }
+    }
+}
+
+.message {
+    padding: 0;
+}
+.message-box__content {
+    text-align: center;
+    padding-bottom: 40px;
+    > img {
+        width: 207;
+        height: 182;
+        object-fit: cover;
+        margin-bottom: 18px;
+    }
+    > p {
+        font-size: 30px;
+        line-height: 44px;
+        color: #333333;
+    }
+}
+</style>
 
 <style lang="scss">
 .red-package-detail {
@@ -312,6 +450,11 @@ export default {
     line-height: 32px;
     color: #FFFFFF;
     opacity: 0.8;
+}
+
+.barrage {
+    margin: 50px 0 60px;
+    width: 100%;
 }
 
 .red-package {

@@ -13,6 +13,19 @@ export default {
             default () {
                 return []
             }
+        },
+        getTemplate: {
+            type: Function,
+            default (item, vm) {
+                return `
+                    <div style="--duration: ${ vm.duration }s; --position: ${ -200 }px" class="${ vm.$style.item }" >
+                        <img class="${ vm.$style.via }" src="${ item.headImgUrl }" alt="">
+                            ${ item.name.split('')[0] } **
+                            已捐赠 ${ item.donationAmount } 元
+                        </div>
+                    </div>
+                `
+            }
         }
     },
     data () {
@@ -37,14 +50,7 @@ export default {
                 return
             }
             const item = this.list[this.index]
-            const template = `
-                <div style="--duration: ${ this.duration }s; --position: ${ -200 }px" class="${ this.$style.item }" >
-                    <img class="${ this.$style.via }" src="${ item.headImgUrl }" alt="">
-                        ${ item.name.split('')[0] } **
-                        已捐赠 ${ item.donationAmount } 元
-                    </div>
-                </div>
-            `
+            const template = this.getTemplate(item, this)
             const node = document.createElement('div')
             node.innerHTML = template
             const child = node.children[0]
