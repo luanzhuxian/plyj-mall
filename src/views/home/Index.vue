@@ -1,6 +1,18 @@
 <template>
     <div :class="$style.home">
         <template v-if="allLoaded">
+            <h3
+                style="font-size: 100px"
+                @click="$router.push({ name: 'RedPackage', params: { activityId: '123123' }})"
+            >
+                main
+            </h3>
+            <h3
+                style="font-size: 100px"
+                @click="$router.push({ name: 'RedPackageDetail', params: { id: '456' }})"
+            >
+                detail
+            </h3>
             <template-b
                 v-if="~[3, 4].indexOf(type)"
                 :type="type"
