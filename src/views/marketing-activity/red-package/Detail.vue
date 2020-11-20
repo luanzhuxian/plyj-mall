@@ -46,7 +46,7 @@
                 </div>
                 <div :class="$style.mainWrapper">
                     <section :class="$style.barrage">
-                        <Barrage :list="bulletList" :get-template="getBulletTemplate" />
+                        <Barrage ref="barrage" :list="bulletList" :get-template="getBulletTemplate" />
                     </section>
                     <!-- 红包 -->
                     <section :class="$style.redPackage">
@@ -158,6 +158,9 @@ export default {
     created () {
         console.log('created', this.id)
         this.bulletList = Object.freeze(bulletList)
+    },
+    activated () {
+        this.$refs.barrage.run()
     },
     methods: {
         getBulletTemplate (bullet, vm) {
