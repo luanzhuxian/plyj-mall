@@ -124,7 +124,7 @@ export default {
                 slidesPerView: 4,
                 spaceBetween: 24,
                 autoplay: {
-                    // delay: 1000,
+                    delay: 1000,
                     disableOnInteraction: false,
                     stopOnLast: false
                 },
@@ -360,6 +360,7 @@ export default {
     }
     &.small {
         .gift-list-item {
+            margin-top: 10px;
             width: 140px;
             height: 180px;
             .img-wrapper {
@@ -414,6 +415,7 @@ export default {
                 }
             }
             &.small {
+                margin-top: 10px;
                 width: 140px;
                 height: 180px;
                 .img-wrapper {
