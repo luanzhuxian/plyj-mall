@@ -124,7 +124,7 @@ export default {
         Product
     },
     props: {
-        id: {
+        couponId: {
             type: String,
             default: ''
         }
@@ -157,7 +157,7 @@ export default {
         }
     },
     created () {
-        console.log('created', this.id)
+        console.log('created', this.couponId)
         this.bulletList = Object.freeze(bulletList)
     },
     activated () {

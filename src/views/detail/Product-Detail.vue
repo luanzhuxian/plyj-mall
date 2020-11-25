@@ -378,7 +378,7 @@ import Instructions from '../../components/detail/Instructions.vue'
 import Field from '../../components/detail/Field.vue'
 import CounponField from './components/Counpon-Field.vue'
 import SpecificationPop from '../../components/detail/Specification-Pop.vue'
-import youLike from './../home/components/YouLike.vue'
+import YouLike from './../home/components/YouLike.vue'
 import SoldOut from './Sold-Out.vue'
 import Comments from './Comments.vue'
 import CountDown from '../../components/product/Count-Down.vue'
@@ -429,7 +429,7 @@ export default {
         BuyNow,
         DetailInfoBox,
         SpecificationPop,
-        youLike,
+        YouLike,
         SoldOut,
         Comments,
         UsefulLife,

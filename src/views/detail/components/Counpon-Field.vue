@@ -12,7 +12,12 @@
                 :key="i"
                 :class="$style.coupontItem"
             >
-                满{{ item.useLimitAmount }}减{{ item.amount }}
+                <template v-if="item.couponType === 3">
+                    福利红包抵{{ item.amount }}
+                </template>
+                <template v-else>
+                    满{{ item.useLimitAmount }}减{{ item.amount }}
+                </template>
             </span>
         </Field>
 
@@ -38,6 +43,7 @@
                             :receive-count="item.count"
                             :coupon-type="item.couponType"
                             :is-claimed="!!item.isClaimed"
+                            :coupon-id="item.id"
                             :price="Number(item.price)"
                             @couponClick="couponClick(item.id)"
                         />

@@ -208,6 +208,12 @@ export default {
     },
     methods: {
         async couponClick (e) {
+            if (this.isPriceShow && this.couponId) {
+                return this.$router.push({
+                    name: 'RedPackageDetail',
+                    params: { couponId: this.couponId }
+                })
+            }
             if (this.isAvailableStatus && this.canGoClassify) {
                 // 去使用，进入可使用此优惠券的商品列表中
                 this.$router.push({
