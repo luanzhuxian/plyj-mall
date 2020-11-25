@@ -45,6 +45,7 @@
                     {{ `144人已领取 仅剩10张` }}
                 </div>
                 <div :class="$style.mainWrapper">
+                    <!-- 弹幕 -->
                     <section :class="$style.barrage">
                         <Barrage ref="barrage" :list="bulletList" :get-template="getBulletTemplate" />
                     </section>

@@ -5,14 +5,15 @@
                 <div :class="$style.topBtnWrapper">
                     <div :class="$style.topBtn" @click="$router.push({ name: 'RedPackageIntro' })">使用说明</div>
                 </div>
+                <!-- 商品轮播 -->
                 <section :class="$style.product" v-if="productList && productList.length">
                     <ProductSwiper :list="productList" />
                 </section>
-
+                <!-- 弹幕 -->
                 <section :class="$style.barrage">
-                    <Barrage ref="barrage" :list="bulletList" :get-template="getBulletTemplate" />
+                    <Barrage ref="barrage" :list="bulletList" :template="getBulletTemplate" />
                 </section>
-
+                <!-- 红包 -->
                 <section :class="$style.redPackage">
                     <ul :class="$style.redPackageList">
                         <Coupon :class="$style.redPackageListItem" v-for="(item, index) of 3" :key="index" />
@@ -100,7 +101,6 @@ export default {
         this.$refs.barrage.run()
     },
     methods: {
-
         getBulletTemplate (bullet, vm) {
             const { avatar, name, phone } = bullet
             const message = `${ name }****${ phone.slice(-4) }刚刚领取满${ 10 }元抵${ 100 }的储备金`

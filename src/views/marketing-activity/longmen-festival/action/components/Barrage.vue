@@ -14,7 +14,7 @@ export default {
                 return []
             }
         },
-        getTemplate: {
+        template: {
             type: Function,
             default (item, vm) {
                 return `
@@ -50,7 +50,7 @@ export default {
                 return
             }
             const item = this.list[this.index]
-            const template = this.getTemplate(item, this)
+            const template = this.template(item, this)
             const node = document.createElement('div')
             node.innerHTML = template
             const child = node.children[0]
