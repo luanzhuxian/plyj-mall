@@ -24,7 +24,7 @@
                         'is-collapse': canCollapse && collapse,
                         'no-collapse': canCollapse && !collapse
                     }"
-                    class="pl-fields__click-icon yaji-icon icon-arrowright"
+                    class="pl-fields__click-icon mall-ui-icon mall-ui-arrowright"
                 />
             </div>
         </div>

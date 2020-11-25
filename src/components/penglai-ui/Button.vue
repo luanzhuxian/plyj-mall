@@ -14,7 +14,7 @@
     >
         <slot name="prefix" />
         <span>
-            <i v-show="loading" class="yaji-icon icon-loading pl-button__loading" />
+            <i v-show="loading" class="mall-ui-icon mall-ui-loading pl-button__loading" />
             <slot>{{ text }}</slot>
         </span>
         <slot name="suffix" />

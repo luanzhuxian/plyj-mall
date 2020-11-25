@@ -6,26 +6,17 @@
             v-show="show"
             :style="{'--animationDuration': animationDuration}"
         >
-            <pl-svg
-                v-if="type === 'error'"
-                class="pl-toast-icon"
-                name="icon-shibai"
-                fill="#fff"
-                width="72"
-            />
-            <pl-svg
+            <i
                 v-if="type === 'success'"
-                class="pl-toast-icon"
-                name="icon-chenggong"
-                fill="#fff"
-                width="72"
+                class="pl-toast-icon mall-ui-icon mall-ui-success"
             />
-            <pl-svg
+            <i
+                v-if="type === 'error'"
+                class="pl-toast-icon mall-ui-icon mall-ui-shibai"
+            />
+            <i
                 v-if="type === 'warning'"
-                class="pl-toast-icon"
-                name="icon-warning"
-                fill="#fff"
-                width="72"
+                class="pl-toast-icon mall-ui-icon mall-ui-jinggao"
             />
             <div class="toast-message">
                 <p v-html="message" />
@@ -85,6 +76,9 @@ export default {
         &.pl-toast-visible {
             /*animation: pl-toast-animation .4s;*/
             /*animation-fill-mode: forwards;*/
+        }
+        &-icon {
+            font-size: 72px;
         }
 
         .toast-message {
