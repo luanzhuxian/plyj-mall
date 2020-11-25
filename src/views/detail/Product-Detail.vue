@@ -75,9 +75,9 @@
                     <!-- 公益棕信息 -->
                     <CharityPrice :detail="detail" :charity-members="charityMembers" v-else-if="productActive === 7 && preActivity !== 0" />
                     <!-- 价格 润笔 购买数量，关注人数 登信息 -->
-                    <info-header :detail="detail" v-else />
+                    <InfoHeader :detail="detail" v-else />
                     <!-- 开售倒计时 -->
-                    <count-down
+                    <CountDown
                         :class="$style.countDown"
                         v-if="detail.shoppingStatus === 1 && (activeProduct === 1 || !preActivity)"
                         size="large"
@@ -93,7 +93,7 @@
                     <Tags :tags="detail.labelModels" />
                     <!-- 使用期限(注意：预购商品取 activityProductModel.validityPeriodStar，表示预购核销时间) -->
                     <!-- 新春团购或新春预购并且活动进行中 走 activityProductModel (注意：双十二团购无核销时间) -->
-                    <useful-life
+                    <UsefulLife
                         v-if="productType === 'FORMAL_CLASS' || productType === 'EXPERIENCE_CLASS' || productType === 'VIRTUAL_GOODS'"
                         :start="([2,4].indexOf(activeProduct) !== -1 && preActivity === 2) ? (activeProduct === 2 && detail.activityProductModel.type !== '2019_02' ? detail.validityPeriodStart : detail.activityProductModel.validityPeriodStart) : detail.validityPeriodStart"
                         :end="([2,4].indexOf(activeProduct) !== -1 && preActivity === 2) ? (activeProduct === 2 && detail.activityProductModel.type !== '2019_02' ? detail.validityPeriodEnd : detail.activityProductModel.validityPeriodEnd) : detail.validityPeriodEnd"
@@ -101,7 +101,7 @@
                 </DetailInfoBox>
 
                 <!-- 选择优惠券 -->
-                <counpon-field
+                <CounponField
                     v-if="couponList.length && preActivity !== 2 && !~[5, 6].indexOf(productActive)"
                     :coupon-list="couponList"
                 />
@@ -180,7 +180,7 @@
                 </div>
 
                 <!--底部购买按钮  -->
-                <buy-now
+                <BuyNow
                     v-if="!~[5, 6].indexOf(productActive) && mchId"
                     type="warning"
                     ref="buyNow"
@@ -204,7 +204,7 @@
                 />
 
                 <!-- 详情页面选择规格 - 弹框 -->
-                <specification-pop
+                <SpecificationPop
                     :default-count="defaultCount"
                     :sku-list="detail.productSkuModels"
                     :sku-attr-list="detail.productAttributes"
@@ -297,17 +297,17 @@
                             </button>
                         </div>
                     </template>
-                </specification-pop>
+                </SpecificationPop>
 
                 <!-- 海报弹框 -->
-                <pl-mask :show.sync="showHaibao">
+                <PlMask :show.sync="showHaibao">
                     <div :class="$style.saveHaibaoContent">
                         <img :src="haibao" alt="">
                         <div :class="$style.saveButton">
                             长按识别或保存二维码，分享给朋友吧！
                         </div>
                     </div>
-                </pl-mask>
+                </PlMask>
 
                 <!-- 公益棕海报 -->
                 <CharityPoster
@@ -355,12 +355,12 @@
 
             <!-- 猜你喜欢 -->
             <div style="background-color: #f4f5f9;">
-                <you-like :product-id="productId" :is-my="true" />
+                <YouLike :product-id="productId" :is-my="true" />
             </div>
         </template>
 
         <!-- 骨架屏 -->
-        <skeleton v-else />
+        <Skeleton v-else />
     </div>
 </template>
 
@@ -377,12 +377,7 @@ import InfoHeader from '../../components/detail/Info-Header.vue'
 import Instructions from '../../components/detail/Instructions.vue'
 import Field from '../../components/detail/Field.vue'
 import CounponField from './components/Counpon-Field.vue'
-import { getProductDetail, getCouponInDetail } from '../../apis/product'
 import SpecificationPop from '../../components/detail/Specification-Pop.vue'
-import share from '../../assets/js/wechat/wechat-share'
-import { mapGetters, mapActions } from 'vuex'
-import { GET_CART_COUNT, SET_SHARE_ID } from '../../store/mutation-type'
-import { addToCart } from '../../apis/shopping-cart'
 import youLike from './../home/components/YouLike.vue'
 import SoldOut from './Sold-Out.vue'
 import Comments from './Comments.vue'
@@ -401,6 +396,11 @@ import Skeleton from './components/Skeleton.vue'
 import Tabs from './components/Tabs.vue'
 import Barrage from '../marketing-activity/longmen-festival/action/components/Barrage'
 import CharityPrice from './charity/Charity-Price'
+import share from '../../assets/js/wechat/wechat-share'
+import { mapGetters, mapActions } from 'vuex'
+import { getProductDetail, getCouponInDetail } from '../../apis/product'
+import { GET_CART_COUNT, SET_SHARE_ID } from '../../store/mutation-type'
+import { addToCart } from '../../apis/shopping-cart'
 import {
     getPublicBenefitStatistics,
     getPublicBenefitList
