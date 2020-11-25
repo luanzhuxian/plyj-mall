@@ -333,10 +333,11 @@ export default {
                 const arr = item.productSkuModels.filter(item => item.status === 1)
                 const priceList = arr.map(item => {
                     if (item.status === 1) {
-                        return Number(item.price)
+                        return Number(item.price) || 0
                     }
                     return 0
                 })
+                priceList.push(0)
                 item.price = Math.min(...priceList) || 0
             }
             this.prodList = list
