@@ -1,81 +1,54 @@
 <template>
-    <div :class="[$style.couponItem, status ? $style.unavailable : '']">
-        <!-- 根据优惠券类型显示图片，1-满减券 2-品类券 3-福利红包 -->
-        <img v-if="couponType === 1" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/full-coupon.png">
-        <img v-if="couponType === 2" src="https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/category-coupon.png">
-        <img v-if="couponType === 3" src="https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/red-package-bg.png">
-        <div :class="$style.wrap">
-            <div :class="$style.main">
-                <div :class="$style.couponItemLeft">
-                    <div :class="$style.leftTop">
-                        <div :class="[$style.couponPrice, amount > 999 ? $style.middle: '', amount > 9999 ? $style.large: '']" v-text="amount" />
-                        <div :class="[$style.couponDesc, amount > 999 ? $style.middle: '']">
-                            <div v-if="couponType === 3">满{{ full }}抵 {{ subtract }}</div>
-                            <div v-else>满{{ full }}减 {{ subtract }}</div>
-                            <div v-text="name" />
-                        </div>
-                    </div>
-                    <div :class="$style.lifeTime">
-                        <div>有效期：<i>{{ useStartTime | dateFormat('YYYY.MM.DD') }}~{{ useEndTime | dateFormat('YYYY.MM.DD') }}</i></div>
-                        <!-- 使用说明 -->
-                        <div
-                            v-show="instruction"
-                            :class="{
-                                [$style.instructionBtn]: true,
-                                [$style.red]: couponType === 1,
-                                [$style.yellow]: couponType === 2,
-                                [$style.orange]: couponType === 3
-                            }"
-                            @click="showInstruction = !showInstruction"
-                        >
-                            使用说明
-                            <pl-svg
-                                :class="{ [$style.showInstruction]: showInstruction }"
-                                name="icon-arrow-down"
-                                fill="#FFF"
-                                width="10"
-                            />
-                        </div>
+    <div
+        :class="[$style.couponItem, status ? $style.unavailable : '']"
+        :style="{ '--backgroundImage': `url(${ bg[couponType] })` }"
+    >
+        <!-- 根据优惠券类型显示图片，2-品类券 1-满减券 -->
+        <div :class="$style.main">
+            <div :class="$style.couponItemLeft">
+                <div :class="$style.leftTop">
+                    <div :class="[$style.couponPrice, amount > 999 ? $style.middle: '', amount > 9999 ? $style.large: '']" v-text="amount" />
+                    <div :class="[$style.couponDesc, amount > 999 ? $style.middle: '']">
+                        <div>满{{ full }}减 {{ subtract }}</div>
+                        <div v-text="name" />
                     </div>
                 </div>
-                <div
-                    v-if="isShowReceive"
-                    :class="$style.couponItemRight"
-                    @click.stop="couponClick"
-                >
-                    <div :class="$style.price" v-if="isPriceShow">{{ `￥${price}` }}</div>
-                    <div :class="$style.getNowWrapper">
-                        <div :class="$style.getNow">
-                            <!-- 根据是否可以去使用，目前只有我的卡券+提交订单显示'去使用'， 其他显示'立即领取' -->
-                            <span v-if="isAvailableStatus">
-                                去
-                                <br>
-                                使
-                                <br>
-                                用
-                            </span>
-                            <span v-else>
-                                <span :class="$style.overMax" v-if="isOverMax">
-                                    <span>
-                                        已达到
-                                        <br>
-                                        领用上限
-                                    </span>
-                                </span>
-                                <!-- 应当是能够显示立即领取的地方，都可能达到领取上限 -->
-                                <template v-else>
-                                    <span>
-                                        立即
-                                        <br>
-                                        领取
-                                    </span>
-                                </template>
-                            </span>
-                            <br>
-                        <!--TODO.当前不显用次数 <span v-if="!isAvailableStatus" :class="$style.receiveCount">{{ receiveCount ? `(${receiveCount}次)` : '' }}</span>-->
-                        </div>
-                        <pl-svg v-if="isAvailableStatus || (!isAvailableStatus && !isOverMax)" name="icon-right" fill="#fff" width="16" />
+                <div :class="$style.lifeTime">
+                    <div>有效期：<i>{{ useStartTime | dateFormat('YYYY-MM-DD') }}~{{ useEndTime | dateFormat('YYYY-MM-DD') }}</i></div>
+                    <!-- 使用说明 -->
+                    <div v-show="instruction" @click="showInstruction = !showInstruction">
+                        使用说明
+                        <pl-svg
+                            :class="{ [$style.showInstruction]: showInstruction }"
+                            name="icon-arrow-down"
+                            fill="#FFF"
+                            width="10"
+                        />
                     </div>
+                </div>
+            </div>
+            <div :class="$style.couponItemRight"
+                 v-if="isShowReceive"
+                 @click.stop="couponClick"
+            >
+                <div :class="$style.price" v-if="isPriceShow"> ￥{{ price }}</div>
+                <div :class="$style.ctrl">
+                    <!-- 根据是否可以去使用，目前只有我的卡券+提交订单显示'去使用'， 其他显示'立即领取' -->
+                    <!-- 应当是能够显示立即领取的地方，都可能达到领取上限 -->
+                    <div v-if="!isOverMax && !isAvailableStatus" :class="$style.rightText">
+                        <span>立即</span>
+                        <span>领取</span>
+                    </div>
+                    <div :class="$style.overMax" v-if="isOverMax && !isAvailableStatus">
+                        <span>已达到</span>
+                        <span>领用上限</span>
+                    </div>
+                    <div v-if="isAvailableStatus" :class="$style.rightText">
+                        <span>去</span>
+                        <span>使</span>
+                        <span>用</span>
+                    </div>
+                    <pl-svg v-if="!isPriceShow && (isAvailableStatus || (!isAvailableStatus && !isOverMax))" name="icon-right" fill="#fff" width="22" />
                 </div>
             </div>
         </div>
@@ -97,7 +70,13 @@ export default {
     name: 'CouponItem',
     data () {
         return {
-            showInstruction: false
+            showInstruction: false,
+            bg: [
+                null,
+                'https://mallcdn.youpenglai.com/static/mall/2.0.0/full-coupon.png',
+                'https://mallcdn.youpenglai.com/static/mall/2.0.0/category-coupon.png',
+                'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/red-package-bg.png'
+            ]
         }
     },
     deactivated () {
@@ -169,7 +148,7 @@ export default {
             default: 0
         },
 
-        // 优惠券类型 1：满减券 2：品类券 3：福利红包
+        // 优惠券类型 1：满减券 2：品类券 3: 福利红包
         couponType: {
             type: Number,
             default: 1
@@ -193,11 +172,6 @@ export default {
         isShowReceive: {
             type: Boolean,
             default: true
-        },
-
-        price: {
-            type: Number,
-            default: 0
         }
     },
     computed: {
@@ -255,30 +229,17 @@ export default {
     filter: grayscale(100%);
   }
   .coupon-item {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 32px;
-    width: 100%;
-    /*overflow: hidden;*/
-
-    > img {
       width: 100%;
-      min-height: 250px;
-    }
-    > .wrap {
-      position: absolute;
-      top: 20px;
-      width: 100%;
-      overflow: hidden;
+      margin-bottom: 32px;
       > .main {
-        width: 100%;
-        min-height: 240px;
-        height: max-content;
-        display: flex;
-        box-sizing: border-box;
+          width: 100%;
+          display: flex;
+          box-sizing: border-box;
+          overflow: hidden;
+          height: 222px;
+          background: var(--backgroundImage) no-repeat center center;
+          background-size: 100% 222px;
       }
-    }
   }
   .coupon-item-left {
     display: flex;
@@ -292,6 +253,7 @@ export default {
   }
   .coupon-price {
     margin-left: 80px;
+    line-height: 50px;
     font-size: 70px;
     color: #ED2E50;
 
@@ -345,93 +307,84 @@ export default {
   .life-time {
     display: flex;
     justify-content: space-between;
-    align-items: center;
     margin-top: 15px;
     margin-left: 50px;
     padding-right: 22px;
     color: #414141;
-    font-size: 20px;
+    font-size: 16px;
     line-height: 20px;
-  }
-.instruction-btn {
-    width: 118px;
-    font-size: 20px;
-    text-align: center;
-    color: #FFF;
-    border-radius: 14px;
-    padding: 3px 2px;
-    &.red {
-        background-color: #E82A4A;
-    }
-    &.yellow {
+    > div {
+      &:nth-last-of-type(1) {
+        width: 118px;
+        font-size: 20px;
+        text-align: center;
+        color: #FFF;
         background-color: #F9B20F;
-    }
-    &.orange {
-        background-color: #EF3D03;
-    }
-    > svg {
-        width: 18px;
-        line-height: 18px;
-        vertical-align: middle;
-        transform: rotate(0);
-        transition: transform .2s linear;
-        &.showInstruction {
+        border-radius: 14px;
+        padding: 3px 2px;
+        > svg {
+          width: 18px;
+          line-height: 18px;
+          vertical-align: middle;
+          transform: rotate(0);
+          transition: transform .2s linear;
+          &.showInstruction {
             transform: rotate(-180deg);
+          }
         }
+      }
     }
-}
+  }
   .coupon-item-right {
     position: relative;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+      flex-direction: column;
     align-items: center;
+      justify-content: center;
     width: 154px;
-    margin-top: -48px;
-    font-size: 32px;
-    color: #fff;
-    font-weight: bold;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.30);
-    .price {
-        position: relative;
-        left: -8px;
-    }
-    .get-now-wrapper {
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 4px;
-    }
-    .get-now {
-      position: relative;
+      .right-text {
+          display: flex;
+          flex-direction: column;
+          margin-right: 10px;
+          font-size: 34px;
+          color: #fff;
+          font-weight: bold;
+      }
       .receive-count {
-        position: absolute;
-        font-weight: normal;
-        width: 150px;
-      }
-
-      .over-max {
-        display: inline-block;
-        position: relative;
-        width: 110px;
-        height: 110px;
-        text-align: center;
-        background: rgba(139, 139, 139, 1);
-        border: 6px solid rgba(255, 255, 255, 1);
-        border-radius: 50%;
-        font-size: 20px;
-        color: rgba(255, 255, 255, 1);
-
-        > span {
           position: absolute;
-          top: 50%;
-          left: 15px;
-          transform: translateY(-50%);
-          word-break: keep-all;
-        }
+          font-weight: normal;
+          width: 150px;
       }
-    }
+      .ctrl {
+          display: flex;
+          align-items: center;
+      }
+      .price {
+          color: #fff;
+          font-size: 32px;
+          font-weight: bold;
+      }
+
+      /*.over-max {
+          display: inline-block;
+          position: relative;
+          width: 110px;
+          height: 110px;
+          text-align: center;
+          background: rgba(139, 139, 139, 1);
+          border: 6px solid rgba(255, 255, 255, 1);
+          border-radius: 50%;
+          font-size: 20px;
+          color: rgba(255, 255, 255, 1);
+
+          > span {
+              position: absolute;
+              top: 50%;
+              left: 15px;
+              transform: translateY(-50%);
+              word-break: keep-all;
+          }
+      }*/
   }
 
   /* 不可使用的状态，文字描述 */

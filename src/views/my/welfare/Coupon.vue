@@ -22,17 +22,41 @@
                     no-icon
                 >
                     <template>
-                        <div name="icon" :class="$style.noCouponIcon" v-if="couponList.length === 0">
+                        <div slot="icon">
                             <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/newCouponIcon.png" width="400" />
                         </div>
-                        <div v-for="item in couponList" :key="item.id"
+                        <pl-checkbox-group v-model="selectCouponList">
+                            <pl-checkbox
+                                v-for="item of couponList"
+                                :key="item.id"
+                                :data="item"
+                                :class="{ [$style.checkbox]: true, [$style.manage]: isManagementState }"
+                            >
+                                <CouponItem
+                                    slot="suffix"
+                                    :class="$style.coupon"
+                                    :id="item.id"
+                                    :name="item.couponName"
+                                    :amount="item.amount"
+                                    :full="item.useLimitAmount"
+                                    :subtract="item.amount"
+                                    :instruction="item.brief"
+                                    :use-start-time="item.useStartTime"
+                                    :use-end-time="item.useEndTime"
+                                    :is-available-status="true"
+                                    :coupon-type="item.couponType"
+                                    :coupon-id="item.coupon"
+                                />
+                            </pl-checkbox>
+                        </pl-checkbox-group>
+                        <!--<div v-for="item in couponList" :key="item.id"
                              :class="[$style.couponsViewItem, isManagementState ? $style.checkBox : '']"
                              @click="selectedChange(item.id)"
                         >
-                            <span v-if="isManagementState">
+                            <div :class="$style.icons" v-show="isManagementState">
                                 <pl-svg v-if="!item.checked" name="icon-weixuanzhong1" width="40" />
                                 <pl-svg v-if="item.checked" name="icon-xuanzhong" width="40" />
-                            </span>
+                            </div>
                             <CouponItem
                                 :class="$style.moveCoupon"
                                 :id="item.id"
@@ -47,7 +71,7 @@
                                 :coupon-type="item.couponType"
                                 :coupon-id="item.coupon"
                             />
-                        </div>
+                        </div>-->
                     </template>
                 </load-more>
             </div>
@@ -83,10 +107,16 @@ export default {
         return {
             // TODO.暂时去除
             hasPackages: false,
-            menuArray: [{ name: '全部', id: '' }, { name: '满减券', id: 1 }, { name: '品类券', id: 2 }],
+            menuArray: [
+                { name: '全部', id: '' },
+                { name: '权益', id: 3 },
+                { name: '满减券', id: 1 },
+                { name: '品类券', id: 2 }
+            ],
             activeMenuId: '',
             isManagementState: false,
             couponList: [],
+            selectCouponList: [],
             couponTotal: 0,
             getMyCouponList,
             form: {
@@ -118,24 +148,14 @@ export default {
             this.couponList = this.formatCouponList(list)
             this.couponTotal = total
         },
-        findCurrentCouponIndex (id) {
-            return this.couponList.findIndex(value => value.id === id)
-        },
-        selectedChange (id) {
-            const index = this.findCurrentCouponIndex(id)
-            const currentCoupon = this.couponList.splice(index, 1)[0]
-            currentCoupon.checked = !currentCoupon.checked
-            this.couponList.splice(index, 0, currentCoupon)
-        },
         async deleteCoupon () {
             try {
-                const deleteList = this.couponList.filter(item => item.checked).map(item => item.id)
-                const { length } = deleteList
-                if (!length) {
+                const deleteList = this.selectCouponList.map(item => item.id)
+                if (!deleteList.length) {
                     this.$warning('您没有选中任何优惠券')
                     return
                 }
-                await this.$confirm(`确定删除这${ length }张优惠券？`)
+                await this.$confirm(`确定删除这${ deleteList.length }张优惠券？`)
                 const { result, message } = await deleteCouponList(deleteList)
                 if (result) {
                     this.$success('删除成功')
@@ -192,38 +212,47 @@ export default {
     }
     .coupons-view {
       width: 100%;
-      padding-top: 16px;
+    padding: 16px 0;
       margin-bottom: 100px;
-      .no-coupon-icon {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-top: 300px;
-        margin-bottom: -200px;
-      }
-
-      .coupons-view-item {
-        overflow: hidden;
+        box-sizing: border-box;
+        .checkbox {
+            padding: 0 30px;
+            margin-bottom: 20px !important;
+            overflow: visible;
+            > label {
+                display: none;
+            }
+            > .coupon {
+                transform: translateX(0);
+                margin-bottom: 0;
+            }
+            &.manage {
+                > label {
+                    display: block;
+                }
+                > .coupon {
+                    transform: translateX(20px);
+                }
+            }
+        }
+      /*.coupons-view-item {
         position: relative;
+          display: flex;
         padding-right: 24px;
         padding-left: 24px;
-
-        > span {
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
-          left: 32px;
+          overflow: hidden;
+        > .icons {
         }
-        > div{
+        > div {
           transition: marginLeft 1s linear;
         }
-      }
+      }*/
 
-      .check-box {
+      /*.check-box {
         > div {
           margin-left: 100px;
         }
-      }
+      }*/
     }
   }
 
