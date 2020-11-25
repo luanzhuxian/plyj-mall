@@ -16,13 +16,18 @@
                 <div :class="$style.lifeTime">
                     <div>有效期：<i>{{ useStartTime | dateFormat('YYYY-MM-DD') }}~{{ useEndTime | dateFormat('YYYY-MM-DD') }}</i></div>
                     <!-- 使用说明 -->
-                    <div v-show="instruction" @click="showInstruction = !showInstruction">
-                        使用说明
+                    <div
+                        v-show="instruction"
+                        @click="showInstruction = !showInstruction"
+                        :style="{ '--bgc': couponType === 1 ? '#e7294b' : couponType === 2 ? '#fab10d' : '#ef3d04' }"
+                        :class="[$style.instructionBtn]"
+                    >
+                        <span>使用说明</span>
                         <pl-svg
                             :class="{ [$style.showInstruction]: showInstruction }"
                             name="icon-arrow-down"
                             fill="#FFF"
-                            width="10"
+                            width="16"
                         />
                     </div>
                 </div>
@@ -313,27 +318,27 @@ export default {
     color: #414141;
     font-size: 16px;
     line-height: 20px;
-    > div {
-      &:nth-last-of-type(1) {
-        width: 118px;
-        font-size: 20px;
-        text-align: center;
-        color: #FFF;
-        background-color: #F9B20F;
-        border-radius: 14px;
-        padding: 3px 2px;
-        > svg {
-          width: 18px;
-          line-height: 18px;
-          vertical-align: middle;
-          transform: rotate(0);
-          transition: transform .2s linear;
-          &.showInstruction {
-            transform: rotate(-180deg);
-          }
-        }
+      .instruction-btn__1 {
+
       }
-    }
+      .instruction-btn {
+          width: 118px;
+          font-size: 16px;
+          text-align: center;
+          color: #FFF;
+          border-radius: 14px;
+          padding: 3px 2px;
+          background-color: var(--bgc);
+          > svg {
+              margin-left: 4px;
+              vertical-align: -3px;
+              transform: rotate(0);
+              transition: transform .2s linear;
+              &.showInstruction {
+                  transform: rotate(-180deg);
+              }
+          }
+      }
   }
   .coupon-item-right {
     position: relative;
