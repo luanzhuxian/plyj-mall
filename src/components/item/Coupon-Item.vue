@@ -43,7 +43,7 @@
                     :class="$style.couponItemRight"
                     @click.stop="couponClick"
                 >
-                    <div :class="$style.price" v-if="couponType === 3 && price">{{ `￥${price}` }}</div>
+                    <div :class="$style.price" v-if="isPriceShow">{{ `￥${price}` }}</div>
                     <div :class="$style.getNowWrapper">
                         <div :class="$style.getNow">
                             <!-- 根据是否可以去使用，目前只有我的卡券+提交订单显示'去使用'， 其他显示'立即领取' -->
@@ -201,7 +201,10 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['userId'])
+        ...mapGetters(['userId']),
+        isPriceShow () {
+            return this.couponType === 3 && !this.isAvailableStatus && !this.isOverMax && this.price
+        }
     },
     methods: {
         async couponClick (e) {
