@@ -38,6 +38,7 @@
                             :receive-count="item.count"
                             :coupon-type="item.couponType"
                             :is-claimed="!!item.isClaimed"
+                            :price="Number(item.price)"
                             @couponClick="couponClick(item.id)"
                         />
                     </template>
