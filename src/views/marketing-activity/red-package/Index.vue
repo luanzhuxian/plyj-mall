@@ -69,12 +69,6 @@ export default {
         Coupon,
         ProductSwiper
     },
-    props: {
-        activityId: {
-            type: String,
-            default: ''
-        }
-    },
     data () {
         return {
             productList: [],
@@ -82,7 +76,6 @@ export default {
         }
     },
     created () {
-        console.log('created', this.activityId)
         this.productList1 = [
             productModel1,
             productModel,
@@ -98,7 +91,9 @@ export default {
         this.bulletList = Object.freeze(bulletList)
     },
     activated () {
-        this.$refs.barrage.run()
+        if (this.$refs.barrage) {
+            this.$refs.barrage.run()
+        }
     },
     methods: {
         getBulletTemplate (bullet, vm) {

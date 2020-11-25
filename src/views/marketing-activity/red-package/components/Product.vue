@@ -2,27 +2,25 @@
     <router-link
         :class="$style.product"
         tag="li"
-        :to="{ name: '' }"
+        :to="{
+            name: 'Product' ,
+            params: { productId: id }
+        }"
     >
         <div :class="$style.left">
-            <img src="https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/47aa30db-205d-40b8-a564-eba87f8d6e03.png" alt="">
+            <img :src="img" :alt="main">
         </div>
         <div :class="$style.right">
-            <b :class="$style.main">
-                {{ `神奇的逻辑思维能力` }}
-            </b>
-            <p :class="$style.sub">
-                {{ '威巴克专属' }}
-            </p>
+            <b :class="$style.main" v-text="main" />
+            <p :class="$style.sub" v-text="sub" />
             <div :class="$style.bottom">
                 <div :class="$style.price">
-                    <b :class="$style.current">3000</b>
-                    <span :class="$style.original">¥5000</span>
+                    <b :class="$style.current" v-text="price" />
+                    <span :class="$style.original" v-text="`¥${original}`" />
                 </div>
                 <div :class="$style.tags">
-                    <span :class="$style.tag">
-                        最高抵1000元
-                    </span>
+                    <span :class="$style.tag" v-text="sku1" />
+                    <span :class="$style.tag" v-text="sku2" />
                 </div>
             </div>
             <button :class="$style.btn">抢</button>
@@ -34,11 +32,37 @@
 export default {
     name: 'Product',
     props: {
-        data: {
-            type: Object,
-            default () {
-                return { values: [] }
-            }
+        id: {
+            type: String,
+            default: ''
+        },
+        img: {
+            type: String,
+            default: ''
+        },
+        main: {
+            type: String,
+            default: ''
+        },
+        sub: {
+            type: String,
+            default: ''
+        },
+        price: {
+            type: Number,
+            default: 0
+        },
+        original: {
+            type: Number,
+            default: 0
+        },
+        sku1: {
+            type: String,
+            default: ''
+        },
+        sku2: {
+            type: String,
+            default: ''
         }
     }
 }
@@ -117,6 +141,7 @@ export default {
     display: inline-block;
     box-sizing: border-box;
     margin-top: 12px;
+    margin-right: 5px;
     padding: 0 6px;
     height: 36px;
     line-height: 32px;

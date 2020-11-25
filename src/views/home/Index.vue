@@ -9,7 +9,7 @@
             </h3>
             <h3
                 style="font-size: 100px"
-                @click="$router.push({ name: 'RedPackageDetail', params: { couponId: '456' }})"
+                @click="$router.push({ name: 'RedPackageDetail', params: { activityId: '1331491545220997121' }})"
             >
                 detail
             </h3>

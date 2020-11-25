@@ -92,6 +92,7 @@ export default {
             type: String,
             default: ''
         },
+        // 活动id
         id: {
             type: String,
             default: ''
@@ -182,15 +183,16 @@ export default {
     computed: {
         ...mapGetters(['userId']),
         isPriceShow () {
-            return this.couponType === 3 && !this.isAvailableStatus && !this.isOverMax && this.price
+            // return this.couponType === 3 && !this.isAvailableStatus && !this.isOverMax && this.price
+            return this.couponType === 3 && !this.isAvailableStatus && !this.isOverMax
         }
     },
     methods: {
         async couponClick (e) {
-            if (this.isPriceShow && this.couponId) {
+            if (this.isPriceShow && this.id) {
                 return this.$router.push({
                     name: 'RedPackageDetail',
-                    params: { couponId: this.couponId }
+                    params: { activityId: this.id }
                 })
             }
             if (this.isAvailableStatus && this.canGoClassify) {

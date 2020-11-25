@@ -12,8 +12,8 @@
         <div :class="$style.background">
             <div :class="$style.container">
                 <!-- logo -->
-                <div :class="$style.logoWrapper">
-                    <img src="https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/gift.png" alt="">
+                <div :class="$style.logoWrapper" v-if="activity.logoShow">
+                    <img :src="activity.logoUrl" alt="">
                 </div>
                 <!-- 海报 -->
                 <div :class="$style.topBtnWrapper">
@@ -28,7 +28,7 @@
                         v-if="isCountdownShow"
                         :duration="getDuration()"
                         format="DD天HH:mm:ss"
-                        @finish="() => resetStatus()"
+                        @finish="status++"
                     >
                         <template v-slot="{time}">
                             <i>{{ String(time.days) }}</i>
@@ -41,33 +41,51 @@
                         </template>
                     </Countdown>
                 </div>
-                <div :class="$style.count">
-                    {{ `144人已领取 仅剩10张` }}
+                <div :class="$style.count" v-if="allLoaded">
+                    {{ `${activity.claimVolume}人已领取 仅剩${activity.issueVolume - activity.claimVolume}张` }}
                 </div>
-                <div :class="$style.mainWrapper">
+                <div :class="$style.mainWrapper" v-if="allLoaded">
                     <!-- 弹幕 -->
                     <section :class="$style.barrage">
-                        <Barrage ref="barrage" :list="bulletList" :get-template="getBulletTemplate" />
+                        <Barrage ref="barrage" :list="bulletList" :template="getBulletTemplate" />
                     </section>
                     <!-- 红包 -->
                     <section :class="$style.redPackage">
                         <div :class="$style.redPackageHeader">
                             <b>小金额，大额券，边逛边优惠！</b>
-                            <button :class="$style.redPackageRule">规则</button>
+                            <router-link :class="$style.redPackageRule" :to="{ name: 'RedPackageIntro'}">
+                                规则
+                            </router-link>
                         </div>
                         <ul :class="$style.redPackageList">
-                            <Coupon :class="$style.redPackageListItem" />
+                            <Coupon
+                                :class="$style.redPackageListItem"
+                                :status.sync="status"
+                                :name="activity.name"
+                                :stock="Number(activity.issueVolume) - Number(activity.claimVolume)"
+                                :amount="redPackage.amount"
+                                :price="redPackage.price"
+                                :receive-start-time="redPackage.receiveStartTime"
+                                :receive-end-time="redPackage.receiveEndTime"
+                                :use-start-time="redPackage.useStartTime"
+                                :use-end-time="redPackage.useEndTime"
+                            />
                         </ul>
-                        <div :class="$style.redPackageForm">
+                        <div :class="$style.redPackageForm" v-if="isFormShow">
                             <PlForm ref="form" :model="form" :rules="rules">
                                 <PlFormItem prop="number" label="领取数量" class="input-number">
-                                    <button type="button" :disabled="form.number <= 1" @click.stop="minus">
-                                        -
-                                    </button>
-                                    <input type="number" v-model.number="form.number" @blur.stop="onInputNumberChange">
-                                    <button type="button" :disabled="form.number >= 99" @click.stop="add">
-                                        +
-                                    </button>
+                                    <template v-if="redPackage.quantityLimit !== 1">
+                                        <button type="button" :disabled="form.number <= 1" @click.stop="minus">
+                                            -
+                                        </button>
+                                        <input type="number" v-model.number="form.number" @blur.stop="onInputNumberChange">
+                                        <button type="button" :disabled="isBtnDisabled" @click.stop="add">
+                                            +
+                                        </button>
+                                    </template>
+                                    <div :class="$style.redPackageLimit" v-if="redPackage.quantityLimit">
+                                        {{ `每人限领${redPackage.quantityLimit}张` }}
+                                    </div>
                                 </PlFormItem>
                                 <PlFormItem prop="name" label="姓名：" :gap-top="34">
                                     <PlInput v-model="form.name" />
@@ -77,34 +95,55 @@
                                 </PlFormItem>
                             </PlForm>
                         </div>
-                        <button :class="[$style.redPackageBtn, $style.disabled]" @click="check">
-                            <span v-if="true" @click="onClick">仅需￥1  敬请期待</span>
-                            <!-- <span v-else-if="">仅需￥1  立即领取</span>
-                            <span v-else-if="">您已领取  立即查看</span>
-                            <span v-else-if="">领取更多福利</span> -->
+                        <button :class="[$style.redPackageBtn, $style.disabled]" v-if="status === 0" @click="check">
+                            {{ `仅需￥${totalPrice}  敬请期待` }}
+                        </button>
+                        <button :class="$style.redPackageBtn" v-else-if="status === 1" @click="check">
+                            {{ `仅需￥${totalPrice}  立即领取` }}
+                        </button>
+                        <!-- <button :class="$style.redPackageBtn" v-else-if="status === 1 && quantityLimit" @click="check">
+                            您已领取  立即查看
+                        </button> -->
+                        <button :class="$style.redPackageBtn" v-else @click="check">
+                            领取更多福利
                         </button>
                     </section>
                     <!-- 商品 -->
-                    <section :class="$style.product">
+                    <section :class="$style.product" v-if="productList && productList.length">
                         <b :class="$style.productHeader">
                             适用商品
                         </b>
                         <ul :class="$style.productList">
-                            <Product :class="$style.productListItem" v-for="(item, index) of 3" :key="index" />
+                            <Product
+                                :class="$style.productListItem"
+                                v-for="(prod, index) of productList"
+                                :key="index"
+                                :id="prod.productId"
+                                :img="prod.productMainImage"
+                                :main="prod.productName"
+                                :sub="prod.productName"
+                                :price="prod.price"
+                                :original="prod.originPrice"
+                                :sku-1="prod.skuCode1Name"
+                                :sku-2="prod.skuCode2Name"
+                            />
                         </ul>
                     </section>
                 </div>
+                <PlSvg :class="$style.loading" name="icon-loading" fill="#FFF" width="90" v-else />
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Barrage from '../longmen-festival/action/components/Barrage.vue'
 import Countdown from '../../activity/components/Countdown.vue'
 import Coupon from './components/Coupon.vue'
 import Product from './components/Product.vue'
 import { checkLength, isPhone } from '../../../assets/js/validate'
+import { getRedPackage } from '../../../apis/marketing-activity/red-package'
 
 const bulletModel = {
     avatar: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/gift.png',
@@ -124,7 +163,7 @@ export default {
         Product
     },
     props: {
-        couponId: {
+        activityId: {
             type: String,
             default: ''
         }
@@ -132,8 +171,12 @@ export default {
     data () {
         return {
             backgroundId: 0,
+            // 0 未开始 1 进行中 2 暂停 3 结束
             status: 0,
+            activity: {},
+            redPackage: {},
             bulletList: [],
+            productList: [],
             form: {
                 number: 1,
                 name: '',
@@ -148,22 +191,74 @@ export default {
                     { required: true, message: '请输入联系人手机号' },
                     { validator: isPhone, message: '联系人手机号格式错误' }
                 ]
-            }
+            },
+            allLoaded: false
         }
     },
     computed: {
+        ...mapGetters(['realName', 'mobile']),
         isCountdownShow () {
             return this.status === 0 || this.status === 1
+        },
+        isFormShow () {
+            return this.status === 1 && this.redPackage.price > 0
+        },
+        isBtnDisabled () {
+            const { number } = this.form
+            return number >= (this.activity.issueVolume - this.activity.claimVolume) || number >= this.quantityLimit
+        },
+        totalPrice () {
+            const { price } = this.redPackage
+            const { number } = this.form
+            return price * number
         }
     },
-    created () {
-        console.log('created', this.couponId)
-        this.bulletList = Object.freeze(bulletList)
+    async created () {
+        console.log('created', this.activityId)
     },
-    activated () {
-        this.$refs.barrage.run()
+    async activated () {
+        try {
+            const request = [
+                this.getRedPackage()
+            ]
+            await Promise.all(request.map(p => p.catch(e => console.error(e))))
+            this.allLoaded = true
+            this.bulletList = Object.freeze(bulletList)
+            this.form.name = this.realName
+            this.form.mobile = this.mobile
+        } catch (error) {
+            throw error
+        }
+        if (this.$refs.barrage) {
+            this.$refs.barrage.run()
+        }
     },
     methods: {
+        async getRedPackage () {
+            try {
+                const { result } = await getRedPackage(this.activityId)
+                const { redPacketCouponVO, ...activity } = result
+                this.status = 1
+                // this.status = result.activityStatus
+                this.activity = activity
+                this.redPackage = redPacketCouponVO
+                this.productList = result.redPacketCouponVO.applicableGoodsVOS
+            } catch (error) {
+                throw error
+            }
+        },
+        getDuration () {
+            // 0 未开始 1 进行中 2 暂停 3 结束
+            const { status } = this
+            const { receiveStartTime, receiveEndTime } = this.redPackage
+            const now = Date.now().valueOf()
+            if (status === 0) {
+                return now - new Date(receiveStartTime).valueOf()
+            } else if (status === 1) {
+                return new Date(receiveEndTime).valueOf() - now
+            }
+            return 0
+        },
         getBulletTemplate (bullet, vm) {
             const { avatar, name, phone } = bullet
             const message = `${ name }****${ phone.slice(-4) }刚刚领取满${ 10 }元抵${ 100 }的储备金`
@@ -179,12 +274,6 @@ export default {
             `
             return template
         },
-        getDuration () {
-            return Date.now().valueOf() - 1599999999999
-        },
-        resetStatus () {
-
-        },
         minus () {
             this.form.number--
         },
@@ -194,7 +283,27 @@ export default {
         onInputNumberChange () {
 
         },
+        checkMobile () {
+            if (!this.mobile) {
+                this.$confirm('您还没有绑定手机，请先绑定手机')
+                    .then(() => {
+                        sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
+                            name: this.$route.name,
+                            params: this.$route.params,
+                            query: this.$route.query
+                        }))
+                        this.$router.push({ name: 'BindMobile' })
+                    })
+                    .catch(() => {})
+                return false
+            }
+            return true
+        },
         check () {
+            if (!this.checkMobile()) {
+                return false
+            }
+
             const result = this.$refs.form.validate()
             console.log(result)
         },
@@ -385,6 +494,7 @@ export default {
     position: relative;
     box-sizing: border-box;
     padding: 478px 24px 80px;
+    min-height: 100vh;
 }
 
 .logo-wrapper {
@@ -500,6 +610,12 @@ export default {
         margin-top: 34px;
         padding: 0 80px;
     }
+    &-limit {
+        margin-left: 14px;
+        width: 112px;
+        font-size: 20px;
+        color: #666666;
+    }
     &-btn {
         display: block;
         margin: 38px auto 50px;
@@ -556,6 +672,23 @@ export default {
                 margin-top: 0;
             }
         }
+    }
+}
+
+.loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0 0;
+    animation: rotate 1.2s linear infinite;
+    z-index: 999;
+}
+@keyframes rotate {
+    from {
+        transform: rotate(0deg) translate(-50%, -50%);
+    }
+    to {
+        transform: rotate(359deg) translate(-50%, -50%);
     }
 }
 

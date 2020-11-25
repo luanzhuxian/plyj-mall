@@ -6,7 +6,7 @@
             <Countdown
                 :duration="getDuration()"
                 format="DD天HH:mm:ss"
-                @finish="() => resetStatus()"
+                @finish="$emit('update:status', status + 1)"
             >
                 <template v-slot="{time}">
                     <i>{{ String(time.days) }}</i>
@@ -20,25 +20,27 @@
             </Countdown>
         </div>
         <div :class="$style.left">
-            <b :class="$style.price">{{ 1000 }}</b>
-            <span :class="$style.stock">{{ `剩余${12}张` }}</span>
+            <b :class="$style.price">{{ amount }}</b>
+            <span :class="$style.stock">{{ `剩余${stock}张` }}</span>
         </div>
         <div :class="$style.right">
             <div :class="$style.top">
                 <div :class="$style.topLeft">
                     <b :class="$style.main">
-                        {{ `满20可抵1000` }}
+                        {{ `满20可抵${amount}` }}
                     </b>
                     <p :class="$style.sub">
-                        {{ '威巴克专属' }}
+                        {{ name }}
                     </p>
                 </div>
-                <button v-if="true">20元抢购</button>
-                <!-- <button v-else-if="true">立即领取</button> -->
-                <!-- <button v-else-if="true" :class="$style.disabled">活动结束</button> -->
+                <template v-if="showBtn">
+                    <button v-if="true">{{ `${price}元抢购` }}</button>
+                    <!-- <button v-else-if="true">立即领取</button> -->
+                    <button v-else-if="status === 3" :class="$style.disabled">活动结束</button>
+                </template>
             </div>
             <p :class="$style.bottom">
-                {{ `使用时间：2020.11.12-2020.12.21` }}
+                {{ `使用时间：${startTime}-${endTime}` }}
             </p>
         </div>
     </li>
@@ -47,7 +49,6 @@
 <script>
 import Countdown from '../../../activity/components/Countdown.vue'
 // import { receiveCoupon } from '../../../apis/my-coupon'
-// import { getDate } from '../helper.js'
 
 // let isClickable = false
 
@@ -57,45 +58,74 @@ export default {
         Countdown
     },
     props: {
-        data: {
-            type: Object,
-            default () {
-                return { values: [] }
-            }
+        showCountdown: Boolean,
+        showBtn: Boolean,
+        // 0 未开始 1 进行中 2 暂停 3 结束
+        status: {
+            type: Number,
+            default: 0
+        },
+        name: {
+            type: String,
+            default: ''
+        },
+        amount: {
+            type: Number,
+            default: 0
+        },
+        stock: {
+            type: Number,
+            default: 0
+        },
+        price: {
+            type: Number,
+            default: 0
+        },
+        receiveStartTime: {
+            type: String,
+            default: ''
+        },
+        receiveEndTime: {
+            type: String,
+            default: ''
+        },
+        useStartTime: {
+            type: String,
+            default: ''
+        },
+        useEndTime: {
+            type: String,
+            default: ''
         }
     },
     data () {
-        return {
-            status: 0
-        }
+        return {}
     },
     computed: {
         isCountdownShow () {
-            return this.status === 0 || this.status === 1
+            return this.showCountdown && (this.status === 0 || this.status === 1)
+        },
+        startTime () {
+            if (!this.useStartTime) return ''
+            return this.useStartTime.split(' ')[0].replace(/-/g, '.')
+        },
+        endTime () {
+            if (!this.useEndTime) return ''
+            return this.useEndTime.split(' ')[0].replace(/-/g, '.')
         }
     },
     methods: {
         getDuration () {
-            return Date.now().valueOf() - 1599999999999
-        },
-        resetStatus () {
-
+            // 0 未开始 1 进行中 2 暂停 3结束
+            const { status, receiveStartTime, receiveEndTime } = this
+            const now = Date.now().valueOf()
+            if (status === 0) {
+                return now - new Date(receiveStartTime).valueOf()
+            } else if (status === 1) {
+                return new Date(receiveEndTime).valueOf() - now
+            }
+            return 0
         }
-        // getDate,
-        // async getCoupon ({ goodsInfo = {} }) {
-        //     const { id } = goodsInfo
-        //     if (isClickable) return
-        //     if (!id) return
-        //     isClickable = true
-        //     try {
-        //         await receiveCoupon({ couponId: id })
-        //         this.$success('领取成功！')
-        //     } catch (e) {
-        //         throw e
-        //     } finally {
-        //         setTimeout(() => (isClickable = false), 500)
-        //     }
-        // }
     }
 }
 </script>
