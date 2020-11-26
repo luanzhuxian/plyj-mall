@@ -159,7 +159,8 @@ import { getRedPackage } from '../../../apis/marketing-activity/red-package'
 import { submit, pay } from './pay'
 import {
     loadImage,
-    drawRoundRect
+    drawRoundRect,
+    createText
 } from '../../../assets/js/util'
 
 // 单位转换：分转元
@@ -467,6 +468,68 @@ export default {
                 radius: 20,
                 fillStyle: '#fff'
             })
+            if (SHOW_COUPON) {
+                // 绘制优惠券
+                const CONPON_BG = await loadImage('https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/coupon.png')
+                CTX.drawImage(CONPON_BG, 45, 500, 660, 190)
+                CTX.font = 'bold 22px sans-serif'
+                CTX.fillStyle = '#F23D00'
+                CTX.textBaseline = 'hanging'
+                createText({
+                    ctx: CTX,
+                    x: 95,
+                    y: 114 + 470,
+                    text: '￥',
+                    lineHeight: 20
+                })
+                CTX.font = 'bold 42px sans-serif'
+                const W2 = createText({
+                    ctx: CTX,
+                    x: 115,
+                    y: 96 + 470,
+                    text: '20000.99',
+                    lineHeight: 54
+                })
+                // 虚线
+                CTX.beginPath()
+                CTX.setLineDash([2, 5])
+                CTX.moveTo(Math.max(W2, 100) + 115 + 20, 62 + 470)
+                CTX.lineTo(Math.max(W2, 100) + 115 + 20, 62 + 470 + 128)
+                CTX.strokeStyle = '#FDAC85'
+                CTX.closePath()
+                CTX.stroke()
+                CTX.font = 'bold 24px sans-serif'
+                createText({
+                    ctx: CTX,
+                    x: 115 + W2 + 1 + 20 * 2,
+                    y: 85 + 470,
+                    text: '满20可抵1000',
+                    lineHeight: 32
+                })
+                CTX.font = 'normal 20px sans-serif'
+                CTX.fillStyle = '#F19874'
+                createText({
+                    ctx: CTX,
+                    x: 116,
+                    y: 150 + 470,
+                    text: '仅剩12张',
+                    lineHeight: 28
+                })
+                createText({
+                    ctx: CTX,
+                    x: 115 + W2 + 1 + 20 * 2,
+                    y: 118 + 470,
+                    text: '威巴克专属',
+                    lineHeight: 28
+                })
+                createText({
+                    ctx: CTX,
+                    x: 115 + W2 + 1 + 20 * 2,
+                    y: 152 + 470,
+                    text: '使用时间：2020.11.12-2020.12.21',
+                    lineHeight: 28
+                })
+            }
 
             // 生成图片
             console.log(CVS.toDataURL('image/jpeg', 0.9))
