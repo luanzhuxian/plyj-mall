@@ -126,12 +126,12 @@ export default {
                 if (result === true) {
                     this.$success('领取成功，请在我的卡券中查看')
                     const result = this.couponList.find(item => item.activityId === activityId)
-                    result.isClaimed = true
+                    this.$set(result, 'isClaimed', true)
                 }
             } catch (error) {
                 throw error
             } finally {
-                this.isCouponLoading = true
+                this.isCouponLoading = false
             }
         }
     }

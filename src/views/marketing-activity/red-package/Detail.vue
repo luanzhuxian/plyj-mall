@@ -133,9 +133,8 @@
                                 :id="prod.productId"
                                 :img="prod.image"
                                 :main="prod.productName"
-                                :sub="prod.productName"
-                                :price="prod.price"
-                                :original="prod.originPrice"
+                                :price="Number(prod.price)"
+                                :original="Number(prod.originPrice)"
                                 :sku1="prod.skuCode1Name"
                                 :sku2="prod.skuCode2Name"
                             />
@@ -155,7 +154,7 @@ import Countdown from '../../activity/components/Countdown.vue'
 import Coupon from './components/Coupon.vue'
 import Product from './components/Product.vue'
 import { checkLength, isPhone } from '../../../assets/js/validate'
-import { getRedPackage } from '../../../apis/marketing-activity/red-package'
+import { getRedPackage, getRedPackageBarrage } from '../../../apis/marketing-activity/red-package'
 import { submit, pay } from './pay'
 import {
     loadImage,
@@ -171,14 +170,14 @@ const fenToYuan = function (num) {
     return Number(num)
 }
 
-const bulletModel = {
-    avatar: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/gift.png',
-    name: '张三',
-    phone: '13333331111',
-    donationAmount: '0.0001'
-}
+// const bulletModel = {
+//     avatar: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/gift.png',
+//     name: '张三',
+//     phone: '13333331111',
+//     donationAmount: '0.0001'
+// }
 
-const bulletList = Array.from({ length: 10 }).fill(bulletModel)
+// const bulletList = Array.from({ length: 10 }).fill(bulletModel)
 
 export default {
     name: 'RedPackageDetail',
@@ -248,12 +247,12 @@ export default {
     async activated () {
         try {
             const request = [
-                this.getRedPackage()
+                this.getRedPackage(),
+                this.getRedPackageBarrage()
             ]
             await Promise.all(request.map(p => p.catch(e => console.error(e))))
             this.form.name = this.realName
             this.form.mobile = this.mobile
-            this.bulletList = Object.freeze(bulletList)
             if (this.$refs.barrage) {
                 this.$refs.barrage.run()
             }
@@ -278,21 +277,24 @@ export default {
                 throw error
             }
         },
-        getDuration () {
-            // 0 未开始 1 进行中 2 暂停 3 结束
-            const { status } = this
-            const { receiveStartTime, receiveEndTime } = this.redPackage
-            const now = Date.now().valueOf()
-            if (status === 0) {
-                return now - new Date(receiveStartTime).valueOf()
-            } else if (status === 1) {
-                return new Date(receiveEndTime).valueOf() - now
+        async getRedPackageBarrage () {
+            try {
+                const { activityId } = this
+                const { result } = await getRedPackageBarrage({ activityId })
+                if (result.length) {
+                    for (const item of result) {
+                        item.phone = String(item.mobile).slice(-4)
+                    }
+                }
+                console.log(result)
+                // this.bulletList = Object.freeze(bulletList)
+            } catch (error) {
+                throw error
             }
-            return 0
         },
         getBulletTemplate (bullet, vm) {
             const { avatar, name, phone } = bullet
-            const message = `${ name }****${ phone.slice(-4) }刚刚领取满${ 10 }元抵${ 100 }的储备金`
+            const message = `${ name }****${ phone }刚刚领取满${ 10 }元抵${ 100 }的储备金`
             const template = `
                 <div class="my-bullet">
                     <div class="my-bullet__avatar">
@@ -304,6 +306,18 @@ export default {
                 </div>
             `
             return template
+        },
+        getDuration () {
+            // 0 未开始 1 进行中 2 暂停 3 结束
+            const { status } = this
+            const { receiveStartTime, receiveEndTime } = this.redPackage
+            const now = Date.now().valueOf()
+            if (status === 0) {
+                return now - new Date(receiveStartTime).valueOf()
+            } else if (status === 1) {
+                return new Date(receiveEndTime).valueOf() - now
+            }
+            return 0
         },
         minus () {
             this.form.count--
@@ -808,7 +822,7 @@ export default {
     }
     &-limit {
         margin-left: 14px;
-        width: 112px;
+        width: max-content;
         font-size: 20px;
         color: #666666;
     }
@@ -823,7 +837,12 @@ export default {
         font-size: 30px;
         color: #FFFFFF;
         &.disabled {
-            opacity: 0.6;
+            opacity: 0.6 !important;
+            font-weight: normal !important;
+        }
+        > svg {
+            animation: rotate2 2s linear infinite;
+            margin-right: 10px;
         }
     }
 }
@@ -876,10 +895,18 @@ export default {
     top: 50%;
     left: 50%;
     transform-origin: 0 0;
-    animation: rotate 1.2s linear infinite;
+    animation: rotate1 1.2s linear infinite;
     z-index: 999;
 }
-@keyframes rotate {
+@keyframes rotate1 {
+    from {
+        transform: rotate(0deg) translate(-50%, -50%);
+    }
+    to {
+        transform: rotate(359deg) translate(-50%, -50%);
+    }
+}
+@keyframes rotate2 {
     from {
         transform: rotate(0deg) translate(-50%, -50%);
     }

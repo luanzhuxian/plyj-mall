@@ -12,7 +12,6 @@
         </div>
         <div :class="$style.right">
             <b :class="$style.main" v-text="main" />
-            <p :class="$style.sub" v-text="sub" />
             <div :class="$style.bottom">
                 <div :class="$style.price">
                     <b :class="$style.current" v-text="price" />
@@ -41,10 +40,6 @@ export default {
             default: ''
         },
         main: {
-            type: String,
-            default: ''
-        },
-        sub: {
             type: String,
             default: ''
         },
@@ -102,14 +97,7 @@ export default {
     font-size: 28px;
     line-height: 38px;
     color: #333333;
-    @include elps();
-}
-.sub {
-    margin-top: 10px;
-    font-size: 28px;
-    line-height: 38px;
-    color: #333333;
-    @include elps();
+    @include elps-wrap(2);
 }
 .bottom {
     margin-top: auto;
