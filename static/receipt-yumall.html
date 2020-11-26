@@ -198,6 +198,7 @@
             })
 
             window.getData = function (orderData) {
+                console.log(orderData)
                 error.style.display = 'none'
                 orderData.goodsPriceTotal = orderData.goodsPriceTotal / 100
                 orderData.amountTotal = orderData.amountTotal / 100
@@ -225,5 +226,7 @@
             }
         })()
     </script>
+    <script src="https://mallcdn.youpenglai.com/cdn/eruda.js"></script>
+    <script>eruda.init()</script>
 </body>
 </html>
