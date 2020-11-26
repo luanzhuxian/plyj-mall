@@ -172,39 +172,6 @@
             //     serialNo: '123'
             // }});
 
-
-            fetch(`${MAIN_URL}/apis/v2/order/pay/goldplan/order/detail?${params}`, {
-                method: 'GET',
-                headers: {
-                    'content-type': 'application/json'
-                }
-            })
-                .then(function (res) {
-                    error.style.display = 'none'
-                    res.json().then(function (data) {
-                        orderData = data.result
-                        orderData.goodsPriceTotal = orderData.goodsPriceTotal / 100
-                        orderData.amountTotal = orderData.amountTotal / 100
-                        var md5Params = Qs.stringify({
-                            sub_mch_id,
-                            out_trade_no,
-                            transaction_id: orderData.transactionId
-                        })
-                        var hash = md5(`${RECEIPT_URL}?${md5Params}`)
-                        if (hash === check_code) {
-                            content.innerHTML = template('tpl', { data: orderData });
-                        } else {
-                            error.style.display = 'flex'
-                            error.querySelector('span').innerText = '订单核验错误'
-                        }
-                    })
-                })
-                .catch(function (err) {
-                    error.style.display = 'flex'
-                    error.querySelector('span').innerText = '订单加载错误'
-                    buttons.style.display = 'none'
-                })
-
             parent.postMessage(JSON.stringify({
                 action: 'onIframeReady',
                 displayStyle: 'SHOW_CUSTOM_PAGE',
@@ -228,6 +195,33 @@
                     }), 'https://payapp.weixin.qq.com')
                 }
             })
+
+            window.getData = function (orderData) {
+                error.style.display = 'none'
+                orderData.goodsPriceTotal = orderData.goodsPriceTotal / 100
+                orderData.amountTotal = orderData.amountTotal / 100
+                var md5Params = Qs.stringify({
+                    sub_mch_id,
+                    out_trade_no,
+                    transaction_id: orderData.transactionId
+                })
+                var hash = md5(`${RECEIPT_URL}?${md5Params}`)
+                if (hash === check_code) {
+                    content.innerHTML = template('tpl', { data: orderData });
+                } else {
+                    error.style.display = 'flex'
+                    error.querySelector('span').innerText = '订单核验错误'
+                }
+            }
+
+            const script = document.createElement('script')
+            script.src = `${MAIN_URL}/apis/v2/order/pay/goldplan/order/detail.js?${params}`
+            document.body.appendChild(script)
+            script.onerror = function () {
+                error.style.display = 'flex'
+                error.querySelector('span').innerText = '订单加载错误'
+                buttons.style.display = 'none'
+            }
         })()
     </script>
 </body>
