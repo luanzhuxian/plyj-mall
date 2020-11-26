@@ -25,7 +25,7 @@
                                     v-text="publicBenefitActivePrice"
                                 />
                                 <p
-                                    v-else-if="activeType === 1 || activeType === 4"
+                                    v-else-if="activeType === 1"
                                     :class="$style.price"
                                     v-text="currentSku.price"
                                 />
