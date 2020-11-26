@@ -827,11 +827,12 @@ export default {
         color: #666666;
     }
     &-btn {
-        display: block;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         margin: 38px auto 50px;
         width: 600px;
         line-height: 80px;
-        text-align: center;
         background: linear-gradient(180deg, #F58A2D 0%, #EC3E01 100%);
         border-radius: 60px;
         font-size: 30px;
@@ -841,6 +842,8 @@ export default {
             font-weight: normal !important;
         }
         > svg {
+            position: relative;
+            top: -2px;
             animation: rotate2 2s linear infinite;
             margin-right: 10px;
         }
@@ -908,10 +911,10 @@ export default {
 }
 @keyframes rotate2 {
     from {
-        transform: rotate(0deg) translate(-50%, -50%);
+        transform: rotate(0deg) translate(0, 0);
     }
     to {
-        transform: rotate(359deg) translate(-50%, -50%);
+        transform: rotate(359deg) translate(0, 0);
     }
 }
 
