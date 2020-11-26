@@ -71,22 +71,9 @@
 
 <script>
 import { mapGetters } from 'vuex'
+
 export default {
     name: 'CouponItem',
-    data () {
-        return {
-            showInstruction: false,
-            bg: [
-                null,
-                'https://mallcdn.youpenglai.com/static/mall/2.0.0/full-coupon.png',
-                'https://mallcdn.youpenglai.com/static/mall/2.0.0/category-coupon.png',
-                'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/red-package-bg.png'
-            ]
-        }
-    },
-    deactivated () {
-        this.showInstruction = false
-    },
     props: {
         status: {
             type: String,
@@ -99,6 +86,11 @@ export default {
         },
         // 优惠券本身的Id
         couponId: {
+            type: String,
+            default: ''
+        },
+        // 活动Id（福利红包）
+        activityId: {
             type: String,
             default: ''
         },
@@ -186,22 +178,40 @@ export default {
             default: 0
         }
     },
+    data () {
+        return {
+            bg: [
+                null,
+                'https://mallcdn.youpenglai.com/static/mall/2.0.0/full-coupon.png',
+                'https://mallcdn.youpenglai.com/static/mall/2.0.0/category-coupon.png',
+                'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/red-package-bg.png'
+            ],
+            showInstruction: false
+        }
+    },
     computed: {
         ...mapGetters(['userId']),
         isPriceShow () {
-            return this.couponType === 3 && !this.isAvailableStatus && !this.isOverMax && this.price
-            // return this.couponType === 3 && !this.isAvailableStatus && !this.isOverMax
+            return this.couponType === 3 && this.price
         }
     },
+    deactivated () {
+        this.showInstruction = false
+    },
     methods: {
+
         async couponClick (e) {
-            if (this.isPriceShow && this.id) {
-                return this.$router.push({
-                    name: 'RedPackageDetail',
-                    params: { activityId: this.id }
-                })
-            }
-            if (this.isAvailableStatus && this.canGoClassify) {
+            // 福利红包
+            if (this.couponType === 3) {
+                if (this.isPriceShow) {
+                    this.$router.push({
+                        name: 'RedPackageDetail',
+                        params: { activityId: this.activityId }
+                    })
+                } else {
+                    await this.$emit('redPackageClick', this.activityId)
+                }
+            } else if (this.isAvailableStatus && this.canGoClassify) {
                 // 去使用，进入可使用此优惠券的商品列表中
                 this.$router.push({
                     name: 'CouponActivity',
@@ -242,8 +252,10 @@ export default {
     filter: grayscale(100%);
   }
   .coupon-item {
+      position: relative;
       width: 100%;
       margin-bottom: 32px;
+      overflow: hidden;
       > .main {
           width: 100%;
           display: flex;
@@ -400,7 +412,7 @@ export default {
   }
 
   /* 不可使用的状态，文字描述 */
-  .unavailableDesc {
+  .unavailable-desc {
     width: 240px;
     height: 80px;
     color: #FFF;

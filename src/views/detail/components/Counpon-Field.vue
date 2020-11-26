@@ -41,11 +41,13 @@
                             :use-end-time="item.useEndTime"
                             :use-start-time="item.useStartTime"
                             :receive-count="item.count"
-                            :coupon-type="item.couponType"
+                            :coupon-type="Number(item.couponType)"
                             :is-claimed="!!item.isClaimed"
                             :coupon-id="item.id"
-                            :price="Number(item.price)"
+                            :activity-id="item.activityId"
+                            :price="Number(item.priceAmount)"
                             @couponClick="couponClick(item.id)"
+                            @redPackageClick="submitRedPackageOrder"
                         />
                     </template>
                 </div>
@@ -58,11 +60,21 @@
 import Field from '../../../components/detail/Field.vue'
 import CouponItem from '../../../components/item/Coupon-Item.vue'
 import { receiveCoupon } from '../../../apis/my-coupon'
+import { submit, pay } from '../../../views/marketing-activity/red-package/pay'
+
 export default {
     name: 'CounponField',
     components: {
         Field,
         CouponItem
+    },
+    props: {
+        couponList: {
+            type: Array,
+            default () {
+                return []
+            }
+        }
     },
     data () {
         return {
@@ -80,20 +92,13 @@ export default {
             return text
         }
     },
-    props: {
-        couponList: {
-            type: Array,
-            default () {
-                return []
-            }
-        }
-    },
     methods: {
         clickHandler (e) {
             this.showCoupon = true
         },
         async couponClick (id) {
             if (this.isCouponLoading) return
+
             try {
                 this.isCouponLoading = true
                 const { result } = await receiveCoupon({ couponId: id })
@@ -108,6 +113,25 @@ export default {
                 throw e
             } finally {
                 this.isCouponLoading = false
+            }
+        },
+        // 提交福利红包订单
+        async submitRedPackageOrder (activityId) {
+            try {
+                if (this.isCouponLoading) return false
+
+                this.isCouponLoading = true
+                const { payData, orderBatchNumber } = await submit(activityId, 1)
+                const result = await pay(payData, payData.orderIds, payData.orderIds.length, orderBatchNumber, 0)
+                if (result === true) {
+                    this.$success('领取成功，请在我的卡券中查看')
+                    const result = this.couponList.find(item => item.activityId === activityId)
+                    result.isClaimed = true
+                }
+            } catch (error) {
+                throw error
+            } finally {
+                this.isCouponLoading = true
             }
         }
     }

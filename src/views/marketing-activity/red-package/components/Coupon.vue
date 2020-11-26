@@ -27,7 +27,7 @@
             <div :class="$style.top">
                 <div :class="$style.topLeft">
                     <b :class="$style.main">
-                        {{ `满20可抵${amount}` }}
+                        {{ `满${useLimitAmount}可抵${amount}` }}
                     </b>
                     <p :class="$style.sub">
                         {{ name }}
@@ -70,6 +70,10 @@ export default {
             default: ''
         },
         amount: {
+            type: Number,
+            default: 0
+        },
+        useLimitAmount: {
             type: Number,
             default: 0
         },

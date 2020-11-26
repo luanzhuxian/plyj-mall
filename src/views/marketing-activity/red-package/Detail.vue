@@ -2,10 +2,10 @@
     <div
         :class="{
             [$style.redPackageDetail]: true,
-            [$style.bgRed]: backgroundId === 0,
-            [$style.bgBlue]: backgroundId === 1,
-            [$style.bgPurple]: backgroundId === 2,
-            [$style.bgYellow]: backgroundId === 3
+            [$style.bgRed]: activity.bgUrlsIndex === 0,
+            [$style.bgBlue]: activity.bgUrlsIndex === 1,
+            [$style.bgPurple]: activity.bgUrlsIndex === 2,
+            [$style.bgYellow]: activity.bgUrlsIndex === 3
         }"
         class="red-package-detail"
     >
@@ -64,6 +64,7 @@
                                 :name="activity.name"
                                 :stock="Number(activity.issueVolume) - Number(activity.claimVolume)"
                                 :amount="redPackage.amount"
+                                :use-limit-amount="redPackage.useLimitAmount"
                                 :price="redPackage.price"
                                 :receive-start-time="redPackage.receiveStartTime"
                                 :receive-end-time="redPackage.receiveEndTime"
@@ -95,16 +96,27 @@
                                 </PlFormItem>
                             </PlForm>
                         </div>
-                        <button :class="[$style.redPackageBtn, $style.disabled]" v-if="status === 0" @click="check">
+                        <button :class="[$style.redPackageBtn, $style.disabled]" v-if="status === 0" @click.stop="check">
                             {{ `仅需￥${totalPrice}  敬请期待` }}
                         </button>
-                        <button :class="$style.redPackageBtn" v-else-if="status === 1" @click="submitOrder">
-                            {{ `仅需￥${totalPrice}  立即领取` }}
+                        <button
+                            v-else-if="status === 1"
+                            :class="{
+                                [$style.redPackageBtn]: true,
+                                [$style.disabled]: submiting
+                            }"
+                            :disabled="submiting"
+                            @click.stop="submit"
+                        >
+                            <PlSvg v-show="submiting" name="icon-btn-loading" fill="#FFF" width="35" />
+                            <span>
+                                {{ `仅需￥${totalPrice}  立即领取` }}
+                            </span>
                         </button>
-                        <!-- <button :class="$style.redPackageBtn" v-else-if="status === 1 && quantityLimit" @click="check">
+                        <!-- <button :class="$style.redPackageBtn" v-else-if="status === 1 && quantityLimit" @click.stop="check">
                             您已领取  立即查看
                         </button> -->
-                        <button :class="$style.redPackageBtn" v-else @click="check">
+                        <button :class="$style.redPackageBtn" v-else @click.stop="check">
                             领取更多福利
                         </button>
                     </section>
@@ -144,14 +156,15 @@ import Coupon from './components/Coupon.vue'
 import Product from './components/Product.vue'
 import { checkLength, isPhone } from '../../../assets/js/validate'
 import { getRedPackage } from '../../../apis/marketing-activity/red-package'
-import {
-    // confirmOrder,
-    submitOrder,
-    getOrderPayData,
-    cancleOrderListByBatchNumber
-} from '../../../apis/order-manager'
-import { setTimeoutSync } from '../../../assets/js/util'
-import wechatPay from '../../../assets/js/wechat/wechat-pay'
+import { submit, pay } from './pay'
+
+// 单位转换：分转元
+const fenToYuan = function (num) {
+    const regexp = /(?:\.0*|(\.\d+?)0+)$/
+    num = (num / 100).toFixed(2)
+    num = num.replace(regexp, '$1')
+    return Number(num)
+}
 
 const bulletModel = {
     avatar: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/gift.png',
@@ -203,13 +216,11 @@ export default {
             // 是否数据请求完毕
             allLoaded: false,
             // 是否在支付
-            submiting: false,
-            // 获取微信支付数据递归次数
-            requestPayDataCount: 0
+            submiting: false
         }
     },
     computed: {
-        ...mapGetters(['realName', 'mobile', 'skuSourceKeyMap']),
+        ...mapGetters(['realName', 'mobile']),
         isCountdownShow () {
             return this.status === 0 || this.status === 1
         },
@@ -235,15 +246,16 @@ export default {
                 this.getRedPackage()
             ]
             await Promise.all(request.map(p => p.catch(e => console.error(e))))
-            this.allLoaded = true
-            this.bulletList = Object.freeze(bulletList)
             this.form.name = this.realName
             this.form.mobile = this.mobile
+            this.bulletList = Object.freeze(bulletList)
+            if (this.$refs.barrage) {
+                this.$refs.barrage.run()
+            }
         } catch (error) {
             throw error
-        }
-        if (this.$refs.barrage) {
-            this.$refs.barrage.run()
+        } finally {
+            this.allLoaded = true
         }
     },
     methods: {
@@ -251,6 +263,7 @@ export default {
             try {
                 const { result } = await getRedPackage(this.activityId)
                 const { redPacketCouponVO, ...activity } = result
+                redPacketCouponVO.price = fenToYuan(redPacketCouponVO.price)
                 this.status = 1
                 // this.status = result.activityStatus
                 this.activity = activity
@@ -313,14 +326,30 @@ export default {
             }
             return true
         },
-        check () {
-            if (!this.checkMobile()) {
-                return false
-            }
+        // 提交福利红包订单
+        async submit () {
+            try {
+                if (!this.checkMobile()) {
+                    return false
+                }
 
-            if (this.isFormShow && this.$refs.form) {
-                const result = this.$refs.form.validate()
-                console.log(result)
+                if (this.isFormShow && this.$refs.form) {
+                    if (!this.$refs.form.validate()) {
+                        return false
+                    }
+                }
+
+                this.submiting = true
+                const { payData, orderBatchNumber } = await submit(this.activityId, this.form.count)
+                const result = await pay(payData, payData.orderIds, payData.orderIds.length, orderBatchNumber, this.totalPrice)
+                console.log('result', result)
+                if (result === true) {
+                    await this.showModel('success')
+                }
+            } catch (error) {
+                throw error
+            } finally {
+                this.submiting = false
             }
         },
 
@@ -365,122 +394,6 @@ export default {
                     }
                 })
                 return this.$router.push({ name: 'RedPackage' })
-            } catch (error) {
-                throw error
-            }
-        },
-        // 提交订单，换取批次号
-        async submitOrder () {
-            try {
-                if (!this.checkMobile()) {
-                    return false
-                }
-
-                if (this.isFormShow && this.$refs.form) {
-                    if (!this.$refs.form.validate()) {
-                        return false
-                    }
-                }
-
-                this.submiting = true
-                const { activityId } = this
-                const data = {
-                    source: 9,
-                    activityId,
-                    skus: [
-                        {
-                            goodsId: activityId,
-                            goodsType: 'RED_ENVELOPE',
-                            sku1: activityId,
-                            count: this.form.count
-                        }
-                    ]
-                }
-                const { result: orderBatchNumber } = await submitOrder(data)
-                await this.requestPayData(orderBatchNumber)
-            } catch (error) {
-                throw error
-            } finally {
-                this.submiting = false
-            }
-        },
-
-        /**
-         * 获取微信支付数据，用批次号换取支付加密数据
-         * @param {string} orderBatchNumber 支付批次号，支付失败时用来关闭此次订单
-         * @returns {Promise<*>}
-         */
-        async requestPayData (orderBatchNumber) {
-            try {
-                // 每500ms请求一次支付数据，如果请求次数超过20次，就终止请求
-                // 下次请求的开始时间 =  500ms + 当前请求时间
-                if (this.requestPayDataCount >= 20) {
-                    this.requestPayDataCount = 0
-                    this.submiting = false
-                    throw new Error('支付失败')
-                }
-                await setTimeoutSync(500)
-                // 如果没有拿到请求数据，再次尝试发起请求
-                // 如果有，则发起支付
-                const { result: payData } = await getOrderPayData(orderBatchNumber)
-                // TODO:
-                console.log('payData', payData)
-                if (!payData) {
-                    this.requestPayDataCount++
-                    await this.requestPayData(orderBatchNumber)
-                } else {
-                    await this.pay(payData, payData.orderIds, payData.orderIds.length, orderBatchNumber)
-                }
-            } catch (error) {
-                this.requestPayDataCount = 0
-                await this.handlepayError(orderBatchNumber)
-                throw error
-            }
-        },
-
-        /**
-         * 支付
-         * @param {object} CREDENTIAL 支付数据
-         * @param {array} orderIds 订单Id
-         * @param {number} orderCount 订单数量
-         * @param {string} orderBatchNumber 支付批次号，支付失败时用来关闭此次订单
-         * @returns {Promise<*>}
-         */
-        async pay (CREDENTIAL, orderIds, orderCount, orderBatchNumber) {
-            // const firstOrder = orderIds[0]
-            try {
-                if (CREDENTIAL.appId) {
-                    await wechatPay(CREDENTIAL)
-                    this.submiting = false
-                    // this.$router.replace({ name: 'PaySuccess', params: { orderId: firstOrder, orderCount } })
-                } else if (this.totalPrice === 0) {
-                    // 免费红包 无需支付
-                    this.submiting = false
-                    await this.showModel('success')
-                    // this.$router.replace({ name: 'PaySuccess', params: { orderId: firstOrder, orderCount } })
-                } else {
-                    throw new Error('支付失败')
-                }
-            } catch (error) {
-                await this.handlepayError(orderBatchNumber)
-                throw error
-            } finally {
-                this.submiting = false
-            }
-        },
-
-        /**
-         * 处理支付失败的场景
-         * @param {string} orderBatchNumber 支付批次号，支付失败时用来关闭此次订单
-         * @returns {Promise<*>}
-         */
-        async handlepayError (orderBatchNumber) {
-            try {
-                const FORMALS = ['PHYSICAL_GOODS', 'VIRTUAL_GOODS', 'FORMAL_CLASS', 'EXPERIENCE_CLASS']
-                const orderType = this.products.some(item => FORMALS.includes(item.goodsType))
-                // 只有普通 实体/虚拟/正式课/体验课 + 非活动状态 才可二次支付不必关闭订单，其他支付失败直接关闭订单
-                if (orderType && this.activeProduct === this.skuSourceKeyMap.NORMAL) return
-                await cancleOrderListByBatchNumber(orderBatchNumber)
             } catch (error) {
                 throw error
             }
@@ -759,22 +672,28 @@ export default {
     }
     &-limit {
         margin-left: 14px;
-        width: 112px;
+        width: max-content;
         font-size: 20px;
         color: #666666;
     }
     &-btn {
-        display: block;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         margin: 38px auto 50px;
         width: 600px;
         line-height: 80px;
-        text-align: center;
         background: linear-gradient(180deg, #F58A2D 0%, #EC3E01 100%);
         border-radius: 60px;
         font-size: 30px;
         color: #FFFFFF;
         &.disabled {
-            opacity: 0.6;
+            opacity: 0.6 !important;
+            font-weight: normal !important;
+        }
+        > svg {
+            animation: rotate 2s linear infinite;
+            margin-right: 10px;
         }
     }
 }
@@ -832,10 +751,10 @@ export default {
 }
 @keyframes rotate {
     from {
-        transform: rotate(0deg) translate(-50%, -50%);
+        transform: rotate(0deg) translate(0, 0);
     }
     to {
-        transform: rotate(359deg) translate(-50%, -50%);
+        transform: rotate(359deg) translate(0, 0);
     }
 }
 

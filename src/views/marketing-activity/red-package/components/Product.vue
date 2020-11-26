@@ -93,11 +93,10 @@ export default {
 .right {
     display: flex;
     flex-direction: column;
-    // justify-content: space-between;
     flex: 1;
     width: 0;
     height: 100%;
-    padding: 8px 10px 4px;
+    padding: 8px 10px;
 }
 .main {
     font-size: 28px;
@@ -113,10 +112,11 @@ export default {
     @include elps();
 }
 .bottom {
-    margin-top: 8px;
+    margin-top: auto;
     width: 270px;
 }
 .price {
+    margin-top: auto;
     @include elps();
     .current {
         font-size: 40px;
