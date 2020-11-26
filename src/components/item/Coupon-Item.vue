@@ -189,8 +189,8 @@ export default {
     computed: {
         ...mapGetters(['userId']),
         isPriceShow () {
-            // return this.couponType === 3 && !this.isAvailableStatus && !this.isOverMax && this.price
-            return this.couponType === 3 && !this.isAvailableStatus && !this.isOverMax
+            return this.couponType === 3 && !this.isAvailableStatus && !this.isOverMax && this.price
+            // return this.couponType === 3 && !this.isAvailableStatus && !this.isOverMax
         }
     },
     methods: {
@@ -326,9 +326,6 @@ export default {
     color: #414141;
     font-size: 16px;
     line-height: 20px;
-      .instruction-btn__1 {
-
-      }
       .instruction-btn {
           width: 118px;
           font-size: 16px;
@@ -351,53 +348,55 @@ export default {
   .coupon-item-right {
     position: relative;
     display: flex;
-      flex-direction: column;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-      justify-content: center;
     width: 154px;
-      .right-text {
-          display: flex;
-          flex-direction: column;
-          margin-right: 10px;
-          font-size: 34px;
-          color: #fff;
-          font-weight: bold;
-      }
-      .receive-count {
-          position: absolute;
-          font-weight: normal;
-          width: 150px;
-      }
-      .ctrl {
-          display: flex;
-          align-items: center;
-      }
-      .price {
-          color: #fff;
-          font-size: 32px;
-          font-weight: bold;
-      }
+    .right-text {
+        display: flex;
+        flex-direction: column;
+        font-size: 34px;
+        color: #fff;
+        font-weight: bold;
+    }
+    .receive-count {
+        position: absolute;
+        font-weight: normal;
+        width: 150px;
+    }
+    .ctrl {
+        display: flex;
+        align-items: center;
+        > svg {
+            margin-left: 10px;
+        }
+    }
+    .price {
+        color: #fff;
+        font-size: 32px;
+        font-weight: bold;
+    }
 
-      /*.over-max {
-          display: inline-block;
-          position: relative;
-          width: 110px;
-          height: 110px;
-          text-align: center;
-          background: rgba(139, 139, 139, 1);
-          border: 6px solid rgba(255, 255, 255, 1);
-          border-radius: 50%;
-          font-size: 20px;
-          color: rgba(255, 255, 255, 1);
+    /*.over-max {
+        display: inline-block;
+        position: relative;
+        width: 110px;
+        height: 110px;
+        text-align: center;
+        background: rgba(139, 139, 139, 1);
+        border: 6px solid rgba(255, 255, 255, 1);
+        border-radius: 50%;
+        font-size: 20px;
+        color: rgba(255, 255, 255, 1);
 
-          > span {
-              position: absolute;
-              top: 50%;
-              left: 15px;
-              transform: translateY(-50%);
-              word-break: keep-all;
-          }
-      }*/
+        > span {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            word-break: keep-all;
+        }
+    }*/
   }
 
   /* 不可使用的状态，文字描述 */
@@ -428,7 +427,7 @@ export default {
   }
 
   /*已领取*/
-  .claimed{
+  .claimed {
     position: absolute;
     left: 350px;
     top: -50px;
