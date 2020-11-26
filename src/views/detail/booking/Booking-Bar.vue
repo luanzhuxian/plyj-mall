@@ -9,7 +9,7 @@
                     :endtime="detail.activityProductModel.activityStartTime"
                     @done="started"
                 />
-                <div :class="$style.desc" v-if="detail.activityProductModel.multiplt === 1">
+                <div :class="$style.desc">
                     预交定金翻{{ detail.activityProductModel.multipltNumber }}倍，
                     最低{{ Number(detail.activityProductModel.lowestPrice).toFixed(2) }}元可得商品</div>
             </div>

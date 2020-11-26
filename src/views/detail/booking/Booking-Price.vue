@@ -3,7 +3,7 @@
         <div>
             <div class="price">
                 定金&nbsp;<span>{{ detail.activityProductModel.price }}</span>
-                <div class="deposit" v-if="detail.activityProductModel.multiplt === 1">
+                <div class="deposit">
                     抵&nbsp;<span>{{ detail.activityProductModel.depositTotal }}</span>
                 </div>
             </div>
