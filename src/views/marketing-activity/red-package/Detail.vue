@@ -17,7 +17,7 @@
                 </div>
                 <!-- 海报 -->
                 <div :class="$style.topBtnWrapper">
-                    <div :class="$style.topBtn">海报分享</div>
+                    <div :class="$style.topBtn" @click="createPoster">海报分享</div>
                 </div>
                 <!-- 倒计时 -->
                 <div :class="$style.countdownWrapper">
@@ -157,6 +157,10 @@ import Product from './components/Product.vue'
 import { checkLength, isPhone } from '../../../assets/js/validate'
 import { getRedPackage } from '../../../apis/marketing-activity/red-package'
 import { submit, pay } from './pay'
+import {
+    loadImage,
+    drawRoundRect
+} from '../../../assets/js/util'
 
 // 单位转换：分转元
 const fenToYuan = function (num) {
@@ -397,6 +401,75 @@ export default {
             } catch (error) {
                 throw error
             }
+        },
+
+        // 创建海报
+        async createPoster () {
+            // 模板
+            const TYPE = 1
+            // 是否显示优惠券
+            const SHOW_COUPON = true
+            const CVS = document.createElement('canvas')
+            const CTX = CVS.getContext('2d')
+            CVS.width = 750
+            CVS.height = 1334
+
+            // 背景色
+            let bgc = ''
+            // 背景图
+            let bgi = ''
+            switch (TYPE) {
+                case 2:
+                    bgc = '#077ce6'
+                    bgi = 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/bg-detail-blue.png'
+                    break
+                case 3:
+                    bgc = '#7e2ef1'
+                    bgi = 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/bg-detail-purple.png'
+                    break
+                case 4:
+                    bgc = '#f5b72f'
+                    bgi = 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/bg-detail-yellow.png'
+                    break
+                default:
+                    bgc = '#ff634d'
+                    bgi = 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/bg-detail-red.png'
+                    break
+            }
+            // 绘制背景
+            CTX.fillStyle = bgc
+            CTX.fillRect(0, 0, CVS.width, CVS.height)
+            const BGI = await loadImage(bgi)
+            CTX.drawImage(BGI, 0, 0, 750, 450)
+            // 左上角图标
+            CTX.beginPath()
+            CTX.lineTo(0, 0)
+            CTX.lineTo(146, 0)
+            CTX.lineTo(0, 126)
+            CTX.closePath()
+            CTX.fillStyle = '#fff'
+            CTX.fill()
+            CTX.beginPath()
+            CTX.arc(41, 39, 33, 0, 2 * Math.PI)
+            CTX.fillStyle = '#FE461F'
+            CTX.closePath()
+            CTX.fill()
+            const GIFT_ICON = await loadImage('https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/gift2.png')
+            CTX.drawImage(GIFT_ICON, 16, 12, 50, 50)
+
+            // 内容
+            drawRoundRect({
+                ctx: CTX,
+                x: SHOW_COUPON ? 25 : 55,
+                y: SHOW_COUPON ? 470 : 550,
+                width: SHOW_COUPON ? 700 : 640,
+                height: SHOW_COUPON ? 794 : 734,
+                radius: 20,
+                fillStyle: '#fff'
+            })
+
+            // 生成图片
+            console.log(CVS.toDataURL('image/jpeg', 0.9))
         }
     }
 }
@@ -465,8 +538,8 @@ export default {
     text-align: center;
     padding-bottom: 40px;
     > img {
-        width: 207;
-        height: 182;
+        width: 207px;
+        height: 182px;
         object-fit: cover;
         margin-bottom: 18px;
     }
@@ -672,28 +745,22 @@ export default {
     }
     &-limit {
         margin-left: 14px;
-        width: max-content;
+        width: 112px;
         font-size: 20px;
         color: #666666;
     }
     &-btn {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        display: block;
         margin: 38px auto 50px;
         width: 600px;
         line-height: 80px;
+        text-align: center;
         background: linear-gradient(180deg, #F58A2D 0%, #EC3E01 100%);
         border-radius: 60px;
         font-size: 30px;
         color: #FFFFFF;
         &.disabled {
-            opacity: 0.6 !important;
-            font-weight: normal !important;
-        }
-        > svg {
-            animation: rotate 2s linear infinite;
-            margin-right: 10px;
+            opacity: 0.6;
         }
     }
 }
@@ -751,10 +818,10 @@ export default {
 }
 @keyframes rotate {
     from {
-        transform: rotate(0deg) translate(0, 0);
+        transform: rotate(0deg) translate(-50%, -50%);
     }
     to {
-        transform: rotate(359deg) translate(0, 0);
+        transform: rotate(359deg) translate(-50%, -50%);
     }
 }
 

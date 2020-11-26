@@ -130,7 +130,7 @@
                                     <template v-if="activeProduct === 7">
                                         库存<i v-text="publicBenefitActiveStock" />件
                                     </template>
-                                    <template v-else-if="activeType !== 1">
+                                    <template v-else-if="activeType !== 1 && activeType !== 4">
                                         总库存<i v-text="activeAllResidue" />件
                                     </template>
                                     <template v-else>
@@ -229,6 +229,7 @@ export default {
             min: 1,
             // 可买数量
             limit: 0,
+            // 当前规格，和计算属性 currentSku 基本一致，不同的是，这个的值可以被修改
             localCurrentSku: {},
             skuCode2List: [],
             currentSku1: '',
@@ -283,6 +284,7 @@ export default {
         publicBenefitActivePrice () {
             return this.publicBenefitActive.activityPrice
         },
+        // 当前选中的规格的原始值
         currentSku () {
             const current = this.skuList.find(item => item.skuCode1 === this.currentSku1 && item.skuCode2 === this.currentSku2) || {}
             if (this.sku.skuCode1 === current.skuCode1 && this.sku.skuCode2 === current.skuCode2) {
@@ -297,6 +299,9 @@ export default {
             return currentSku1.productAttributeImage ? currentSku1.productAttributeImage[0] || this.productImage : this.productImage
         },
         residue () {
+            if (this.activeType === 4 && this.localCurrentSku.activityProduct) {
+                return this.localCurrentSku.stock
+            }
             return this.localCurrentSku.stock
         },
 
@@ -414,9 +419,9 @@ export default {
             this.currentSku2 = sku2
             this.setCount()
         },
+        // 初始化显示的数量
         setCount () {
             this.min = this.currentSku.minBuyNum || 1
-            this.currentSku.count = this.currentSku.count || 1
             const max = Math.max(this.currentSku.count, this.min)
             this.localCurrentSku.count = max
             this.count = max
