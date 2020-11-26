@@ -337,7 +337,7 @@ export default {
                     }
                     return 0
                 })
-                priceList.push(0)
+                console.log(priceList)
                 item.price = Math.min(...priceList) || 0
             }
             this.prodList = list
