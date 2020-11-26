@@ -23,12 +23,12 @@
                 <div :class="$style.countdownWrapper">
                     <span :class="$style.text" v-if="status === 0">距活动开始：</span>
                     <span :class="$style.text" v-if="status === 1">距活动结束：</span>
-                    <span :class="$style.text" v-if="status === 2">活动已结束</span>
+                    <span :class="$style.text" v-if="status === 3">活动已结束</span>
                     <Countdown
                         v-if="isCountdownShow"
                         :duration="getDuration()"
                         format="DD天HH:mm:ss"
-                        @finish="status++"
+                        @finish="resetCountdown"
                     >
                         <template v-slot="{time}">
                             <i>{{ String(time.days) }}</i>
@@ -46,7 +46,7 @@
                 </div>
                 <div :class="$style.mainWrapper" v-if="allLoaded">
                     <!-- 弹幕 -->
-                    <section :class="$style.barrage">
+                    <section :class="$style.barrage" v-if="isBarrageShow">
                         <Barrage ref="barrage" :list="bulletList" :template="getBulletTemplate" />
                     </section>
                     <!-- 红包 -->
@@ -61,11 +61,12 @@
                             <Coupon
                                 :class="$style.redPackageListItem"
                                 :status.sync="status"
-                                :name="activity.name"
+                                :name="Number(activity.name)"
                                 :stock="Number(activity.issueVolume) - Number(activity.claimVolume)"
-                                :amount="redPackage.amount"
-                                :use-limit-amount="redPackage.useLimitAmount"
-                                :price="redPackage.price"
+                                :show-stock="status === 1"
+                                :amount="Number(redPackage.amount)"
+                                :use-limit-amount="Number(redPackage.useLimitAmount)"
+                                :price="Number(redPackage.price)"
                                 :receive-start-time="redPackage.receiveStartTime"
                                 :receive-end-time="redPackage.receiveEndTime"
                                 :use-start-time="redPackage.useStartTime"
@@ -79,8 +80,8 @@
                                         <button type="button" :disabled="form.count <= 1" @click.stop="minus">
                                             -
                                         </button>
-                                        <input type="number" v-model.number="form.count" @blur.stop="onInputNumberChange">
-                                        <button type="button" :disabled="isBtnDisabled" @click.stop="add">
+                                        <input type="number" v-model.number="form.count">
+                                        <button type="button" :disabled="isInputNumberDisabled" @click.stop="add">
                                             +
                                         </button>
                                     </template>
@@ -96,27 +97,30 @@
                                 </PlFormItem>
                             </PlForm>
                         </div>
-                        <button :class="[$style.redPackageBtn, $style.disabled]" v-if="status === 0" @click.stop="check">
-                            {{ `仅需￥${totalPrice}  敬请期待` }}
+                        <!-- 按钮 -->
+                        <button :class="[$style.redPackageBtn, $style.disabled]" v-if="status === 0">
+                            <span v-if="totalPrice"> {{ `仅需￥${totalPrice}  敬请期待` }}</span>
+                            <span v-else>敬情期待</span>
                         </button>
-                        <button
-                            v-else-if="status === 1"
-                            :class="{
-                                [$style.redPackageBtn]: true,
-                                [$style.disabled]: submiting
-                            }"
-                            :disabled="submiting"
-                            @click.stop="submit"
-                        >
-                            <PlSvg v-show="submiting" name="icon-btn-loading" fill="#FFF" width="35" />
-                            <span>
-                                {{ `仅需￥${totalPrice}  立即领取` }}
-                            </span>
-                        </button>
-                        <!-- <button :class="$style.redPackageBtn" v-else-if="status === 1 && quantityLimit" @click.stop="check">
-                            您已领取  立即查看
-                        </button> -->
-                        <button :class="$style.redPackageBtn" v-else @click.stop="check">
+                        <template v-if="status === 1">
+                            <button :class="$style.redPackageBtn" v-if="isUpLimitReached" @click.stop="$router.push({ name: 'RedPackage' })">
+                                您已领取  立即查看
+                            </button>
+                            <button
+                                v-else
+                                :class="{
+                                    [$style.redPackageBtn]: true,
+                                    [$style.disabled]: submiting || isUpLimitReached
+                                }"
+                                :disabled="submiting || isUpLimitReached"
+                                @click.stop="submit"
+                            >
+                                <PlSvg v-show="submiting" name="icon-btn-loading" fill="#FFF" width="35" />
+                                <span v-if="totalPrice">{{ `仅需￥${totalPrice}  立即领取` }}</span>
+                                <span v-else>数量有限 立即领取</span>
+                            </button>
+                        </template>
+                        <button :class="$style.redPackageBtn" v-if="status === 3" @click.stop="$router.push({ name: 'RedPackage' })">
                             领取更多福利
                         </button>
                     </section>
@@ -142,6 +146,10 @@
                     </section>
                 </div>
                 <PlSvg :class="$style.loading" name="icon-loading" fill="#FFF" width="90" v-else />
+                <router-link :class="$style.navBtn" :to="{ name: 'RedPackage' }">
+                    <span>活动</span>
+                    <span>首页</span>
+                </router-link>
             </div>
         </div>
     </div>
@@ -170,14 +178,13 @@ const fenToYuan = function (num) {
     return Number(num)
 }
 
-// const bulletModel = {
-//     avatar: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/gift.png',
-//     name: '张三',
-//     phone: '13333331111',
-//     donationAmount: '0.0001'
-// }
-
-// const bulletList = Array.from({ length: 10 }).fill(bulletModel)
+// 是否是今天
+const isToday = date => {
+    const today = new Date().setHours(0, 0, 0, 0)
+    const tomorrow = today + (24 * 60 * 60 * 1000)
+    const current = new Date(date).valueOf()
+    return current >= today && current <= tomorrow
+}
 
 export default {
     name: 'RedPackageDetail',
@@ -195,7 +202,10 @@ export default {
     },
     data () {
         return {
-            backgroundId: 0,
+            // 是否数据请求完毕
+            allLoaded: false,
+            // 是否在支付
+            submiting: false,
             // 0 未开始 1 进行中 2 暂停 3 结束
             status: 0,
             activity: {},
@@ -216,11 +226,7 @@ export default {
                     { required: true, message: '请输入联系人手机号' },
                     { validator: isPhone, message: '联系人手机号格式错误' }
                 ]
-            },
-            // 是否数据请求完毕
-            allLoaded: false,
-            // 是否在支付
-            submiting: false
+            }
         }
     },
     computed: {
@@ -228,22 +234,29 @@ export default {
         isCountdownShow () {
             return this.status === 0 || this.status === 1
         },
+        isBarrageShow () {
+            return (this.status === 1 || this.status === 3) && this.bulletList && this.bulletList.length
+        },
         isFormShow () {
             return this.status === 1 && this.redPackage.price > 0
         },
-        isBtnDisabled () {
+        isInputNumberDisabled () {
             const { count } = this.form
-            return count >= (this.activity.issueVolume - this.activity.claimVolume) || count >= this.quantityLimit
+            // count += this.redPackage.userClaimed
+            return count >= (this.activity.issueVolume - this.activity.claimVolume) || count >= this.redPackage.quantityLimit
+        },
+        // 是否达到领取上线
+        isUpLimitReached () {
+            // this.form.count + this.redPackage.userClaimed >= this.redPackage.useLimitAmount
+            return false
         },
         totalPrice () {
             const { price } = this.redPackage
             const { count } = this.form
-            return price * count
+            return Number(price) * Number(count)
         }
     },
-    async created () {
-        console.log('created', this.activityId)
-    },
+    async created () {},
     async activated () {
         try {
             const request = [
@@ -268,8 +281,7 @@ export default {
                 const { result } = await getRedPackage(this.activityId)
                 const { redPacketCouponVO, ...activity } = result
                 redPacketCouponVO.price = fenToYuan(redPacketCouponVO.price)
-                this.status = 1
-                // this.status = result.activityStatus
+                this.status = result.activityStatus
                 this.activity = activity
                 this.redPackage = redPacketCouponVO
                 this.productList = result.redPacketCouponVO.applicableGoodsVOS
@@ -284,21 +296,22 @@ export default {
                 if (result.length) {
                     for (const item of result) {
                         item.phone = String(item.mobile).slice(-4)
+                        item.time = isToday(item.createTime) ? '刚刚' : ''
+                        item.msg = item.message ? item.message.replace(/\.\d+0+/, '') : ''
                     }
                 }
-                console.log(result)
-                // this.bulletList = Object.freeze(bulletList)
+                this.bulletList = Object.freeze(result)
             } catch (error) {
                 throw error
             }
         },
         getBulletTemplate (bullet, vm) {
-            const { avatar, name, phone } = bullet
-            const message = `${ name }****${ phone }刚刚领取满${ 10 }元抵${ 100 }的储备金`
+            const { userImage, userName, phone, time, msg } = bullet
+            const message = `${ userName }****${ phone }${ time }领取${ msg }的储备金`
             const template = `
                 <div class="my-bullet">
                     <div class="my-bullet__avatar">
-                        <img src="${ avatar }" alt="${ name }">
+                        <img src="${ userImage }" alt="${ userName }">
                     </div>
                     <div class="my-bullet__message">
                         ${ message }
@@ -319,14 +332,19 @@ export default {
             }
             return 0
         },
+        resetCountdown () {
+            if (this.status === 0) {
+                this.status = 1
+            }
+            if (this.status === 1) {
+                this.status = 3
+            }
+        },
         minus () {
             this.form.count--
         },
         add () {
             this.form.count++
-        },
-        onInputNumberChange () {
-
         },
         // 检查是否绑定手机号
         checkMobile () {
@@ -358,11 +376,16 @@ export default {
                     }
                 }
 
+                // if (this.form.count + this.redPackage.userClaimed > this.redPackage.useLimitAmount) {
+                //     return this.$warning(`每人至多领取${ this.redPackage.useLimitAmount }张，您已领取${ this.redPackage.userClaimed }张`)
+                // }
+
                 this.submiting = true
                 const { payData, orderBatchNumber } = await submit(this.activityId, this.form.count)
                 const result = await pay(payData, payData.orderIds, payData.orderIds.length, orderBatchNumber, this.totalPrice)
                 console.log('result', result)
                 if (result === true) {
+                    // this.redPackage.userClaimed++
                     await this.showModel('success')
                 }
             } catch (error) {
@@ -669,6 +692,7 @@ export default {
 
 <style lang="scss" module>
 .red-package-detail {
+    position: relative;
     min-height: 100vh;
     &.bg-red {
         background: #FD644C;
@@ -703,7 +727,7 @@ export default {
 .container {
     position: relative;
     box-sizing: border-box;
-    padding: 478px 24px 80px;
+    padding: 478px 24px 146px;
     min-height: 100vh;
 }
 
@@ -893,6 +917,23 @@ export default {
     }
 }
 
+.nav-btn {
+    position: fixed;
+    right: 26px;
+    bottom: 34px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 84px;
+    height: 84px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    font-size: 22px;
+    line-height: 30px;
+    color: #FFFFFF;
+}
+
 .loading {
     position: absolute;
     top: 50%;
@@ -901,6 +942,7 @@ export default {
     animation: rotate1 1.2s linear infinite;
     z-index: 999;
 }
+
 @keyframes rotate1 {
     from {
         transform: rotate(0deg) translate(-50%, -50%);

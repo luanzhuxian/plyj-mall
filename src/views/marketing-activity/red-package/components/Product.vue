@@ -7,22 +7,24 @@
             params: { productId: id }
         }"
     >
-        <div :class="$style.left">
-            <img :src="img" :alt="main">
-        </div>
-        <div :class="$style.right">
-            <b :class="$style.main" v-text="main" />
-            <div :class="$style.bottom">
-                <div :class="$style.price">
-                    <b :class="$style.current" v-text="price" />
-                    <span :class="$style.original" v-text="`¥${original}`" />
-                </div>
+        <div :class="$style.wrapper">
+            <div :class="$style.left">
+                <img :src="img" :alt="main">
+            </div>
+            <div :class="$style.right">
+                <b :class="$style.main" v-text="main" />
                 <div :class="$style.tags">
                     <span :class="$style.tag" v-if="sku1" v-text="sku1" />
                     <span :class="$style.tag" v-if="sku2" v-text="sku2" />
                 </div>
+                <div :class="$style.price">
+                    <b :class="$style.current" v-text="price" />
+                    <span :class="$style.original" v-text="`¥${original}`" />
+                </div>
             </div>
-            <button :class="$style.btn">抢</button>
+        </div>
+        <div :class="$style.btnWrapper">
+            <button :class="$style.btn">领券后购买</button>
         </div>
     </router-link>
 </template>
@@ -67,12 +69,17 @@ export default {
 .product {
     position: relative;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     box-sizing: border-box;
     padding: 26px 16px;
-    height: 260px;
+    height: 316px;
     background-color: #fff;
     border-radius: 20px;
+}
+.wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
 }
 .left {
     width: 314px;
@@ -87,6 +94,7 @@ export default {
 }
 .right {
     display: flex;
+    justify-content: space-between;
     flex-direction: column;
     flex: 1;
     width: 0;
@@ -95,16 +103,30 @@ export default {
 }
 .main {
     font-size: 28px;
+    height: 82px;
     line-height: 38px;
     color: #333333;
     @include elps-wrap(2);
 }
-.bottom {
+.tags {
     margin-top: auto;
-    width: 270px;
+}
+.tag {
+    display: inline-block;
+    box-sizing: border-box;
+    margin-right: 10px;
+    padding: 0 6px;
+    height: 36px;
+    line-height: 32px;
+    text-align: center;
+    border: 2px solid #FE7700;
+    border-radius: 6px;
+    font-size: 20px;
+    color: #FE7700;
+    @include elps();
 }
 .price {
-    margin-top: auto;
+    margin-top: 8px;
     @include elps();
     .current {
         font-size: 40px;
@@ -125,33 +147,17 @@ export default {
         vertical-align: super;
     }
 }
-.tag {
-    display: inline-block;
-    box-sizing: border-box;
-    margin-top: 12px;
-    margin-right: 10px;
-    padding: 0 6px;
-    height: 36px;
-    line-height: 32px;
-    text-align: center;
-    border: 2px solid #FE7700;
-    border-radius: 6px;
-    font-size: 20px;
-    color: #FE7700;
-    @include elps();
+.btn-wrapper {
+    margin-top: 8px;
+    text-align: right;
 }
 .btn {
-    position: absolute;
-    right: 18px;
-    bottom: 26px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 72px;
-    height: 72px;
-    background: #F23D00;
-    border-radius: 50%;
-    font-size: 40px;
+    width: 160px;
+    line-height: 48px;
+    text-align: center;
+    background: #FE7700;
+    border-radius: 40px;
+    font-size: 26px;
     color: #FFFFFF;
 }
 </style>

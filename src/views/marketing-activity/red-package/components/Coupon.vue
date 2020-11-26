@@ -1,12 +1,12 @@
 <template>
-    <li :class="$style.coupon">
+    <li :class="$style.coupon" @click.stop="handleClick">
         <div :class="$style.countdownWrapper" v-if="isCountdownShow">
             <span :class="$style.text" v-if="status === 0">距活动开始：</span>
             <span :class="$style.text" v-if="status === 1">距活动结束：</span>
             <Countdown
                 :duration="getDuration()"
                 format="DD天HH:mm:ss"
-                @finish="$emit('update:status', status + 1)"
+                @finish="resetCountdown"
             >
                 <template v-slot="{time}">
                     <i>{{ String(time.days) }}</i>
@@ -21,7 +21,7 @@
         </div>
         <div :class="$style.left">
             <b :class="$style.price">{{ amount }}</b>
-            <span :class="$style.stock">{{ `剩余${stock}张` }}</span>
+            <span :class="$style.stock" v-if="showStock">{{ `剩余${stock}张` }}</span>
         </div>
         <div :class="$style.right">
             <div :class="$style.top">
@@ -34,9 +34,11 @@
                     </p>
                 </div>
                 <template v-if="showBtn">
-                    <button v-if="true">{{ `${price}元抢购` }}</button>
-                    <!-- <button v-else-if="true">立即领取</button> -->
-                    <button v-else-if="status === 3" :class="$style.disabled">活动结束</button>
+                    <template v-if="~[0, 1].indexOf(status)">
+                        <button v-if="price">{{ `${price}元抢购` }}</button>
+                        <button v-else>立即领取</button>
+                    </template>
+                    <button v-if="status === 3" :class="$style.disabled">活动结束</button>
                 </template>
             </div>
             <p :class="$style.bottom">
@@ -48,9 +50,6 @@
 
 <script>
 import Countdown from '../../../activity/components/Countdown.vue'
-// import { receiveCoupon } from '../../../apis/my-coupon'
-
-// let isClickable = false
 
 export default {
     name: 'Coupon',
@@ -59,6 +58,7 @@ export default {
     },
     props: {
         showCountdown: Boolean,
+        showStock: Boolean,
         showBtn: Boolean,
         // 0 未开始 1 进行中 2 暂停 3 结束
         status: {
@@ -129,6 +129,17 @@ export default {
                 return new Date(receiveEndTime).valueOf() - now
             }
             return 0
+        },
+        resetCountdown () {
+            if (this.status === 0) {
+                this.$emit('update:status', 1)
+            }
+            if (this.status === 1) {
+                this.$emit('update:status', 3)
+            }
+        },
+        handleClick () {
+            this.$emit('click')
         }
     }
 }
@@ -172,9 +183,12 @@ export default {
 }
 .left {
     position: relative;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     box-sizing: border-box;
-    padding: 56px 0 6px 20px;
+    padding-left: 20px;
     width: 184px;
     height: 100%;
     @include elps();
