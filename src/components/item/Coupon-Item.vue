@@ -178,6 +178,12 @@ export default {
         isShowReceive: {
             type: Boolean,
             default: true
+        },
+
+        // 福利红包价格
+        price: {
+            type: Number,
+            default: 0
         }
     },
     computed: {
