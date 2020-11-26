@@ -7,7 +7,7 @@
                 </div>
                 <!-- 商品轮播 -->
                 <section :class="$style.product" v-if="productList && productList.length">
-                    <ProductSwiper :list="productList" />
+                    <Swiper :list="productList" />
                 </section>
                 <!-- 弹幕 -->
                 <section :class="$style.barrage">
@@ -30,7 +30,7 @@
 <script>
 import Barrage from '../longmen-festival/action/components/Barrage.vue'
 import Coupon from './components/Coupon.vue'
-import ProductSwiper from './components/Product-Swiper.vue'
+import Swiper from './components/Swiper.vue'
 
 const productModel1 = {
     img: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/奖品.png',
@@ -67,7 +67,7 @@ export default {
     components: {
         Barrage,
         Coupon,
-        ProductSwiper
+        Swiper
     },
     data () {
         return {
