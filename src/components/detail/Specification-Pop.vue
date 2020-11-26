@@ -140,7 +140,7 @@
                             </div>
                         </div>
                     </div>
-                    <div :class="$style.bookPrice" v-if="activeProduct === 4 && currentSku.activityProduct">
+                    <div :class="$style.bookPrice" v-if="activeProduct === 4 && preActivity === 2 && currentSku.activityProduct">
                         定金<span>{{ currentSku.activityPrice }}</span>
                         <div class="deposit">
                             抵<span>{{ currentSku.depositTotal }}</span>

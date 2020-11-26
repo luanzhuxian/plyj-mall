@@ -117,7 +117,7 @@
         >
             <template v-slot:footer="{ currentSku, limiting, limit, publicBenefitActiveStock }">
                 <div>
-                    <div :class="$style.buttons2" v-if="activeProduct === 4 && !currentSku.activityProduct">
+                    <div :class="$style.buttons2" v-if="activeProduct === 4 && preActivity === 2 && !currentSku.activityProduct">
                         <button
                             :class="$style.add"
                             @click="$emit('addToCart', currentSku, limiting, limit)"
@@ -135,6 +135,15 @@
                             <span>{{ confirmText }}</span>
                         </button>
                     </div>
+                    <button
+                        :class="$style.preBtn"
+                        :disabled="activeStock <= 0"
+                        @click="confirm(currentSku, limiting, limit)"
+                        v-else-if="activeProduct === 4 && preActivity === 2 && currentSku.activityProduct"
+                    >
+                        {{ activeStock > 0 ? '定金购买' : '已售罄' }}
+                        <div :class="$style.btnText">¥ {{ currentSku.activityPrice }}</div>
+                    </button>
                     <pl-button
                         type="warning"
                         size="large"
@@ -143,7 +152,7 @@
                         @click="confirm(currentSku, limiting, limit)"
                         v-else
                     >
-                        {{ (activeProduct === 4 && currentSku.activityProduct) ? `定金购买 ¥ ${currentSku.activityPrice}` : '确定' }}
+                        {{ confirmText }}
                     </pl-button>
                 </div>
             </template>
@@ -509,7 +518,18 @@ export default {
             }
         }
     }
-
+    .preBtn{
+      width: 100%;
+      height: 80px;
+      margin-right: 16px;
+      color: #fff;
+      font-size: 30px;
+      background: #FE7700;
+      border-radius: 10px;
+      &:disabled {
+        color: rgba(255, 255, 255, .4);
+      }
+    }
     .buttons {
         display: flex;
         margin-right: 20px;
@@ -520,6 +540,16 @@ export default {
         > button {
             flex: 1;
         }
+      .btn-text {
+        margin: 4px auto 0;
+        width: 100px;
+        text-align: center;
+        line-height: 28px;
+        background: #ffffff;
+        border-radius: 304px;
+        font-size: 20px;
+        color: #FE7700;
+      }
     }
     .buttons2 {
       display: flex;
@@ -629,16 +659,5 @@ export default {
                 color: #ccc;
             }
         }
-    }
-
-    .btn-text {
-        margin: 4px auto 0;
-        width: 100px;
-        text-align: center;
-        line-height: 28px;
-        background: #ffffff;
-        border-radius: 304px;
-        font-size: 20px;
-        color: #FE7700;
     }
 </style>
