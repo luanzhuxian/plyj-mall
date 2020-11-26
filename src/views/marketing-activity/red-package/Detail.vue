@@ -75,10 +75,10 @@
                             <PlForm ref="form" :model="form" :rules="rules">
                                 <PlFormItem prop="number" label="领取数量" class="input-number">
                                     <template v-if="redPackage.quantityLimit !== 1">
-                                        <button type="button" :disabled="form.number <= 1" @click.stop="minus">
+                                        <button type="button" :disabled="form.count <= 1" @click.stop="minus">
                                             -
                                         </button>
-                                        <input type="number" v-model.number="form.number" @blur.stop="onInputNumberChange">
+                                        <input type="number" v-model.number="form.count" @blur.stop="onInputNumberChange">
                                         <button type="button" :disabled="isBtnDisabled" @click.stop="add">
                                             +
                                         </button>
@@ -98,7 +98,7 @@
                         <button :class="[$style.redPackageBtn, $style.disabled]" v-if="status === 0" @click="check">
                             {{ `仅需￥${totalPrice}  敬请期待` }}
                         </button>
-                        <button :class="$style.redPackageBtn" v-else-if="status === 1" @click="check">
+                        <button :class="$style.redPackageBtn" v-else-if="status === 1" @click="submitOrder">
                             {{ `仅需￥${totalPrice}  立即领取` }}
                         </button>
                         <!-- <button :class="$style.redPackageBtn" v-else-if="status === 1 && quantityLimit" @click="check">
@@ -119,13 +119,13 @@
                                 v-for="(prod, index) of productList"
                                 :key="index"
                                 :id="prod.productId"
-                                :img="prod.productMainImage"
+                                :img="prod.image"
                                 :main="prod.productName"
                                 :sub="prod.productName"
                                 :price="prod.price"
                                 :original="prod.originPrice"
-                                :sku-1="prod.skuCode1Name"
-                                :sku-2="prod.skuCode2Name"
+                                :sku1="prod.skuCode1Name"
+                                :sku2="prod.skuCode2Name"
                             />
                         </ul>
                     </section>
@@ -144,6 +144,14 @@ import Coupon from './components/Coupon.vue'
 import Product from './components/Product.vue'
 import { checkLength, isPhone } from '../../../assets/js/validate'
 import { getRedPackage } from '../../../apis/marketing-activity/red-package'
+import {
+    // confirmOrder,
+    submitOrder,
+    getOrderPayData,
+    cancleOrderListByBatchNumber
+} from '../../../apis/order-manager'
+import { setTimeoutSync } from '../../../assets/js/util'
+import wechatPay from '../../../assets/js/wechat/wechat-pay'
 
 const bulletModel = {
     avatar: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/gift.png',
@@ -178,7 +186,7 @@ export default {
             bulletList: [],
             productList: [],
             form: {
-                number: 1,
+                count: 1,
                 name: '',
                 mobile: ''
             },
@@ -192,11 +200,16 @@ export default {
                     { validator: isPhone, message: '联系人手机号格式错误' }
                 ]
             },
-            allLoaded: false
+            // 是否数据请求完毕
+            allLoaded: false,
+            // 是否在支付
+            submiting: false,
+            // 获取微信支付数据递归次数
+            requestPayDataCount: 0
         }
     },
     computed: {
-        ...mapGetters(['realName', 'mobile']),
+        ...mapGetters(['realName', 'mobile', 'skuSourceKeyMap']),
         isCountdownShow () {
             return this.status === 0 || this.status === 1
         },
@@ -204,13 +217,13 @@ export default {
             return this.status === 1 && this.redPackage.price > 0
         },
         isBtnDisabled () {
-            const { number } = this.form
-            return number >= (this.activity.issueVolume - this.activity.claimVolume) || number >= this.quantityLimit
+            const { count } = this.form
+            return count >= (this.activity.issueVolume - this.activity.claimVolume) || count >= this.quantityLimit
         },
         totalPrice () {
             const { price } = this.redPackage
-            const { number } = this.form
-            return price * number
+            const { count } = this.form
+            return price * count
         }
     },
     async created () {
@@ -275,14 +288,15 @@ export default {
             return template
         },
         minus () {
-            this.form.number--
+            this.form.count--
         },
         add () {
-            this.form.number++
+            this.form.count++
         },
         onInputNumberChange () {
 
         },
+        // 检查是否绑定手机号
         checkMobile () {
             if (!this.mobile) {
                 this.$confirm('您还没有绑定手机，请先绑定手机')
@@ -304,19 +318,35 @@ export default {
                 return false
             }
 
-            const result = this.$refs.form.validate()
-            console.log(result)
+            if (this.isFormShow && this.$refs.form) {
+                const result = this.$refs.form.validate()
+                console.log(result)
+            }
         },
-        async onClick () {
+
+        /**
+         * 领取后弹窗
+         * @param {string} type success fail
+         * @returns {Promise<*>}
+         */
+        async showModel (type) {
             try {
-                const Image = this.$createElement('img', {
-                    attrs: {
-                        src: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/弹框1.png'
-                    }
-                })
-                const Text1 = this.$createElement('p', '领取成功，可在订单或')
-                const Text2 = this.$createElement('p', '领券中心查看')
-                // const Text3 = this.$createElement('p', '下手慢了，去看看其他活动吧')
+                let imgSrc
+                let text1
+                let text2
+
+                if (type === 'success') {
+                    imgSrc = 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/弹框1.png'
+                    text1 = '领取成功，可在订单或'
+                    text2 = '领券中心查看'
+                } else {
+                    imgSrc = 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/弹框2.png'
+                    text1 = '下手慢了，去看看其他活动吧'
+                    text2 = ''
+                }
+                const Image = this.$createElement('img', { attrs: { src: imgSrc } })
+                const Text1 = this.$createElement('p', text1)
+                const Text2 = this.$createElement('p', text2)
                 const Content = this.$createElement(
                     'div', {
                         class: 'message-box__content'
@@ -334,6 +364,123 @@ export default {
                         borderTop: '2px solid #E7E7E7'
                     }
                 })
+                return this.$router.push({ name: 'RedPackage' })
+            } catch (error) {
+                throw error
+            }
+        },
+        // 提交订单，换取批次号
+        async submitOrder () {
+            try {
+                if (!this.checkMobile()) {
+                    return false
+                }
+
+                if (this.isFormShow && this.$refs.form) {
+                    if (!this.$refs.form.validate()) {
+                        return false
+                    }
+                }
+
+                this.submiting = true
+                const { activityId } = this
+                const data = {
+                    source: 9,
+                    activityId,
+                    skus: [
+                        {
+                            goodsId: activityId,
+                            goodsType: 'RED_ENVELOPE',
+                            sku1: activityId,
+                            count: this.form.count
+                        }
+                    ]
+                }
+                const { result: orderBatchNumber } = await submitOrder(data)
+                await this.requestPayData(orderBatchNumber)
+            } catch (error) {
+                throw error
+            } finally {
+                this.submiting = false
+            }
+        },
+
+        /**
+         * 获取微信支付数据，用批次号换取支付加密数据
+         * @param {string} orderBatchNumber 支付批次号，支付失败时用来关闭此次订单
+         * @returns {Promise<*>}
+         */
+        async requestPayData (orderBatchNumber) {
+            try {
+                // 每500ms请求一次支付数据，如果请求次数超过20次，就终止请求
+                // 下次请求的开始时间 =  500ms + 当前请求时间
+                if (this.requestPayDataCount >= 20) {
+                    this.requestPayDataCount = 0
+                    this.submiting = false
+                    throw new Error('支付失败')
+                }
+                await setTimeoutSync(500)
+                // 如果没有拿到请求数据，再次尝试发起请求
+                // 如果有，则发起支付
+                const { result: payData } = await getOrderPayData(orderBatchNumber)
+                // TODO:
+                console.log('payData', payData)
+                if (!payData) {
+                    this.requestPayDataCount++
+                    await this.requestPayData(orderBatchNumber)
+                } else {
+                    await this.pay(payData, payData.orderIds, payData.orderIds.length, orderBatchNumber)
+                }
+            } catch (error) {
+                this.requestPayDataCount = 0
+                await this.handlepayError(orderBatchNumber)
+                throw error
+            }
+        },
+
+        /**
+         * 支付
+         * @param {object} CREDENTIAL 支付数据
+         * @param {array} orderIds 订单Id
+         * @param {number} orderCount 订单数量
+         * @param {string} orderBatchNumber 支付批次号，支付失败时用来关闭此次订单
+         * @returns {Promise<*>}
+         */
+        async pay (CREDENTIAL, orderIds, orderCount, orderBatchNumber) {
+            // const firstOrder = orderIds[0]
+            try {
+                if (CREDENTIAL.appId) {
+                    await wechatPay(CREDENTIAL)
+                    this.submiting = false
+                    // this.$router.replace({ name: 'PaySuccess', params: { orderId: firstOrder, orderCount } })
+                } else if (this.totalPrice === 0) {
+                    // 免费红包 无需支付
+                    this.submiting = false
+                    await this.showModel('success')
+                    // this.$router.replace({ name: 'PaySuccess', params: { orderId: firstOrder, orderCount } })
+                } else {
+                    throw new Error('支付失败')
+                }
+            } catch (error) {
+                await this.handlepayError(orderBatchNumber)
+                throw error
+            } finally {
+                this.submiting = false
+            }
+        },
+
+        /**
+         * 处理支付失败的场景
+         * @param {string} orderBatchNumber 支付批次号，支付失败时用来关闭此次订单
+         * @returns {Promise<*>}
+         */
+        async handlepayError (orderBatchNumber) {
+            try {
+                const FORMALS = ['PHYSICAL_GOODS', 'VIRTUAL_GOODS', 'FORMAL_CLASS', 'EXPERIENCE_CLASS']
+                const orderType = this.products.some(item => FORMALS.includes(item.goodsType))
+                // 只有普通 实体/虚拟/正式课/体验课 + 非活动状态 才可二次支付不必关闭订单，其他支付失败直接关闭订单
+                if (orderType && this.activeProduct === this.skuSourceKeyMap.NORMAL) return
+                await cancleOrderListByBatchNumber(orderBatchNumber)
             } catch (error) {
                 throw error
             }

@@ -3,13 +3,13 @@
         <template v-if="allLoaded">
             <h3
                 style="font-size: 100px"
-                @click="$router.push({ name: 'RedPackage', params: { activityId: '123123' }})"
+                @click="$router.push({ name: 'RedPackage'})"
             >
                 main
             </h3>
             <h3
                 style="font-size: 100px"
-                @click="$router.push({ name: 'RedPackageDetail', params: { activityId: '1331491545220997121' }})"
+                @click="$router.push({ name: 'RedPackageDetail', params: { activityId: '1331799433634127874' }})"
             >
                 detail
             </h3>

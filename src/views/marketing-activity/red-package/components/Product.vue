@@ -19,8 +19,8 @@
                     <span :class="$style.original" v-text="`¥${original}`" />
                 </div>
                 <div :class="$style.tags">
-                    <span :class="$style.tag" v-text="sku1" />
-                    <span :class="$style.tag" v-text="sku2" />
+                    <span :class="$style.tag" v-if="sku1" v-text="sku1" />
+                    <span :class="$style.tag" v-if="sku2" v-text="sku2" />
                 </div>
             </div>
             <button :class="$style.btn">抢</button>
@@ -141,7 +141,7 @@ export default {
     display: inline-block;
     box-sizing: border-box;
     margin-top: 12px;
-    margin-right: 5px;
+    margin-right: 10px;
     padding: 0 6px;
     height: 36px;
     line-height: 32px;
@@ -150,6 +150,7 @@ export default {
     border-radius: 6px;
     font-size: 20px;
     color: #FE7700;
+    @include elps();
 }
 .btn {
     position: absolute;
