@@ -171,14 +171,6 @@
             //     goodsPriceTotal: '222',
             //     serialNo: '123'
             // }});
-            const script = document.createElement('script')
-            script.src = `${MAIN_URL}/apis/v2/order/pay/goldplan/order/detail?${params}`
-            document.body.appendChild(script)
-            script.onerror = function () {
-                error.style.display = 'flex'
-                error.querySelector('span').innerText = '订单加载错误'
-                buttons.style.display = 'none'
-            }
 
             parent.postMessage(JSON.stringify({
                 action: 'onIframeReady',
@@ -220,6 +212,15 @@
                     error.style.display = 'flex'
                     error.querySelector('span').innerText = '订单核验错误'
                 }
+            }
+
+            const script = document.createElement('script')
+            script.src = `${MAIN_URL}/apis/v2/order/pay/goldplan/order/detail.js?${params}`
+            document.body.appendChild(script)
+            script.onerror = function () {
+                error.style.display = 'flex'
+                error.querySelector('span').innerText = '订单加载错误'
+                buttons.style.display = 'none'
             }
         })()
     </script>
