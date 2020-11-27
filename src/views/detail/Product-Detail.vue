@@ -730,7 +730,7 @@ export default {
                 // 所有图片
                 this.banners = mediaInfoIds
                 this.productSkuModels = result.productSkuModels
-                this.currentModel = result.productSkuModels.find(item => item.minBuyNum <= item.stock) || result.productSkuModels[0]
+                this.currentModel = result.productSkuModels.find(item => item.activityPrice === result.activityProductModel.price) || result.productSkuModels[0]
                 this.currentModel.count = result.productSkuModels[0].minBuyNum
                 this.detail = result
 

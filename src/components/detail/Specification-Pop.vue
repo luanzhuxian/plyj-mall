@@ -25,15 +25,15 @@
                                     v-text="publicBenefitActivePrice"
                                 />
                                 <p
-                                    v-else-if="activeType === 1"
+                                    v-else-if="activeType === 1 || (activeProduct === 4 && !currentSku.activityProduct)"
                                     :class="$style.price"
                                     v-text="currentSku.price"
                                 />
                                 <!-- 如果是预购的话，取当前选中规格的价格 -->
                                 <p
-                                    v-else-if="activeType !== 1"
+                                    v-else-if="activeProduct === 4 && currentSku.activityProduct"
                                     :class="$style.price"
-                                    v-text="activityProductModel.price"
+                                    v-text="currentSku.activityPrice"
                                 />
                                 <p :class="$style.original" v-if="currentSku.price !== currentSku.originalPrice && currentSku.originalPrice">
                                     原价：<del class="rmb" v-text="currentSku.originalPrice" v-if="activeType !== 1" /> <del class="rmb" v-else v-text="currentSku.originalPrice" />
