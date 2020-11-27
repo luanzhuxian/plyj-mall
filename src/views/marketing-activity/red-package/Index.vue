@@ -54,14 +54,7 @@ import Barrage from '../longmen-festival/action/components/Barrage.vue'
 import Coupon from './components/Coupon.vue'
 import Swiper from './components/Swiper.vue'
 import { getRedPackageList, getRedPackageBarrage } from '../../../apis/marketing-activity/red-package'
-
-// 是否是今天
-const isToday = date => {
-    const today = new Date().setHours(0, 0, 0, 0)
-    const tomorrow = today + (24 * 60 * 60 * 1000)
-    const current = new Date(date).valueOf()
-    return current >= today && current <= tomorrow
-}
+import { getBulletTemplate, isToday } from './utils'
 
 const productModel = {
     goodsImage: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/奖品.png',
@@ -106,6 +99,8 @@ export default {
         }
     },
     methods: {
+        // 获取红包弹幕模板
+        getBulletTemplate,
         sort (list) {
             if (list.length) {
                 for (const product of list) {
@@ -202,22 +197,6 @@ export default {
             } catch (error) {
                 throw error
             }
-        },
-        // 获取红包弹幕模板
-        getBulletTemplate (bullet, vm) {
-            const { userImage, userName, phone, time, msg } = bullet
-            const message = `${ userName }****${ phone }${ time }领取${ msg }的储备金`
-            const template = `
-                <div class="my-bullet">
-                    <div class="my-bullet__avatar">
-                        <img src="${ userImage }" alt="${ userName }">
-                    </div>
-                    <div class="my-bullet__message">
-                        ${ message }
-                    </div>
-                </div>
-            `
-            return template
         },
         // 检查是否绑定手机号
         checkMobile () {

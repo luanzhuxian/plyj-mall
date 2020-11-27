@@ -26,7 +26,7 @@
                     <span :class="$style.text" v-if="status === 3">活动已结束</span>
                     <Countdown
                         v-if="isCountdownShow"
-                        :duration="getDuration()"
+                        :duration="getDuration(status, redPackage.receiveStartTime, redPackage.receiveEndTime)"
                         format="DD天HH:mm:ss"
                         @finish="resetCountdown"
                     >
@@ -165,26 +165,16 @@ import { checkLength, isPhone } from '../../../assets/js/validate'
 import { getRedPackage, getRedPackageBarrage } from '../../../apis/marketing-activity/red-package'
 import { submit, pay } from './pay'
 import {
+    getDuration,
+    getBulletTemplate,
+    fenToYuan,
+    isToday
+} from './utils'
+import {
     loadImage,
     drawRoundRect,
     createText
 } from '../../../assets/js/util'
-
-// 单位转换：分转元
-const fenToYuan = function (num) {
-    const regexp = /(?:\.0*|(\.\d+?)0+)$/
-    num = (num / 100).toFixed(2)
-    num = num.replace(regexp, '$1')
-    return Number(num)
-}
-
-// 是否是今天
-const isToday = date => {
-    const today = new Date().setHours(0, 0, 0, 0)
-    const tomorrow = today + (24 * 60 * 60 * 1000)
-    const current = new Date(date).valueOf()
-    return current >= today && current <= tomorrow
-}
 
 export default {
     name: 'RedPackageDetail',
@@ -306,34 +296,9 @@ export default {
             }
         },
         // 获取红包弹幕模板
-        getBulletTemplate (bullet, vm) {
-            const { userImage, userName, phone, time, msg } = bullet
-            const message = `${ userName }****${ phone }${ time }领取${ msg }的储备金`
-            const template = `
-                <div class="my-bullet">
-                    <div class="my-bullet__avatar">
-                        <img src="${ userImage }" alt="${ userName }">
-                    </div>
-                    <div class="my-bullet__message">
-                        ${ message }
-                    </div>
-                </div>
-            `
-            return template
-        },
-        // 计算倒计时间隔
-        getDuration () {
-            // 0 未开始 1 进行中 2 暂停 3 结束
-            const { status } = this
-            const { receiveStartTime, receiveEndTime } = this.redPackage
-            const now = Date.now().valueOf()
-            if (status === 0) {
-                return new Date(receiveStartTime).valueOf() - now
-            } else if (status === 1) {
-                return new Date(receiveEndTime).valueOf() - now
-            }
-            return 0
-        },
+        getBulletTemplate,
+        // 计算福利红包倒计时间隔
+        getDuration,
         // 重置倒计时
         resetCountdown () {
             if (this.status === 0) {
@@ -677,15 +642,22 @@ export default {
                 border: none;
                 > input {
                     width: 66px;
-                    height: 38px;
+                    height: 50px;
                     border: 2px solid #E7E7E7;
                     text-align: center;
+                    font-size: 22px;
                 }
                 > button {
-                    width: 40px;
-                    height: 38px;
+                    width: 50px;
+                    height: 50px;
                     border: 2px solid #E7E7E7;
-                    border-radius: 0px 8px 8px 0px;
+                    font-size: 25px;
+                    &:nth-of-type(1) {
+                        border-radius: 8px 0px 0px 8px;
+                    }
+                    &:nth-last-of-type(1) {
+                        border-radius: 0px 8px 8px 0px;
+                    }
                 }
             }
         }

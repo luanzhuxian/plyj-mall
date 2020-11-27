@@ -4,7 +4,7 @@
             <span :class="$style.text" v-if="status === 0">距活动开始：</span>
             <span :class="$style.text" v-if="status === 1">距活动结束：</span>
             <Countdown
-                :duration="getDuration()"
+                :duration="getDuration(status, receiveStartTime, receiveEndTime)"
                 format="DD天HH:mm:ss"
                 @finish="resetCountdown"
             >
@@ -50,6 +50,7 @@
 
 <script>
 import Countdown from '../../../activity/components/Countdown.vue'
+import { getDuration } from '../utils'
 
 export default {
     name: 'Coupon',
@@ -119,17 +120,7 @@ export default {
         }
     },
     methods: {
-        getDuration () {
-            // 0 未开始 1 进行中 2 暂停 3结束
-            const { status, receiveStartTime, receiveEndTime } = this
-            const now = Date.now().valueOf()
-            if (status === 0) {
-                return new Date(receiveStartTime).valueOf() - now
-            } else if (status === 1) {
-                return new Date(receiveEndTime).valueOf() - now
-            }
-            return 0
-        },
+        getDuration,
         resetCountdown () {
             if (this.status === 0) {
                 this.$emit('update:status', 1)
