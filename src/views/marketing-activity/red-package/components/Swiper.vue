@@ -162,6 +162,9 @@ export default {
                 height: 144px;
                 overflow: hidden;
             }
+            .info {
+                padding-top: 12px;
+            }
             .name {
                 font-size: 22px;
                 line-height: 32px;
@@ -181,6 +184,9 @@ export default {
                 width: 100%;
                 height: 112px;
                 overflow: hidden;
+            }
+            .info {
+                padding-top: 8px;
             }
             .name {
                 font-size: 20px;
@@ -216,6 +222,9 @@ export default {
                 height: 144px;
                 overflow: hidden;
             }
+            .info {
+                padding-top: 12px;
+            }
             .name {
                 font-size: 22px;
                 line-height: 32px;
@@ -233,6 +242,9 @@ export default {
                 width: 100%;
                 height: 112px;
                 overflow: hidden;
+            }
+            .info {
+                padding-top: 8px;
             }
             .name {
                 font-size: 20px;
@@ -253,14 +265,13 @@ export default {
             }
         }
         .info {
+            text-align: center;
+            box-sizing: border-box;
             flex: 1;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            padding: 0 10px;
             background: #FFF36E;
             color: #FF6407;
+            @include elps();
         }
 
     }

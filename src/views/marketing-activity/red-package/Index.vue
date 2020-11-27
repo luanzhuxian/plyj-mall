@@ -156,28 +156,26 @@ export default {
                 }
 
                 for (const redPackage of this.redPackageList) {
-                    if (redPackage.goodsVOS) {
-                        const product = redPackage.goodsVOS
-                        // if (redPackage.goodsVOS && redPackage.goodsVOS.length) {
-                        // for (const product of redPackage.goodsVOS) {
-                        if (map.has(product.goodsId)) {
-                            const prod = map.get(product.goodsId)
-                            prod.redPackages.push({
-                                activityId: redPackage.id,
-                                amount: redPackage.amount
-                            })
-                            map.set(product.goodsId, prod)
-                        } else {
-                            map.set(product.goodsId, {
-                                ...product,
-                                isProduct: true,
-                                redPackages: [{
+                    if (redPackage.goodsVOS && redPackage.goodsVOS.length) {
+                        for (const product of redPackage.goodsVOS) {
+                            if (map.has(product.goodsId)) {
+                                const prod = map.get(product.goodsId)
+                                prod.redPackages.push({
                                     activityId: redPackage.id,
                                     amount: redPackage.amount
-                                }]
-                            })
+                                })
+                                map.set(product.goodsId, prod)
+                            } else {
+                                map.set(product.goodsId, {
+                                    ...product,
+                                    isProduct: true,
+                                    redPackages: [{
+                                        activityId: redPackage.id,
+                                        amount: redPackage.amount
+                                    }]
+                                })
+                            }
                         }
-                        // }
                     }
                 }
                 productList = [...map.values()]
