@@ -93,7 +93,7 @@
             />
 
             <ContactInfo
-                v-if="!physicalProducts.length"
+                v-if="physicalProducts.length"
                 :physical-products="physicalProducts"
                 @change="contactInfoChange"
             />
