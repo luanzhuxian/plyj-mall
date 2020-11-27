@@ -291,8 +291,7 @@ export default {
         },
         async getRedPackageBarrage () {
             try {
-                const { activityId } = this
-                const { result } = await getRedPackageBarrage({ activityId })
+                const { result } = await getRedPackageBarrage()
                 if (result.length) {
                     for (const item of result) {
                         item.phone = String(item.mobile).slice(-4)

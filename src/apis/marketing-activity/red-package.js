@@ -10,4 +10,4 @@ export const getRedPackage = id => axios.get(`/apis/v2/red-package-activities/${
 export const getRedPackageStat = id => axios.get(`/apis/v2/red-package-activities/stat/${ id }`)
 
 // 查询福利红包弹幕
-export const getRedPackageBarrage = params => axios.get('/apis/v2/red-package-activities/barrage', { params })
+export const getRedPackageBarrage = () => axios.get('/apis/v2/red-package-activities/barrage')
