@@ -9,8 +9,8 @@
                 @finish="resetCountdown"
             >
                 <template v-slot="{time}">
-                    <i>{{ String(time.days) }}</i>
-                    <span :class="$style.day">天</span>
+                    <i v-if="time.days">{{ String(time.days) }}</i>
+                    <span :class="$style.day" v-if="time.days">天</span>
                     <i>{{ String(time.hours).padStart(2, '0') }}</i>
                     <span :class="$style.colon">:</span>
                     <i>{{ String(time.minutes).padStart(2, '0') }}</i>
@@ -124,7 +124,7 @@ export default {
             const { status, receiveStartTime, receiveEndTime } = this
             const now = Date.now().valueOf()
             if (status === 0) {
-                return now - new Date(receiveStartTime).valueOf()
+                return new Date(receiveStartTime).valueOf() - now
             } else if (status === 1) {
                 return new Date(receiveEndTime).valueOf() - now
             }

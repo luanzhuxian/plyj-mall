@@ -115,7 +115,7 @@ export default {
                 this.isCouponLoading = false
             }
         },
-        // 提交福利红包订单
+        // 提交福利红包订单，只针对零元红包
         async submitRedPackageOrder (activityId) {
             try {
                 if (this.isCouponLoading) return false
