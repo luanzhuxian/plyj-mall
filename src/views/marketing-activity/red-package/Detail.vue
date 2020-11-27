@@ -61,9 +61,9 @@
                             <Coupon
                                 :class="$style.redPackageListItem"
                                 :status.sync="status"
-                                :name="Number(activity.name)"
-                                :stock="Number(activity.issueVolume) - Number(activity.claimVolume)"
                                 :show-stock="status === 1"
+                                :name="activity.name"
+                                :stock="Number(activity.issueVolume) - Number(activity.claimVolume)"
                                 :amount="Number(redPackage.amount)"
                                 :use-limit-amount="Number(redPackage.useLimitAmount)"
                                 :price="Number(redPackage.price)"
@@ -103,7 +103,7 @@
                             <span v-else>敬情期待</span>
                         </button>
                         <template v-if="status === 1">
-                            <button :class="$style.redPackageBtn" v-if="isUpLimitReached" @click.stop="$router.push({ name: 'RedPackage' })">
+                            <button :class="$style.redPackageBtn" v-if="isUpLimitReached" @click.stop="$router.push({ name: 'MyCoupon' })">
                                 您已领取  立即查看
                             </button>
                             <button
@@ -240,15 +240,15 @@ export default {
         isFormShow () {
             return this.status === 1 && this.redPackage.price > 0
         },
+        // 购买上限
         isInputNumberDisabled () {
-            const { count } = this.form
-            // count += this.redPackage.userClaimed
+            let { count } = this.form
+            count += this.activity.userClaimed
             return count >= (this.activity.issueVolume - this.activity.claimVolume) || count >= this.redPackage.quantityLimit
         },
-        // 是否达到领取上线
+        // 是否达到领取上限
         isUpLimitReached () {
-            // this.form.count + this.redPackage.userClaimed >= this.redPackage.useLimitAmount
-            return false
+            return this.activity.userClaimed >= this.redPackage.useLimitAmount
         },
         totalPrice () {
             const { price } = this.redPackage
@@ -375,16 +375,16 @@ export default {
                     }
                 }
 
-                // if (this.form.count + this.redPackage.userClaimed > this.redPackage.useLimitAmount) {
-                //     return this.$warning(`每人至多领取${ this.redPackage.useLimitAmount }张，您已领取${ this.redPackage.userClaimed }张`)
-                // }
+                if (this.form.count + this.activity.userClaimed > this.redPackage.useLimitAmount) {
+                    return this.$warning(`每人至多领取${ this.redPackage.useLimitAmount }张，您已领取${ this.activity.userClaimed }张`)
+                }
 
                 this.submiting = true
                 const { payData, orderBatchNumber } = await submit(this.activityId, this.form.count)
                 const result = await pay(payData, payData.orderIds, payData.orderIds.length, orderBatchNumber, this.totalPrice)
                 console.log('result', result)
                 if (result === true) {
-                    // this.redPackage.userClaimed++
+                    this.activity.userClaimed++
                     await this.showModel('success')
                 }
             } catch (error) {
@@ -691,8 +691,6 @@ export default {
 
 <style lang="scss" module>
 .red-package-detail {
-    position: relative;
-    min-height: 100vh;
     &.bg-red {
         background: #FD644C;
         .background {

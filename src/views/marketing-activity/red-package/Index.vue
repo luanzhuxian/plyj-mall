@@ -5,41 +5,44 @@
                 <div :class="$style.topBtnWrapper">
                     <div :class="$style.topBtn" @click="$router.push({ name: 'RedPackageIntro' })">使用说明</div>
                 </div>
-                <!-- 商品轮播 -->
-                <section :class="$style.product" v-if="productList && productList.length">
-                    <Swiper :list="productList" />
-                </section>
-                <!-- 弹幕 -->
-                <section :class="$style.barrage" v-if="bulletList && bulletList.length">
-                    <Barrage ref="barrage" :list="bulletList" :template="getBulletTemplate" />
-                </section>
-                <!-- 红包 -->
-                <section :class="$style.redPackage">
-                    <ul :class="$style.redPackageList">
-                        <Coupon
-                            :class="$style.redPackageListItem"
-                            v-for="(item, index) of redPackageList"
-                            :key="index"
-                            :status.sync="item.activityStatus"
-                            :show-countdown="[0, 1].includes(item.activityStatus)"
-                            :show-stock="item.activityStatus === 1"
-                            show-btn
-                            :name="item.name"
-                            :stock="Number(item.issueVolume) - Number(item.claimVolume)"
-                            :amount="Number(item.amount)"
-                            :use-limit-amount="Number(item.useLimitAmount)"
-                            :price="Number(item.price)"
-                            :receive-start-time="item.receiveStartTime"
-                            :receive-end-time="item.receiveEndTime"
-                            :use-start-time="item.useStartTime"
-                            :use-end-time="item.useEndTime"
-                            @click="$router.push({ name: 'RedPackageDetail', params: { activityId: item.id }})"
-                        />
-                    </ul>
-                </section>
-                <button :class="$style.button" @click="share">
-                    立即分享
-                </button>
+                <template v-if="allLoaded">
+                    <!-- 商品轮播 -->
+                    <section :class="$style.product" v-if="productList && productList.length">
+                        <Swiper :list="productList" />
+                    </section>
+                    <!-- 弹幕 -->
+                    <section :class="$style.barrage" v-if="bulletList && bulletList.length">
+                        <Barrage ref="barrage" :list="bulletList" :template="getBulletTemplate" />
+                    </section>
+                    <!-- 红包 -->
+                    <section :class="$style.redPackage">
+                        <ul :class="$style.redPackageList">
+                            <Coupon
+                                :class="$style.redPackageListItem"
+                                v-for="(item, index) of redPackageList"
+                                :key="index"
+                                :status.sync="item.activityStatus"
+                                :show-countdown="[0, 1].includes(item.activityStatus)"
+                                :show-stock="item.activityStatus === 1"
+                                show-btn
+                                :name="item.name"
+                                :stock="Number(item.issueVolume) - Number(item.claimVolume)"
+                                :amount="Number(item.amount)"
+                                :use-limit-amount="Number(item.useLimitAmount)"
+                                :price="Number(item.price)"
+                                :receive-start-time="item.receiveStartTime"
+                                :receive-end-time="item.receiveEndTime"
+                                :use-start-time="item.useStartTime"
+                                :use-end-time="item.useEndTime"
+                                @click="$router.push({ name: 'RedPackageDetail', params: { activityId: item.id }})"
+                            />
+                        </ul>
+                    </section>
+                    <button :class="$style.button" @click="share">
+                        立即分享
+                    </button>
+                </template>
+                <PlSvg :class="$style.loading" name="icon-loading" fill="#FFF" width="90" v-else />
             </div>
         </div>
     </div>
@@ -130,20 +133,13 @@ export default {
         async getRedPackageList () {
             try {
                 const params = {
-                    // activityStatus:
+                    activityStatus: 1,
                     page: 1,
                     size: 99
                 }
                 const { result: { records = [] } } = await getRedPackageList(params)
-                // console.log(records)
-                this.redPackageList = records
-                // if (result.length) {
-                //     for (const item of result) {
-                //         item.phone = String(item.mobile).slice(-4)
-                //         item.time = isToday(item.createTime) ? '刚刚' : ''
-                //         item.msg = item.message ? item.message.replace(/\.\d+0+/, '') : ''
-                //     }
-                // }
+                // 福利红包未隐藏且有库存
+                this.redPackageList = records.filter(item => item.showStatus && (item.issueVolume > item.claimVolume))
             } catch (error) {
                 throw error
             }
@@ -245,7 +241,6 @@ export default {
 
 <style lang="scss" module>
 .red-package-main {
-    min-height: 100vh;
     background: #FD644C;
 }
 
@@ -261,6 +256,7 @@ export default {
     align-items: center;
     box-sizing: border-box;
     padding: 330px 24px 80px;
+    min-height: 100vh;
 }
 
 .top-btn-wrapper {
@@ -318,6 +314,24 @@ export default {
     font-family: Microsoft YaHei;
     font-weight: bold;
     color: #F23D00;
+}
+
+.loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0 0;
+    animation: rotate 1.2s linear infinite;
+    z-index: 999;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg) translate(-50%, -50%);
+    }
+    to {
+        transform: rotate(359deg) translate(-50%, -50%);
+    }
 }
 
 </style>
