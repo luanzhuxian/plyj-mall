@@ -71,6 +71,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import Panel from './Panel.vue'
 import Countdown from '../components/Countdown.vue'
 
@@ -128,7 +129,7 @@ export default {
         if (this.data.values.length) {
             const activity = this.data.values[0]
             const { startTime, systemTime } = activity
-            const duration = new Date(systemTime).valueOf() - new Date(startTime).valueOf()
+            const duration = moment(systemTime).valueOf() - moment(startTime).valueOf()
             this.isStarted = duration > 0
             this.duration = Math.abs(duration)
         }

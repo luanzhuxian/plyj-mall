@@ -63,6 +63,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
     name: 'OnlineCourse',
     props: {
@@ -85,7 +87,7 @@ export default {
         getBtnText ({ isOpenSale, regularSaleTime = '' }) {
             let text = '立即订购'
             if (isOpenSale === 1) {
-                const saleTime = new Date(regularSaleTime).valueOf()
+                const saleTime = moment(regularSaleTime).valueOf()
                 if (saleTime > Date.now()) {
                     text = '即将开售'
                 }
