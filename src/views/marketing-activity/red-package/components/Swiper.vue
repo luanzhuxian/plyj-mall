@@ -1,22 +1,24 @@
 <template>
     <div class="product-swiper">
-        <ul :class="$style.productList" v-if="list.length === 1">
+        <ul :class="$style.productList" v-if="list.length <= 3">
             <li
                 :class="[$style.productListItem, item.isProduct ? $style.small : $style.large]"
                 v-for="(item, index) of list"
                 :key="index"
             >
                 <div :class="$style.imgWrapper">
-                    <img :src="item.img" :alt="item.name">
+                    <img :src="item.goodsImage + '?x-oss-process=style/thum-small'" :alt="item.goodsName">
                 </div>
                 <div :class="$style.info">
-                    <b :class="$style.name" v-text="item.name" />
-                    <div :class="$style.rule" v-if="item.rule" v-text="item.rule" />
+                    <b :class="$style.name" v-text="item.goodsName" />
+                    <div :class="$style.amount" v-if="item.redPackages && item.redPackages.length">
+                        {{ `抢券抵${item.redPackages[0].amount}` }}
+                    </div>
                 </div>
             </li>
         </ul>
         <swiper
-            v-if="list.length > 1"
+            v-else
             ref="swiper"
             class="swiper"
             :options="swiperOption"
@@ -30,11 +32,13 @@
             >
                 <li :class="[$style.productListItem]">
                     <div :class="$style.imgWrapper">
-                        <img :src="item.img" :alt="item.name" v-imgError>
+                        <img :src="item.goodsImage + '?x-oss-process=style/thum-small'" :alt="item.goodsName" v-imgError>
                     </div>
                     <div :class="$style.info">
-                        <b :class="$style.name" v-text="item.name" />
-                        <div :class="$style.rule" v-if="item.rule" v-text="item.rule" />
+                        <b :class="$style.name" v-text="item.goodsName" />
+                        <div :class="$style.amount" v-if="item.redPackages && item.redPackages.length">
+                            {{ `抢券抵${item.redPackages[0].amount}` }}
+                        </div>
                     </div>
                 </li>
             </swiper-slide>
@@ -162,7 +166,7 @@ export default {
                 font-size: 22px;
                 line-height: 32px;
             }
-            .rule {
+            .amount {
                 margin-top: 4px;
                 font-size: 16px;
             }
@@ -182,7 +186,7 @@ export default {
                 font-size: 20px;
                 line-height: 26px;
             }
-            .rule {
+            .amount {
                 margin-top: 4px;
                 font-size: 14px;
             }
@@ -216,7 +220,7 @@ export default {
                 font-size: 22px;
                 line-height: 32px;
             }
-            .rule {
+            .amount {
                 margin-top: 4px;
                 font-size: 16px;
             }
@@ -234,7 +238,7 @@ export default {
                 font-size: 20px;
                 line-height: 26px;
             }
-            .rule {
+            .amount {
                 margin-top: 4px;
                 font-size: 14px;
             }

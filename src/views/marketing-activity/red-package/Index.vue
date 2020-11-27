@@ -34,7 +34,7 @@
                                 :receive-end-time="item.receiveEndTime"
                                 :use-start-time="item.useStartTime"
                                 :use-end-time="item.useEndTime"
-                                @click="$router.push({ name: 'RedPackageDetail', params: { activityId: item.id }})"
+                                @click="handleClick(item.id)"
                             />
                         </ul>
                     </section>
@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Barrage from '../longmen-festival/action/components/Barrage.vue'
 import Coupon from './components/Coupon.vue'
 import Swiper from './components/Swiper.vue'
@@ -62,25 +63,11 @@ const isToday = date => {
     return current >= today && current <= tomorrow
 }
 
-const productModel1 = {
-    img: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/奖品.png',
-    name: '神秘大礼一',
-    rule: '',
-    isProduct: false
-}
-
-const productModel2 = {
-    img: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/奖品.png',
-    name: '神秘大礼二',
-    rule: '',
-    isProduct: false
-}
-
 const productModel = {
-    img: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/奖品.png',
-    name: '平衡车',
-    rule: '抢券抵10000',
-    isProduct: true
+    goodsImage: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/奖品.png',
+    goodsName: '特惠福利',
+    redPackages: [],
+    isProduct: false
 }
 
 export default {
@@ -94,24 +81,13 @@ export default {
         return {
             // 是否数据请求完毕
             allLoaded: false,
-            productList: [],
             bulletList: [],
+            productList: [],
             redPackageList: []
         }
     },
-    created () {
-        this.productList1 = [
-            productModel1,
-            productModel,
-            productModel2
-        ]
-        this.productList = [
-            productModel1,
-            productModel,
-            productModel2,
-            productModel,
-            productModel1
-        ]
+    computed: {
+        ...mapGetters(['mobile'])
     },
     async activated () {
         try {
@@ -130,20 +106,90 @@ export default {
         }
     },
     methods: {
+        sort (list) {
+            if (list.length) {
+                for (const product of list) {
+                    product.redPackages.sort((a, b) => b.amount - a.amount)
+                }
+                // 商品排序按照抵用红包金额从大到小排序
+                list.sort((a, b) => b.redPackages[0].amount - a.redPackages[0].amount)
+            }
+        },
+        // 重新组装商品列表，填充占位图
+        rebuid (list) {
+            if (list.length === 0) {
+                list = [productModel, productModel, productModel]
+            } else if (list.length === 1) {
+                list = [productModel, list[0], productModel]
+            } else if (list.length === 2) {
+                list = [productModel, list[0], productModel, list[1], productModel]
+            } else if (list.length === 3) {
+                list = [list[0], productModel, list[1], productModel, list[2]]
+            } else if (list.length === 4) {
+                list = [...list, productModel]
+            }
+            return list
+        },
+        // 获取红包活动列表
         async getRedPackageList () {
             try {
+                let productList = []
+                const map = new Map()
+                // 0 未开始 1 进行中 2 暂停 3 结束
                 const params = {
-                    activityStatus: 1,
+                    activityStatus: '0, 1',
                     page: 1,
                     size: 99
                 }
+
                 const { result: { records = [] } } = await getRedPackageList(params)
-                // 福利红包未隐藏且有库存
+                // 过滤未隐藏且有库存的福利红包
                 this.redPackageList = records.filter(item => item.showStatus && (item.issueVolume > item.claimVolume))
+
+                // 没有可用红包返回上一页
+                if (!this.redPackageList.length) {
+                    this.$alert('很遗憾，该活动已结束，请查看更多活动')
+                        .finally(() => {
+                            this.$router.go(-1)
+                        })
+                    return false
+                }
+
+                for (const redPackage of this.redPackageList) {
+                    if (redPackage.goodsVOS) {
+                        const product = redPackage.goodsVOS
+                        // if (redPackage.goodsVOS && redPackage.goodsVOS.length) {
+                        // for (const product of redPackage.goodsVOS) {
+                        if (map.has(product.goodsId)) {
+                            const prod = map.get(product.goodsId)
+                            prod.redPackages.push({
+                                activityId: redPackage.id,
+                                amount: redPackage.amount
+                            })
+                            map.set(product.goodsId, prod)
+                        } else {
+                            map.set(product.goodsId, {
+                                ...product,
+                                isProduct: true,
+                                redPackages: [{
+                                    activityId: redPackage.id,
+                                    amount: redPackage.amount
+                                }]
+                            })
+                        }
+                        // }
+                    }
+                }
+                productList = [...map.values()]
+                // 排序
+                this.sort(productList)
+                // 长度不够，填充占位图
+                this.productList = productList.length <= 4 ? this.rebuid(productList) : productList.slice(0, 20)
             } catch (error) {
                 throw error
             }
         },
+        // 获取红包弹幕
         async getRedPackageBarrage () {
             try {
                 const { result } = await getRedPackageBarrage()
@@ -159,6 +205,7 @@ export default {
                 throw error
             }
         },
+        // 获取红包弹幕模板
         getBulletTemplate (bullet, vm) {
             const { userImage, userName, phone, time, msg } = bullet
             const message = `${ userName }****${ phone }${ time }领取${ msg }的储备金`
@@ -174,8 +221,32 @@ export default {
             `
             return template
         },
+        // 检查是否绑定手机号
+        checkMobile () {
+            if (!this.mobile) {
+                this.$confirm('您还没有绑定手机，请先绑定手机')
+                    .then(() => {
+                        sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
+                            name: this.$route.name,
+                            params: this.$route.params,
+                            query: this.$route.query
+                        }))
+                        this.$router.push({ name: 'BindMobile' })
+                    })
+                    .catch(() => {})
+                return false
+            }
+            return true
+        },
+        handleClick (activityId) {
+            if (!this.checkMobile()) return
+            this.$router.push({
+                name: 'RedPackageDetail',
+                params: { activityId }
+            })
+        },
         share () {
-
+            // if (!this.checkMobile()) return
         }
     }
 }

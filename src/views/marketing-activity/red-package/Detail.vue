@@ -1,5 +1,6 @@
 <template>
     <div
+        class="red-package-detail"
         :class="{
             [$style.redPackageDetail]: true,
             [$style.bgRed]: activity.bgUrlsIndex === 0,
@@ -7,7 +8,6 @@
             [$style.bgPurple]: activity.bgUrlsIndex === 2,
             [$style.bgYellow]: activity.bgUrlsIndex === 3
         }"
-        class="red-package-detail"
     >
         <div :class="$style.background">
             <div :class="$style.container">
@@ -256,7 +256,6 @@ export default {
             return Number(price) * Number(count)
         }
     },
-    async created () {},
     async activated () {
         try {
             const request = [
@@ -276,6 +275,7 @@ export default {
         }
     },
     methods: {
+        // 获取红包活动详情
         async getRedPackage () {
             try {
                 const { result } = await getRedPackage(this.activityId)
@@ -289,6 +289,7 @@ export default {
                 throw error
             }
         },
+        // 获取红包弹幕
         async getRedPackageBarrage () {
             try {
                 const { result } = await getRedPackageBarrage()
@@ -304,6 +305,7 @@ export default {
                 throw error
             }
         },
+        // 获取红包弹幕模板
         getBulletTemplate (bullet, vm) {
             const { userImage, userName, phone, time, msg } = bullet
             const message = `${ userName }****${ phone }${ time }领取${ msg }的储备金`
@@ -319,6 +321,7 @@ export default {
             `
             return template
         },
+        // 计算倒计时间隔
         getDuration () {
             // 0 未开始 1 进行中 2 暂停 3 结束
             const { status } = this
@@ -331,6 +334,7 @@ export default {
             }
             return 0
         },
+        // 重置倒计时
         resetCountdown () {
             if (this.status === 0) {
                 this.status = 1
