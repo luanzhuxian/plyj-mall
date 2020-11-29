@@ -36,6 +36,8 @@
                                     slot="suffix"
                                     :class="$style.coupon"
                                     :id="item.id"
+                                    :coupon-id="item.coupon"
+                                    :coupon-type="item.couponType"
                                     :name="item.couponName"
                                     :amount="item.amount"
                                     :full="item.useLimitAmount"
@@ -44,8 +46,6 @@
                                     :use-start-time="item.useStartTime"
                                     :use-end-time="item.useEndTime"
                                     :is-available-status="true"
-                                    :coupon-type="item.couponType"
-                                    :coupon-id="item.coupon"
                                 />
                             </pl-checkbox>
                         </pl-checkbox-group>

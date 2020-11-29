@@ -113,7 +113,7 @@
                                     [$style.disabled]: submiting || isUpLimitReached
                                 }"
                                 :disabled="submiting || isUpLimitReached"
-                                @click.stop="submit"
+                                @click.stop="submitRedPackageOrder"
                             >
                                 <PlSvg v-show="submiting" name="icon-btn-loading" fill="#FFF" width="35" />
                                 <span v-if="totalPrice">{{ `仅需￥${totalPrice}  立即领取` }}</span>
@@ -163,7 +163,7 @@ import Coupon from './components/Coupon.vue'
 import Product from './components/Product.vue'
 import { checkLength, isPhone } from '../../../assets/js/validate'
 import { getRedPackage, getRedPackageBarrage } from '../../../apis/marketing-activity/red-package'
-import { submit, pay } from './pay'
+import { submitRedPackageOrder, pay } from './pay'
 import {
     getDuration,
     getBulletTemplate,
@@ -332,7 +332,7 @@ export default {
             return true
         },
         // 提交福利红包订单
-        async submit () {
+        async submitRedPackageOrder () {
             try {
                 if (!this.checkMobile()) {
                     return false
@@ -349,7 +349,7 @@ export default {
                 }
 
                 this.submiting = true
-                const { payData, orderBatchNumber } = await submit(this.activityId, this.form.count)
+                const { payData, orderBatchNumber } = await submitRedPackageOrder(this.activityId, this.form.count)
                 const result = await pay(payData, payData.orderIds, payData.orderIds.length, orderBatchNumber, this.totalPrice)
                 console.log('result', result)
                 if (result === true) {

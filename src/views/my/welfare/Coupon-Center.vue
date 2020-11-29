@@ -25,7 +25,9 @@
                         <CouponItem
                             v-for="item in couponList"
                             :key="item.id"
-                            :price="item.price"
+                            :id="item.id"
+                            :coupon-type="Number(item.couponType)"
+                            :price="item.couponType === 3 ? Number(item.priceAmount) : Number(item.price)"
                             :name="item.couponName"
                             :amount="item.amount"
                             :full="item.useLimitAmount"
@@ -34,11 +36,10 @@
                             :use-start-time="item.useStartTime"
                             :use-end-time="item.useEndTime"
                             :receive-count="item.count"
-                            :coupon-type="item.couponType"
                             :is-over-max="!item.canReceive"
                             :is-claimed="!!item.isClaimed"
                             @couponClick="couponClick(item)"
-                            @redPackageClick="submitRedPackageOrder(item)"
+                            @redPackageClick="redPackageClick(item)"
                         />
                     </template>
                 </load-more>
@@ -104,8 +105,7 @@ export default {
                 this.isCouponLoading = false
             }
         },
-        // 提交福利红包订单
-        submitRedPackageOrder ({ activityId }) {
+        redPackageClick ({ activityId }) {
             if (this.isCouponLoading) return
             if (!activityId) return
 

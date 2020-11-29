@@ -1,3 +1,5 @@
+// 福利红包下单
+
 import {
     submitOrder,
     getOrderPayData,
@@ -85,7 +87,7 @@ const requestPayData = async function (orderBatchNumber) {
 }
 
 // 提交福利红包订单，换取批次号
-export const submit = async function (activityId, count) {
+export const submitRedPackageOrder = async function (activityId, count) {
     try {
         const data = {
             source: 9,

@@ -29,6 +29,7 @@
                             <CouponItem
                                 :class="$style.moveCoupon"
                                 :id="item.id"
+                                :coupon-type="item.couponType"
                                 :name="item.couponName"
                                 :amount="item.amount"
                                 :full="item.useLimitAmount"
@@ -36,7 +37,6 @@
                                 :instruction="item.brief"
                                 :use-start-time="item.useStartTime"
                                 :use-end-time="item.useEndTime"
-                                :coupon-type="item.couponType"
                                 status="已使用"
                             />
                         </div>

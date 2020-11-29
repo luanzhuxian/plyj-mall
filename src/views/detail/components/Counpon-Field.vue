@@ -33,6 +33,7 @@
                     <template v-for="(item, i) of couponList">
                         <CouponItem
                             :key="i"
+                            :coupon-type="Number(item.couponType)"
                             :coupon-id="item.id"
                             :name="item.couponName"
                             :amount="item.amount"
@@ -42,11 +43,10 @@
                             :use-end-time="item.useEndTime"
                             :use-start-time="item.useStartTime"
                             :receive-count="item.count"
-                            :coupon-type="Number(item.couponType)"
                             :is-claimed="!!item.isClaimed"
                             :price="Number(item.priceAmount)"
                             @couponClick="couponClick(item.id)"
-                            @redPackageClick="submitRedPackageOrder(item)"
+                            @redPackageClick="redPackageClick(item)"
                         />
                     </template>
                 </div>
@@ -59,7 +59,7 @@
 import Field from '../../../components/detail/Field.vue'
 import CouponItem from '../../../components/item/Coupon-Item.vue'
 import { receiveCoupon } from '../../../apis/my-coupon'
-import { submit, pay } from '../../../views/marketing-activity/red-package/pay'
+import { submitRedPackageOrder, pay } from '../../../views/marketing-activity/red-package/pay'
 
 export default {
     name: 'CounponField',
@@ -114,8 +114,8 @@ export default {
                 this.isCouponLoading = false
             }
         },
-        // 提交福利红包订单，只针对零元红包
-        async submitRedPackageOrder ({ activityId, priceAmount }) {
+        // 提交福利红包订单
+        async redPackageClick ({ activityId, priceAmount }) {
             try {
                 if (this.isCouponLoading) return
                 if (!activityId) return
@@ -130,7 +130,7 @@ export default {
 
                 // 零元红包下单
                 this.isCouponLoading = true
-                const { payData, orderBatchNumber } = await submit(activityId, 1)
+                const { payData, orderBatchNumber } = await submitRedPackageOrder(activityId, 1)
                 const result = await pay(payData, payData.orderIds, payData.orderIds.length, orderBatchNumber, 0)
                 if (result === true) {
                     this.$success('领取成功，请在我的卡券中查看')

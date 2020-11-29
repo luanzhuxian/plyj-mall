@@ -3,13 +3,13 @@
         <div :class="$style.couponActivityTop">
             <CouponItem
                 :id="couponInfo.id"
+                :coupon-type="couponInfo.type"
                 :name="couponInfo.name"
                 :amount="couponInfo.amount"
                 :full="couponInfo.useLimitAmount"
                 :subtract="couponInfo.amount"
                 :use-start-time="couponInfo.useStartTime"
                 :use-end-time="couponInfo.useEndTime"
-                :coupon-type="couponInfo.type"
                 :is-claimed="couponInfo.isClaimed"
                 @couponClick="couponClick(couponId)"
             />
