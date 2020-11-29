@@ -135,19 +135,21 @@
                     <div>
                         <template v-for="(item, i) of couponList">
                             <CouponItem
+                                v-if="item.show"
                                 :key="i"
+                                :coupon-type="item.couponType"
                                 :id="item.couponId"
-                                :use-end-time="item.useEndTime"
-                                :use-start-time="item.useStartTime"
                                 :full="item.useLimitAmount"
                                 :subtract="item.amount"
                                 :amount="item.amount"
                                 :instruction="item.brief"
-                                :coupon-type="item.couponType"
+                                :use-end-time="item.useEndTime"
+                                :use-start-time="item.useStartTime"
                                 :is-over-max="!item.canReceive"
-                                :is-claimed="receiveCouponIdList.indexOf(item.couponId) !== -1"
+                                :is-claimed="~receiveCouponIdList.indexOf(item.couponId) || ~receiveCouponIdList.indexOf(item.activityId)"
+                                :price="Number(item.price)"
                                 @couponClick="couponClick(item.couponId)"
-                                v-if="item.show"
+                                @redPackageClick="redPackageClick(item)"
                             />
                         </template>
                     </div>
@@ -298,6 +300,8 @@ import {
     // throttle
 } from '../../assets/js/util'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
+import { submitRedPackageOrder, pay } from '../../views/marketing-activity/red-package/pay'
+
 const POSTER_BG = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/live/live-poster.png'
 const PolyvLiveSdk = window.PolyvLiveSdk
 export default {
@@ -998,10 +1002,30 @@ export default {
                     activityId: this.activityId,
                     entityClassName: 'MallLiveActivityEntity'
                 })
-                this.$success('领取成功')
                 this.receiveCouponIdList.push(id)
+                this.$success('领取成功')
             } catch (e) {
                 throw e
+            } finally {
+                this.isCouponLoading = false
+            }
+        },
+        // 提交福利红包订单
+        async redPackageClick ({ activityId, price }) {
+            try {
+                if (this.isCouponLoading) return
+                if (!activityId) return
+
+                this.isCouponLoading = true
+                const { payData, orderBatchNumber } = await submitRedPackageOrder(activityId, 1)
+                const result = await pay(payData, payData.orderIds, payData.orderIds.length, orderBatchNumber, Number(price))
+                this.receiveCouponIdList.push(activityId)
+                // 零元红包下单成功弹窗提示，非零元自动跳转
+                if (result === true) {
+                    this.$success('领取成功')
+                }
+            } catch (error) {
+                throw error
             } finally {
                 this.isCouponLoading = false
             }
