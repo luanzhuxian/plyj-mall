@@ -33,6 +33,7 @@
                     <template v-for="(item, i) of couponList">
                         <CouponItem
                             :key="i"
+                            :coupon-id="item.id"
                             :name="item.couponName"
                             :amount="item.amount"
                             :full="item.useLimitAmount"
@@ -43,11 +44,9 @@
                             :receive-count="item.count"
                             :coupon-type="Number(item.couponType)"
                             :is-claimed="!!item.isClaimed"
-                            :coupon-id="item.id"
-                            :activity-id="item.activityId"
                             :price="Number(item.priceAmount)"
                             @couponClick="couponClick(item.id)"
-                            @redPackageClick="submitRedPackageOrder"
+                            @redPackageClick="submitRedPackageOrder(item)"
                         />
                     </template>
                 </div>
@@ -116,10 +115,20 @@ export default {
             }
         },
         // 提交福利红包订单，只针对零元红包
-        async submitRedPackageOrder (activityId) {
+        async submitRedPackageOrder ({ activityId, priceAmount }) {
             try {
-                if (this.isCouponLoading) return false
+                if (this.isCouponLoading) return
+                if (!activityId) return
 
+                // 非零元红包跳转活动页
+                if (priceAmount) {
+                    return this.$router.push({
+                        name: 'RedPackageDetail',
+                        params: { activityId }
+                    })
+                }
+
+                // 零元红包下单
                 this.isCouponLoading = true
                 const { payData, orderBatchNumber } = await submit(activityId, 1)
                 const result = await pay(payData, payData.orderIds, payData.orderIds.length, orderBatchNumber, 0)

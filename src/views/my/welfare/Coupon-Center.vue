@@ -25,7 +25,6 @@
                         <CouponItem
                             v-for="item in couponList"
                             :key="item.id"
-                            :id="item.id"
                             :price="item.price"
                             :name="item.couponName"
                             :amount="item.amount"
@@ -39,6 +38,7 @@
                             :is-over-max="!item.canReceive"
                             :is-claimed="!!item.isClaimed"
                             @couponClick="couponClick(item)"
+                            @redPackageClick="submitRedPackageOrder(item)"
                         />
                     </template>
                 </load-more>
@@ -103,6 +103,16 @@ export default {
             } finally {
                 this.isCouponLoading = false
             }
+        },
+        // 提交福利红包订单
+        submitRedPackageOrder ({ activityId }) {
+            if (this.isCouponLoading) return
+            if (!activityId) return
+
+            this.$router.push({
+                name: 'RedPackageDetail',
+                params: { activityId }
+            })
         },
         refreshHandler (list) {
             this.couponList = list

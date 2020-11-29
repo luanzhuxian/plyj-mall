@@ -79,18 +79,12 @@ export default {
             type: String,
             default: ''
         },
-        // 活动id
         id: {
             type: String,
             default: ''
         },
         // 优惠券本身的Id
         couponId: {
-            type: String,
-            default: ''
-        },
-        // 活动Id（福利红包）
-        activityId: {
             type: String,
             default: ''
         },
@@ -191,6 +185,7 @@ export default {
     },
     computed: {
         ...mapGetters(['userId']),
+        // 福利红包价格展示
         isPriceShow () {
             return this.couponType === 3 && this.price
         }
@@ -199,18 +194,10 @@ export default {
         this.showInstruction = false
     },
     methods: {
-
         async couponClick (e) {
             // 福利红包
             if (this.couponType === 3) {
-                if (this.isPriceShow) {
-                    this.$router.push({
-                        name: 'RedPackageDetail',
-                        params: { activityId: this.activityId }
-                    })
-                } else {
-                    await this.$emit('redPackageClick', this.activityId)
-                }
+                await this.$emit('redPackageClick')
             } else if (this.isAvailableStatus && this.canGoClassify) {
                 // 去使用，进入可使用此优惠券的商品列表中
                 this.$router.push({
