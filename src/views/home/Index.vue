@@ -3,7 +3,7 @@
         <template v-if="allLoaded">
             <h3
                 style="font-size: 100px"
-                @click="$router.push({ name: 'RedPackage'})"
+                @click="$router.push({ name: 'RedPackage' })"
             >
                 main
             </h3>

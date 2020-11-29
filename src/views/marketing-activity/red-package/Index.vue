@@ -2,8 +2,8 @@
     <div :class="$style.redPackageMain" class="red-package-main">
         <div :class="$style.background">
             <div :class="$style.container">
-                <div :class="$style.topBtnWrapper">
-                    <div :class="$style.topBtn" @click="$router.push({ name: 'RedPackageIntro' })">使用说明</div>
+                <div :class="$style.topBtnWrapper" @click="$router.push({ name: 'RedPackageIntro' })">
+                    <span>使用说明</span>
                 </div>
                 <template v-if="allLoaded">
                     <!-- 商品轮播 -->

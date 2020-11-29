@@ -16,8 +16,9 @@
                     <img :src="activity.logoUrl" alt="">
                 </div>
                 <!-- 海报 -->
-                <div :class="$style.topBtnWrapper">
-                    <div :class="$style.topBtn" @click="createPoster">海报分享</div>
+                <div :class="$style.topBtnWrapper" @click="createPoster">
+                    <PlSvg v-show="creatingPoster" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
+                    <span v-show="!creatingPoster">海报分享</span>
                 </div>
                 <!-- 倒计时 -->
                 <div :class="$style.countdownWrapper">
@@ -152,6 +153,12 @@
                 </router-link>
             </div>
         </div>
+        <transition name="fade">
+            <div v-if="showPoster" :class="$style.poster">
+                <img v-imgError :src="poster" alt="" style="width: 80%;">
+                <PlSvg name="icon-close3" width="36" @click="showPoster = false" />
+            </div>
+        </transition>
     </div>
 </template>
 
@@ -173,8 +180,10 @@ import {
 import {
     loadImage,
     drawRoundRect,
-    createText
+    createText,
+    generateQrcode
 } from '../../../assets/js/util'
+import share from '../../../assets/js/wechat/wechat-share'
 
 export default {
     name: 'RedPackageDetail',
@@ -216,11 +225,15 @@ export default {
                     { required: true, message: '请输入联系人手机号' },
                     { validator: isPhone, message: '联系人手机号格式错误' }
                 ]
-            }
+            },
+            showPoster: false,
+            creatingPoster: false,
+            poster: '',
+            shareUrl: ''
         }
     },
     computed: {
-        ...mapGetters(['realName', 'mobile']),
+        ...mapGetters(['realName', 'userName', 'mobile', 'appId', 'mallUrl']),
         isCountdownShow () {
             return this.status === 0 || this.status === 1
         },
@@ -272,6 +285,13 @@ export default {
                 const { redPacketCouponVO, ...activity } = result
                 redPacketCouponVO.price = fenToYuan(redPacketCouponVO.price)
                 this.status = result.activityStatus
+                if (result.activityStatus === 2) {
+                    this.$alert('很遗憾，该活动已暂停，请查看更多活动')
+                        .finally(() => {
+                            this.$router.replace({ name: 'RedPackage' })
+                        })
+                    return false
+                }
                 this.activity = activity
                 this.redPackage = redPacketCouponVO
                 this.productList = result.redPacketCouponVO.applicableGoodsVOS
@@ -408,32 +428,46 @@ export default {
                 throw error
             }
         },
-
+        share () {
+            // let img
+            const { appId, mallUrl } = this
+            this.shareUrl = `${ mallUrl }/red-package/detail/${ this.activityId }?noCache=${ Date.now() }`
+            // if (this.list.length) {
+            //     img =
+            // }
+            share({
+                appId,
+                title: `${ this.userName } 邀您领取福利红包`,
+                desc: '小金额，大额券，边逛边优惠',
+                link: this.shareUrl
+                // imgUrl: img
+            })
+        },
         // 创建海报
         async createPoster () {
-            // 模板
-            const TYPE = 1
-            // 是否显示优惠券
-            const SHOW_COUPON = true
-            const CVS = document.createElement('canvas')
-            const CTX = CVS.getContext('2d')
-            CVS.width = 750
-            CVS.height = 1334
+            if (this.creatingPoster) {
+                return
+            }
+            if (this.poster) {
+                this.showPoster = true
+                return
+            }
 
+            this.creatingPoster = true
             // 背景色
             let bgc = ''
             // 背景图
             let bgi = ''
-            switch (TYPE) {
-                case 2:
+            switch (this.activity.bgUrlsIndex) {
+                case 1:
                     bgc = '#077ce6'
                     bgi = 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/bg-detail-blue.png'
                     break
-                case 3:
+                case 2:
                     bgc = '#7e2ef1'
                     bgi = 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/bg-detail-purple.png'
                     break
-                case 4:
+                case 3:
                     bgc = '#f5b72f'
                     bgi = 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/bg-detail-yellow.png'
                     break
@@ -442,26 +476,35 @@ export default {
                     bgi = 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/bg-detail-red.png'
                     break
             }
+
+            // 是否显示优惠券
+            const SHOW_COUPON = true
+            const CVS = document.createElement('canvas')
+            const CTX = CVS.getContext('2d')
+            CVS.width = 750
+            CVS.height = 1334
             // 绘制背景
             CTX.fillStyle = bgc
             CTX.fillRect(0, 0, CVS.width, CVS.height)
             const BGI = await loadImage(bgi)
             CTX.drawImage(BGI, 0, 0, 750, 450)
             // 左上角图标
-            CTX.beginPath()
-            CTX.lineTo(0, 0)
-            CTX.lineTo(146, 0)
-            CTX.lineTo(0, 126)
-            CTX.closePath()
-            CTX.fillStyle = '#fff'
-            CTX.fill()
-            CTX.beginPath()
-            CTX.arc(41, 39, 33, 0, 2 * Math.PI)
-            CTX.fillStyle = '#FE461F'
-            CTX.closePath()
-            CTX.fill()
-            const GIFT_ICON = await loadImage('https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/gift2.png')
-            CTX.drawImage(GIFT_ICON, 16, 12, 50, 50)
+            if (this.activity.logoShow && this.activity.logoUrl) {
+                CTX.beginPath()
+                CTX.lineTo(0, 0)
+                CTX.lineTo(146, 0)
+                CTX.lineTo(0, 126)
+                CTX.closePath()
+                CTX.fillStyle = '#fff'
+                CTX.fill()
+                CTX.beginPath()
+                CTX.arc(41, 39, 33, 0, 2 * Math.PI)
+                CTX.fillStyle = '#FE461F'
+                CTX.closePath()
+                CTX.fill()
+                const LOGO = await loadImage(this.activity.logoUrl)
+                CTX.drawImage(LOGO, 16, 12, 50, 50)
+            }
 
             // 内容
             drawRoundRect({
@@ -492,7 +535,7 @@ export default {
                     ctx: CTX,
                     x: 115,
                     y: 96 + 470,
-                    text: '20000.99',
+                    text: `${ this.redPackage.amount }`,
                     lineHeight: 54
                 })
                 // 虚线
@@ -506,38 +549,71 @@ export default {
                 CTX.font = 'bold 24px sans-serif'
                 createText({
                     ctx: CTX,
-                    x: 115 + W2 + 1 + 20 * 2,
+                    x: 115 + Math.max(W2, 100) + 1 + 20 + 35,
                     y: 85 + 470,
-                    text: '满20可抵1000',
+                    text: `满${ Number(this.redPackage.useLimitAmount) }可抵${ Number(this.redPackage.amount) }`,
                     lineHeight: 32
                 })
                 CTX.font = 'normal 20px sans-serif'
                 CTX.fillStyle = '#F19874'
+                if (this.status === 1) {
+                    createText({
+                        ctx: CTX,
+                        x: 116,
+                        y: 150 + 470,
+                        text: `仅剩${ Number(this.activity.issueVolume) - Number(this.activity.claimVolume) }张`,
+                        lineHeight: 28
+                    })
+                }
                 createText({
                     ctx: CTX,
-                    x: 116,
-                    y: 150 + 470,
-                    text: '仅剩12张',
-                    lineHeight: 28
-                })
-                createText({
-                    ctx: CTX,
-                    x: 115 + W2 + 1 + 20 * 2,
+                    x: 115 + Math.max(W2, 100) + 1 + 20 + 35,
                     y: 118 + 470,
-                    text: '威巴克专属',
+                    text: this.activity.name,
                     lineHeight: 28
                 })
                 createText({
                     ctx: CTX,
-                    x: 115 + W2 + 1 + 20 * 2,
+                    x: 115 + Math.max(W2, 100) + 1 + 20 + 35,
                     y: 152 + 470,
-                    text: '使用时间：2020.11.12-2020.12.21',
+                    text: `使用时间：${ this.redPackage.useStartTime.split(' ')[0].replace(/-/g, '.') }-${ this.redPackage.useEndTime.split(' ')[0].replace(/-/g, '.') }`,
                     lineHeight: 28
                 })
+                drawRoundRect({
+                    ctx: CTX,
+                    x: 75,
+                    y: 720,
+                    width: 600,
+                    height: 80,
+                    radius: 40,
+                    fillStyle: '#F23D00'
+                })
+                CTX.setLineDash([])
+                CTX.lineWidth = 5
+                drawRoundRect({
+                    ctx: CTX,
+                    x: 225,
+                    y: 838,
+                    width: 300,
+                    height: 300,
+                    radius: 20,
+                    strokeStyle: '#F23D00',
+                    fillStyle: '#fff'
+                })
+                const QR = await generateQrcode({ size: 220, text: this.shareUrl, type: 'canvas' })
+                CTX.drawImage(QR, 266, 880, 220, 220)
+                CTX.font = 'normal 30px sans-serif'
+                CTX.textAlign = 'center'
+                CTX.fillStyle = '#fff'
+                CTX.fillText('数量有限  立即领取', 375, 745)
+                CTX.fillStyle = '#333'
+                CTX.fillText('长按识别领取优惠', 375, 1170)
             }
 
             // 生成图片
-            console.log(CVS.toDataURL('image/jpeg', 0.9))
+            this.poster = CVS.toDataURL('image/jpeg', 0.9)
+            this.showPoster = true
+            this.creatingPoster = false
         }
     }
 }
@@ -725,10 +801,12 @@ export default {
     position: absolute;
     top: 26px;
     right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 120px;
     height: 48px;
     line-height: 48px;
-    text-align: center;
     background: #000000;
     border-radius: 48px 0px 0px 48px;
     overflow: hidden;
@@ -887,6 +965,25 @@ export default {
                 margin-top: 0;
             }
         }
+    }
+}
+
+.poster {
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+    z-index: 10;
+    > img {
+        margin-top: 20px;
+    }
+    > svg {
+        margin-top: 20px;
     }
 }
 

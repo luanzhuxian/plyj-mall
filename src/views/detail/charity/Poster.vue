@@ -96,9 +96,6 @@ export default {
             }
         }
     },
-    created () {
-        // this.createPoster()
-    },
     methods: {
         close () {
             this.isShow = false
