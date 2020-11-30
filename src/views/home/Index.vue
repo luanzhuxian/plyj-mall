@@ -7,29 +7,29 @@
             >
                 main
             </h3>
-            <template-b
+            <TemplateB
                 v-if="~[3, 4].indexOf(type)"
                 :type="type"
                 :skin-id="skinId"
                 :data="modules"
             />
-            <template-c
+            <TemplateC
                 v-if="type === -1"
                 :type="type"
                 :skin-id="skinId"
                 :data="modules"
             />
-            <template-d
+            <TemplateD
                 v-if="type === 9"
                 :type="type"
                 :skin-id="skinId"
                 :data="modules"
             />
-            <invite-newcomers-home-entry />
+            <InviteNewcomersHomeEntry />
             <!--瓜分奖学金-->
-            <split-burse />
+            <SplitBurse />
             <!--送课弹框-->
-            <send-live is-notice="0" />
+            <SendLive is-notice="0" />
         </template>
         <div :class="$style.skeleton" v-else>
             <div :class="$style.skeletonA" />

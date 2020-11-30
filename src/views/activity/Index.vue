@@ -3,7 +3,7 @@
         <!-- 双十二 2019 -->
         <div :class="$style.d12" v-if="~[5, 6, 7].indexOf(type)">
             <div :class="$style.background">
-                <search placeholder="搜索商品" />
+                <Search placeholder="搜索商品" />
                 <div :class="$style.container" v-if="allLoaded">
                     <router-link
                         :class="{
@@ -14,44 +14,44 @@
                         tag="div"
                         :to="{ name: topBtnType === 1 ? 'MyCoupon' : '' }"
                     />
-                    <template-fengqiang
+                    <TemplateFengqiang
                         v-if="type === 5"
                         :data="modules"
                         :type="type"
                     />
-                    <template-baofa
+                    <TemplateBaofa
                         v-if="type === 6"
                         :data="modules"
                         :type="type"
                     />
-                    <template-fanchang
+                    <TemplateFanchang
                         v-if="type === 7"
                         :data="modules"
                         :type="type"
                     />
                 </div>
             </div>
-            <invite-newcomers-home-entry />
+            <InviteNewcomersHomeEntry />
         </div>
         <!-- 新春 -->
-        <template-xinchun
+        <TemplateXinchun
             v-if="type === 8"
             :data="modules"
             :type="type"
         />
         <!-- 龙门节 -->
-        <template-dragon-gate
+        <TemplateDragonGate
             v-if="type === 10"
             :data="modules"
             :type="type"
         />
         <!-- 双十二 2020 -->
-        <template-double-12
+        <TemplateDouble12
             v-if="type === 11"
             :data="modules"
             :type="type"
         />
-        <pl-svg :class="$style.loading" name="icon-loading" fill="#FFF" width="90" v-if="!allLoaded" />
+        <PlSvg :class="$style.loading" name="icon-loading" fill="#FFF" width="90" v-if="!allLoaded" />
     </div>
 </template>
 
