@@ -201,6 +201,7 @@
                     :product-type="productType"
                     @addToCart="addToCart"
                     @buyNow="buyNow"
+                    :coupon-list="couponList"
                 />
 
                 <!-- 详情页面选择规格 - 弹框 -->
@@ -215,6 +216,7 @@
                     :active-product="activeProduct"
                     :activity-product-model="detail.activityProductModel || null"
                     :pre-activity="preActivity"
+                    :coupon-list="couponList"
                 >
                     <template v-slot:footer="{ currentSku, limiting, limit, publicBenefitActiveStock, publicBenefitActivePrice}" v-if="!~[5, 6].indexOf(productActive) && mchId">
                         <div :class="$style.buttons" v-if="activeProduct === 2 && preActivity === 2">

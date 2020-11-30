@@ -175,6 +175,13 @@ export default {
                 return []
             }
         },
+        // 优惠券列表
+        couponList: {
+            type: Array,
+            default () {
+                return []
+            }
+        },
         skuAttrList: {
             type: Array,
             default () {
@@ -322,6 +329,14 @@ export default {
                 return this.activeProduct
             }
             return 1
+        },
+
+        /**
+         * 找出合适的福利红包，如果没有返回null
+         * 更加规格和规格价格，找出减免力度最大的红包展示出来
+         */
+        getRedPacket () {
+            return null
         }
     },
     methods: {

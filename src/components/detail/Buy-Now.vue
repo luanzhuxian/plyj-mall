@@ -114,6 +114,7 @@
             :active-product="activeProduct"
             :pre-activity="preActivity"
             :activity-product-model="activityProductModel"
+            :coupon-list="couponList"
         >
             <template v-slot:footer="{ currentSku, limiting, limit, publicBenefitActiveStock }">
                 <div>
@@ -198,6 +199,13 @@ export default {
             default: ''
         },
         skuList: {
+            type: Array,
+            default () {
+                return []
+            }
+        },
+        // 优惠券列表
+        couponList: {
             type: Array,
             default () {
                 return []

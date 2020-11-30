@@ -49,7 +49,7 @@
         <div :class="[$style.panel, $style.express]"
              v-if="detail.orderType === orderTypeKeyMap.PHYSICAL_GOODS && [orderStatuskeyMap.WAIT_SHIP, orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status) && !isClosedByCancle"
         >
-            <pl-svg name="icon-express" :class="$style.icon" />
+            <pl-svg :vertical-align="-24" name="icon-express" :class="$style.icon" />
             <span :class="$style.content">
                 {{ detail.status === orderStatuskeyMap.WAIT_SHIP ? '待发货' : `${shippingInfoModel.logisticsCompany}  ${shippingInfoModel.logisticsNo}` }}
             </span>

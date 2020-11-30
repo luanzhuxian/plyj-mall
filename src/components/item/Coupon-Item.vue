@@ -7,7 +7,7 @@
         <div :class="$style.main">
             <div :class="$style.couponItemLeft">
                 <div :class="$style.leftTop">
-                    <div :class="[$style.couponPrice, amount > 999 ? $style.middle: '', amount > 9999 ? $style.large: '']" v-text="amount" />
+                    <div :class="[$style.couponPrice, String(amount).length > 3 ? $style.middle: '', String(amount).length > 3 > 4 ? $style.large: '']" v-text="amount" />
                     <div :class="[$style.couponDesc, amount > 999 ? $style.middle: '']">
                         <div>满{{ full }}减 {{ subtract }}</div>
                         <div v-text="name" />
