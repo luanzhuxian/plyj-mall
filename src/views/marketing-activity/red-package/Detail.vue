@@ -48,7 +48,7 @@
                 <div :class="$style.mainWrapper" v-if="allLoaded">
                     <!-- 弹幕 -->
                     <section :class="$style.barrage" v-if="isBarrageShow">
-                        <Barrage ref="barrage" :list="bulletList" :template="getBulletTemplate" />
+                        <Barrage ref="barrage" :list="bulletList" :template="getBulletTemplate" :gap="2" />
                     </section>
                     <!-- 红包 -->
                     <section :class="$style.redPackage">

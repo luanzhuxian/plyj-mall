@@ -14,6 +14,10 @@ export default {
                 return []
             }
         },
+        gap: {
+            type: Number,
+            default: 1.4
+        },
         template: {
             type: Function,
             default (item, vm) {
@@ -32,7 +36,6 @@ export default {
         return {
             index: 0,
             duration: 3,
-            gap: 1.4,
             timer: null
         }
     },
