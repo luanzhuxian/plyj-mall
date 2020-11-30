@@ -78,11 +78,11 @@
                             <PlForm ref="form" :model="form" :rules="rules">
                                 <PlFormItem prop="number" label="领取数量" class="input-number">
                                     <template v-if="redPackage.quantityLimit !== 1">
-                                        <button type="button" :disabled="form.count <= 1" @click.stop="minus">
+                                        <button type="button" :disabled="form.count <= 1" @click.stop="form.count--">
                                             -
                                         </button>
                                         <input type="number" v-model.number="form.count">
-                                        <button type="button" :disabled="isInputNumberDisabled" @click.stop="add">
+                                        <button type="button" :disabled="isInputNumberDisabled" @click.stop="form.count++">
                                             +
                                         </button>
                                     </template>
@@ -116,7 +116,7 @@
                                 :disabled="submiting || isUpLimitReached"
                                 @click.stop="submitRedPackageOrder"
                             >
-                                <PlSvg v-show="submiting" name="icon-btn-loading" fill="#FFF" width="35" />
+                                <PlSvg v-show="submiting" name="icon-btn-loading" fill="#FFF" width="35" class="rotate" />
                                 <span v-if="totalPrice">{{ `仅需￥${totalPrice}  立即领取` }}</span>
                                 <span v-else>数量有限 立即领取</span>
                             </button>
@@ -153,12 +153,22 @@
                 </router-link>
             </div>
         </div>
-        <transition name="fade">
-            <div v-if="showPoster" :class="$style.poster">
-                <img v-imgError :src="poster" alt="" style="width: 80%;">
-                <PlSvg name="icon-close3" width="36" @click="showPoster = false" />
-            </div>
-        </transition>
+        <Poster
+            ref="poster"
+            :bg-index="activity.bgUrlsIndex"
+            show-coupon
+            :show-logo="activity.logoShow"
+            :logo-url="activity.logoUrl"
+            :name="activity.name"
+            :status="activity.activityStatus"
+            :amount="redPackage.amount"
+            :use-limit-amount="redPackage.useLimitAmount"
+            :issue-volume="activity.issueVolume"
+            :claim-volume="activity.claimVolume"
+            :use-start-time="redPackage.useStartTime"
+            :use-end-time="redPackage.useEndTime"
+            :share-url="shareUrl"
+        />
     </div>
 </template>
 
@@ -168,6 +178,7 @@ import Barrage from '../longmen-festival/action/components/Barrage.vue'
 import Countdown from '../../../components/activity/Countdown.vue'
 import Coupon from './components/Coupon.vue'
 import Product from './components/Product.vue'
+import Poster from './components/Poster.vue'
 import { checkLength, isPhone } from '../../../assets/js/validate'
 import { getRedPackage, getRedPackageBarrage } from '../../../apis/marketing-activity/red-package'
 import { submitRedPackageOrder, pay } from './pay'
@@ -177,12 +188,6 @@ import {
     fenToYuan,
     isToday
 } from './utils'
-import {
-    loadImage,
-    drawRoundRect,
-    createText,
-    generateQrcode
-} from '../../../assets/js/util'
 import share from '../../../assets/js/wechat/wechat-share'
 
 export default {
@@ -191,7 +196,8 @@ export default {
         Barrage,
         Countdown,
         Coupon,
-        Product
+        Product,
+        Poster
     },
     props: {
         activityId: {
@@ -226,9 +232,7 @@ export default {
                     { validator: isPhone, message: '联系人手机号格式错误' }
                 ]
             },
-            showPoster: false,
             creatingPoster: false,
-            poster: '',
             shareUrl: ''
         }
     },
@@ -276,6 +280,11 @@ export default {
         } finally {
             this.allLoaded = true
         }
+    },
+    deactivated () {
+        // this.allLoaded = false
+        this.submiting = false
+        this.creatingPoster = false
     },
     methods: {
         // 获取红包活动详情
@@ -328,12 +337,6 @@ export default {
                 this.status = 3
             }
         },
-        minus () {
-            this.form.count--
-        },
-        add () {
-            this.form.count++
-        },
         // 检查是否绑定手机号
         checkMobile () {
             if (!this.mobile) {
@@ -371,6 +374,7 @@ export default {
                 this.submiting = true
                 const { payData, orderBatchNumber } = await submitRedPackageOrder(this.activityId, this.form.count)
                 const result = await pay(payData, payData.orderIds, payData.orderIds.length, orderBatchNumber, this.totalPrice)
+                // TODO:
                 console.log('result', result)
                 if (result === true) {
                     this.activity.userClaimed++
@@ -431,191 +435,31 @@ export default {
             }
         },
         share () {
-            // let img
-            const { appId, mallUrl } = this
-            this.shareUrl = `${ mallUrl }/red-package/detail/${ this.activityId }?noCache=${ Date.now() }`
-            // if (this.list.length) {
-            //     img =
-            // }
+            const { appId, mallUrl, shareUrl, userName } = this
+            this.shareUrl = `${ mallUrl }/red-package/detail/${ this.activityId }?t=${ Date.now() }`
             share({
                 appId,
-                title: `${ this.userName } 邀您领取福利红包`,
+                title: `${ userName } 邀您领取福利红包`,
                 desc: '小金额，大额券，边逛边优惠',
-                link: this.shareUrl
-                // imgUrl: img
+                link: shareUrl,
+                imgUrl: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/share.png'
             })
         },
         // 创建海报
         async createPoster () {
-            if (this.creatingPoster) {
-                return
-            }
-            if (this.poster) {
-                this.showPoster = true
-                return
-            }
-
-            this.creatingPoster = true
-            // 背景色
-            let bgc = ''
-            // 背景图
-            let bgi = ''
-            switch (this.activity.bgUrlsIndex) {
-                case 1:
-                    bgc = '#077ce6'
-                    bgi = 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/bg-detail-blue.png'
-                    break
-                case 2:
-                    bgc = '#7e2ef1'
-                    bgi = 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/bg-detail-purple.png'
-                    break
-                case 3:
-                    bgc = '#f5b72f'
-                    bgi = 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/bg-detail-yellow.png'
-                    break
-                default:
-                    bgc = '#ff634d'
-                    bgi = 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/bg-detail-red.png'
-                    break
-            }
-
-            // 是否显示优惠券
-            const SHOW_COUPON = true
-            const CVS = document.createElement('canvas')
-            const CTX = CVS.getContext('2d')
-            CVS.width = 750
-            CVS.height = 1334
-            // 绘制背景
-            CTX.fillStyle = bgc
-            CTX.fillRect(0, 0, CVS.width, CVS.height)
-            const BGI = await loadImage(bgi)
-            CTX.drawImage(BGI, 0, 0, 750, 450)
-            // 左上角图标
-            if (this.activity.logoShow && this.activity.logoUrl) {
-                CTX.beginPath()
-                CTX.lineTo(0, 0)
-                CTX.lineTo(146, 0)
-                CTX.lineTo(0, 126)
-                CTX.closePath()
-                CTX.fillStyle = '#fff'
-                CTX.fill()
-                CTX.beginPath()
-                CTX.arc(41, 39, 33, 0, 2 * Math.PI)
-                CTX.fillStyle = '#FE461F'
-                CTX.closePath()
-                CTX.fill()
-                const LOGO = await loadImage(this.activity.logoUrl)
-                CTX.drawImage(LOGO, 16, 12, 50, 50)
-            }
-
-            // 内容
-            drawRoundRect({
-                ctx: CTX,
-                x: SHOW_COUPON ? 25 : 55,
-                y: SHOW_COUPON ? 470 : 550,
-                width: SHOW_COUPON ? 700 : 640,
-                height: SHOW_COUPON ? 794 : 734,
-                radius: 20,
-                fillStyle: '#fff'
-            })
-            if (SHOW_COUPON) {
-                // 绘制优惠券
-                const CONPON_BG = await loadImage('https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/coupon.png')
-                CTX.drawImage(CONPON_BG, 45, 500, 660, 190)
-                CTX.font = 'bold 22px sans-serif'
-                CTX.fillStyle = '#F23D00'
-                CTX.textBaseline = 'hanging'
-                createText({
-                    ctx: CTX,
-                    x: 95,
-                    y: 114 + 470,
-                    text: '￥',
-                    lineHeight: 20
-                })
-                CTX.font = 'bold 42px sans-serif'
-                const W2 = createText({
-                    ctx: CTX,
-                    x: 115,
-                    y: 96 + 470,
-                    text: `${ this.redPackage.amount }`,
-                    lineHeight: 54
-                })
-                // 虚线
-                CTX.beginPath()
-                CTX.setLineDash([2, 5])
-                CTX.moveTo(Math.max(W2, 100) + 115 + 20, 62 + 470)
-                CTX.lineTo(Math.max(W2, 100) + 115 + 20, 62 + 470 + 128)
-                CTX.strokeStyle = '#FDAC85'
-                CTX.closePath()
-                CTX.stroke()
-                CTX.font = 'bold 24px sans-serif'
-                createText({
-                    ctx: CTX,
-                    x: 115 + Math.max(W2, 100) + 1 + 20 + 35,
-                    y: 85 + 470,
-                    text: `满${ Number(this.redPackage.useLimitAmount) }可抵${ Number(this.redPackage.amount) }`,
-                    lineHeight: 32
-                })
-                CTX.font = 'normal 20px sans-serif'
-                CTX.fillStyle = '#F19874'
-                if (this.status === 1) {
-                    createText({
-                        ctx: CTX,
-                        x: 116,
-                        y: 150 + 470,
-                        text: `仅剩${ Number(this.activity.issueVolume) - Number(this.activity.claimVolume) }张`,
-                        lineHeight: 28
-                    })
+            try {
+                if (this.creatingPoster) {
+                    return
                 }
-                createText({
-                    ctx: CTX,
-                    x: 115 + Math.max(W2, 100) + 1 + 20 + 35,
-                    y: 118 + 470,
-                    text: this.activity.name,
-                    lineHeight: 28
-                })
-                createText({
-                    ctx: CTX,
-                    x: 115 + Math.max(W2, 100) + 1 + 20 + 35,
-                    y: 152 + 470,
-                    text: `使用时间：${ this.redPackage.useStartTime.split(' ')[0].replace(/-/g, '.') }-${ this.redPackage.useEndTime.split(' ')[0].replace(/-/g, '.') }`,
-                    lineHeight: 28
-                })
-                drawRoundRect({
-                    ctx: CTX,
-                    x: 75,
-                    y: 720,
-                    width: 600,
-                    height: 80,
-                    radius: 40,
-                    fillStyle: '#F23D00'
-                })
-                CTX.setLineDash([])
-                CTX.lineWidth = 5
-                drawRoundRect({
-                    ctx: CTX,
-                    x: 225,
-                    y: 838,
-                    width: 300,
-                    height: 300,
-                    radius: 20,
-                    strokeStyle: '#F23D00',
-                    fillStyle: '#fff'
-                })
-                const QR = await generateQrcode({ size: 220, text: this.shareUrl, type: 'canvas' })
-                CTX.drawImage(QR, 266, 880, 220, 220)
-                CTX.font = 'normal 30px sans-serif'
-                CTX.textAlign = 'center'
-                CTX.fillStyle = '#fff'
-                CTX.fillText('数量有限  立即领取', 375, 745)
-                CTX.fillStyle = '#333'
-                CTX.fillText('长按识别领取优惠', 375, 1170)
-            }
 
-            // 生成图片
-            this.poster = CVS.toDataURL('image/jpeg', 0.9)
-            this.showPoster = true
-            this.creatingPoster = false
+                this.creatingPoster = true
+                await this.$nextTick()
+                await this.$refs.poster.createPoster()
+            } catch (error) {
+                throw error
+            } finally {
+                this.creatingPoster = false
+            }
         }
     }
 }
@@ -921,7 +765,6 @@ export default {
         > svg {
             position: relative;
             top: -2px;
-            animation: rotate2 2s linear infinite;
             margin-right: 10px;
         }
     }
@@ -970,25 +813,6 @@ export default {
     }
 }
 
-.poster {
-    position: fixed;
-    left: 0;
-    top: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, .5);
-    z-index: 10;
-    > img {
-        margin-top: 20px;
-    }
-    > svg {
-        margin-top: 20px;
-    }
-}
-
 .nav-btn {
     position: fixed;
     right: 26px;
@@ -1011,24 +835,16 @@ export default {
     top: 50%;
     left: 50%;
     transform-origin: 0 0;
-    animation: rotate1 1.2s linear infinite;
+    animation: rotate 1.2s linear infinite;
     z-index: 999;
 }
 
-@keyframes rotate1 {
+@keyframes rotate {
     from {
         transform: rotate(0deg) translate(-50%, -50%);
     }
     to {
         transform: rotate(359deg) translate(-50%, -50%);
-    }
-}
-@keyframes rotate2 {
-    from {
-        transform: rotate(0deg) translate(0, 0);
-    }
-    to {
-        transform: rotate(359deg) translate(0, 0);
     }
 }
 

@@ -38,23 +38,27 @@
                             />
                         </ul>
                     </section>
-                    <button :class="$style.button" @click="share">
+                    <button :class="$style.button" @click="createPoster">
+                        <PlSvg v-show="creatingPoster" name="icon-btn-loading" fill="#F23D00" width="35" class="rotate" />
                         立即分享
                     </button>
                 </template>
                 <PlSvg :class="$style.loading" name="icon-loading" fill="#FFF" width="90" v-else />
             </div>
         </div>
+        <Poster ref="poster" :share-url="shareUrl" />
     </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import Swiper from './components/Swiper.vue'
 import Barrage from '../longmen-festival/action/components/Barrage.vue'
 import Coupon from './components/Coupon.vue'
-import Swiper from './components/Swiper.vue'
+import Poster from './components/Poster.vue'
 import { getRedPackageList, getRedPackageBarrage } from '../../../apis/marketing-activity/red-package'
 import { getBulletTemplate, isToday } from './utils'
+import share from '../../../assets/js/wechat/wechat-share'
 
 const productModel = {
     goodsImage: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/奖品.png',
@@ -66,9 +70,10 @@ const productModel = {
 export default {
     name: 'RedPackage',
     components: {
+        Swiper,
         Barrage,
         Coupon,
-        Swiper
+        Poster
     },
     data () {
         return {
@@ -76,11 +81,13 @@ export default {
             allLoaded: false,
             bulletList: [],
             productList: [],
-            redPackageList: []
+            redPackageList: [],
+            creatingPoster: false,
+            shareUrl: ''
         }
     },
     computed: {
-        ...mapGetters(['mobile'])
+        ...mapGetters(['userName', 'mobile', 'appId', 'mallUrl'])
     },
     async activated () {
         try {
@@ -92,11 +99,16 @@ export default {
             if (this.$refs.barrage) {
                 this.$refs.barrage.run()
             }
+            this.share()
         } catch (error) {
             throw error
         } finally {
             this.allLoaded = true
         }
+    },
+    deactivated () {
+        // this.allLoaded = false
+        this.creatingPoster = false
     },
     methods: {
         // 获取红包弹幕模板
@@ -223,7 +235,31 @@ export default {
             })
         },
         share () {
-            // if (!this.checkMobile()) return
+            const { appId, mallUrl, shareUrl, userName } = this
+            this.shareUrl = `${ mallUrl }/red-package/home?t=${ Date.now() }`
+            share({
+                appId,
+                title: `${ userName } 邀您领取福利红包`,
+                desc: '小金额，大额券，边逛边优惠',
+                link: shareUrl,
+                imgUrl: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/share.png'
+            })
+        },
+        // 创建海报
+        async createPoster () {
+            try {
+                if (this.creatingPoster) {
+                    return
+                }
+
+                this.creatingPoster = true
+                await this.$nextTick()
+                await this.$refs.poster.createPoster()
+            } catch (error) {
+                throw error
+            } finally {
+                this.creatingPoster = false
+            }
         }
     }
 }
@@ -351,17 +387,21 @@ export default {
 }
 
 .button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin: 54px;
     width: 600px;
     height: 80px;
-    line-height: 80px;
-    text-align: center;
     background: #FFF36E;
     border-radius: 60px;
     font-size: 30px;
     font-family: Microsoft YaHei;
     font-weight: bold;
     color: #F23D00;
+    > svg {
+        margin-right: 10px;
+    }
 }
 
 .loading {
