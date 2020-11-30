@@ -6,7 +6,8 @@
         @click="clickHandler"
         :style="{
             width: truthWidth,
-            height: truthHeight
+            height: truthHeight,
+            verticalAlign: verticalAlign / 7.5 + 'vw'
         }"
         @hover="hoverHandler"
     >
@@ -47,6 +48,10 @@ export default {
         type: {
             type: String,
             default: 'svg'
+        },
+        verticalAlign: {
+            type: Number,
+            default: 0
         }
     },
     data () {
@@ -179,5 +184,6 @@ export default {
 
 <style module lang="scss">
     .pl-svg {
+      vertical-align: -4px;
     }
 </style>
