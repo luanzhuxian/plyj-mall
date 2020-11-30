@@ -54,7 +54,7 @@
                     <section :class="$style.redPackage">
                         <div :class="$style.redPackageHeader">
                             <b>小金额，大额券，边逛边优惠！</b>
-                            <router-link :class="$style.redPackageRule" :to="{ name: 'RedPackageIntro'}">
+                            <router-link :class="$style.redPackageRule" :to="{ name: 'RedPackageIntro', query: { from: 'RedPackageDetail' } }">
                                 规则
                             </router-link>
                         </div>

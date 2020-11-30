@@ -4,7 +4,7 @@
             <div :class="$style.title">使用说明</div>
         </div>
 
-        <div :class="[$style.module, $style.content, $style.border]">
+        <div :class="[$style.module, $style.content, $style.border]" v-if="$route.query.from && $route.query.from === 'RedPackageDetail'">
             <div :class="[$style.title, $style.left]">使用须知</div>
             <p :class="$style.tip">发券时间：2020.1.2.-2020.6.30</p>
             <p :class="$style.tip">使用时间：2020.1.2.-2020.6.30</p>
