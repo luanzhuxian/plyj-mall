@@ -109,15 +109,15 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import scan from '../../../../assets/js/wechat/wechat-scan'
-import LoadMore from '../../../../components/common/Load-More.vue'
+import scan from '../../../assets/js/wechat/wechat-scan'
+import LoadMore from '../../../components/common/Load-More.vue'
 import CodeItem from './components/Code-Item'
 import ReceiveCode from './components/Receive-Code'
 import {
     getRedemptionList,
     deleteRedemptionByIds
-} from '../../../../apis/my-redemption'
-import PlButton from '../../../../components/penglai-ui/Button'
+} from '../../../apis/my-redemption'
+import PlButton from '../../../components/penglai-ui/Button'
 
 export default {
     name: 'Redemption',

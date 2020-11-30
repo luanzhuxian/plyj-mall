@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { getBurseDetail } from './../../../apis/my-burse.js'
+import { getBurseDetail } from '../../../apis/my-burse.js'
 export default {
     name: 'MyBurseDetail',
     data () {

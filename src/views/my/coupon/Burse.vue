@@ -49,8 +49,8 @@
 
 <script>
 import BurseItem from './components/Burse-Item.vue'
-import LoadMore from './../../../components/common/Load-More.vue'
-import { getBurseMes, getBurseList } from './../../../apis/my-burse.js'
+import LoadMore from '../../../components/common/Load-More.vue'
+import { getBurseMes, getBurseList } from '../../../apis/my-burse.js'
 
 export default {
     name: 'MyBurse',

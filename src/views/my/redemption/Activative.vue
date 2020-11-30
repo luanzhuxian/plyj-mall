@@ -33,7 +33,7 @@ import { mapGetters } from 'vuex'
 import {
     getRedemptiontInfo,
     receiveRedemption
-} from '../../../../apis/my-redemption'
+} from '../../../apis/my-redemption'
 import ReceiveResult from './components/Receive-Result'
 export default {
     name: 'RedemptionActivative',

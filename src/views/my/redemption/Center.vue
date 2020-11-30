@@ -47,7 +47,7 @@ import CodeItem from './components/Code-Item'
 import ProductItem from './components/Product-Item'
 import {
     getProductByCodeId
-} from '../../../../apis/my-redemption'
+} from '../../../apis/my-redemption'
 // 商品类型
 const productTypeKeyMap = {
     2: 'KNOWLEDGE_COURSE',

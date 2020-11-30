@@ -22,7 +22,7 @@
 
 <script>
 import ProductItem from './components/Product-Item'
-import { getProductByCodeId } from '../../../../apis/my-redemption'
+import { getProductByCodeId } from '../../../apis/my-redemption'
 export default {
     name: 'Redeemed',
     props: {

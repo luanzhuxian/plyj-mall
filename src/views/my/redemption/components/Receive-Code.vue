@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { receiveRedemption } from '../../../../../apis/my-redemption'
+import { receiveRedemption } from '../../../../apis/my-redemption'
 const codeDesc = {
     201: '该兑换码为无效码',
     202: '该兑换码为失效码',
