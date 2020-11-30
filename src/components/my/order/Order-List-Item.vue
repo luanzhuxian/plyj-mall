@@ -17,7 +17,7 @@
             />
         </div>
         <order-item
-            :img="goodsImages"
+            :img="orderType === 'RED_ENVELOPE' ? 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/red-packet-order-icon.png' : goodsImages"
             :name="goodsName"
             :option="subSkuName ? `${skuName},${subSkuName}` : skuName"
             :count="count"

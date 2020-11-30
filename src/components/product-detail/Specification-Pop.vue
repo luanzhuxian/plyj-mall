@@ -35,13 +35,17 @@
                                     :class="$style.price"
                                     v-text="currentSku.activityPrice"
                                 />
-                                <p :class="$style.original" v-if="currentSku.price !== currentSku.originalPrice && currentSku.originalPrice">
-                                    原价：<del class="rmb" v-text="currentSku.originalPrice" v-if="activeType !== 1" /> <del class="rmb" v-else v-text="currentSku.originalPrice" />
+                                <p :class="$style.original"
+                                   v-if="currentSku.price !== currentSku.originalPrice && currentSku.originalPrice">
+                                    原价：
+                                    <del class="rmb" v-text="currentSku.originalPrice" v-if="activeType !== 1" />
+                                    <del class="rmb" v-else v-text="currentSku.originalPrice" />
                                 </p>
                                 <p :class="$style.repertory" v-if="currentSku.skuCode1Name">
                                     已选：
                                     “<i v-text="currentSku.skuCode1Name" />
-                                    <template v-if="currentSku.skuCode2Name">，<i v-text="currentSku.skuCode2Name" /></template>”
+                                    <template v-if="currentSku.skuCode2Name">，<i v-text="currentSku.skuCode2Name" /></template>
+                                    ”
                                 </p>
                             </div>
                         </div>
@@ -140,12 +144,20 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- 预购提醒 -->
                     <div :class="$style.bookPrice" v-if="activeProduct === 4 && preActivity === 2 && currentSku.activityProduct">
                         定金<span>{{ currentSku.activityPrice }}</span>
                         <div class="deposit">
                             抵<span>{{ currentSku.depositTotal }}</span>
                         </div>
                     </div>
+
+                    <!-- 红包抵用提醒 -->
+                    <div class="fz-24" v-if="getRedPacket">
+                        当前商品可使用满 <i class=" primary-color">{{ getRedPacket.useLimitAmount }}减{{ getRedPacket.amount }}</i> 商品福利红包
+                    </div>
+
                     <div :class="$style.footer" v-if="localCurrentSku.id" @click.capture="slotClickHandler">
                         <slot
                             name="footer"
@@ -165,6 +177,7 @@
 
 <script>
 import { getCurrentLimit } from '../../apis/product'
+
 export default {
     name: 'SpecificationPop',
     props: {
@@ -255,26 +268,6 @@ export default {
             if (val) {
                 this.init()
             }
-        },
-        currentSku: {
-            async handler (val) {
-                if (!val.id) return
-                this.localCurrentSku = val
-                this.$emit('change', val)
-                this.$emit('update:sku', val)
-
-                // 当前商品限购的时候，检查可买数量
-                if (this.limiting) {
-                    try {
-                        const { result: limit } = await getCurrentLimit(val.productId, this.activeType)
-                        this.limit = limit
-                    } catch (e) {
-                        this.limit = this.limiting
-                        this.$error('商品限购检查错误')
-                    }
-                }
-            },
-            deep: true
         }
     },
     created () {
@@ -299,7 +292,7 @@ export default {
             } else {
                 current.count = current.minBuyNum
             }
-            return current
+            return { ...current }
         },
         skuImage () {
             const currentSku1 = this.skuAttrList[0].productAttributeValues.find(item => item.id === this.currentSku1)
@@ -336,7 +329,20 @@ export default {
          * 更加规格和规格价格，找出减免力度最大的红包展示出来
          */
         getRedPacket () {
-            return null
+            const RED_PACKET = this.couponList.filter(item => item.couponType === 3).sort((a, b) => a.amount - b.amount)
+            if (!RED_PACKET.length) {
+                return null
+            }
+            // 找出匹配当前规格的红包
+            const filterRedPacket = []
+            const { skuCode1: CUR_SKUCODE1, skuCode2: CUR_SKUCODE2 } = this.currentSku
+            for (const redPacket of RED_PACKET) {
+                const { couponGoodsSkuDTOS } = redPacket
+                if (couponGoodsSkuDTOS.some(item => item.skuCode === CUR_SKUCODE1 && item.subSkuCode === CUR_SKUCODE2)) {
+                    filterRedPacket.push(redPacket)
+                }
+            }
+            return filterRedPacket.slice(-1)[0] || null
         }
     },
     methods: {
@@ -347,7 +353,7 @@ export default {
 
         // 初始化，会选中一个默认规格，如果没有默认规格，选中第一个(禁用的不能选中)，并触发一次change事件
         init () {
-            // 有默认规格，并且默认规格有效
+        // 有默认规格，并且默认规格有效
             this.localCurrentSku.count = this.sku.count
             this.count = this.sku.count
             if (this.sku.id && this.sku.stock >= this.sku.minBuyNum && this.sku.count <= this.sku.stock) {
@@ -356,10 +362,10 @@ export default {
                 // 没有默认规格，并且默认规格失效，找出规格列表中，第一给没有禁用的规格
                 const noDisable = this.skuList.find(item => {
                     /**
-           * 规格按钮的禁用规则：
-           * 非活动商品或者活动商品但是活动未开始时，当库存大于最小购买量，按钮就不可选择
-           * 活动商品且活动已开始，当购买数量大于0 的情况下
-           */
+                     * 规格按钮的禁用规则：
+                     * 非活动商品或者活动商品但是活动未开始时，当库存大于最小购买量，按钮就不可选择
+                     * 活动商品且活动已开始，当购买数量大于0 的情况下
+                     */
                     if (this.activeType === 1 || this.preActivity !== 2) {
                         return item.stock >= item.minBuyNum
                     }
@@ -395,7 +401,7 @@ export default {
                 return this.activityProductModel && this.activityProductModel.buyCount < 1
             })
         },
-        skuChange (skuCode1, skuCode2) {
+        async skuChange (skuCode1, skuCode2) {
             // 该行是有用的，目的是触发多次 watcher 更新，解决选择数量问题
             this.currentSku1 = ''
 
@@ -429,10 +435,12 @@ export default {
             }
             this.skuCode2List = skuCode2List
             this.setCount()
+            await this.onSkuChange()
         },
-        subSkuChange (sku2) {
+        async subSkuChange (sku2) {
             this.currentSku2 = sku2
             this.setCount()
+            await this.onSkuChange()
         },
         // 初始化显示的数量
         setCount () {
@@ -440,6 +448,23 @@ export default {
             const max = Math.max(this.currentSku.count, this.min)
             this.localCurrentSku.count = max
             this.count = max
+        },
+        async onSkuChange () {
+            await this.$nextTick()
+            this.localCurrentSku = this.currentSku
+            this.$emit('change', this.currentSku)
+            this.$emit('update:sku', this.currentSku)
+
+            // 当前商品限购的时候，检查可买数量
+            if (this.limiting) {
+                try {
+                    const { result: limit } = await getCurrentLimit(this.currentSku.productId, this.activeType)
+                    this.limit = limit
+                } catch (e) {
+                    this.limit = this.limiting
+                    this.$error('商品限购检查错误')
+                }
+            }
         },
         attrIsHear (attrId) {
             return this.skuList.some(item => item.skuCode1 === attrId || item.skuCode2 === attrId)
@@ -525,6 +550,7 @@ export default {
     background-color: rgba(0, 0, 0, .65);
     z-index: 12;
   }
+
   .close {
     position: absolute;
     top: 24px;
@@ -532,6 +558,7 @@ export default {
     width: 46px;
     height: 46px;
   }
+
   .spec-box {
     position: absolute;
     display: flex;
@@ -545,72 +572,89 @@ export default {
     bottom: 0;
     background-color: #fff;
     box-sizing: border-box;
+
     .base-info {
       display: flex;
       align-items: flex-end;
       padding-bottom: 24px;
       border-bottom: 1px solid #e7e7e7;
-        > img {
-            width: 162px;
-            height: 108px;
-            margin-right: 22px;
-            object-fit: cover;
-        }
+
+      > img {
+        width: 162px;
+        height: 108px;
+        margin-right: 22px;
+        object-fit: cover;
+      }
     }
   }
+
   .book-price {
     font-size: 24px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-weight: 500;
-    .deposit{
+
+    .deposit {
       margin-left: 10px;
     }
+
     span {
       color: #FE7700;
+
       &:before {
         content: '¥';
         font-size: 24px;
       }
     }
   }
+
   .base-info-right {
     font-size: 24px;
+
     .price {
       color: $--primary-color;
       font-weight: bold;
+
       &:before {
         content: '￥';
         font-size: 20px;
       }
     }
+
     .original {
       color: #adadad;
     }
+
     .repertory {
       color: #666;
     }
   }
+
   .color, .size, .count {
     position: relative;
     padding: 20px 0;
+
     > div:nth-of-type(1) {
       font-size: 26px;
       font-weight: bold;
       margin-bottom: 20px;
     }
   }
+
   .color {
     border-bottom: 1px solid #e7e7e7;
   }
+
   .size {
     border-bottom: 1px solid #e7e7e7;
   }
+
   .skuBox {
     max-height: 420px;
     overflow: scroll;
   }
+
   .color-list, .size-list {
     display: flex;
     flex-wrap: wrap;
@@ -618,6 +662,7 @@ export default {
     padding: 5px;
     overflow: auto;
     box-sizing: border-box;
+
     > button {
       position: relative;
       margin: 0 13px 13px 0;
@@ -630,9 +675,11 @@ export default {
       border-radius: $--radius2;
       overflow: visible;
       box-sizing: border-box;
+
       &:disabled {
         color: #ccc !important;
       }
+
       &.active {
         color: $--primary-color;
         border: 1px solid currentColor;
@@ -641,11 +688,13 @@ export default {
       }
     }
   }
+
   .count {
     > .countCtr {
       display: flex;
       align-items: center;
       height: 60px;
+
       button {
         height: 60px;
         width: 60px;
@@ -653,10 +702,12 @@ export default {
         font-weight: bold;
         color: #666;
         background-color: #f3f3f3;
+
         &:disabled {
           color: #ccc !important;
         }
       }
+
       input {
         width: 80px;
         height: 60px;
@@ -666,17 +717,20 @@ export default {
         font-size: 20px;
         background-color: #f3f3f3;
         border-radius: 0 !important;
+
         &:disabled {
           color: #ccc !important;
         }
       }
     }
   }
+
   .residue {
     margin-left: 20px;
     font-size: 24px;
     color: #999;
   }
+
   .footer {
     position: relative;
   }

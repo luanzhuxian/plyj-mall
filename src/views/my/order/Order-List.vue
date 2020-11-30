@@ -29,7 +29,7 @@
                         tag="div"
                         v-for="(item, i) of orderList"
                         :key="item.orderId"
-                        :to="{ name: 'OrderDetail', params: { orderId: item.orderId } }"
+                        :to="{ name: item.orderType === 'RED_ENVELOPE' ? 'RedPacketOrderDetail' : 'OrderDetail', params: { orderId: item.orderId } }"
                     >
                         <OrderListItem
                             :detail="item"

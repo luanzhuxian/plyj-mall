@@ -83,7 +83,7 @@ export default {
             LIVE_GOODS: '直播',
             VIDEO_GOODS: '录播',
             GRAPHIC_DATA: '图文资料',
-            RED_ENVELOPE: '福利红包'
+            RED_ENVELOPE: '权益商品'
         },
         // 订单类型关键字
         orderTypeKeyMap: {

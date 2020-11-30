@@ -130,6 +130,12 @@
 .primary-color {
   color: $--primary-color;
 }
+.warn-color {
+    color: $--warning-color;
+}
+.warn-color-active {
+    color: $--warning-color-active;
+}
 
 .rmb {
   &:before {

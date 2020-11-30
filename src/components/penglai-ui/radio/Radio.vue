@@ -65,6 +65,15 @@ export default {
             default () {
                 return null
             }
+        },
+
+        /**
+         * 是否可以被取消, 如果可以，在取消时将使用传入的值
+         * 此时radio的表现有点类似checkbox
+         */
+        cancelValue: {
+            type: [Boolean, Object, Array, String, Number],
+            default: undefined
         }
     },
     inject: {
@@ -92,9 +101,14 @@ export default {
     },
     methods: {
         onClick () {
-            this.$emit('change', this.label)
+            let val = this.label
+            console.log(this.value, this.cancelValue)
+            if (this.cancelValue !== undefined && this.checked) {
+                val = this.cancelValue
+            }
+            this.$emit('change', val)
             if (this.changeHandler) {
-                this.changeHandler(this.label)
+                this.changeHandler(val)
             }
         }
     }

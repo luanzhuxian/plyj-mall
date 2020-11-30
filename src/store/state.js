@@ -76,6 +76,11 @@ export default {
         SUPER_ADMIN_EMPLOYEE: '朋来雅集商户中心员工账号',
         VISITOR: '游客'
     },
+    couponTypeMap: {
+        1: '满减券',
+        2: '品类券',
+        3: '福利红包'
+    },
     // 主会场信息
     activityData: {},
     // 皮肤id

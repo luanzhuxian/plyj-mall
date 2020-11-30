@@ -71,5 +71,7 @@ export default {
 
     // 杂项
     // 是否禁止支付
-    forbiddenPay: state => state.theMallForbiddenPay.includes(state.mallInfo.sequenceNbr)
+    forbiddenPay: state => state.theMallForbiddenPay.includes(state.mallInfo.sequenceNbr),
+    // 券的类型
+    couponTypeMap: state => state.couponTypeMap
 }

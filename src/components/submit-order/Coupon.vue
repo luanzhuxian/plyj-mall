@@ -6,11 +6,25 @@
         >
             <pl-fields
                 size="middle"
-                :right-text="!coupon.id ? couponList.length +'张可用' : '-¥' + coupon.amount "
+                :can-click="false"
             >
                 <div>
                     <pl-svg class="mr-10" name="icon-coupon" width="40" :vertical-align="-8" />
                     <span>优惠</span>
+                </div>
+                <div slot="right-content" :class="$style.couponContent">
+                    <div v-if="checkedRedpacket">
+                        <span class="fz-26 warn-color-active mr-10" v-text="couponTypeMap[checkedRedpacket.couponType]" />
+                        <span class="fz-26 warn-color-active mr-24">满{{ checkedRedpacket.useLimitAmount }}减{{ checkedRedpacket.amount }}</span>
+                        <span class="fz-26 gray-4">-300</span>
+                        <pl-svg name="icon-right" fill="#c1c1c1" width="20" />
+                    </div>
+                    <div v-if="checkedCoupon">
+                        <span class="fz-26 warn-color-active mr-10" v-text="couponTypeMap[checkedCoupon.couponType]" />
+                        <span class="fz-26 warn-color-active mr-24">满{{ checkedCoupon.useLimitAmount }}减{{ checkedCoupon.amount }}</span>
+                        <span class="fz-26 gray-4">-300</span>
+                        <pl-svg name="icon-right" fill="#c1c1c1" width="20" />
+                    </div>
                 </div>
             </pl-fields>
         </div>
@@ -21,38 +35,60 @@
         >
             <div :class="$style.coupon">
                 <p class="fz-28 gray-3">先领优惠券，购物更划算</p>
-                <div :class="$style.couponList">
-                    <template v-for="(item, i) of couponList">
-                        <div :key="i" :class="$style.couponItem" @click="couponClick(item)">
+                <pl-radio-group :class="$style.couponList" v-model="checkedRedpacket">
+                    <pl-radio
+                        v-for="(item, i) of redPacket"
+                        :key="i"
+                        position="right"
+                        :label="item"
+                        :cancel-value="null"
+                    >
+                        <div :key="i" :class="$style.couponItem">
                             <div :class="$style.button">省{{ item.amount }}</div>
+                            <div :class="$style.type" v-text="couponTypeMap[item.couponType]" />
                             <div :class="$style.full">满{{ item.useLimitAmount }}减{{ item.amount }}</div>
                             <span :class="$style.timeDesc">{{ item.timeDesc }}</span>
                             <span :class="$style.recommend" v-if="recommendCouponId === item.id">推荐使用</span>
-                            <span :class="$style.choices">
-                                <pl-svg v-if="item.id === coupon.id" name="icon-xuanzhong" width="40" />
-                                <pl-svg v-else name="icon-weixuanzhong1" width="40" />
-                            </span>
                         </div>
-                    </template>
-                    <div :class="$style.couponItem" @click="couponClick({})">
-                        <div :class="$style.notChooseCoupon">不参加优惠</div>
-                        <span :class="$style.choices">
-                            <pl-svg v-if="!coupon.id" name="icon-xuanzhong" width="40" />
-                            <pl-svg v-else name="icon-weixuanzhong1" width="40" />
-                        </span>
-                    </div>
-                </div>
+                    </pl-radio>
+                </pl-radio-group>
+                <pl-radio-group :class="$style.couponList" v-model="checkedCoupon">
+                    <pl-radio
+                        v-for="(item, i) of coupons"
+                        :key="i"
+                        position="right"
+                        :label="item"
+                        :cancel-value="null"
+                    >
+                        <div :key="i" :class="$style.couponItem">
+                            <div :class="$style.button">省{{ item.amount }}</div>
+                            <div :class="$style.type" v-text="couponTypeMap[item.couponType]" />
+                            <div :class="$style.full">满{{ item.useLimitAmount }}减{{ item.amount }}</div>
+                            <span :class="$style.timeDesc">{{ item.timeDesc }}</span>
+                            <span :class="$style.recommend" v-if="recommendCouponId === item.id">推荐使用</span>
+                        </div>
+                    </pl-radio>
+                </pl-radio-group>
+                <pl-radio-group :class="$style.couponList" v-model="noJoin">
+                    <pl-radio :label="true" :cancel-value="false">
+                        <span class="fz-24 gray-4">不参加优惠</span>
+                    </pl-radio>
+                </pl-radio-group>
             </div>
         </pl-popup>
     </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
     name: 'SubmitOrderCoupon',
     data () {
         return {
-            showCoupon: false
+            showCoupon: false,
+            noJoin: false,
+            checkedRedpacket: null,
+            checkedCoupon: null
         }
     },
     props: {
@@ -81,8 +117,29 @@ export default {
         }
     },
     computed: {
+        ...mapGetters(['couponTypeMap']),
         recommendCouponId () {
             return this.recommendCoupon.id || ''
+        },
+        redPacket () {
+            return this.couponList.filter(item => item.couponType === 3)
+        },
+        coupons () {
+            return this.couponList.filter(item => item.couponType !== 3)
+        }
+    },
+    watch: {
+        noJoin (val) {
+            if (val) {
+                this.checkedRedpacket = null
+                this.checkedCoupon = null
+            }
+        },
+        checkedCoupon (val) {
+            this.noJoin = !val
+        },
+        checkedRedpacket (val) {
+            this.noJoin = !val
         }
     },
     methods: {
@@ -104,15 +161,27 @@ export default {
         border-radius: 20px;
         overflow: hidden;
     }
+    .coupon-content {
+        > div {
+            margin-bottom: 26px;
+            text-align: right;
+            &:nth-last-of-type(1) {
+                margin-bottom: 0;
+            }
+        }
+    }
     .coupon {
         padding: 0 24px;
         > .coupon-list {
-            margin-top: 48px;
-            padding-bottom: 40px;
+            &:nth-last-of-type(1) {
+                margin-top: 0;
+                padding-bottom: 40px;
+            }
 
             .coupon-item {
-                height: 72px;
-                line-height: 72px;
+                display: flex;
+                align-items: center;
+                height: 64px;
                 position: relative;
                 overflow: hidden;
                 font-size: 24px;
@@ -121,13 +190,18 @@ export default {
                     display: inline-block;
                     width: 120px;
                     height: 40px;
-                    border: 2px solid #F2B036;
+                    border: 2px solid $--warning-color;
                     border-radius: 8px;
                     line-height: 40px;
-                    color: #F2B036;
+                    color: $--warning-color;
                     text-align: center;
-                    margin-top: 10px;
                     float: left;
+                }
+
+                .type {
+                    margin-left: 20px;
+                    color: $--warning-color-active;
+                    font-size: 28px;
                 }
 
                 .full {
@@ -145,7 +219,7 @@ export default {
                     margin-left: 20px;
                 }
                 .recommend {
-                    color:#FE0D0D;
+                    color: #FE0D0D;
                     margin-left: 20px;
                 }
                 .choices {
@@ -163,6 +237,15 @@ export default {
                     color:#C1C1C1;
                 }
             }
+        }
+    }
+</style>
+<style scoped lang="scss">
+    ::v-deep {
+        .pl-fields_box.middle {
+            padding: 26px 0;
+            align-items: flex-start;
+            height: max-content;
         }
     }
 </style>

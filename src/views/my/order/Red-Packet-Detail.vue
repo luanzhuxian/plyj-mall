@@ -1,51 +1,72 @@
 <template>
     <div :class="$style.redPacketDetail">
-        <div :class="$style.status">
-            已关闭/已完成
-        </div>
+        <div :class="$style.status" v-text="orderStatusMap[detail.status]" />
         <div :class="$style.content">
             <div :class="$style.baseInfo">
                 <img src="https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/red-packet-order-icon.png" alt="">
                 <div :class="$style.info">
-                    <div :class="$style.name">
-                        威巴克专属福利红包
-                    </div>
-                    <div :class="$style.price">
-                        满20抵100
-                    </div>
+                    <div :class="$style.name" v-text="goodsModel.name" />
+                    <!-- 满减额 -->
+                    <div :class="$style.price" v-text="goodsModel.sku" />
                     <div :class="$style.tips">
                         <p>暂不支持退换货  不支持开具发票</p>
                         <p>使用后发生退款，不予退回</p>
                     </div>
-                    <span :class="$style.count">x1</span>
+                    <span :class="$style.count">x{{ goodsModel.count }}</span>
                 </div>
             </div>
             <div :class="$style.intro">
-                <span>使用说明</span>
-                <i>2019.11.11  -2020.11.11</i>
+                <span>使用时间</span>
+                <i>{{ detail.startExpire | dateFormat('YYYY-MM-DD') }} - {{ detail.endExpire | dateFormat('YYYY-MM-DD') }}</i>
             </div>
             <div :class="$style.intro">
-                <span>使用时间</span>
-                <i :class="$style.explain">
-                    这门课提供的思维方法和行动工具，能够帮助你这门课提供的思维方法和行动工具，能够帮助你这门课提供的思维方法和行动工具，能够帮助你
-                </i>
+                <span>使用说明</span>
+                <pre :class="$style.explain" v-text="goodsModel.goodsDescription" />
             </div>
         </div>
 
         <div :class="$style.buttons">
             <pl-button type="default" round plain>联系我们</pl-button>
-            <pl-button type="warning" round>删除订单</pl-button>
+            <pl-button type="warning" round @>删除订单</pl-button>
         </div>
     </div>
 </template>
 
 <script>
+import { getOrderDetail, deleteOrder } from '../../../apis/order-manager'
+import { mapGetters } from 'vuex'
 export default {
     name: 'RedPacketOrderDetail',
+    data () {
+        return {
+            detail: {}
+        }
+    },
+    computed: {
+        ...mapGetters(['orderStatusMap']),
+        goodsModel () {
+            return this.detail.goodsModel || {}
+        }
+    },
     props: {
         orderId: {
             type: String,
             default: ''
+        }
+    },
+    async created () {
+        await this.getOrderDetail()
+    },
+    methods: {
+        async getOrderDetail () {
+            const { result } = await getOrderDetail(this.orderId)
+            this.detail = result
+        },
+        async deleteOrder () {
+            await this.$confirm('是否删除当前订单？ 删除后不可找回')
+            await deleteOrder(this.orderId)
+            this.$success('删除成功')
+            await this.$router.replace({ name: 'OrderList' })
         }
     }
 }
@@ -110,6 +131,8 @@ export default {
         font-size: 26px;
         > .explain {
             width: 654px;
+            word-break: break-all;
+            white-space: pre-wrap;
             margin-top: 16px;
             padding: 24px 30px;
             color: #666;
