@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import filter from '../../../filter'
+import filter from '../../filter'
 export default {
     name: 'SubmitOrderExchangeCode',
     data () {

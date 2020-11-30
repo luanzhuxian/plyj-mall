@@ -133,12 +133,12 @@
 
 <script>
 import OtherInfo from './Other-Info.vue'
-import OrderItem from '../../../components/item/Order-Item.vue'
+import OrderItem from '../item/Order-Item.vue'
 import InfoItem from './Info-Item.vue'
 import StudentInline from './Student-Inline.vue'
 import CustomInline from './Custom-Inline.vue'
 import ExchangeCode from './Exchange-Code'
-import Count from '../../../components/common/Count.vue'
+import Count from '../common/Count.vue'
 import { mapGetters } from 'vuex'
 export default {
     name: 'SubmitProductsViewer',

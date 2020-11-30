@@ -131,11 +131,11 @@ import { mapGetters } from 'vuex'
 import OrderItemSkeleton from '../../components/skeleton/Order-Item.vue'
 import AddressItemSkeleton from '../../components/skeleton/Address-Item.vue'
 import { getServerTime } from '../../apis/base-api'
-import ProductVeiwer from './components/Product-Veiwer.vue'
-import Coupon from './components/Coupon.vue'
-import Scholarship from './components/Scholarship.vue'
-import Invoice from './components/Invoice.vue'
-import ContactInfo from './components/Contact-Info.vue'
+import ProductVeiwer from '../../components/submit-order/Product-Veiwer.vue'
+import Coupon from '../../components/submit-order/Coupon.vue'
+import Scholarship from '../../components/submit-order/Scholarship.vue'
+import Invoice from '../../components/submit-order/Invoice.vue'
+import ContactInfo from '../../components/submit-order/Contact-Info.vue'
 import { setTimeoutSync } from '../../assets/js/util'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
 export default {
@@ -759,5 +759,5 @@ export default {
 </script>
 
 <style module lang="scss">
-    @import "scss/submit-order";
+    @import "submit-order";
 </style>

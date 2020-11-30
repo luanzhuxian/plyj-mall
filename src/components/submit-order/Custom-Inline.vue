@@ -25,7 +25,7 @@
 
 <script>
 import CustomForm from './Custom-Form.vue'
-import { checkLength } from '../../../assets/js/validate'
+import { checkLength } from '../../assets/js/validate'
 
 export default {
     name: 'CustomInline',

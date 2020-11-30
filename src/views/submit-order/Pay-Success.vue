@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import youLike from './../home/components/YouLike.vue'
+import youLike from '../home/components/YouLike.vue'
 import { mapGetters } from 'vuex'
 import { checkGetGift } from '../../apis/order-manager'
 import { promise } from '../../assets/js/util'

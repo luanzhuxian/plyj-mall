@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { checkLength, isPhone } from '../../../assets/js/validate'
+import { checkLength, isPhone } from '../../assets/js/validate'
 import { mapGetters } from 'vuex'
 export default {
     name: 'SubmitOrderContactInfo',
