@@ -251,7 +251,7 @@ export default {
         },
         // 是否达到领取上限
         isUpLimitReached () {
-            return this.activity.userClaimed >= this.redPackage.useLimitAmount
+            return this.activity.userClaimed >= this.redPackage.quantityLimit
         },
         totalPrice () {
             const { price } = this.redPackage
@@ -364,8 +364,8 @@ export default {
                     }
                 }
 
-                if (this.form.count + this.activity.userClaimed > this.redPackage.useLimitAmount) {
-                    return this.$warning(`每人至多领取${ this.redPackage.useLimitAmount }张，您已领取${ this.activity.userClaimed }张`)
+                if (this.form.count + this.activity.userClaimed > this.redPackage.quantityLimit) {
+                    return this.$warning(`每人至多领取${ this.redPackage.quantityLimit }张，您已领取${ this.activity.userClaimed }张`)
                 }
 
                 this.submiting = true
