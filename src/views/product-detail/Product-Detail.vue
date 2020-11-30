@@ -973,7 +973,7 @@ export default {
 
                 this.creating = true
                 await this.$nextTick()
-                this.$refs.charityPoster.createPoster()
+                await this.$refs.charityPoster.createPoster()
             } catch (error) {
                 throw error
             } finally {

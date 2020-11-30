@@ -7,12 +7,6 @@
             >
                 main
             </h3>
-            <h3
-                style="font-size: 100px"
-                @click="$router.push({ name: 'RedPackageDetail', params: { activityId: '1331858150213812226' }})"
-            >
-                detail
-            </h3>
             <template-b
                 v-if="~[3, 4].indexOf(type)"
                 :type="type"
