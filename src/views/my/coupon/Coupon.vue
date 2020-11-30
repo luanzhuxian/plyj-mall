@@ -46,6 +46,7 @@
                                     :use-start-time="item.useStartTime"
                                     :use-end-time="item.useEndTime"
                                     :is-available-status="true"
+                                    @redPackageClick="redPackageClick(item)"
                                 />
                             </pl-checkbox>
                         </pl-checkbox-group>
@@ -127,6 +128,16 @@ export default {
             }
         }
     },
+    watch: {
+        isManagementState (val) {
+            if (val) this.couponList = this.formatCouponList(this.couponList)
+        },
+        activeMenuId (val) {
+            this.isManagementState = false
+            this.form.couponType = val
+            this.$refs.loadMore.refresh()
+        }
+    },
     mounted () {
         if (this.$refs.loadMore) this.$refs.loadMore.refresh()
     },
@@ -167,16 +178,14 @@ export default {
             } catch (e) {
                 throw e
             }
-        }
-    },
-    watch: {
-        isManagementState (val) {
-            if (val) this.couponList = this.formatCouponList(this.couponList)
         },
-        activeMenuId (val) {
-            this.isManagementState = false
-            this.form.couponType = val
-            this.$refs.loadMore.refresh()
+        redPackageClick ({ activityId }) {
+            if (!activityId) return
+
+            this.$router.push({
+                name: 'RedPackageDetail',
+                params: { activityId }
+            })
         }
     }
 }
