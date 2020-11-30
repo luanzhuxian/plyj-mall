@@ -22,7 +22,7 @@
 import moment from 'moment'
 import { mapGetters } from 'vuex'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
-import CountDown from '../../../components/product/Count-Down.vue'
+import CountDown from '../../../components/product-detail/Count-Down.vue'
 
 export default {
     name: 'Banner',

@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import BurseList from './components/Burse-List.vue'
+import BurseList from '../../../components/my/coupon/Burse-List.vue'
 
 export default {
     name: 'MyBurseRecord',

@@ -51,9 +51,9 @@
 </template>
 
 <script>
-import Price from '../product/Price.vue'
+import Price from '../product-detail/Price.vue'
 import { mapGetters } from 'vuex'
-import CountDown from '../product/Count-Down.vue'
+import CountDown from '../product-detail/Count-Down.vue'
 export default {
     name: 'GoodsItem',
     components: {

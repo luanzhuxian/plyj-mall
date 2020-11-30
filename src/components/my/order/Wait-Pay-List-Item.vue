@@ -53,8 +53,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import filter from '../../../../filter/index'
-import OrderItem from '../../../../components/item/Order-Item.vue'
+import filter from '../../../filter'
+import OrderItem from '../../item/Order-Item.vue'
 export default {
     name: 'WaitPayListItem',
     components: {

@@ -43,8 +43,8 @@
 </template>
 
 <script>
-import CodeItem from './components/Code-Item'
-import ProductItem from './components/Product-Item'
+import CodeItem from '../../../components/my/redemption/Code-Item'
+import ProductItem from '../../../components/my/redemption/Product-Item'
 import {
     getProductByCodeId
 } from '../../../apis/my-redemption'

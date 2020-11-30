@@ -21,8 +21,8 @@
 </template>
 
 <script>
-import PaidPlayer from '../../../components/common/Paid-Player.vue'
-import { setStudyCount, setStudyTime } from './../../../apis/live-library'
+import PaidPlayer from '../common/Paid-Player.vue'
+import { setStudyCount, setStudyTime } from '../../apis/live-library'
 export default {
     name: 'VideoPlayer',
     components: {

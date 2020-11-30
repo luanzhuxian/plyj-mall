@@ -66,8 +66,8 @@
 
 <script>
 import LoadMore from '../../../components/common/Load-More.vue'
-import CouponItem from '../../../components/item/Coupon-Item.vue'
-import CouponGoodItem from '../../../components/item/Coupon-Good-Item.vue'
+import CouponItem from '../../../components/my/coupon/Coupon-Item.vue'
+import CouponGoodItem from '../../../components/my/coupon/Coupon-Good-Item.vue'
 import { getProductList, getCouponDetail, receiveCoupon } from '../../../apis/my-coupon'
 
 export default {

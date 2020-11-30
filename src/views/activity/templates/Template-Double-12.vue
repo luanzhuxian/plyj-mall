@@ -52,7 +52,7 @@ import Yugou from '../double-12-2020/Yugou.vue'
 import Package from '../double-12-2020/Package.vue'
 import Popular from '../double-12-2020/Popular.vue'
 import Panel from '../double-12-2020/Panel.vue'
-import BackToTop from '../components/BackToTop.vue'
+import BackToTop from '../../../components/activity/BackToTop.vue'
 
 export default {
     name: 'TemplateDragonGate',

@@ -41,7 +41,7 @@
 
 <script>
 /* eslint-disable */
-import CountDown from '../../../components/product/Second-Count-Down.vue'
+import CountDown from '../../../components/product-detail/Second-Count-Down.vue'
 export default {
   components: {
     CountDown

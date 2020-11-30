@@ -79,7 +79,7 @@
 
 <script>
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
-import Countdown from '../components/Countdown.vue'
+import Countdown from '../../../components/activity/Countdown.vue'
 import ItemChunyun from './Item-Chunyun.vue'
 import { getDuration } from '../helper.js'
 

@@ -56,10 +56,10 @@
 </template>
 
 <script>
-import Field from '../../../components/detail/Field.vue'
-import CouponItem from '../../../components/item/Coupon-Item.vue'
-import { receiveCoupon } from '../../../apis/my-coupon'
-import { submitRedPackageOrder, pay } from '../../../views/marketing-activity/red-package/pay'
+import Field from './Field.vue'
+import CouponItem from '../my/coupon/Coupon-Item.vue'
+import { receiveCoupon } from '../../apis/my-coupon'
+import { submitRedPackageOrder, pay } from '../../views/marketing-activity/red-package/pay'
 
 export default {
     name: 'CounponField',

@@ -177,7 +177,7 @@
 import CartItem from '../../components/item/Cart-Item.vue'
 import NoContent from '../../components/common/No-Content.vue'
 import CartItemSkeleton from '../../components/skeleton/Cart-Item.vue'
-import SpecificationPop from '../../components/detail/Specification-Pop.vue'
+import SpecificationPop from '../../components/product-detail/Specification-Pop.vue'
 import {
     getCartList,
     deleteCartProducts,

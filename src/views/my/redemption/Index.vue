@@ -111,8 +111,8 @@
 import { mapGetters } from 'vuex'
 import scan from '../../../assets/js/wechat/wechat-scan'
 import LoadMore from '../../../components/common/Load-More.vue'
-import CodeItem from './components/Code-Item'
-import ReceiveCode from './components/Receive-Code'
+import CodeItem from '../../../components/my/redemption/Code-Item'
+import ReceiveCode from '../../../components/my/redemption/Receive-Code'
 import {
     getRedemptionList,
     deleteRedemptionByIds

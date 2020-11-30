@@ -34,7 +34,7 @@ import {
     getRedemptiontInfo,
     receiveRedemption
 } from '../../../apis/my-redemption'
-import ReceiveResult from './components/Receive-Result'
+import ReceiveResult from '../../../components/my/redemption/Receive-Result'
 export default {
     name: 'RedemptionActivative',
     props: {

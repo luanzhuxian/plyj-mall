@@ -20,8 +20,8 @@
 </template>
 
 <script>
-import { generateQrcode, createText } from '../../../../assets/js/util'
-import filter from '../../../../filter/index'
+import { generateQrcode, createText } from '../../../assets/js/util'
+import filter from '../../../filter'
 export default {
     name: 'OrderCodeItem',
     props: {

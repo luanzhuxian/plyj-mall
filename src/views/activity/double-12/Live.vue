@@ -63,7 +63,7 @@
 
 <script>
 import moment from 'moment'
-import Countdown from '../components/Countdown.vue'
+import Countdown from '../../../components/activity/Countdown.vue'
 
 export default {
     name: 'Live',

@@ -57,7 +57,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import Search from './components/Search.vue'
+import Search from '../../components/activity/Search.vue'
 import TemplateFengqiang from './templates/Template-Fengqiang.vue'
 import TemplateBaofa from './templates/Template-Baofa.vue'
 import TemplateFanchang from './templates/Template-Fanchang.vue'

@@ -100,7 +100,7 @@
 
 <script>
 import Panel from './Panel.vue'
-import Countdown from '../components/Countdown.vue'
+import Countdown from '../../../components/activity/Countdown.vue'
 import { getDuration, getTotalPrice, getPrice } from '../helper'
 
 export default {

@@ -106,7 +106,7 @@
 <script>
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import Panel from './Panel.vue'
-import Countdown from '../components/Countdown.vue'
+import Countdown from '../../../components/activity/Countdown.vue'
 import { getDuration } from '../helper'
 
 const map = {

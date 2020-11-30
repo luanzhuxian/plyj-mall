@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { throttle } from '../../../assets/js/util'
+import { throttle } from '../../assets/js/util'
 
 const RAF = window.requestAnimationFrame || (func => setTimeout(func, 16))
 const cubic = value => Math.pow(value, 3)

@@ -21,7 +21,7 @@
 
 <script>
 import pdfjsLib from 'pdfjs-dist'
-import { throttle } from '../../../assets/js/util'
+import { throttle } from '../../assets/js/util'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://mallcdn.youpenglai.com/cdn/pdf/pdf.worker.min.js'
 

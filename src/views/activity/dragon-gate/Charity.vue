@@ -73,7 +73,7 @@
 <script>
 import moment from 'moment'
 import Panel from './Panel.vue'
-import Countdown from '../components/Countdown.vue'
+import Countdown from '../../../components/activity/Countdown.vue'
 
 export default {
     name: 'Charity',

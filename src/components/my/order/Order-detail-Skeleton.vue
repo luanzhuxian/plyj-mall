@@ -28,8 +28,8 @@
 </template>
 
 <script>
-import OrderItemSkeleton from '../../../../components/skeleton/Order-Item.vue'
-import AddressItemSkeleton from '../../../../components/skeleton/Address-Item.vue'
+import OrderItemSkeleton from '../../skeleton/Order-Item.vue'
+import AddressItemSkeleton from '../../skeleton/Address-Item.vue'
 export default {
     name: 'OrderDetailSkeleton',
     components: {

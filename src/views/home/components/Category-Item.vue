@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import Price from '../../../components/product/Price.vue'
+import Price from '../../../components/product-detail/Price.vue'
 
 export default {
     name: 'CategoryItem',

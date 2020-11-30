@@ -52,7 +52,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import CountDown from '../product/Count-Down.vue'
+import CountDown from '../product-detail/Count-Down.vue'
 
 export default {
     name: 'LessonItem',

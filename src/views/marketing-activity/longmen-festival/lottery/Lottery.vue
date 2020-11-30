@@ -238,7 +238,7 @@
 <script>
 // 根据屏幕大小转换canvas中使用的长度大小
 import GiftPopUp from '../../../../components/activity/Gift-Pop-Up.vue'
-import CouponItemViewer from '../../../../components/item/Coupon-Item-Viewer.vue'
+import CouponItemViewer from '../../../../components/my/coupon/Coupon-Item-Viewer.vue'
 import GiftItem from '../../../../components/item/Gift-Item.vue'
 import { shuffle } from '../../../../assets/js/loadsh'
 import { loadImage, cutArcImage, generateQrcode, SectionToChinese, promise } from '../../../../assets/js/util'

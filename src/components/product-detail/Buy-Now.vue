@@ -167,7 +167,7 @@
 import { mapGetters, mapActions } from 'vuex'
 import { GET_CART_COUNT } from '../../store/mutation-type'
 import { addToCart } from '../../apis/shopping-cart'
-import SpecificationPop from '../../components/detail/Specification-Pop.vue'
+import SpecificationPop from './/Specification-Pop.vue'
 import Contact from '../common/Contact.vue'
 
 export default {

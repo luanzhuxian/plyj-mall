@@ -166,7 +166,7 @@
 
 <script>
 import moment from 'moment'
-import Countdown from '../components/Countdown.vue'
+import Countdown from '../../../components/activity/Countdown.vue'
 import { getPrice, getDate, getDuration } from '../helper.js'
 
 export default {

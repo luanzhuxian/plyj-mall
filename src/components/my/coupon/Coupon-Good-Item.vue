@@ -58,10 +58,10 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import { GET_CART_COUNT } from '../../store/mutation-type'
-import Price from '../product/Price.vue'
-import SpecificationPop from '../../components/detail/Specification-Pop.vue'
-import { addToCart } from '../../apis/shopping-cart'
+import { GET_CART_COUNT } from '../../../store/mutation-type'
+import Price from '../../product-detail/Price.vue'
+import SpecificationPop from '../../product-detail/Specification-Pop.vue'
+import { addToCart } from '../../../apis/shopping-cart'
 
 export default {
     name: 'CouponGoodItem',

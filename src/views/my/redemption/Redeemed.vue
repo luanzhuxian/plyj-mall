@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import ProductItem from './components/Product-Item'
+import ProductItem from '../../../components/my/redemption/Product-Item'
 import { getProductByCodeId } from '../../../apis/my-redemption'
 export default {
     name: 'Redeemed',

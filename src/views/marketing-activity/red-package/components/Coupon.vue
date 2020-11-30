@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import Countdown from '../../../activity/components/Countdown.vue'
+import Countdown from '../../../../components/activity/Countdown.vue'
 import { getDuration } from '../utils'
 
 export default {

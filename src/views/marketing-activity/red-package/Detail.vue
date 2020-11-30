@@ -165,7 +165,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import Barrage from '../longmen-festival/action/components/Barrage.vue'
-import Countdown from '../../activity/components/Countdown.vue'
+import Countdown from '../../../components/activity/Countdown.vue'
 import Coupon from './components/Coupon.vue'
 import Product from './components/Product.vue'
 import { checkLength, isPhone } from '../../../assets/js/validate'

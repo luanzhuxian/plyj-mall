@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import TogetherCountDown from '../../../components/product/Together-Count-Down.vue'
+import TogetherCountDown from '../../../components/product-detail/Together-Count-Down.vue'
 
 export default {
     components: {

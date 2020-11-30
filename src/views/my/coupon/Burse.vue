@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import BurseItem from './components/Burse-Item.vue'
+import BurseItem from '../../../components/my/coupon/Burse-Item.vue'
 import LoadMore from '../../../components/common/Load-More.vue'
 import { getBurseMes, getBurseList } from '../../../apis/my-burse.js'
 

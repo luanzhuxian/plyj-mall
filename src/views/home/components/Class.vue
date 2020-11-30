@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import CountDown from '../../../components/product/Count-Down.vue'
+import CountDown from '../../../components/product-detail/Count-Down.vue'
 
 export default {
     name: 'Class',

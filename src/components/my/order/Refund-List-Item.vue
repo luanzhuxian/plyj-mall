@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import OrderItem from '../../../../components/item/Order-Item.vue'
+import OrderItem from '../../item/Order-Item.vue'
 import { mapGetters } from 'vuex'
 export default {
     name: 'RefundListItem',

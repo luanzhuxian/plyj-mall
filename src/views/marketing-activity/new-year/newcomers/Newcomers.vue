@@ -47,7 +47,7 @@
 import moment from 'moment'
 import { mapGetters } from 'vuex'
 import share from '../../../../assets/js/wechat/wechat-share'
-import CouponItem from '../../../../components/item/Coupon-Item.vue'
+import CouponItem from '../../../../components/my/coupon/Coupon-Item.vue'
 import { getServerTime } from '../../../../apis/base-api'
 import { getNewcomersDetail } from '../../../../apis/new-year'
 

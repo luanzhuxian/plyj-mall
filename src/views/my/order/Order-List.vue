@@ -69,7 +69,7 @@ import { mapGetters, mapMutations } from 'vuex'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
 import moment from 'moment'
 import Countdown from '../../../assets/js/Countdown'
-import OrderListItem from './components/Order-List-Item'
+import OrderListItem from '../../../components/my/order/Order-List-Item'
 
 export default {
     name: 'OrderList',

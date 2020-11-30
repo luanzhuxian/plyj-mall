@@ -62,7 +62,7 @@
 
 <script>
 import Panel from './Panel.vue'
-import Countdown from '../components/Countdown.vue'
+import Countdown from '../../../components/activity/Countdown.vue'
 import { getDuration, reset } from '../helper'
 
 export default {

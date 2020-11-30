@@ -21,8 +21,8 @@
 
 <script>
 import BurseItem from './Burse-Item.vue'
-import LoadMore from './../../../../components/common/Load-More.vue'
-import { getBurseList, deleteBurse } from './../../../../apis/my-burse.js'
+import LoadMore from '../../common/Load-More.vue'
+import { getBurseList, deleteBurse } from '../../../apis/my-burse.js'
 export default {
     name: 'BurList',
     inheritAttrs: false,
