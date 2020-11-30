@@ -388,7 +388,7 @@ export default {
          * @param {string} type success fail
          * @returns {Promise<*>}
          */
-        async showModel (type) {
+        async showModel (type = 'success') {
             try {
                 let imgSrc
                 let text1
@@ -398,7 +398,7 @@ export default {
                     imgSrc = 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/弹框1.png'
                     text1 = '领取成功，可在订单或'
                     text2 = '领券中心查看'
-                } else {
+                } else if (type === 'fail') {
                     imgSrc = 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/弹框2.png'
                     text1 = '下手慢了，去看看其他活动吧'
                     text2 = ''
@@ -414,16 +414,18 @@ export default {
                 )
 
                 await this.$confirm({
-                    message: '恭喜您',
+                    message: type === 'success' ? '恭喜您' : '优惠券已抢完',
                     slot: Content,
-                    confirmText: '查看活动',
+                    confirmText: type === 'success' ? '确定' : '查看活动',
                     hasCancelButton: false,
                     confirmStyle: {
                         color: '#F23D00',
                         borderTop: '2px solid #E7E7E7'
                     }
                 })
-                return this.$router.push({ name: 'RedPackage' })
+                if (type === 'fail') {
+                    return this.$router.push({ name: 'RedPackage' })
+                }
             } catch (error) {
                 throw error
             }
