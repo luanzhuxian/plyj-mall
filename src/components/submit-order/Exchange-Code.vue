@@ -2,13 +2,13 @@
     <div>
         <div
             :class="$style.itemSelector"
-            @click.capture="exchangeCode.isDefault ? '' : showExchangeCode = true"
+            @click.capture="exchangeCode ? '' : showExchangeCode = true"
         >
             <span :class="$style.label">兑换码</span>
             <span :class="$style.content">
-                {{ !exchangeCode.id ? '不使用兑换码' : localSeparator(exchangeCode.exchangeCode, ' ', 4) }}
+                {{ !exchangeCode ? '不使用兑换码' : localSeparator(exchangeCode.exchangeCode, ' ', 4) }}
                 <!--有默认兑换码信息时，不支持选择其他兑换码-->
-                <pl-svg v-if="!exchangeCode.isDefault" name="icon-right" fill="#ccc" height="24" />
+                <pl-svg v-if="!exchangeCode" name="icon-right" fill="#ccc" height="24" />
             </span>
         </div>
         <pl-popup
@@ -62,12 +62,17 @@ export default {
         exchangeCode: {
             type: Object,
             default () {
-                return {
-                }
+                return null
             }
         },
         // 兑换码列表
         exchangeCodeList: {
+            type: Array,
+            default () {
+                return []
+            }
+        },
+        products: {
             type: Array,
             default () {
                 return []

@@ -88,11 +88,11 @@
                         <span slot="content">{{ item.discount / 10 }}折 -¥{{ ((item.sellingPrice - item.amount) / 100).toFixed(2) }}</span>
                     </InfoItem>-->
                     <!--TODO.当前仅支持单个商品时使用兑换码-->
-                    <InfoItem v-if="activeProduct === 1 && products.length === 1 && (exchangeCodeMap[item.goodsId] && exchangeCodeMap[item.goodsId].length || exchangeCode.isDefault)">
+                    <InfoItem v-if="activeProduct === 1 && products.length === 1 && (exchangeCodeList[item.goodsId] && exchangeCodeList[item.goodsId].length || exchangeCode)">
                         <ExchangeCode
                             slot="footer"
                             :exchange-code="exchangeCode"
-                            :exchange-code-list="exchangeCodeMap[item.goodsId]"
+                            :exchange-code-list="exchangeCodeList[item.goodsId]"
                             @change="chooseExchangeCode"
                         />
                     </InfoItem>
@@ -140,6 +140,8 @@ import CustomInline from './Custom-Inline.vue'
 import ExchangeCode from './Exchange-Code'
 import Count from '../common/Count.vue'
 import { mapGetters } from 'vuex'
+import { getExchangeCodeMap } from '../../apis/my-coupon'
+import moment from 'moment'
 export default {
     name: 'SubmitProductsViewer',
     components: {
@@ -151,8 +153,28 @@ export default {
         CustomInline,
         ExchangeCode
     },
+    data () {
+        return {
+
+            /**
+               * {
+                        productId1: [{exchangeCode1}, {exchangeCode2}]
+                        productId2: []
+                        productId3: []
+                        productId4: []
+               * }
+               */
+            exchangeCodeList: []
+        }
+    },
     props: {
         products: {
+            type: Array,
+            default () {
+                return []
+            }
+        },
+        confirmList: {
             type: Array,
             default () {
                 return []
@@ -161,26 +183,11 @@ export default {
         isCart: {
             type: Boolean
         },
-        // 兑换码列表
-        /**
-        * {
-            productId1: [{exchangeCode1}, {exchangeCode2}]
-            productId2: []
-            productId3: []
-            productId4: []
-         * }
-        */
-        exchangeCodeMap: {
-            type: Object,
-            default () {
-                return {}
-            }
-        },
         // 当前选定的兑换码信息
         exchangeCode: {
             type: Object,
             default () {
-                return {}
+                return null
             }
         },
         preActivity: {
@@ -190,6 +197,10 @@ export default {
         activeProduct: {
             type: Number,
             default: 1
+        },
+        serverTime: {
+            type: [Number, String],
+            default: 0
         }
     },
     computed: {
@@ -198,7 +209,22 @@ export default {
             orderTypeKeyMap: 'orderTypeKeyMap'
         })
     },
+    async mounted () {
+        await this.getList()
+    },
     methods: {
+        async getList () {
+            const { result: exchangeCodeMap } = await getExchangeCodeMap(this.confirmList.map(item => item.productId))
+            for (const productId in exchangeCodeMap) {
+                for (const code of exchangeCodeMap[productId]) {
+                    const duration = moment(code.endTime).valueOf() - moment(this.serverTime).valueOf()
+                    const day = Math.floor(moment.duration(duration).asDays())
+                    code.timeDesc = ''
+                    if (day < 4) code.timeDesc = day < 1 ? '即将过期' : `${ day }天后过期`
+                }
+            }
+            this.exchangeCodeList = exchangeCodeMap
+        },
         studentInited (students, product) {
             this.$emit('studentInited', { students, product })
         },

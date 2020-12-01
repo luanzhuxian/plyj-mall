@@ -119,16 +119,17 @@ export const submitOrder = {
         // preActivity: this.preActivity || '',
         // activityId: this.activityProductModel ? this.activityProductModel.activityId || '' : ''
         /**
-         * 设置提交订单使用的商品
+         * 设置提交订单使用的商品到storage中，以便在刷新的时候重复利用
          * @param state
          * @param {Object} params - 商品数据
          * @param {String} params.activeProduct - 商品参与的活动类型 * 1 正常商品 2 团购 3 秒杀 4 预购 5 春耘 6 组合课
          * @param {String} params.preActivity - 活动状态
          * @param {String} params.activityId - 活动id
-         * @param {String} discountModel 优惠信息: 包括奖学金 + 优惠券, 可为 null
-         * @param {String} discountModel.couponModel 优惠券信息
-         * @param {String} discountModel.scholarshipModel 奖学金信息
-         * @param {String} discountModel.exchangeCodeModel 兑换码信息
+         * @param {Object} discountModel 优惠信息: 包括奖学金 + 优惠券, 可为 null
+         * @param {Object | null} [discountModel.couponModel.redPacket] 红包信息
+         * @param {Object | null} [discountModel.couponModel.coupon] 优惠券信息
+         * @param {Object} [discountModel.scholarshipModel] 奖学金信息
+         * @param {Object} [discountModel.exchangeCodeModel] 兑换码信息
          * @param {Array}  products - 活动id
          * @param {string} products[].productId - 商品id
          * @param {number} products[].count - 商品数量

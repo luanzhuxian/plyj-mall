@@ -87,6 +87,14 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import {
+    getCouponByPrice,
+    getCouponOfMax
+
+    /* getRedEnvelopeListByPrice */
+} from '../../apis/my-coupon'
+import moment from 'moment'
+import { getServerTime } from '../../apis/base-api'
 export default {
     name: 'SubmitOrderCoupon',
     data () {
@@ -94,24 +102,47 @@ export default {
             showCoupon: false,
             noJoin: false,
             checkedRedpacket: null,
-            checkedCoupon: null
+            checkedCoupon: null,
+            couponList: []
         }
     },
     props: {
+        // 活动状态（2 进行中）
+        preActivity: {
+            type: Number,
+            default: 1
+        },
+        // 活动类型
+        activeProduct: {
+            type: Number,
+            default: 1
+        },
+        // 商品列表
+        products: {
+            type: Array,
+            default () {
+                return []
+            }
+        },
+        // 兑换码信息
+        exchangeCodeInfo: {
+            type: Object,
+            default () {
+                return {}
+            }
+        },
+        addressId: {
+            type: String,
+            default: ''
+        },
         // 当前选择的优惠券
         coupon: {
             type: Object,
             default () {
                 return {
-                    scholarship: 1
+                    redPacket: null,
+                    coupon: null
                 }
-            }
-        },
-        // 优惠券列表
-        couponList: {
-            type: Array,
-            default () {
-                return []
             }
         },
         // 推荐的优惠券
@@ -135,13 +166,11 @@ export default {
         }
     },
     watch: {
-        recommendCoupon: {
-            handler (val = {}) {
-                const recommend = this.couponList.find(item => item.id === val.id)
-                console.log(recommend)
-                recommend ? recommend.couponType === 3 ? this.checkedRedpacket = recommend : this.checkedCoupon = recommend : this.noJoin = true
-            },
-            immediate: true
+        exchangeCodeInfo (val) {
+            if (val) {
+                this.checkedRedpacket = null
+                this.checkedCoupon = null
+            }
         },
         noJoin (val) {
             if (val) {
@@ -157,6 +186,10 @@ export default {
                     redPacket: this.checkedRedpacket,
                     coupon: this.checkedCoupon
                 })
+                this.$emit('update:coupon', {
+                    redPacket: this.checkedRedpacket,
+                    coupon: this.checkedCoupon
+                })
             })
         },
         checkedRedpacket (val) {
@@ -167,7 +200,48 @@ export default {
                     redPacket: this.checkedRedpacket,
                     coupon: this.checkedCoupon
                 })
+                this.$emit('update:coupon', {
+                    redPacket: this.checkedRedpacket,
+                    coupon: this.checkedCoupon
+                })
             }, 100)
+        }
+    },
+    async mounted () {
+        const COUPON_DATA = {
+            activeProduct: this.preActivity === 2 ? this.activeProduct : 1,
+            activityId: this.activityId,
+            cartProducts: this.products,
+            addressSeq: this.addressId
+        }
+        await this.getCouponList(COUPON_DATA)
+        this.checkedRedpacket = this.coupon.redPacket ? this.couponList.find(item => item.id === this.coupon.redPacket.id) : null
+        this.checkedCoupon = this.coupon.coupon ? this.couponList.find(item => item.id === this.coupon.coupon.id) : null
+        if (!this.coupon.redPacket && !this.coupon.coupon) {
+            await this.getRecommedCoupon(COUPON_DATA)
+        }
+    },
+    methods: {
+        // 优惠券列表
+        async getCouponList (COUPON_DATA) {
+            // 初始化优惠券列表
+            const { result } = await getCouponByPrice(COUPON_DATA)
+            // 获取服务器时间
+            const { result: serverTime } = await getServerTime()
+            // 设置优惠券列表
+            this.couponList = result.map(item => {
+                const duration = moment(item.useEndTime).valueOf() - moment(serverTime).valueOf()
+                const day = Math.floor(moment.duration(duration).asDays())
+                item.timeDesc = ''
+                if (day < 4) item.timeDesc = day < 1 ? '即将过期' : `${ day }天后过期`
+                return item
+            })
+        },
+        // 推荐的优惠券
+        async getRecommedCoupon (COUPON_DATA) {
+            const { result } = await getCouponOfMax(COUPON_DATA)
+            const recommend = this.couponList.find(item => item.id === result.id)
+            recommend ? recommend.couponType === 3 ? this.checkedRedpacket = recommend : this.checkedCoupon = recommend : this.noJoin = true
         }
     }
 }
