@@ -198,6 +198,8 @@ export default {
                 scholarshipModel: null,
                 // 优惠券
                 cartCouponModel: null,
+                // 红包
+                welfareRedPackage: null,
                 // 发票
                 invoiceInfoModel: null
             }
@@ -496,20 +498,28 @@ export default {
         /**
          * 修改优惠券
          * 需要注意的是，每次修改优惠券的时候，奖学金会联动的做出改变
-         * @param coupon {Object} 当前优惠券
+         * @param coupon {Object | null} 当前优惠券
+         * @param redPacket {Object | null} 当前红包
          */
-        async couponChange (coupon) {
-            this.form.cartCouponModel = coupon.id ? { userCouponId: coupon.id } : null
+        async couponChange ({ coupon, redPacket }) {
+            console.log(coupon, redPacket)
+            // 优惠的总金额
+            const amount = (coupon ? coupon.amount : 0) + (redPacket ? redPacket.amount : 0)
+            // 是否可以和奖学金同时使用（奖学金和红包必须同时允许）
+            const scholarship = (coupon ? coupon.scholarship : true) && (redPacket ? redPacket.scholarship : true)
+            // 放入表单中
+            this.form.cartCouponModel = coupon && coupon.id ? { userCouponId: coupon.id } : null
+            this.form.welfareRedPackage = redPacket && redPacket.id ? { userCouponId: redPacket.id } : null
             try {
                 await this.$nextTick()
                 // 选择优惠券时，若 当前除去奖学金之外的总价，大于零，才可使用奖学金 + 当前优惠券支持使用奖学金
-                const currentTotalAmount = this.totalAmount + (this.currentRedEnvelope.amount || 0) - (coupon.amount || 0)
-                if (!(coupon.scholarship && currentTotalAmount)) {
+                const currentTotalAmount = this.totalAmount + (this.currentRedEnvelope.amount || 0) - amount
+                if (!(scholarship && currentTotalAmount)) {
                     this.currentRedEnvelope = {}
                 }
                 this.form.scholarshipModel = this.currentRedEnvelope.id ? { scholarshipId: this.currentRedEnvelope.id } : null
-                // 选择优惠券后，兑换码默认不使用
-                if (coupon.id) this.exchangeCodeInfo = {}
+                // 选择优惠券或者红包后，兑换码默认不使用
+                if (coupon || redPacket) this.exchangeCodeInfo = {}
                 await this.getProductDetail()
             } catch (e) {
                 throw e

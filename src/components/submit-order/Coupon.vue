@@ -13,16 +13,22 @@
                     <span>优惠</span>
                 </div>
                 <div slot="right-content" :class="$style.couponContent">
+                    <div v-if="!checkedRedpacket && !checkedCoupon">
+                        <span class="fz-26 mr-10">
+                            可选 <i class="warn-color-active">{{ couponList.length }}</i> 张优惠券
+                        </span>
+                        <pl-svg name="icon-right" fill="#c1c1c1" width="20" />
+                    </div>
                     <div v-if="checkedRedpacket">
                         <span class="fz-26 warn-color-active mr-10" v-text="couponTypeMap[checkedRedpacket.couponType]" />
                         <span class="fz-26 warn-color-active mr-24">满{{ checkedRedpacket.useLimitAmount }}减{{ checkedRedpacket.amount }}</span>
-                        <span class="fz-26 gray-4">-300</span>
+                        <span class="fz-26 gray-4">-{{ checkedRedpacket.amount }}</span>
                         <pl-svg name="icon-right" fill="#c1c1c1" width="20" />
                     </div>
                     <div v-if="checkedCoupon">
                         <span class="fz-26 warn-color-active mr-10" v-text="couponTypeMap[checkedCoupon.couponType]" />
                         <span class="fz-26 warn-color-active mr-24">满{{ checkedCoupon.useLimitAmount }}减{{ checkedCoupon.amount }}</span>
-                        <span class="fz-26 gray-4">-300</span>
+                        <span class="fz-26 gray-4">-{{ checkedCoupon.amount }}</span>
                         <pl-svg name="icon-right" fill="#c1c1c1" width="20" />
                     </div>
                 </div>
@@ -129,6 +135,14 @@ export default {
         }
     },
     watch: {
+        recommendCoupon: {
+            handler (val = {}) {
+                const recommend = this.couponList.find(item => item.id === val.id)
+                console.log(recommend)
+                recommend ? recommend.couponType === 3 ? this.checkedRedpacket = recommend : this.checkedCoupon = recommend : this.noJoin = true
+            },
+            immediate: true
+        },
         noJoin (val) {
             if (val) {
                 this.checkedRedpacket = null
@@ -136,18 +150,24 @@ export default {
             }
         },
         checkedCoupon (val) {
-            this.noJoin = !val
+            this.noJoin = !val && !this.checkedRedpacket
+            clearTimeout(this.timer)
+            this.timer = setTimeout(() => {
+                this.$emit('change', {
+                    redPacket: this.checkedRedpacket,
+                    coupon: this.checkedCoupon
+                })
+            })
         },
         checkedRedpacket (val) {
-            this.noJoin = !val
-        }
-    },
-    methods: {
-        // 选择优惠券, 选择完成后，重新计算价格
-        async couponClick (item) {
-            this.$emit('change', item)
-            this.$emit('update:coupon', item)
-            this.showCoupon = false
+            this.noJoin = !val && !this.checkedCoupon
+            clearTimeout(this.timer)
+            this.timer = setTimeout(() => {
+                this.$emit('change', {
+                    redPacket: this.checkedRedpacket,
+                    coupon: this.checkedCoupon
+                })
+            }, 100)
         }
     }
 }

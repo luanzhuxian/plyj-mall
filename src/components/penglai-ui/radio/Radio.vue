@@ -102,7 +102,6 @@ export default {
     methods: {
         onClick () {
             let val = this.label
-            console.log(this.value, this.cancelValue)
             if (this.cancelValue !== undefined && this.checked) {
                 val = this.cancelValue
             }
