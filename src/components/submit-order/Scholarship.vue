@@ -23,28 +23,25 @@
         >
             <div :class="$style.redEnvelope">
                 <p class="fz-28 gray-3">仅支持选择一个奖学金进行抵扣</p>
-                <div :class="$style.redEnvelopeList">
-                    <template v-for="(item, i) of redEnvelopeList">
-                        <div :key="i" :class="$style.redEnvelopeItem" @click="redEnvelopeClick(item)">
+                <pl-radio-group :class="$style.redEnvelopeList" v-model="checkedRedEnvelope">
+                    <pl-radio
+                        v-for="(item, i) of redEnvelopeList"
+                        :key="i"
+                        position="right"
+                        :label="item.id"
+                    >
+                        <div :key="i" :class="$style.redEnvelopeItem">
                             <span>
                                 <pl-svg name="icon-RedEnvelope" width="40" />
                             </span>
                             <span :class="$style.count">￥{{ item.amount }}</span>
                             <span v-if="item.amount > totalAmount" :class="$style.isOver">使用后超出抵用金额不返还</span>
-                            <span :class="$style.choices">
-                                <pl-svg v-if="currentRedEnvelope && item.id === currentRedEnvelope.id" name="icon-xuanzhong" width="40" />
-                                <pl-svg v-else name="icon-weixuanzhong1" width="40" />
-                            </span>
                         </div>
-                    </template>
-                    <div :class="$style.redEnvelopeItem" @click="redEnvelopeClick(null)">
+                    </pl-radio>
+                    <pl-radio key="100" position="right" :label="null">
                         <span :class="$style.notChooseRedEnvelope">不使用</span>
-                        <span :class="$style.choices">
-                            <pl-svg v-if="!currentRedEnvelope" name="icon-xuanzhong" width="40" />
-                            <pl-svg v-else name="icon-weixuanzhong1" width="40" />
-                        </span>
-                    </div>
-                </div>
+                    </pl-radio>
+                </pl-radio-group>
             </div>
         </pl-popup>
     </div>
@@ -53,14 +50,14 @@
 <script>
 import { getRedEnvelopeListByPrice } from '../../apis/my-coupon'
 import moment from 'moment'
-import { getServerTime } from '../../apis/base-api'
 
 export default {
     name: 'SubmitOrderScholarship',
     data () {
         return {
             showRedEnvelopePopup: false,
-            redEnvelopeList: []
+            redEnvelopeList: [],
+            checkedRedEnvelope: null
         }
     },
     props: {
@@ -100,6 +97,10 @@ export default {
             default () {
                 return {}
             }
+        },
+        serverTime: {
+            type: [String, Number],
+            default: 0
         }
     },
     computed: {
@@ -124,24 +125,32 @@ export default {
                 }
             }
         },
-        // 优惠券修改时，对奖学金做出相应调整
-        currentCoupon () {}
+        checkedRedEnvelope: {
+            handler (val) {
+                const redEnvelope = this.redEnvelopeList.find(item => item.id === val) || null
+                this.$emit('update:currentRedEnvelope', redEnvelope)
+                this.$emit('change', redEnvelope)
+            }
+        }
     },
     async mounted () {
         await this.getList()
+        if (this.currentRedEnvelope) {
+            this.checkedRedEnvelope = this.currentRedEnvelope.id
+        }
     },
     methods: {
         async getList () {
             // 获取服务器时间
-            const { result: serverTime } = await getServerTime()
             const { result } = await getRedEnvelopeListByPrice()
             this.redEnvelopeList = result.map(item => {
-                const duration = moment(item.useEndTime).valueOf() - moment(serverTime).valueOf()
+                const duration = moment(item.useEndTime).valueOf() - moment(this.serverTime).valueOf()
                 const day = Math.floor(moment.duration(duration).asDays())
                 item.timeDesc = ''
                 if (day < 4) item.timeDesc = day < 1 ? '即将过期' : `${ day }天后过期`
                 return item
             })
+            this.$emit('loaded', this.couponList)
         },
         // 选择红包
         async redEnvelopeClick (item) {

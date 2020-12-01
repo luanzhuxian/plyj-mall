@@ -64,24 +64,26 @@
             <!--知识课程暂时不支持使用优惠券-->
             <!-- v-if="couponList.length > 0 && activeProduct === 1 && goodsAmount > 0 && !hasKnowlegeCourse && !exchangeCodeInfo.id" -->
             <Coupon
-                v-if="goodsAmount > 0 && !hasKnowlegeCourse"
+                v-if="goodsAmount > 0 && activeProduct === 1 && !hasKnowlegeCourse"
                 :active-product="activeProduct"
                 :pre-activity="preActivity"
                 :coupon.sync="currentCoupon"
                 :products="CONFIRM_LIST"
                 :exchange-code-info="exchangeCodeInfo"
+                :server-time="serverTime"
                 @change="couponChange"
                 :address-id="selectedAddress.sequenceNbr"
             />
             <!--知识课程暂时不支持使用奖学金-->
-            <!-- v-if="goodsAmount > 0 && activeProduct === 1 && !hasKnowlegeCourse && !exchangeCodeInfo.id"  -->
             <Scholarship
+                v-if="goodsAmount > 0 && activeProduct === 1 && !hasKnowlegeCourse"
                 :active-product="activeProduct"
                 :total-amount="totalAmount"
                 :freight="freight"
                 :products="CONFIRM_LIST"
                 :current-red-envelope.sync="currentRedEnvelope"
                 :exchange-code-info="exchangeCodeInfo"
+                :server-time="serverTime"
                 :current-coupon="currentCoupon"
                 @change="scholarshipChange"
             />
@@ -183,7 +185,7 @@ export default {
             // 需要自定义表单的商品
             customList: [],
             // 服务器时间
-            serverTime: '',
+            serverTime: 0,
             // 当前选中的红包
             currentRedEnvelope: null,
             form: {
@@ -259,9 +261,7 @@ export default {
         try {
             this.loading = true
             await this.init()
-            await this.getProductDetail()
-            // 设置默认学员
-            await this.setDefaultChecked()
+            await this.$nextTick()
             this.loading = false
         } catch (e) {
             throw e
@@ -273,14 +273,20 @@ export default {
         // 初始化，执行顺序不能乱
         async init () {
             try {
-                await this.initProductInfo()
-                await this.initRedeemCode()
                 // 获取服务器时间
                 const { result: serverTime } = await getServerTime()
                 // 设置服务器时间
                 this.serverTime = serverTime
+                // 要购买的商品列表
+                await this.initProductInfo()
+                // 兑换码
+                await this.initRedeemCode()
                 // 初始化优惠信息
                 await this.initDiscountModel()
+                // 设置默认学员
+                await this.setDefaultChecked()
+                // 商品价格及其它信息详情
+                await this.getProductDetail()
             } catch (e) {
                 throw e
             }
@@ -378,7 +384,7 @@ export default {
         async initDiscountModel () {
             try {
                 const { discountModel } = this['submitOrder/orderProducts']
-                console.log(discountModel)
+                console.log(discountModel, 382)
                 if (!discountModel) return
                 const { couponModel, scholarshipModel, exchangeCodeModel } = discountModel
                 await this.$nextTick()
@@ -437,7 +443,6 @@ export default {
          * @param redPacket {Object | null} 当前红包
          */
         async couponChange ({ coupon, redPacket }) {
-            console.log(coupon, redPacket)
             this.form.cartCouponModel = coupon && coupon.id ? { userCouponId: coupon.id } : null
             this.form.welfareRedPackage = redPacket && redPacket.id ? { userCouponId: redPacket.id } : null
             // 选中时情况兑换码

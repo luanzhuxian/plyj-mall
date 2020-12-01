@@ -13,22 +13,22 @@
                     <span>优惠</span>
                 </div>
                 <div slot="right-content" :class="$style.couponContent">
-                    <div v-if="!checkedRedpacket && !checkedCoupon">
+                    <div v-if="!this.coupon.copon && !this.coupon.redPacket">
                         <span class="fz-26 mr-10">
                             可选 <i class="warn-color-active">{{ couponList.length }}</i> 张优惠券
                         </span>
                         <pl-svg name="icon-right" fill="#c1c1c1" width="20" />
                     </div>
-                    <div v-if="checkedRedpacket">
-                        <span class="fz-26 warn-color-active mr-10" v-text="couponTypeMap[checkedRedpacket.couponType]" />
-                        <span class="fz-26 warn-color-active mr-24">满{{ checkedRedpacket.useLimitAmount }}减{{ checkedRedpacket.amount }}</span>
-                        <span class="fz-26 gray-4">-{{ checkedRedpacket.amount }}</span>
+                    <div v-if="this.coupon.redPacket">
+                        <span class="fz-26 warn-color-active mr-10" v-text="couponTypeMap[this.coupon.redPacket.couponType]" />
+                        <span class="fz-26 warn-color-active mr-24">满{{ this.coupon.redPacket.useLimitAmount }}减{{ this.coupon.redPacket.amount }}</span>
+                        <span class="fz-26 gray-4">-{{ this.coupon.redPacket.amount }}</span>
                         <pl-svg name="icon-right" fill="#c1c1c1" width="20" />
                     </div>
-                    <div v-if="checkedCoupon">
-                        <span class="fz-26 warn-color-active mr-10" v-text="couponTypeMap[checkedCoupon.couponType]" />
-                        <span class="fz-26 warn-color-active mr-24">满{{ checkedCoupon.useLimitAmount }}减{{ checkedCoupon.amount }}</span>
-                        <span class="fz-26 gray-4">-{{ checkedCoupon.amount }}</span>
+                    <div v-if="this.coupon.coupon">
+                        <span class="fz-26 warn-color-active mr-10" v-text="couponTypeMap[this.coupon.coupon.couponType]" />
+                        <span class="fz-26 warn-color-active mr-24">满{{ this.coupon.coupon.useLimitAmount }}减{{ this.coupon.coupon.amount }}</span>
+                        <span class="fz-26 gray-4">-{{ this.coupon.coupon.amount }}</span>
                         <pl-svg name="icon-right" fill="#c1c1c1" width="20" />
                     </div>
                 </div>
@@ -46,8 +46,8 @@
                         v-for="(item, i) of redPacket"
                         :key="i"
                         position="right"
-                        :label="item"
-                        :cancel-value="null"
+                        :label="item.id"
+                        :cancel-value="''"
                     >
                         <div :key="i" :class="$style.couponItem">
                             <div :class="$style.button">省{{ item.amount }}</div>
@@ -63,8 +63,8 @@
                         v-for="(item, i) of coupons"
                         :key="i"
                         position="right"
-                        :label="item"
-                        :cancel-value="null"
+                        :label="item.id"
+                        :cancel-value="''"
                     >
                         <div :key="i" :class="$style.couponItem">
                             <div :class="$style.button">省{{ item.amount }}</div>
@@ -94,15 +94,14 @@ import {
     /* getRedEnvelopeListByPrice */
 } from '../../apis/my-coupon'
 import moment from 'moment'
-import { getServerTime } from '../../apis/base-api'
 export default {
     name: 'SubmitOrderCoupon',
     data () {
         return {
             showCoupon: false,
             noJoin: false,
-            checkedRedpacket: null,
-            checkedCoupon: null,
+            checkedRedpacket: '',
+            checkedCoupon: '',
             couponList: []
         }
     },
@@ -151,6 +150,10 @@ export default {
             default () {
                 return {}
             }
+        },
+        serverTime: {
+            type: [String, Number],
+            default: 0
         }
     },
     computed: {
@@ -168,42 +171,38 @@ export default {
     watch: {
         exchangeCodeInfo (val) {
             if (val) {
-                this.checkedRedpacket = null
-                this.checkedCoupon = null
+                this.checkedRedpacket = ''
+                this.checkedCoupon = ''
             }
         },
         noJoin (val) {
             if (val) {
-                this.checkedRedpacket = null
-                this.checkedCoupon = null
+                this.checkedRedpacket = ''
+                this.checkedCoupon = ''
             }
         },
         checkedCoupon (val) {
             this.noJoin = !val && !this.checkedRedpacket
             clearTimeout(this.timer)
             this.timer = setTimeout(() => {
-                this.$emit('change', {
-                    redPacket: this.checkedRedpacket,
-                    coupon: this.checkedCoupon
-                })
-                this.$emit('update:coupon', {
-                    redPacket: this.checkedRedpacket,
-                    coupon: this.checkedCoupon
-                })
+                const data = {
+                    redPacket: this.couponList.find(item => item.id === this.checkedRedpacket) || null,
+                    coupon: this.couponList.find(item => item.id === val) || null
+                }
+                this.$emit('change', data)
+                this.$emit('update:coupon', data)
             })
         },
         checkedRedpacket (val) {
             this.noJoin = !val && !this.checkedCoupon
             clearTimeout(this.timer)
             this.timer = setTimeout(() => {
-                this.$emit('change', {
-                    redPacket: this.checkedRedpacket,
-                    coupon: this.checkedCoupon
-                })
-                this.$emit('update:coupon', {
-                    redPacket: this.checkedRedpacket,
-                    coupon: this.checkedCoupon
-                })
+                const data = {
+                    redPacket: this.couponList.find(item => item.id === val) || null,
+                    coupon: this.couponList.find(item => item.id === this.checkedCoupon) || null
+                }
+                this.$emit('change', data)
+                this.$emit('update:coupon', data)
             }, 100)
         }
     },
@@ -215,33 +214,33 @@ export default {
             addressSeq: this.addressId
         }
         await this.getCouponList(COUPON_DATA)
-        this.checkedRedpacket = this.coupon.redPacket ? this.couponList.find(item => item.id === this.coupon.redPacket.id) : null
-        this.checkedCoupon = this.coupon.coupon ? this.couponList.find(item => item.id === this.coupon.coupon.id) : null
-        if (!this.coupon.redPacket && !this.coupon.coupon) {
+        const { redPacket, coupon } = this.coupon
+        if (!redPacket && !coupon) {
             await this.getRecommedCoupon(COUPON_DATA)
         }
+        if (redPacket) this.checkedRedpacket = redPacket.id
+        if (coupon) this.checkedCoupon = coupon.id
     },
     methods: {
         // 优惠券列表
         async getCouponList (COUPON_DATA) {
             // 初始化优惠券列表
             const { result } = await getCouponByPrice(COUPON_DATA)
-            // 获取服务器时间
-            const { result: serverTime } = await getServerTime()
             // 设置优惠券列表
             this.couponList = result.map(item => {
-                const duration = moment(item.useEndTime).valueOf() - moment(serverTime).valueOf()
+                const duration = moment(item.useEndTime).valueOf() - moment(this.serverTime).valueOf()
                 const day = Math.floor(moment.duration(duration).asDays())
                 item.timeDesc = ''
                 if (day < 4) item.timeDesc = day < 1 ? '即将过期' : `${ day }天后过期`
                 return item
             })
+            this.$emit('loaded', this.couponList)
         },
         // 推荐的优惠券
         async getRecommedCoupon (COUPON_DATA) {
             const { result } = await getCouponOfMax(COUPON_DATA)
             const recommend = this.couponList.find(item => item.id === result.id)
-            recommend ? recommend.couponType === 3 ? this.checkedRedpacket = recommend : this.checkedCoupon = recommend : this.noJoin = true
+            recommend ? recommend.couponType === 3 ? this.checkedRedpacket = recommend.id : this.checkedCoupon = recommend.id : this.noJoin = true
         }
     }
 }

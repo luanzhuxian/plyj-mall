@@ -4,7 +4,7 @@ const ORDER_PRODUCTS = JSON.parse(sessionStorage.getItem('CONFIRM_LIST')) || { p
 const INVOICE_PRODUCTS = JSON.parse(sessionStorage.getItem('APPLY_INVOICE')) || []
 const INVOICE_FROM_ROUTE = JSON.parse(sessionStorage.getItem('APPLY_INVOICE_FROM')) || {}
 const INVOICE_INFO = JSON.parse(sessionStorage.getItem('INVOICE_MODEL')) || []
-const EXCHANGE_CODE_MODEL = JSON.parse(sessionStorage.getItem('EXCHANGE_CODE_MODEL')) || {}
+const EXCHANGE_CODE_MODEL = JSON.parse(sessionStorage.getItem('EXCHANGE_CODE_MODEL')) || null
 export const submitOrder = {
     // 开启命名空间
     namespaced: true,

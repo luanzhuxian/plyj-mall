@@ -96,7 +96,11 @@ export default {
             return `pl-radio_${ uid }`
         },
         checked () {
-            return this.label === this.value || this.label === (this.values ? this.values.defaultValue : null)
+            if (this.values) {
+                return this.label === this.values.defaultValue
+            }
+            return this.label === this.value
+            // return this.label === this.value || this.label === (this.values ? this.values.defaultValue : null)
         }
     },
     methods: {
