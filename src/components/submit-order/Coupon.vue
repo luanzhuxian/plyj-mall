@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="couponList.length > 0">
         <div
             :class="$style.itemSelector"
             @click.capture="showCoupon = true"
@@ -225,6 +225,7 @@ export default {
             addressSeq: this.addressId
         }
         await this.getCouponList(COUPON_DATA)
+        if (this.couponList.length === 0) return
 
         // 取出缓存的数据
         const { discountModel } = this.orderProducts

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="redEnvelopeList.length > 0">
         <!-- v-if="(totalAmount + (currentRedEnvelope.amount || 0) - (freight || 0)) && redEnvelopeList.length && isScholarship" -->
         <div
             v-if="redEnvelopeList.length && isScholarship"
@@ -141,6 +141,7 @@ export default {
     },
     async mounted () {
         await this.getList()
+        if (this.redEnvelopeList.length === 0) return
 
         // 缓存的数据
         const { discountModel } = this.orderProducts
