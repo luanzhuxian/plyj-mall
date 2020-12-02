@@ -367,7 +367,9 @@ export default {
                 }
 
                 if (this.form.count + this.activity.userClaimed > this.redPackage.quantityLimit) {
-                    return this.$warning(`每人至多领取${ this.redPackage.quantityLimit }张，您已领取${ this.activity.userClaimed }张`)
+                    return Number(this.activity.userClaimed)
+                        ? this.$warning(`每人至多领取${ this.redPackage.quantityLimit }张，您已领取${ Number(this.activity.userClaimed) }张`)
+                        : this.$warning(`每人至多领取${ this.redPackage.quantityLimit }张`)
                 }
 
                 this.submiting = true
