@@ -10,6 +10,7 @@
                 :subtract="couponInfo.amount"
                 :use-start-time="couponInfo.useStartTime"
                 :use-end-time="couponInfo.useEndTime"
+                :can-receive="couponInfo.canReceive"
             />
             <div :class="$style.counterTitle">
                 限时优惠，满{{ couponInfo.useLimitAmount }}减{{ couponInfo.amount }}，可选择以下商品凑单购买
@@ -87,7 +88,8 @@ export default {
                 useStartTime: '',
                 useEndTime: '',
                 instruction: '',
-                isClaimed: false
+                isClaimed: false,
+                canReceive: ''
             },
             // 增加节流阀
             isCouponLoading: false,
@@ -130,7 +132,6 @@ export default {
             try {
                 this.couponId = this.$route.params.couponId
                 const { result } = await getCouponDetail(this.couponId)
-
                 // 设置优惠券的详情
                 this.couponInfo.id = result.id
                 this.couponInfo.name = result.couponName
@@ -141,6 +142,7 @@ export default {
                 this.couponInfo.useEndTime = result.useEndTime
                 this.couponInfo.instruction = result.brief
                 this.couponInfo.isClaimed = result.claimed
+                this.couponInfo.canReceive = result.canReceive
 
                 // 设置查询当前优惠券下的商品列表参数
                 this.form.current = 1
