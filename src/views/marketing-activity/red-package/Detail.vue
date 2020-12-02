@@ -62,7 +62,6 @@
                             <Coupon
                                 :class="$style.redPackageListItem"
                                 :status.sync="status"
-                                :show-stock="status === 1"
                                 :name="activity.name"
                                 :stock="Number(activity.issueVolume) - Number(activity.claimVolume)"
                                 :amount="Number(redPackage.amount)"
