@@ -120,7 +120,11 @@ export default {
                     useEndTime,
                     shareUrl
                 } = this
-
+                const CVS = document.createElement('canvas')
+                const CTX = CVS.getContext('2d')
+                const devicePixelRatio = window.devicePixelRatio
+                CVS.width = 750 * devicePixelRatio
+                CVS.height = 1334 * devicePixelRatio
                 // 背景色
                 let bgc = ''
                 // 背景图
@@ -131,57 +135,52 @@ export default {
                         case 1:
                             bgc = '#077ce6'
                             bgi = 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/bg-detail-blue.png'
-                            bgHeight = 468
+                            bgHeight = 468 * devicePixelRatio
                             break
                         case 2:
                             bgc = '#7e2ef1'
                             bgi = 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/bg-detail-purple.png'
-                            bgHeight = 458
+                            bgHeight = 458 * devicePixelRatio
                             break
                         case 3:
                             bgc = '#f5b72f'
                             bgi = 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/bg-detail-yellow.png'
-                            bgHeight = 466
+                            bgHeight = 466 * devicePixelRatio
                             break
                         default:
                             bgc = '#ff634d'
                             bgi = 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/bg-detail-red.png'
-                            bgHeight = 467
+                            bgHeight = 467 * devicePixelRatio
                             break
                     }
                 } else {
                     bgc = '#fd644c'
                     bgi = 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/bg-main.png'
-                    bgHeight = 420
+                    bgHeight = 420 * devicePixelRatio
                 }
-
-                const CVS = document.createElement('canvas')
-                const CTX = CVS.getContext('2d')
-                CVS.width = 750
-                CVS.height = 1334
 
                 // 绘制背景
                 CTX.fillStyle = bgc
                 CTX.fillRect(0, 0, CVS.width, CVS.height)
                 const BGI = await loadImage(bgi)
-                CTX.drawImage(BGI, 0, 0, 750, bgHeight)
+                CTX.drawImage(BGI, 0, 0, 750 * devicePixelRatio, bgHeight)
 
                 // 左上角图标
                 if (showLogo && logoUrl) {
                     CTX.beginPath()
                     CTX.lineTo(0, 0)
-                    CTX.lineTo(146, 0)
-                    CTX.lineTo(0, 126)
+                    CTX.lineTo(146 * devicePixelRatio, 0)
+                    CTX.lineTo(0, 126 * devicePixelRatio)
                     CTX.closePath()
                     CTX.fillStyle = '#fff'
                     CTX.fill()
                     CTX.beginPath()
-                    CTX.arc(41, 39, 33, 0, 2 * Math.PI)
+                    CTX.arc(41 * devicePixelRatio, 39 * devicePixelRatio, 33 * devicePixelRatio, 0, 2 * Math.PI)
                     CTX.fillStyle = '#FE461F'
                     CTX.closePath()
                     CTX.fill()
                     const LOGO = await loadImage(logoUrl)
-                    CTX.drawImage(cutArcImage(LOGO), 8, 6, 66, 66)
+                    CTX.drawImage(cutArcImage(LOGO), 8 * devicePixelRatio, 6 * devicePixelRatio, 66 * devicePixelRatio, 66 * devicePixelRatio)
                     // CTX.save()
                     // CTX.arc(41, 39, 33, 0, 2 * Math.PI)
                     // CTX.clip()
@@ -192,126 +191,138 @@ export default {
                 // 内容
                 drawRoundRect({
                     ctx: CTX,
-                    x: showCoupon ? 25 : 55,
-                    y: showCoupon ? 470 : 500,
-                    width: showCoupon ? 700 : 640,
-                    height: showCoupon ? 794 : 734,
-                    radius: 20,
+                    x: (showCoupon ? 25 : 55) * devicePixelRatio,
+                    y: (showCoupon ? 470 : 500) * devicePixelRatio,
+                    width: (showCoupon ? 700 : 640) * devicePixelRatio,
+                    height: (showCoupon ? 794 : 734) * devicePixelRatio,
+                    radius: 20 * devicePixelRatio,
                     fillStyle: '#fff'
                 })
                 if (showCoupon) {
                     // 绘制优惠券
                     const CONPON_BG = await loadImage('https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/coupon.png')
-                    CTX.drawImage(CONPON_BG, 45, 500, 660, 190)
-
-                    const unitWidth = CTX.measureText('￥').width
-                    const amountWidth = CTX.measureText(amount).width
-                    const unitStartX = (75 + Math.max(amountWidth, 100) / 2) - (unitWidth + amountWidth) / 2
-
-                    CTX.font = 'bold 22px sans-serif'
+                    CTX.drawImage(CONPON_BG, 45 * devicePixelRatio, 500 * devicePixelRatio, 660 * devicePixelRatio, 190 * devicePixelRatio)
+                    CTX.font = `bold ${ 22 * devicePixelRatio }px sans-serif`
+                    // const unitWidth = CTX.measureText('￥').width
+                    // const amountWidth = CTX.measureText(amount).width
+                    // const unitStartX = (75 * devicePixelRatio + amountWidth) - (unitWidth + amountWidth) / 2
+                    // 总额
                     CTX.fillStyle = '#F23D00'
                     CTX.textBaseline = 'hanging'
                     createText({
                         ctx: CTX,
-                        x: unitStartX,
-                        y: 114 + 470,
+                        x: 94 * devicePixelRatio,
+                        y: (114 + 470) * devicePixelRatio,
                         text: '￥',
-                        lineHeight: 20
+                        lineHeight: 20 * devicePixelRatio
                     })
-                    CTX.font = 'bold 42px sans-serif'
-                    const W2 = createText({
+                    CTX.font = `bold ${ 42 * devicePixelRatio }px sans-serif`
+                    const AMOUNT_WIDTH = createText({
                         ctx: CTX,
-                        x: unitStartX + 20,
-                        y: 96 + 470,
+                        x: (94 + 20) * devicePixelRatio,
+                        y: (96 + 470) * devicePixelRatio,
                         text: `${ amount }`,
-                        lineHeight: 54
+                        lineHeight: 54 * devicePixelRatio
                     })
+                    // 剩余
+                    CTX.font = `normal ${ 20 * devicePixelRatio }px sans-serif`
+                    CTX.fillStyle = '#F19874'
+                    let COUNT_WIDTH = 0
+                    if (status === 1) {
+                        COUNT_WIDTH = createText({
+                            ctx: CTX,
+                            x: 116 * devicePixelRatio,
+                            y: (150 + 470) * devicePixelRatio,
+                            text: `仅剩${ issueVolume - claimVolume }张`,
+                            lineHeight: 28 * devicePixelRatio
+                        })
+                    }
+                    // 虚线的横坐标
+                    const LINE_START = Math.max(AMOUNT_WIDTH, COUNT_WIDTH)
                     // 虚线
                     CTX.beginPath()
-                    CTX.setLineDash([2, 5])
-                    CTX.moveTo(Math.max(W2, 100) + 115 + 20, 62 + 470)
-                    CTX.lineTo(Math.max(W2, 100) + 115 + 20, 62 + 470 + 128)
+                    CTX.lineWidth = 2 * devicePixelRatio
+                    CTX.setLineDash([2 * devicePixelRatio, 5 * devicePixelRatio])
+                    CTX.moveTo(LINE_START + (116 + 35) * devicePixelRatio, (62 + 470) * devicePixelRatio)
+                    CTX.lineTo(LINE_START + (116 + 35) * devicePixelRatio, (62 + 470 + 128) * devicePixelRatio)
                     CTX.strokeStyle = '#FDAC85'
                     CTX.closePath()
                     CTX.stroke()
-                    CTX.font = 'bold 24px sans-serif'
+                    CTX.setLineDash([])
+
+                    // 满减额
+                    CTX.font = `bold ${ 24 * devicePixelRatio }px sans-serif`
+                    CTX.fillStyle = '#F23D00'
                     createText({
                         ctx: CTX,
-                        x: 115 + Math.max(W2, 100) + 1 + 20 + 35,
-                        y: 85 + 470,
+                        x: LINE_START + (116 + 2 + 35 * 2) * devicePixelRatio,
+                        y: (85 + 470) * devicePixelRatio,
                         text: `满${ useLimitAmount }可抵${ amount }`,
-                        lineHeight: 32
+                        lineHeight: 32 * devicePixelRatio
                     })
-                    CTX.font = 'normal 20px sans-serif'
+                    // 名称
+                    CTX.font = `normal ${ 20 * devicePixelRatio }px sans-serif`
                     CTX.fillStyle = '#F19874'
-                    if (status === 1) {
-                        createText({
-                            ctx: CTX,
-                            x: 116,
-                            y: 150 + 470,
-                            text: `仅剩${ issueVolume - claimVolume }张`,
-                            lineHeight: 28
-                        })
-                    }
                     createText({
                         ctx: CTX,
-                        x: 115 + Math.max(W2, 100) + 1 + 20 + 35,
-                        y: 118 + 470,
+                        x: LINE_START + (116 + 2 + 35 * 2) * devicePixelRatio,
+                        y: (118 + 470) * devicePixelRatio,
                         text: name,
-                        lineHeight: 28
+                        lineHeight: 28 * devicePixelRatio
                     })
+                    // 使用时间
                     createText({
                         ctx: CTX,
-                        x: 115 + Math.max(W2, 100) + 1 + 20 + 35,
-                        y: 152 + 470,
+                        x: LINE_START + (116 + 2 + 35 * 2) * devicePixelRatio,
+                        y: (152 + 470) * devicePixelRatio,
                         text: `使用时间：${ useStartTime.split(' ')[0].replace(/-/g, '.') }-${ useEndTime.split(' ')[0].replace(/-/g, '.') }`,
-                        lineHeight: 28
+                        lineHeight: 28 * devicePixelRatio
                     })
                     // 按钮
-                    const grd = CTX.createLinearGradient(0, 0, 0, 80)
+                    const grd = CTX.createLinearGradient(76 * devicePixelRatio, 725 * devicePixelRatio, 76 * devicePixelRatio, (725 + 80) * devicePixelRatio)
                     grd.addColorStop(0, '#F58A2D')
                     grd.addColorStop(1, '#EC3E01')
                     CTX.fillStyle = grd
-
                     drawRoundRect({
                         ctx: CTX,
-                        x: 75,
-                        y: 720,
-                        width: 600,
-                        height: 80,
-                        radius: 40,
+                        x: 75 * devicePixelRatio,
+                        y: 720 * devicePixelRatio,
+                        width: 600 * devicePixelRatio,
+                        height: 80 * devicePixelRatio,
+                        radius: 40 * devicePixelRatio,
                         fillStyle: grd
                     })
-                    CTX.font = 'normal 30px sans-serif'
+                    CTX.font = `normal ${ 30 * devicePixelRatio }px sans-serif`
                     CTX.fillStyle = '#fff'
                     CTX.textAlign = 'center'
-                    CTX.fillText('数量有限  立即领取', 375, 745)
-                    CTX.font = 'normal 36px sans-serif'
+                    CTX.fillText('数量有限  立即领取', 375 * devicePixelRatio, 745 * devicePixelRatio)
+                    CTX.font = `normal ${ 36 * devicePixelRatio }px sans-serif`
                     CTX.fillStyle = '#ffef7e'
-                    CTX.fillText('小金额 大额券 边逛边优惠', 375, 145)
+                    CTX.fillText('小金额 大额券 边逛边优惠', 375 * devicePixelRatio, 145 * devicePixelRatio)
                 }
                 // 二维码
-                CTX.setLineDash([])
-                CTX.lineWidth = 5
+                CTX.lineWidth = 5 * devicePixelRatio
                 drawRoundRect({
                     ctx: CTX,
-                    x: showCoupon ? 225 : 176,
-                    y: showCoupon ? 838 : 620,
-                    width: showCoupon ? 300 : 400,
-                    height: showCoupon ? 300 : 400,
-                    radius: 20,
+                    x: (showCoupon ? 225 : 176) * devicePixelRatio,
+                    y: (showCoupon ? 838 : 620) * devicePixelRatio,
+                    width: (showCoupon ? 300 : 400) * devicePixelRatio,
+                    height: (showCoupon ? 300 : 400) * devicePixelRatio,
+                    radius: 20 * devicePixelRatio,
                     strokeStyle: '#F23D00',
                     fillStyle: '#fff'
                 })
-                const QR = await generateQrcode({ size: showCoupon ? 220 : 320, text: shareUrl, type: 'canvas' })
-                showCoupon ? CTX.drawImage(QR, 266, 880, 220, 220) : CTX.drawImage(QR, 216, 660, 320, 320)
-                CTX.font = 'normal 30px sans-serif'
+                const QR = await generateQrcode({ size: (showCoupon ? 220 : 320) * devicePixelRatio, text: shareUrl, type: 'canvas' })
+                showCoupon
+                    ? CTX.drawImage(QR, 266 * devicePixelRatio, 880 * devicePixelRatio, 220 * devicePixelRatio, 220 * devicePixelRatio)
+                    : CTX.drawImage(QR, 216 * devicePixelRatio, 660 * devicePixelRatio, 320 * devicePixelRatio, 320 * devicePixelRatio)
+                CTX.font = `normal ${ 30 * devicePixelRatio }px sans-serif`
                 CTX.fillStyle = '#333'
                 CTX.textAlign = 'center'
-                CTX.fillText('长按识别领取优惠', 375, showCoupon ? 1170 : 1130)
+                CTX.fillText('长按识别领取优惠', 375 * devicePixelRatio, (showCoupon ? 1170 : 1130) * devicePixelRatio)
 
                 // 生成图片
-                this.poster = CVS.toDataURL('image/jpeg', 0.9)
+                this.poster = CVS.toDataURL('image/jpeg')
                 this.isShow = true
                 this.$emit('done', this.poster)
                 return this.poster
