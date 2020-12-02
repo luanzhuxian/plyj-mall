@@ -5,7 +5,7 @@
                 <div :class="$style.topBtnWrapper" @click="$router.push({ name: 'RedPackageIntro' })">
                     <span>使用说明</span>
                 </div>
-                <template v-if="allLoaded">
+                <template v-if="allLoaded && redPackageList && redPackageList.length">
                     <!-- 商品轮播 -->
                     <section :class="$style.product" v-if="productList && productList.length">
                         <Swiper :list="productList" />
