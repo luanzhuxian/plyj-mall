@@ -7,9 +7,13 @@
         <div :class="$style.main">
             <div :class="$style.couponItemLeft">
                 <div :class="$style.leftTop">
-                    <div :class="[$style.couponPrice, String(amount).length > 3 ? $style.middle: '', String(amount).length > 3 > 4 ? $style.large: '']" v-text="amount" />
+                    <div :class="[$style.couponPrice, String(amount).length > 3 ? $style.middle: '', String(amount).length > 3 > 4 ? $style.large: '']">
+                        <span :class="$style.prefix">{{ couponType === 3 ? '抵' : '￥' }}</span>
+                        <span v-text="amount" />
+                    </div>
                     <div :class="[$style.couponDesc, amount > 999 ? $style.middle: '']">
-                        <div>满{{ full }}减 {{ subtract }}</div>
+                        <div v-if="couponType === 3">满{{ full }}可用</div>
+                        <div v-else>满{{ full }}减 {{ amount }}</div>
                         <div v-text="name" />
                     </div>
                 </div>
@@ -101,12 +105,6 @@ export default {
 
         // 满多少
         full: {
-            type: Number,
-            default: 1
-        },
-
-        // 减多少
-        subtract: {
             type: Number,
             default: 1
         },
@@ -279,9 +277,8 @@ export default {
       line-height: 40px;
     }
 
-    &:before {
+    > .prefix {
       display: inline-block;
-      content: '￥';
       box-sizing: border-box;
       color: #ED2E50;
       line-height: 32px;

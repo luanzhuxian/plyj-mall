@@ -41,7 +41,6 @@
                                     :name="item.couponName"
                                     :amount="item.amount"
                                     :full="item.useLimitAmount"
-                                    :subtract="item.amount"
                                     :instruction="item.brief"
                                     :use-start-time="item.useStartTime"
                                     :use-end-time="item.useEndTime"
