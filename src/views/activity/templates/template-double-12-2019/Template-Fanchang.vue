@@ -28,12 +28,12 @@
 </template>
 
 <script>
-import Live from '../double-12/Live.vue'
-import Pintuan from '../double-12/Pintuan.vue'
-import Maisong from '../double-12/Maisong.vue'
-import Fengqiang from '../double-12/Fengqiang.vue'
-import MiaoshaSmall from '../double-12/Miaosha-Small.vue'
-import Recommend from '../../home/components/Recommend.vue'
+import Live from '../../double-12/Live.vue'
+import Pintuan from '../../double-12/Pintuan.vue'
+import Maisong from '../../double-12/Maisong.vue'
+import Fengqiang from '../../double-12/Fengqiang.vue'
+import MiaoshaSmall from '../../double-12/Miaosha-Small.vue'
+import Recommend from '../../../home/components/Recommend.vue'
 
 export default {
     name: 'HomeTemplateB',
