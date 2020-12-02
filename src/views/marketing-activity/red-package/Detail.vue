@@ -224,12 +224,12 @@ export default {
             },
             rules: {
                 name: [
-                    { required: true, message: '请输入联系人姓名' },
-                    { validator: checkLength(12), message: '联系人姓名为1~12个字符' }
+                    { required: true, message: '请输入姓名' },
+                    { validator: checkLength(12), message: '姓名为1~12个字符' }
                 ],
                 mobile: [
-                    { required: true, message: '请输入联系人手机号' },
-                    { validator: isPhone, message: '联系人手机号格式错误' }
+                    { required: true, message: '请输入电话' },
+                    { validator: isPhone, message: '电话格式错误' }
                 ]
             },
             creatingPoster: false,
@@ -282,7 +282,6 @@ export default {
         }
     },
     deactivated () {
-        // this.allLoaded = false
         this.submiting = false
         this.creatingPoster = false
     },
@@ -374,8 +373,6 @@ export default {
                 this.submiting = true
                 const { payData, orderBatchNumber } = await submitRedPackageOrder(this.activityId, this.form.count)
                 const result = await pay(payData, payData.orderIds, payData.orderIds.length, orderBatchNumber, this.totalPrice)
-                // TODO:
-                console.log('result', result)
                 if (result === true) {
                     this.activity.userClaimed++
                     await this.showModel('success')

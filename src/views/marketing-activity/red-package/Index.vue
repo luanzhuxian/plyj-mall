@@ -107,7 +107,6 @@ export default {
         }
     },
     deactivated () {
-        // this.allLoaded = false
         this.creatingPoster = false
     },
     methods: {
