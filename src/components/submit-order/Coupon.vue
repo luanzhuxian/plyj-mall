@@ -158,6 +158,7 @@ export default {
     },
     computed: {
         ...mapGetters(['couponTypeMap']),
+        ...mapGetters('submitOrder', ['orderProducts']),
         recommendCouponId () {
             return this.recommendCoupon.id || ''
         },
@@ -191,6 +192,11 @@ export default {
                 }
                 this.$emit('change', data)
                 this.$emit('update:coupon', data)
+                this.$store.commit('submitOrder/setOrderProducts', {
+                    discountModel: {
+                        couponModel: data
+                    }
+                })
             })
         },
         checkedRedpacket (val) {
@@ -203,6 +209,11 @@ export default {
                 }
                 this.$emit('change', data)
                 this.$emit('update:coupon', data)
+                this.$store.commit('submitOrder/setOrderProducts', {
+                    discountModel: {
+                        couponModel: data
+                    }
+                })
             }, 100)
         }
     },
@@ -214,7 +225,11 @@ export default {
             addressSeq: this.addressId
         }
         await this.getCouponList(COUPON_DATA)
-        const { redPacket, coupon } = this.coupon
+
+        // 取出缓存的数据
+        const { discountModel } = this.orderProducts
+        discountModel.couponModel = discountModel.couponModel || { redPacket: null, coupon: null }
+        const { couponModel: { redPacket, coupon } } = discountModel
         if (!redPacket && !coupon) {
             await this.getRecommedCoupon(COUPON_DATA)
         }

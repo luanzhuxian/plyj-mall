@@ -275,8 +275,6 @@ export default {
                 this.serverTime = serverTime
                 // 要购买的商品列表
                 await this.initProductInfo()
-                // 初始化优惠信息
-                await this.initDiscountModel()
                 // 设置默认学员
                 await this.setDefaultChecked()
                 // 商品价格及其它信息详情
@@ -357,40 +355,6 @@ export default {
                 }))
                 this.CONFIRM_LIST = CONFIRM_LIST
                 return CONFIRM_LIST
-            } catch (e) {
-                throw e
-            }
-        },
-
-        // 在订单页面, 调整订单相关信息后, 设置订单优惠信息
-        setDiscountModel () {
-            const params = {
-                couponModel: this.currentCoupon,
-                scholarshipModel: this.currentRedEnvelope,
-                exchangeCodeModel: this.exchangeCodeInfo
-            }
-            this.$store.commit('submitOrder/setOrderProducts', {
-                discountModel: params
-            })
-        },
-
-        /* 初始化优惠信息, 如果有信息,请求confirm接口; 没有的话, 不做处理 */
-        async initDiscountModel () {
-            try {
-                const { discountModel } = this['submitOrder/orderProducts']
-                console.log(discountModel, 382)
-                if (!discountModel) return
-                const { couponModel, scholarshipModel, exchangeCodeModel } = discountModel
-                await this.$nextTick()
-                if (couponModel) {
-                    this.currentCoupon = couponModel
-                    await this.couponChange(couponModel)
-                }
-                if (scholarshipModel) {
-                    this.currentRedEnvelope = scholarshipModel
-                    await this.scholarshipChange(scholarshipModel)
-                }
-                if (exchangeCodeModel) await this.exchangeCodeChange(exchangeCodeModel)
             } catch (e) {
                 throw e
             }
@@ -649,11 +613,8 @@ export default {
     },
     async beforeRouteLeave (to, from, next) {
         const customRouteName = ['ApplyInvoice', 'Address', 'AddAddress', 'StudentList']
-        if (customRouteName.includes(to.name)) {
-            this.setDiscountModel()
-        } else {
+        if (!customRouteName.includes(to.name)) {
             this.$store.commit('submitOrder/removeOrderProducts')
-            this.$store.commit('submitOrder/removeCurExchangeCode')
             this.$store.commit('submitOrder/removeInvoiceInfo')
         }
         if (this.submiting) {

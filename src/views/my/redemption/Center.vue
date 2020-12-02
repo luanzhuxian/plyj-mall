@@ -166,13 +166,17 @@ export default {
             })
             // 设置当前商品默认兑换码信息
             const { exchangeCode, name, startTime, endTime } = this.detail
-            this.$store.commit('submitOrder/setCurExchangeCode', {
-                productId: detail.productId,
-                id: this.codeId,
-                exchangeCode,
-                startTime,
-                endTime,
-                name
+            this.$store.commit('submitOrder/setOrderProducts', {
+                discountModel: {
+                    exchangeCodeModel: {
+                        productId: detail.productId,
+                        id: this.codeId,
+                        exchangeCode,
+                        startTime,
+                        endTime,
+                        name
+                    }
+                }
             })
             this.$router.push({
                 name: 'SubmitOrder'

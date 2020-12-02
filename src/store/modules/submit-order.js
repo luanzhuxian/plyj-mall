@@ -1,10 +1,9 @@
 /* 处理提交订单页面再多个页面都需要使用的数据 */
 const CHECKED_STUDENT = JSON.parse(localStorage.getItem('CHECKED_STUDENT')) || {}
-const ORDER_PRODUCTS = JSON.parse(sessionStorage.getItem('CONFIRM_LIST')) || { params: {}, products: [] }
+const ORDER_PRODUCTS = JSON.parse(sessionStorage.getItem('CONFIRM_LIST')) || { discountModel: {}, params: {}, products: [] }
 const INVOICE_PRODUCTS = JSON.parse(sessionStorage.getItem('APPLY_INVOICE')) || []
 const INVOICE_FROM_ROUTE = JSON.parse(sessionStorage.getItem('APPLY_INVOICE_FROM')) || {}
 const INVOICE_INFO = JSON.parse(sessionStorage.getItem('INVOICE_MODEL')) || []
-const EXCHANGE_CODE_MODEL = JSON.parse(sessionStorage.getItem('EXCHANGE_CODE_MODEL')) || null
 export const submitOrder = {
     // 开启命名空间
     namespaced: true,
@@ -13,8 +12,7 @@ export const submitOrder = {
         orderProducts: ORDER_PRODUCTS,
         invoiceProducts: INVOICE_PRODUCTS,
         invoiceFromRoute: INVOICE_FROM_ROUTE,
-        invoiceInfo: INVOICE_INFO,
-        exchangeCodeInfo: EXCHANGE_CODE_MODEL
+        invoiceInfo: INVOICE_INFO
     },
     mutations: {
 
@@ -140,9 +138,10 @@ export const submitOrder = {
          * @param {string} products[].productType - 商品类型  store.getters.orderTypeKeyMap 种的值
          */
         setOrderProducts (state, { params, discountModel, products }) {
-            params = params || state.orderProducts.params
-            products = products || state.orderProducts.products
-            discountModel = discountModel || null
+            params = Object.assign(state.orderProducts.params, params)
+            products = Object.assign(state.orderProducts.products, products)
+            // products = products || state.orderProducts.products
+            discountModel = Object.assign(state.orderProducts.discountModel, discountModel)
             for (const item of products) {
                 item.agentUser = this.state.SHARE_ID
             }
@@ -153,27 +152,6 @@ export const submitOrder = {
         removeOrderProducts: state => {
             sessionStorage.removeItem('CONFIRM_LIST')
             state.orderProducts = ORDER_PRODUCTS
-        },
-
-        /**
-         * 设置提交订单默认的兑换码信息
-         * @param state
-         * @param {Object} params - 兑换码信息
-         * @param {Object} params.productId - 商品id
-         * @param {Object} params.id - 兑换码id
-         * @param {Object} params.exchangeCode - 兑换码code
-         * @param {Object} params.startTime - 兑换码使用开始时间
-         * @param {Object} params.endTime - 兑换码使用结束时间
-         * @param {Object} params.name - 兑换码活动名称
-         */
-        setCurExchangeCode (state, params) {
-            const exchangeCodeInfo = JSON.stringify(params) || {}
-            sessionStorage.setItem('EXCHANGE_CODE_MODEL', exchangeCodeInfo)
-            state.exchangeCodeInfo = JSON.parse(exchangeCodeInfo)
-        },
-        removeCurExchangeCode: state => {
-            sessionStorage.removeItem('EXCHANGE_CODE_MODEL')
-            state.exchangeCodeInfo = null
         }
     },
     getters: {
@@ -181,7 +159,6 @@ export const submitOrder = {
         orderProducts: state => state.orderProducts,
         invoiceProducts: state => state.invoiceProducts,
         invoiceFromRoute: state => state.invoiceFromRoute,
-        invoiceInfo: state => state.invoiceInfo,
-        exchangeCodeInfo: state => state.exchangeCodeInfo
+        invoiceInfo: state => state.invoiceInfo
     }
 }

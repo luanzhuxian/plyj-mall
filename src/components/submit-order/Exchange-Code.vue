@@ -84,22 +84,29 @@ export default {
             const codeInfo = this.exchangeCodeList.find(item => item.id === val) || null
             this.$emit('change', codeInfo)
             this.codeInfo = codeInfo
-            this.$store.commit('submitOrder/setCurExchangeCode', codeInfo ? {
-                productId: this.productId,
-                id: codeInfo.id,
-                exchangeCode: codeInfo.exchangeCode,
-                startTime: codeInfo.startTime,
-                endTime: codeInfo.endTime,
-                name: codeInfo.name
-            } : null)
+            // 缓存数据
+            this.$store.commit('submitOrder/setOrderProducts', {
+                discountModel: {
+                    exchangeCodeModel: codeInfo ? {
+                        productId: this.productId,
+                        id: codeInfo.id,
+                        exchangeCode: codeInfo.exchangeCode,
+                        startTime: codeInfo.startTime,
+                        endTime: codeInfo.endTime,
+                        name: codeInfo.name
+                    } : null
+                }
+            })
         }
     },
     computed: {
-        ...mapGetters('submitOrder', ['exchangeCodeInfo'])
+        ...mapGetters('submitOrder', ['exchangeCodeInfo', 'orderProducts'])
     },
     mounted () {
-        if (this.exchangeCodeInfo) {
-            this.code = this.exchangeCodeInfo.id || ''
+        // 取出缓存的数据
+        const { discountModel } = this.orderProducts
+        if (discountModel && discountModel.exchangeCodeModel) {
+            this.code = discountModel.exchangeCodeModel.id || ''
         }
     }
 }

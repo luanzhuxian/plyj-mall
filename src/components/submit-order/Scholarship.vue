@@ -50,7 +50,7 @@
 <script>
 import { getRedEnvelopeListByPrice } from '../../apis/my-coupon'
 import moment from 'moment'
-
+import { mapGetters } from 'vuex'
 export default {
     name: 'SubmitOrderScholarship',
     data () {
@@ -104,6 +104,7 @@ export default {
         }
     },
     computed: {
+        ...mapGetters('submitOrder', ['orderProducts']),
         isScholarship () {
             const { coupon, redPacket } = this.currentCoupon
             return (coupon ? coupon.scholarship : true) && (redPacket ? redPacket.scholarship : true)
@@ -130,13 +131,21 @@ export default {
                 const redEnvelope = this.redEnvelopeList.find(item => item.id === val) || null
                 this.$emit('update:currentRedEnvelope', redEnvelope)
                 this.$emit('change', redEnvelope)
+                this.$store.commit('submitOrder/setOrderProducts', {
+                    discountModel: {
+                        scholarshipModel: redEnvelope
+                    }
+                })
             }
         }
     },
     async mounted () {
         await this.getList()
-        if (this.currentRedEnvelope) {
-            this.checkedRedEnvelope = this.currentRedEnvelope.id
+
+        // 缓存的数据
+        const { discountModel } = this.orderProducts
+        if (discountModel && discountModel.scholarshipModel) {
+            this.checkedRedEnvelope = discountModel.scholarshipModel.id
         }
     },
     methods: {
