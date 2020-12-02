@@ -87,7 +87,8 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['userName', 'mobile', 'appId', 'mallUrl', 'isActivityAuth'
+        ...mapGetters(['userName', 'mobile', 'appId', 'mallUrl', 'isActivityAuth'])
+    },
     async activated () {
         try {
             const request = [
