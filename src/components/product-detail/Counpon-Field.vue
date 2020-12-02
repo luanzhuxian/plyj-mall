@@ -39,14 +39,13 @@
                             :amount="item.amount"
                             :full="item.useLimitAmount"
                             :subtract="item.amount"
+                            :red-packet-activity-id="item.activityId"
                             :instruction="item.brief"
                             :use-end-time="item.useEndTime"
                             :use-start-time="item.useStartTime"
                             :receive-count="item.count"
-                            :is-claimed="!!item.isClaimed"
-                            :price="Number(item.priceAmount)"
-                            @couponClick="couponClick(item.id)"
-                            @redPackageClick="redPackageClick(item)"
+                            :price="Number(item.price)"
+                            :can-receive="item.canReceive"
                         />
                     </template>
                 </div>
@@ -58,8 +57,6 @@
 <script>
 import Field from './Field.vue'
 import CouponItem from '../my/coupon/Coupon-Item.vue'
-import { receiveCoupon } from '../../apis/my-coupon'
-import { submitRedPackageOrder, pay } from '../../views/marketing-activity/red-package/pay'
 
 export default {
     name: 'CounponField',
@@ -94,54 +91,6 @@ export default {
     methods: {
         clickHandler (e) {
             this.showCoupon = true
-        },
-        async couponClick (id) {
-            if (this.isCouponLoading) return
-
-            try {
-                this.isCouponLoading = true
-                const { result } = await receiveCoupon({ couponId: id })
-                result.isClaimed = true
-
-                // 只刷新所领取卡券信息
-                const oldCouponIndex = this.couponList.findIndex(item => item.id === id)
-                this.couponList.splice(oldCouponIndex, 1)
-                this.couponList.splice(oldCouponIndex, 0, result)
-                this.$success('领取成功，请在我的卡券中查看')
-            } catch (e) {
-                throw e
-            } finally {
-                this.isCouponLoading = false
-            }
-        },
-        // 提交福利红包订单
-        async redPackageClick ({ activityId, priceAmount }) {
-            try {
-                if (this.isCouponLoading) return
-                if (!activityId) return
-
-                // 非零元红包跳转活动页
-                if (priceAmount) {
-                    return this.$router.push({
-                        name: 'RedPackageDetail',
-                        params: { activityId }
-                    })
-                }
-
-                // 零元红包下单
-                this.isCouponLoading = true
-                const { payData, orderBatchNumber } = await submitRedPackageOrder(activityId, 1)
-                const result = await pay(payData, payData.orderIds, payData.orderIds.length, orderBatchNumber, 0)
-                if (result === true) {
-                    this.$success('领取成功，请在我的卡券中查看')
-                    const result = this.couponList.find(item => item.activityId === activityId)
-                    this.$set(result, 'isClaimed', true)
-                }
-            } catch (error) {
-                throw error
-            } finally {
-                this.isCouponLoading = false
-            }
         }
     }
 }

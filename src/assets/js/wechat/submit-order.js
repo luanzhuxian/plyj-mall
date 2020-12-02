@@ -1,6 +1,7 @@
-import { getOrderPayData } from '../../../apis/order-manager'
 import wechatPay from '../wechat/wechat-pay'
 import { setTimeoutSync } from '../util'
+import { getOrderPayData } from '../../../apis/order-manager'
+export { submitOrder, cancleOrderListByBatchNumber } from '../../../apis/order-manager'
 
 export const pay = async CREDENTIAL => {
     await wechatPay(CREDENTIAL)

@@ -2,7 +2,7 @@
     <div :class="$style.couponActivity">
         <div :class="$style.couponActivityTop">
             <CouponItem
-                :id="couponInfo.id"
+                :coupon-id="couponInfo.id"
                 :coupon-type="couponInfo.type"
                 :name="couponInfo.name"
                 :amount="couponInfo.amount"
@@ -10,8 +10,6 @@
                 :subtract="couponInfo.amount"
                 :use-start-time="couponInfo.useStartTime"
                 :use-end-time="couponInfo.useEndTime"
-                :is-claimed="couponInfo.isClaimed"
-                @couponClick="couponClick(couponId)"
             />
             <div :class="$style.counterTitle">
                 限时优惠，满{{ couponInfo.useLimitAmount }}减{{ couponInfo.amount }}，可选择以下商品凑单购买
@@ -68,7 +66,7 @@
 import LoadMore from '../../../components/common/Load-More.vue'
 import CouponItem from '../../../components/my/coupon/Coupon-Item.vue'
 import CouponGoodItem from '../../../components/my/coupon/Coupon-Good-Item.vue'
-import { getProductList, getCouponDetail, receiveCoupon } from '../../../apis/my-coupon'
+import { getProductList, getCouponDetail } from '../../../apis/my-coupon'
 
 export default {
     name: 'CouponActivity',
@@ -153,22 +151,6 @@ export default {
                 if (this.isReload) this.$refs.loadMore.refresh()
             } catch (e) {
                 throw (e)
-            }
-        },
-        async couponClick (id) {
-            if (this.isCouponLoading) return
-            if (this.couponInfo.isClaimed) return this.$warning('已领取')
-            try {
-                this.isCouponLoading = true
-                await receiveCoupon({
-                    couponId: id
-                })
-                this.$success('领取成功')
-                this.couponInfo.isClaimed = true
-            } catch (e) {
-                throw e
-            } finally {
-                this.isCouponLoading = false
             }
         },
         // 排序

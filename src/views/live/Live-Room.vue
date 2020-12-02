@@ -137,19 +137,19 @@
                             <CouponItem
                                 v-if="item.show"
                                 :key="i"
+                                :activity-id="this.activityId"
                                 :coupon-type="item.couponType"
-                                :id="item.couponId"
+                                :coupon-id="item.couponId"
                                 :full="item.useLimitAmount"
                                 :subtract="item.amount"
                                 :amount="item.amount"
                                 :instruction="item.brief"
                                 :use-end-time="item.useEndTime"
                                 :use-start-time="item.useStartTime"
-                                :is-over-max="!item.canReceive"
-                                :is-claimed="~receiveCouponIdList.indexOf(item.couponId) || ~receiveCouponIdList.indexOf(item.activityId)"
+                                :can-receive="item.canReceive"
                                 :price="Number(item.price)"
-                                @couponClick="couponClick(item.couponId)"
-                                @redPackageClick="redPackageClick(item)"
+                                source="live"
+                                direct-pay
                             />
                         </template>
                     </div>
@@ -286,9 +286,6 @@ import {
     getOrderPayData,
     cancleOrderListByBatchNumber
 } from '../../apis/order-manager'
-import {
-    receiveCouponForLive
-} from '../../apis/my-coupon'
 import io from 'socket.io-client'
 import moment from 'moment'
 import {
@@ -300,7 +297,6 @@ import {
     // throttle
 } from '../../assets/js/util'
 import wechatPay from '../../assets/js/wechat/wechat-pay'
-import { submitRedPackageOrder, pay } from '../../views/marketing-activity/red-package/pay'
 
 const POSTER_BG = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/live/live-poster.png'
 const PolyvLiveSdk = window.PolyvLiveSdk
@@ -371,14 +367,10 @@ export default {
              */
             chatRecords: [],
             couponList: [],
-            // 增加节流阀
-            isCouponLoading: false,
             productList: [],
             detail: {
                 liveType: 'live'
             },
-            // 已领取的优惠券id列表
-            receiveCouponIdList: [],
             // 录播视频信息
             recorded: {
                 fileSize: 0,
@@ -394,7 +386,6 @@ export default {
     },
     async created () {
         localStorage.removeItem(`LIVE_MESSAGE_${ this.mallDomain }`)
-        this.receiveCouponIdList = []
         if (this.roleCode === 'VISITOR') {
             this.$confirm({
                 message: '为了您的账号安全，请绑定手机号',
@@ -992,43 +983,6 @@ export default {
             await this.$nextTick()
             const box = this.$refs.chatWrap
             if (box && typeof box.scrollBy === 'function') box.scrollBy(0, box.offsetHeight)
-        },
-        async couponClick (id) {
-            if (this.isCouponLoading) return
-            try {
-                this.isCouponLoading = true
-                await receiveCouponForLive({
-                    couponId: id,
-                    activityId: this.activityId,
-                    entityClassName: 'MallLiveActivityEntity'
-                })
-                this.receiveCouponIdList.push(id)
-                this.$success('领取成功')
-            } catch (e) {
-                throw e
-            } finally {
-                this.isCouponLoading = false
-            }
-        },
-        // 提交福利红包订单
-        async redPackageClick ({ activityId, price }) {
-            try {
-                if (this.isCouponLoading) return
-                if (!activityId) return
-
-                this.isCouponLoading = true
-                const { payData, orderBatchNumber } = await submitRedPackageOrder(activityId, 1)
-                const result = await pay(payData, payData.orderIds, payData.orderIds.length, orderBatchNumber, Number(price))
-                this.receiveCouponIdList.push(activityId)
-                // 零元红包下单成功弹窗提示，非零元自动跳转
-                if (result === true) {
-                    this.$success('领取成功')
-                }
-            } catch (error) {
-                throw error
-            } finally {
-                this.isCouponLoading = false
-            }
         },
         // 判断优惠券是否到了显示时间
         canShowCoupon (afterMinuteShow) {

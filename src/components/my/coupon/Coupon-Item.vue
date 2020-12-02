@@ -44,11 +44,11 @@
                 <div :class="$style.ctrl">
                     <!-- 根据是否可以去使用，目前只有我的卡券+提交订单显示'去使用'， 其他显示'立即领取' -->
                     <!-- 应当是能够显示立即领取的地方，都可能达到领取上限 -->
-                    <div v-if="!isOverMax && !isAvailableStatus" :class="$style.rightText">
+                    <div v-if="canReceive && !isAvailableStatus" :class="$style.rightText">
                         <span>立即</span>
                         <span>领取</span>
                     </div>
-                    <div :class="$style.overMax" v-if="isOverMax && !isAvailableStatus">
+                    <div :class="[$style.overMax, $style.rightText]" v-if="!canReceive && !isAvailableStatus">
                         <span>已达到</span>
                         <span>领用上限</span>
                     </div>
@@ -57,7 +57,7 @@
                         <span>使</span>
                         <span>用</span>
                     </div>
-                    <pl-svg v-if="!isPriceShow && (isAvailableStatus || (!isAvailableStatus && !isOverMax))" name="icon-right" fill="#fff" width="22" />
+                    <pl-svg v-if="!isPriceShow && (isAvailableStatus || (!isAvailableStatus && canReceive))" name="icon-right" fill="#fff" width="22" />
                 </div>
             </div>
         </div>
@@ -75,15 +75,12 @@
 
 <script>
 import { mapGetters } from 'vuex'
-
+import { requestPayData, pay, submitOrder, cancleOrderListByBatchNumber } from '../../../assets/js/wechat/submit-order'
+import { receiveCoupon, receiveCouponForLive } from '../../../apis/my-coupon'
 export default {
     name: 'CouponItem',
     props: {
         status: {
-            type: String,
-            default: ''
-        },
-        id: {
             type: String,
             default: ''
         },
@@ -126,12 +123,6 @@ export default {
         // 是否使用
         isAvailableStatus: Boolean,
 
-        // 是否点击去分类
-        canGoClassify: {
-            type: Boolean,
-            default: true
-        },
-
         // 领取次数
         receiveCount: {
             type: Number,
@@ -143,21 +134,11 @@ export default {
             type: Number,
             default: 1
         },
-
-        // 是否已经到达领用上线,只有领用处才有这个字段
-        isOverMax: {
-
-            /* activityLimit 0 不限制 1-限制; quantityLimit 可以领取的张数; count 已经领取的次数 */
+        // 是否可领取
+        canReceive: {
             type: Boolean,
-            default: false
+            default: true
         },
-
-        // 是否在当前页面可领取，只支持前端页面的显示
-        isClaimed: {
-            type: Boolean,
-            default: false
-        },
-
         // 是否显示立即领取
         isShowReceive: {
             type: Boolean,
@@ -168,6 +149,23 @@ export default {
         price: {
             type: Number,
             default: 0
+        },
+        // 其它活动id
+        activityId: {
+            type: String,
+            default: ''
+        },
+        // 福利红包活动id
+        redPacketActivityId: {
+            type: String,
+            default: ''
+        },
+        // 福利红包是否在当前页面直接购买，不用跳转到活动详情页面
+        directPay: Boolean,
+        // 领取环境: live 直播间
+        source: {
+            type: String,
+            default: ''
         }
     },
     data () {
@@ -178,7 +176,10 @@ export default {
                 'https://mallcdn.youpenglai.com/static/mall/2.0.0/category-coupon.png',
                 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/red-package-bg.png'
             ],
-            showInstruction: false
+            showInstruction: false,
+            // 是否已领取
+            isClaimed: false,
+            loading: false
         }
     },
     computed: {
@@ -193,39 +194,105 @@ export default {
     },
     methods: {
         async couponClick (e) {
-            // 福利红包
-            if (this.couponType === 3) {
-                await this.$emit('redPackageClick')
-            } else if (this.isAvailableStatus && this.canGoClassify) {
-                // 去使用，进入可使用此优惠券的商品列表中
-                this.$router.push({
+            if (!this.userId) {
+                this.$confirm('请先绑定手机')
+                    .then(() => {
+                        const {
+                            name,
+                            params,
+                            query
+                        } = this.$route
+                        sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
+                            name,
+                            params,
+                            query
+                        }))
+                        this.$router.push({
+                            name: 'BindMobile'
+                        })
+                    })
+                return
+            }
+            if (this.loading) return
+            try {
+                this.loading = true
+                // 福利红包
+                if (this.couponType === 3) {
+                    await this.redpacket()
+                } else {
+                    await this.coupon()
+                }
+            } catch (e) {
+                throw e
+            } finally {
+                this.loading = false
+            }
+        },
+        // 优惠券处理逻辑
+        async coupon () {
+            if (this.status) return
+            if (this.isAvailableStatus) {
+                // 去使用
+                await this.$router.push({
                     name: 'CouponActivity',
                     params: { couponId: this.couponId }
                 })
-            } else {
-                if (!this.userId) {
-                    this.$confirm('请先绑定手机')
-                        .then(() => {
-                            const {
-                                name,
-                                params,
-                                query
-                            } = this.$route
-                            sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({
-                                name,
-                                params,
-                                query
-                            }))
-                            this.$router.push({
-                                name: 'BindMobile'
-                            })
-                        })
-                    return
+            } else if (this.canReceive) {
+                // 去领取
+                if (this.source === 'live') {
+                    await receiveCouponForLive({
+                        couponId: this.couponId,
+                        activityId: this.activityId,
+                        entityClassName: 'MallLiveActivityEntity'
+                    })
+                } else {
+                    await receiveCoupon({ couponId: this.couponId })
                 }
-                if (!this.status) {
-                    await this.$emit('couponClick', e)
-                }
+                this.$success('领取成功，请在我的卡券中查看')
+                this.isClaimed = true
             }
+            this.$emit('couponClick', this.$props)
+        },
+        // 福利红包处理逻辑
+        async redpacket () {
+            if (this.status) return
+            // 0元优惠券，或者标记了可直接下单的，可以直接下单领取，其它情况跳转至活动详情页面领取
+            if ((!this.price || this.directPay) && this.canReceive && !this.isAvailableStatus) {
+                let orderBatchNumber = ''
+                try {
+                    const { result } = await submitOrder({
+                        source: 9,
+                        activityId: this.redPacketActivityId,
+                        skus: [
+                            {
+                                goodsId: this.redPacketActivityId,
+                                goodsType: 'RED_ENVELOPE',
+                                sku1: this.redPacketActivityId,
+                                count: 1
+                            }
+                        ]
+                    })
+                    orderBatchNumber = result
+                    const payData = await requestPayData(orderBatchNumber)
+                    // const { payData, orderBatchNumber } = await submitRedPackageOrder(this.redPacketActivityId, 1)
+                    if (payData.appId) {
+                        await pay(payData)
+                    } else if (!this.price) {
+                        this.$success('领取成功，请在我的卡券中查看')
+                        this.isClaimed = true
+                    } else {
+                        throw new Error('支付失败')
+                    }
+                } catch (e) {
+                    if (orderBatchNumber) cancleOrderListByBatchNumber(orderBatchNumber)
+                    throw e
+                }
+                return
+            }
+            this.$router.push({
+                name: 'RedPackageDetail',
+                params: { activityId: this.redPacketActivityId }
+            })
         }
     }
 }
@@ -354,6 +421,9 @@ export default {
         font-size: 34px;
         color: #fff;
         font-weight: bold;
+        &.over-max {
+            text-align: center;
+        }
     }
     .receive-count {
         position: absolute;

@@ -35,43 +35,19 @@
                                 <CouponItem
                                     slot="suffix"
                                     :class="$style.coupon"
-                                    :id="item.id"
                                     :coupon-id="item.coupon"
                                     :coupon-type="item.couponType"
                                     :name="item.couponName"
+                                    :red-packet-activity-id="item.activityId"
                                     :amount="item.amount"
                                     :full="item.useLimitAmount"
                                     :instruction="item.brief"
                                     :use-start-time="item.useStartTime"
                                     :use-end-time="item.useEndTime"
                                     :is-available-status="true"
-                                    @redPackageClick="redPackageClick(item)"
                                 />
                             </pl-checkbox>
                         </pl-checkbox-group>
-                        <!--<div v-for="item in couponList" :key="item.id"
-                             :class="[$style.couponsViewItem, isManagementState ? $style.checkBox : '']"
-                             @click="selectedChange(item.id)"
-                        >
-                            <div :class="$style.icons" v-show="isManagementState">
-                                <pl-svg v-if="!item.checked" name="icon-weixuanzhong1" width="40" />
-                                <pl-svg v-if="item.checked" name="icon-xuanzhong" width="40" />
-                            </div>
-                            <CouponItem
-                                :class="$style.moveCoupon"
-                                :id="item.id"
-                                :name="item.couponName"
-                                :amount="item.amount"
-                                :full="item.useLimitAmount"
-                                :subtract="item.amount"
-                                :instruction="item.brief"
-                                :use-start-time="item.useStartTime"
-                                :use-end-time="item.useEndTime"
-                                :is-available-status="true"
-                                :coupon-type="item.couponType"
-                                :coupon-id="item.coupon"
-                            />
-                        </div>-->
                     </template>
                 </load-more>
             </div>
@@ -177,14 +153,6 @@ export default {
             } catch (e) {
                 throw e
             }
-        },
-        redPackageClick ({ activityId }) {
-            if (!activityId) return
-
-            this.$router.push({
-                name: 'RedPackageDetail',
-                params: { activityId }
-            })
         }
     }
 }

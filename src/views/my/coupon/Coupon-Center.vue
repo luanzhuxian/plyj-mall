@@ -25,21 +25,19 @@
                         <CouponItem
                             v-for="item in couponList"
                             :key="item.id"
-                            :id="item.id"
+                            :coupon-id="item.id"
                             :coupon-type="Number(item.couponType)"
-                            :price="item.couponType === 3 ? Number(item.priceAmount) : Number(item.price)"
+                            :price="Number(item.price)"
                             :name="item.couponName"
                             :amount="item.amount"
                             :full="item.useLimitAmount"
+                            :red-packet-activity-id="item.activityId"
                             :subtract="item.amount"
                             :instruction="item.brief"
                             :use-start-time="item.useStartTime"
                             :use-end-time="item.useEndTime"
                             :receive-count="item.count"
-                            :is-over-max="!item.canReceive"
-                            :is-claimed="!!item.isClaimed"
-                            @couponClick="couponClick(item)"
-                            @redPackageClick="redPackageClick(item)"
+                            :can-receive="item.canReceive"
                         />
                     </template>
                 </load-more>
@@ -56,7 +54,7 @@
 <script>
 import CouponItem from '../../../components/my/coupon/Coupon-Item.vue'
 import LoadMore from '../../../components/common/Load-More.vue'
-import { getAvailableCouponList, receiveCoupon } from '../../../apis/my-coupon'
+import { getAvailableCouponList } from '../../../apis/my-coupon'
 
 export default {
     name: 'CouponCenter',
@@ -80,40 +78,6 @@ export default {
         if (this.$refs.loadMore) this.$refs.loadMore.refresh()
     },
     methods: {
-        async couponClick (item) {
-            if (this.isCouponLoading) return
-            const { id } = item
-            // TODO.Echo无Id时弹框提示，并打印当前优惠券信息
-            if (!id) {
-                return this.$warning('请刷新页面')
-            }
-            try {
-                this.isCouponLoading = true
-                const { result } = await receiveCoupon({
-                    couponId: id
-                })
-                result.isClaimed = true
-
-                // 只刷新所领取卡券信息
-                const oldCouponIndex = this.couponList.findIndex(item => item.id === id)
-                this.couponList.splice(oldCouponIndex, 1)
-                this.couponList.splice(oldCouponIndex, 0, result)
-                this.$success('领取成功')
-            } catch (e) {
-                throw e
-            } finally {
-                this.isCouponLoading = false
-            }
-        },
-        redPackageClick ({ activityId }) {
-            if (this.isCouponLoading) return
-            if (!activityId) return
-
-            this.$router.push({
-                name: 'RedPackageDetail',
-                params: { activityId }
-            })
-        },
         refreshHandler (list) {
             this.couponList = list
         }

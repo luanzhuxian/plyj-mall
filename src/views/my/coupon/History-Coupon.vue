@@ -28,7 +28,6 @@
                             </span>
                             <CouponItem
                                 :class="$style.moveCoupon"
-                                :id="item.id"
                                 :coupon-type="item.couponType"
                                 :name="item.couponName"
                                 :amount="item.amount"
@@ -37,6 +36,7 @@
                                 :instruction="item.brief"
                                 :use-start-time="item.useStartTime"
                                 :use-end-time="item.useEndTime"
+                                :red-packet-activity-id="item.activityId"
                                 status="已使用"
                             />
                         </div>
@@ -71,7 +71,6 @@
                             </span>
                             <CouponItem
                                 :class="$style.moveCoupon"
-                                :id="item.id"
                                 :name="item.couponName"
                                 :amount="item.amount"
                                 :full="item.useLimitAmount"

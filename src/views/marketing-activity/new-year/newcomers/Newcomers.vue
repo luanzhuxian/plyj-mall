@@ -12,6 +12,8 @@
             <CouponItem
                 v-for="(item, index) in activityInfo.couponModels"
                 :key="index"
+                :coupon-id="item.id"
+                :activity-id="item.activityId"
                 :name="item.couponName"
                 :amount="item.amount"
                 :subtract="item.amount"
