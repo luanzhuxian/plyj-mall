@@ -57,7 +57,7 @@ import Barrage from '../longmen-festival/action/components/Barrage.vue'
 import Coupon from './components/Coupon.vue'
 import Poster from './components/Poster.vue'
 import { getRedPackageList, getRedPackageBarrage } from '../../../apis/marketing-activity/red-package'
-import { getBulletTemplate, isToday } from './utils'
+import { getBulletTemplate, isToday, fenToYuan } from './utils'
 import share from '../../../assets/js/wechat/wechat-share'
 
 const productModel = {
@@ -151,7 +151,12 @@ export default {
 
                 const { result: { records = [] } } = await getRedPackageList(params)
                 // 过滤未隐藏且有库存的福利红包
-                this.redPackageList = records.filter(item => item.showStatus && (item.issueVolume > item.claimVolume))
+                this.redPackageList = records
+                    .filter(item => item.showStatus && (item.issueVolume > item.claimVolume))
+                    .map(item => {
+                        item.price = fenToYuan(item.price)
+                        return item
+                    })
 
                 // 没有可用红包返回上一页
                 if (!this.redPackageList.length) {
