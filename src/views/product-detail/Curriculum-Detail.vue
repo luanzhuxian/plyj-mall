@@ -4,8 +4,8 @@
             <div :class="$style.bannerWrapper">
                 <!-- 海报按钮 -->
                 <div :class="$style.haibao">
-                    <pl-svg :key="1" v-show="creating" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
-                    <pl-svg
+                    <PlSvg :key="1" v-show="creating" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
+                    <PlSvg
                         :key="2"
                         v-show="!creating"
                         name="icon-poster-512b1"
@@ -15,16 +15,16 @@
                     />
                     <p>分享海报</p>
                 </div>
-                <banner :banners="banners" />
+                <Banner :banners="banners" />
 
                 <!-- 弹幕 -->
-                <barrage
+                <Barrage
                     v-if="productActive === 7"
                     :class="$style.barrage"
                     :list="charityMembers"
                 />
                 <!-- 公益棕活动倒计时 -->
-                <charity-countdown-bar
+                <CharityCountdownBar
                     v-if="productActive === 7"
                     :class="$style.countDownBar"
                     :starttime="detail.currentTime"
@@ -34,7 +34,7 @@
                     @done="refresh"
                 />
                 <!-- 倒计时 -->
-                <count-down
+                <CountDown
                     v-else-if="isCountdownShow"
                     :class="[$style.countDownBar, $style.regular]"
                     :endtime="detail.regularSaleTime"
@@ -44,7 +44,7 @@
                 />
             </div>
 
-            <info-box>
+            <InfoBox>
                 <div :class="$style.priceBoxWrapper">
                     <!-- 公益活动进入 -->
                     <div :class="$style.priceBox" v-if="productActive === 7">
@@ -89,7 +89,7 @@
                     </div>
 
                     <!-- 公益棕用户头像 -->
-                    <charity-join v-if="productActive === 7" :data="charityMembers" :donation="detail.donationAmount" />
+                    <CharityJoin v-if="productActive === 7" :data="charityMembers" :donation="detail.donationAmount" />
 
                     <div :class="$style.priceRight" v-else-if="agentUser && detail.rebate">
                         <p class="fz-22 gray-1">
@@ -105,13 +105,13 @@
                 </div>
 
                 <!-- 课程名称 -->
-                <detail-title :product-name="detail.courseName" />
+                <DetailTitle :product-name="detail.courseName" />
                 <!-- 课程描述 -->
-                <detail-desc v-text="detail.courseBrief" />
+                <DetailDesc v-text="detail.courseBrief" />
                 <!-- 课程标签 -->
-                <tags :tags="detail.labelModels" />
+                <Tags :tags="detail.labelModels" />
 
-                <field
+                <Field
                     v-if="detail.lecturer"
                     :class="$style.field"
                     size="small"
@@ -119,24 +119,24 @@
                     label="主讲人："
                     :content="detail.lecturer"
                 />
-                <field
+                <Field
                     :class="$style.field"
                     size="small"
                     icon="icon-date"
                     label="有效期："
                     :content="getExpiration(detail)"
                 />
-            </info-box>
+            </InfoBox>
 
             <!-- 相关课程 -->
-            <slide-courses
+            <SlideCourses
                 v-if="courseType === 1 && relatedCourses.length"
                 :class="$style.slideCourses"
                 :data="relatedCourses"
             />
 
             <!-- 公益棕活动规则 -->
-            <charity-rule
+            <CharityRule
                 :class="$style.rule"
                 v-if="productActive === 7"
                 :detail="detail.activityBrief"
@@ -146,8 +146,8 @@
                 :tabs="[{ label: '课程介绍', value: 1 }, { label: '目录', value: 2, hidden: courseType === 1 }]"
                 v-model="tab"
             >
-                <detail-info v-show="tab === 1" :content="detail.details || '暂无详情'" />
-                <serise-courses
+                <DetailInfo v-show="tab === 1" :content="detail.details || '暂无详情'" />
+                <SeriseCourses
                     v-show="tab === 2"
                     :data="videoList"
                     :course-id="detail.id"
@@ -163,7 +163,7 @@
             </Tabs>
 
             <!-- 订购须知 -->
-            <instructions v-if="detail.payNotice" title="订购须知" :content="detail.payNotice" />
+            <Instructions v-if="detail.payNotice" title="订购须知" :content="detail.payNotice" />
 
             <!-- 底部购买 -->
             <div :class="$style.bottom" v-if="!~[5, 6].indexOf(productActive)">
@@ -241,7 +241,7 @@
                 该视频课程已下架
             </div>
 
-            <contact :show.sync="showContact" />
+            <Contact :show.sync="showContact" />
 
             <!-- 试看视频 -->
             <VideoPlayer
@@ -255,17 +255,17 @@
             />
 
             <!-- 海报弹框 -->
-            <pl-mask :show.sync="showHaibao">
+            <PlMask :show.sync="showHaibao">
                 <div :class="$style.saveHaibaoContent">
                     <img v-imgError :src="haibao" alt="">
                     <div :class="$style.saveButton">
                         长按识别或保存二维码，分享给朋友吧！
                     </div>
                 </div>
-            </pl-mask>
+            </PlMask>
 
             <!-- 公益棕海报 -->
-            <charity-poster
+            <CharityPoster
                 v-if="productActive === 7"
                 ref="charityPoster"
                 :data="detail"
@@ -277,7 +277,7 @@
         </template>
 
         <!-- 骨架屏 -->
-        <skeleton v-else />
+        <Skeleton v-else />
     </div>
 </template>
 

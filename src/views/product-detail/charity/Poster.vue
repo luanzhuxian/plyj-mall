@@ -1,9 +1,9 @@
 <template>
-    <pl-mask :show.sync="isShow">
+    <PlMask :show.sync="isShow">
         <div :class="$style.content">
             <img :src="poster" alt="">
         </div>
-    </pl-mask>
+    </PlMask>
 </template>
 
 <script>

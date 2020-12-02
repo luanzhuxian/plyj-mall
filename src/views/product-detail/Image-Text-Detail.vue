@@ -5,14 +5,14 @@
             <div :class="$style.bannerWrapper">
                 <!-- 海报按钮 -->
                 <div :class="$style.haibao">
-                    <pl-svg :key="1" v-show="creating" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
-                    <pl-svg :key="2" v-show="!creating" name="icon-poster-512b1" fill="#fff" width="35" @click="createPoster" />
+                    <PlSvg :key="1" v-show="creating" name="icon-btn-loading" width="35" fill="#fff" class="rotate" />
+                    <PlSvg :key="2" v-show="!creating" name="icon-poster-512b1" fill="#fff" width="35" @click="createPoster" />
                     <p>分享海报</p>
                 </div>
-                <banner :banners="banners" />
+                <Banner :banners="banners" />
 
                 <!-- 倒计时 -->
-                <count-down
+                <CountDown
                     v-if="isCountdownShow"
                     :class="[$style.countDownBar, $style.regular]"
                     :endtime="detail.regularSaleTime"
@@ -22,7 +22,7 @@
                 />
             </div>
 
-            <info-box>
+            <InfoBox>
                 <div :class="$style.priceBoxWrapper">
                     <div :class="$style.priceBox">
                         <template v-if="detail.isGive">
@@ -52,11 +52,11 @@
                 </div>
 
                 <!-- 名称 -->
-                <detail-title :product-name="detail.graphicName" />
+                <DetailTitle :product-name="detail.graphicName" />
                 <!-- 描述 -->
-                <detail-desc v-text="detail.graphicBrief" />
+                <DetailDesc v-text="detail.graphicBrief" />
 
-                <field
+                <Field
                     v-if="detail.author"
                     :class="$style.field"
                     size="small"
@@ -64,16 +64,16 @@
                     label="作者："
                     :content="detail.author"
                 />
-            </info-box>
+            </InfoBox>
 
             <!-- 课程详情 -->
             <div :class="$style.detailOrComment">
                 <Tabs :tabs="tabs" v-model="tab">
-                    <detail-info
+                    <DetailInfo
                         v-show="tab === 1"
                         :content="detail.details || '暂无详情'"
                     />
-                    <image-text-list
+                    <ImageTextList
                         v-show="tab === 2"
                         :data="detail.graphicPdfs || []"
                         :is-bought="isBought"
@@ -137,24 +137,24 @@
                 该图文资料已下架
             </div>
 
-            <contact :show.sync="showContact" />
+            <Contact :show.sync="showContact" />
 
             <!-- 海报弹框 -->
-            <pl-mask :show.sync="showHaibao">
+            <PlMask :show.sync="showHaibao">
                 <div :class="$style.saveHaibaoContent">
                     <img v-imgError :src="haibao" alt="">
                     <div :class="$style.saveButton">
                         长按识别或保存二维码，分享给朋友吧！
                     </div>
                 </div>
-            </pl-mask>
+            </PlMask>
 
             <!-- pdf预览 -->
-            <pdf-previewer :show.sync="isPreviewerShow" :url="pdfUrl" />
+            <PdfPreviewer :show.sync="isPreviewerShow" :url="pdfUrl" />
         </template>
 
         <!-- 骨架屏 -->
-        <skeleton v-else />
+        <Skeleton v-else />
     </div>
 </template>
 
