@@ -86,7 +86,7 @@
                                 <span>购买数量</span>
                                 <!-- 只有 进行中 + 秒杀活动 + 活动购买/从规格页面 按照活动限购显示，其他都按照普通商品的限购显示 -->
                                 <span
-                                    v-if="activeType === 3 && activityProductModel && activityProductModel.activityLimit === 1"
+                                    v-if="(activeType === 3 || (activeType === 4 && currentSku.activityProduct)) && activityProductModel && activityProductModel.activityLimit === 1"
                                     class="fz-20 ml-10"
                                     style="color: #B8B8B8; font-weight: normal;"
                                 >
