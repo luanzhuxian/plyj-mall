@@ -15,7 +15,7 @@ export const getDuration = (status, receiveStartTime, receiveEndTime) => {
 // 获取福利红包弹幕模板
 export const getBulletTemplate = (bullet, vm) => {
     const { userImage, userName, mobile, time, msg } = bullet
-    const message = `${ userName.slice(0, 1) }** ${ String(mobile).slice(0, 3) }****${ String(mobile).slice(-4) } ${ time }领取${ msg }的储备金`
+    const message = `${ userName.slice(0, 1) }** ${ String(mobile).slice(0, 3) }****${ String(mobile).slice(-4) } ${ time }领取${ msg }的福利红包`
     const template = `
         <div class="my-bullet">
             <div class="my-bullet__avatar">
