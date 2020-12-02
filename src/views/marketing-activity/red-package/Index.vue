@@ -212,7 +212,6 @@ export default {
                 const { result } = await getRedPackageBarrage()
                 if (result.length) {
                     for (const item of result) {
-                        item.phone = String(item.mobile).slice(-4)
                         item.time = isToday(item.createTime) ? '刚刚' : ''
                         item.msg = item.message ? item.message.replace(/\.\d+0+/g, '') : ''
                     }

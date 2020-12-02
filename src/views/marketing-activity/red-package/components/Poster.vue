@@ -84,11 +84,9 @@ export default {
         }
     },
     beforeDestroy () {
-        console.log(1)
         this.poster = ''
     },
     deactivated () {
-        console.log(2)
         this.poster = ''
     },
     methods: {
