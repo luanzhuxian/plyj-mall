@@ -16,7 +16,6 @@
                 :confirm-list="CONFIRM_LIST"
                 :pre-activity="preActivity"
                 :active-product="activeProduct"
-                :exchange-code="exchangeCodeInfo"
                 :is-cart="isCart"
                 @exchangeCodeChange="exchangeCodeChange"
                 @studentInited="studentInited"
@@ -62,14 +61,12 @@
             </div>
 
             <!--知识课程暂时不支持使用优惠券-->
-            <!-- v-if="couponList.length > 0 && activeProduct === 1 && goodsAmount > 0 && !hasKnowlegeCourse && !exchangeCodeInfo.id" -->
             <Coupon
                 v-if="goodsAmount > 0 && activeProduct === 1 && !hasKnowlegeCourse"
                 :active-product="activeProduct"
                 :pre-activity="preActivity"
                 :coupon.sync="currentCoupon"
                 :products="CONFIRM_LIST"
-                :exchange-code-info="exchangeCodeInfo"
                 :server-time="serverTime"
                 @change="couponChange"
                 :address-id="selectedAddress.sequenceNbr"
@@ -82,7 +79,6 @@
                 :freight="freight"
                 :products="CONFIRM_LIST"
                 :current-red-envelope.sync="currentRedEnvelope"
-                :exchange-code-info="exchangeCodeInfo"
                 :server-time="serverTime"
                 :current-coupon="currentCoupon"
                 @change="scholarshipChange"
@@ -210,7 +206,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['selectedAddress', 'openId', 'mobile', 'addressList', 'realName', 'userName', 'shareId', 'orderTypeKeyMap', 'skuSourceKeyMap', 'submitOrder/orderProducts', 'submitOrder/exchangeCodeInfo', 'submitOrder/checkedStudents']),
+        ...mapGetters(['selectedAddress', 'openId', 'mobile', 'addressList', 'realName', 'userName', 'shareId', 'orderTypeKeyMap', 'skuSourceKeyMap', 'submitOrder/orderProducts', 'submitOrder/checkedStudents']),
         // 是否从购物车进入的确认订单页面
         isCart () {
             return !!this.$route.query.isCart
@@ -279,8 +275,6 @@ export default {
                 this.serverTime = serverTime
                 // 要购买的商品列表
                 await this.initProductInfo()
-                // 兑换码
-                await this.initRedeemCode()
                 // 初始化优惠信息
                 await this.initDiscountModel()
                 // 设置默认学员
@@ -402,18 +396,6 @@ export default {
             }
         },
 
-        /**
-         * 初始化默认兑换码信息
-         *  */
-        async initRedeemCode () {
-            try {
-                const exchangeCodeInfo = this['submitOrder/exchangeCodeInfo']
-                this.exchangeCodeInfo = exchangeCodeInfo
-            } catch (e) {
-                throw e
-            }
-        },
-
         // 设置默认选中的学生， 若没有当前规格的商品，根据个数取默认的学员数据
         async setDefaultChecked () {
             try {
@@ -446,7 +428,7 @@ export default {
             this.form.cartCouponModel = coupon && coupon.id ? { userCouponId: coupon.id } : null
             this.form.welfareRedPackage = redPacket && redPacket.id ? { userCouponId: redPacket.id } : null
             // 选中时情况兑换码
-            if (coupon || redPacket) this.exchangeCodeInfo = null
+            // if (coupon || redPacket) this.exchangeCodeInfo = null
             await this.$nextTick()
             await this.getProductDetail()
         },
@@ -454,7 +436,7 @@ export default {
         async scholarshipChange (scholarship) {
             this.form.scholarshipModel = scholarship ? { scholarshipId: scholarship.id } : null
             // 选中时情况兑换码
-            if (scholarship) this.exchangeCodeInfo = null
+            // if (scholarship) this.exchangeCodeInfo = null
             await this.getProductDetail()
         },
         // 修改兑换码

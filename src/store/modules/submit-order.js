@@ -156,16 +156,16 @@ export const submitOrder = {
         },
 
         /**
-       * 设置提交订单默认的兑换码信息
-       * @param state
-       * @param {Object} params - 兑换码信息
-       * @param {Object} params.productId - 商品id
-       * @param {Object} params.id - 兑换码id
-       * @param {Object} params.exchangeCode - 兑换码code
-       * @param {Object} params.startTime - 兑换码使用开始时间
-       * @param {Object} params.endTime - 兑换码使用结束时间
-       * @param {Object} params.name - 兑换码活动名称
-       */
+         * 设置提交订单默认的兑换码信息
+         * @param state
+         * @param {Object} params - 兑换码信息
+         * @param {Object} params.productId - 商品id
+         * @param {Object} params.id - 兑换码id
+         * @param {Object} params.exchangeCode - 兑换码code
+         * @param {Object} params.startTime - 兑换码使用开始时间
+         * @param {Object} params.endTime - 兑换码使用结束时间
+         * @param {Object} params.name - 兑换码活动名称
+         */
         setCurExchangeCode (state, params) {
             const exchangeCodeInfo = JSON.stringify(params) || {}
             sessionStorage.setItem('EXCHANGE_CODE_MODEL', exchangeCodeInfo)
@@ -173,7 +173,7 @@ export const submitOrder = {
         },
         removeCurExchangeCode: state => {
             sessionStorage.removeItem('EXCHANGE_CODE_MODEL')
-            state.exchangeCodeInfo = {}
+            state.exchangeCodeInfo = null
         }
     },
     getters: {

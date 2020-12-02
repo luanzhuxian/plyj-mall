@@ -15,11 +15,11 @@ export default {
     },
 
     /**
-   * 给字符串添加分隔符
-   * @param separator
-   * @num 多少位字符设一个分隔符
-   * @returns {*}
-   */
+       * 给字符串添加分隔符
+       * @param separator
+       * @num 多少位字符设一个分隔符
+       * @returns {*}
+       */
     separator (val, separator, num) {
         const strArr = []
         let index = 1

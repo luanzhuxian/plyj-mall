@@ -88,11 +88,11 @@
                         <span slot="content">{{ item.discount / 10 }}折 -¥{{ ((item.sellingPrice - item.amount) / 100).toFixed(2) }}</span>
                     </InfoItem>-->
                     <!--TODO.当前仅支持单个商品时使用兑换码-->
-                    <InfoItem v-if="activeProduct === 1 && products.length === 1 && (exchangeCodeList[item.goodsId] && exchangeCodeList[item.goodsId].length || exchangeCode)">
+                    <InfoItem v-if="activeProduct === 1 && products.length === 1 && (exchangeCodeList[item.goodsId] && exchangeCodeList[item.goodsId].length)">
                         <ExchangeCode
                             slot="footer"
-                            :exchange-code="exchangeCode"
                             :exchange-code-list="exchangeCodeList[item.goodsId]"
+                            :product-id="item.goodsId"
                             @change="chooseExchangeCode"
                         />
                     </InfoItem>
@@ -183,13 +183,6 @@ export default {
         isCart: {
             type: Boolean
         },
-        // 当前选定的兑换码信息
-        exchangeCode: {
-            type: Object,
-            default () {
-                return null
-            }
-        },
         preActivity: {
             type: [Number, String],
             default: ''
@@ -210,10 +203,10 @@ export default {
         })
     },
     async mounted () {
-        await this.getList()
+        await this.getExchangeCodeList()
     },
     methods: {
-        async getList () {
+        async getExchangeCodeList () {
             const { result: exchangeCodeMap } = await getExchangeCodeMap(this.confirmList.map(item => item.productId))
             for (const productId in exchangeCodeMap) {
                 for (const code of exchangeCodeMap[productId]) {

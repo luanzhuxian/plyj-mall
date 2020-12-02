@@ -95,7 +95,7 @@ export default {
         exchangeCodeInfo: {
             type: Object,
             default () {
-                return {}
+                return null
             }
         },
         serverTime: {

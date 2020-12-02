@@ -2,13 +2,13 @@
     <div>
         <div
             :class="$style.itemSelector"
-            @click.capture="exchangeCode ? '' : showExchangeCode = true"
+            @click.capture="showExchangeCode = true"
         >
             <span :class="$style.label">兑换码</span>
             <span :class="$style.content">
-                {{ !exchangeCode ? '不使用兑换码' : localSeparator(exchangeCode.exchangeCode, ' ', 4) }}
+                {{ !codeInfo ? '不使用兑换码' : localSeparator(codeInfo.exchangeCode, ' ', 4) }}
                 <!--有默认兑换码信息时，不支持选择其他兑换码-->
-                <pl-svg v-if="!exchangeCode" name="icon-right" fill="#ccc" height="24" />
+                <pl-svg v-if="!codeInfo" name="icon-right" fill="#ccc" height="24" />
             </span>
         </div>
         <pl-popup
@@ -18,30 +18,30 @@
         >
             <div :class="$style.exchangeCode">
                 <p class="fz-28 gray-3">使用兑换码，免费学习</p>
-                <div :class="$style.exchangeCodeList">
-                    <template v-for="(item, i) of exchangeCodeList">
-                        <div :key="i" :class="$style.exchangeCodeItem" @click="exchangeCodeClick(item)">
+                <pl-radio-group :class="$style.exchangeCodeList" v-model="code">
+                    <pl-radio
+                        v-for="(item, i) of exchangeCodeList"
+                        :label="item.id"
+                        :key="i"
+                        position="right"
+                    >
+                        <div :class="$style.exchangeCodeItem">
                             <div :class="$style.info">
                                 <span :class="$style.name">{{ item.name }}</span>
                                 <span :class="$style.timeDesc">{{ item.timeDesc }}</span>
                                 <!--兑换码列表是按照结束时间排序的，推荐第一个时间最早的兑换码-->
                                 <span v-if="!i" :class="$style.recommend">推荐</span>
-                                <span :class="$style.choices">
-                                    <pl-svg v-if="item.id === exchangeCode.id" name="icon-xuanzhong" width="40" />
-                                    <pl-svg v-else name="icon-weixuanzhong1" width="40" />
-                                </span>
                             </div>
                             <div :class="$style.code">兑换码{{ item.exchangeCode | separator(' ', 4) }}</div>
                         </div>
-                    </template>
-                    <div :class="[$style.exchangeCodeItem, $style.notChoose]" @click="exchangeCodeClick({})">
+                    </pl-radio>
+                    <pl-radio
+                        :label="''"
+                        :key="100"
+                    >
                         <span :class="$style.notChooseExchangeCode">不使用兑换码</span>
-                        <span :class="$style.choices">
-                            <pl-svg v-if="!exchangeCode.id" name="icon-xuanzhong" width="40" />
-                            <pl-svg v-else name="icon-weixuanzhong1" width="40" />
-                        </span>
-                    </div>
-                </div>
+                    </pl-radio>
+                </pl-radio-group>
             </div>
         </pl-popup>
     </div>
@@ -49,22 +49,18 @@
 
 <script>
 import filter from '../../filter'
+import { mapGetters } from 'vuex'
 export default {
     name: 'SubmitOrderExchangeCode',
     data () {
         return {
             showExchangeCode: false,
-            localSeparator: filter.separator
+            localSeparator: filter.separator,
+            code: '',
+            codeInfo: null
         }
     },
     props: {
-        // 当前选择的兑换码
-        exchangeCode: {
-            type: Object,
-            default () {
-                return null
-            }
-        },
         // 兑换码列表
         exchangeCodeList: {
             type: Array,
@@ -77,13 +73,33 @@ export default {
             default () {
                 return []
             }
+        },
+        productId: {
+            type: String,
+            default: ''
         }
     },
-    methods: {
-        // 选择兑换码, 选择完成后，重新计算价格
-        async exchangeCodeClick (item) {
-            this.$emit('change', item)
-            this.showExchangeCode = false
+    watch: {
+        code (val) {
+            const codeInfo = this.exchangeCodeList.find(item => item.id === val) || null
+            this.$emit('change', codeInfo)
+            this.codeInfo = codeInfo
+            this.$store.commit('submitOrder/setCurExchangeCode', codeInfo ? {
+                productId: this.productId,
+                id: codeInfo.id,
+                exchangeCode: codeInfo.exchangeCode,
+                startTime: codeInfo.startTime,
+                endTime: codeInfo.endTime,
+                name: codeInfo.name
+            } : null)
+        }
+    },
+    computed: {
+        ...mapGetters('submitOrder', ['exchangeCodeInfo'])
+    },
+    mounted () {
+        if (this.exchangeCodeInfo) {
+            this.code = this.exchangeCodeInfo.id || ''
         }
     }
 }
@@ -104,7 +120,7 @@ export default {
   .exchangeCode {
     padding: 0 24px;
     > .exchangeCode-list {
-      margin-top: 48px;
+      margin-top: 24px;
       padding-bottom: 40px;
 
       .exchangeCode-item {
@@ -133,7 +149,6 @@ export default {
         }
         .code {
           margin-top: 12px;
-          margin-bottom: 54px;
           font-size:26px;
           line-height:34px;
           color:#373737;
