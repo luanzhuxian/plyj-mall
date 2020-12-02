@@ -125,7 +125,7 @@ import AddressItem from '../../components/item/Address-Item.vue'
 import {
     confirmOrder,
     submitOrder,
-    getOrderPayData,
+    // getOrderPayData,
     cancleOrderListByBatchNumber
 } from '../../apis/order-manager'
 import { getList } from '../../apis/student'
@@ -138,8 +138,8 @@ import Coupon from '../../components/submit-order/Coupon.vue'
 import Scholarship from '../../components/submit-order/Scholarship.vue'
 import Invoice from '../../components/submit-order/Invoice.vue'
 import ContactInfo from '../../components/submit-order/Contact-Info.vue'
-import { setTimeoutSync } from '../../assets/js/util'
-import wechatPay from '../../assets/js/wechat/wechat-pay'
+import { requestPayData, pay } from '../../assets/js/wechat/submit-order'
+
 export default {
     name: 'SubmitOrder',
     components: {
@@ -518,37 +518,12 @@ export default {
                 const form = JSON.parse(JSON.stringify(this.form))
                 this.checkInvoiceSelected(form)
                 const { result: orderBatchNumber } = await submitOrder(form)
-                await this.requestPayData(orderBatchNumber)
+                const payData = await requestPayData(orderBatchNumber)
+                await this.pay(payData, payData.orderIds, payData.orderIds.length, orderBatchNumber)
             } catch (e) {
                 throw e
             } finally {
                 this.submiting = false
-            }
-        },
-        async requestPayData (orderBatchNumber) {
-            try {
-                // 每500ms请求一次支付数据，如果请求次数超过20次，就终止请求
-                // 下次请求的开始时间 =  500ms + 当前请求时间
-                if (this.requestPayDataCount >= 20) {
-                    this.requestPayDataCount = 0
-                    this.submiting = false
-                    throw new Error('支付失败')
-                }
-                await setTimeoutSync(500)
-                // 如果没有拿到请求数据，再次尝试发起请求
-                // 如果有，则发起支付
-                const { result: payData } = await getOrderPayData(orderBatchNumber)
-                if (!payData) {
-                    this.requestPayDataCount++
-                    await this.requestPayData(orderBatchNumber)
-                } else {
-                    await this.pay(payData, payData.orderIds, payData.orderIds.length, orderBatchNumber)
-                }
-            } catch (e) {
-                this.requestPayDataCount = 0
-                await this.handlepayError(orderBatchNumber)
-                await this.$router.replace({ name: 'Orders', params: { status: 'ALL_ORDER' } })
-                throw e
             }
         },
         // 处理支付失败的场景
@@ -579,7 +554,7 @@ export default {
             const orderType = this.products.some(item => FORMALS.includes(item.goodsType))
             try {
                 if (CREDENTIAL.appId) {
-                    await wechatPay(CREDENTIAL)
+                    await pay(CREDENTIAL)
                     this.submiting = false
                     this.$router.replace({ name: 'PaySuccess', params: { orderId: firstOrder, orderCount }, query: { orderType } })
                 } else if (this.totalAmount === 0) {
