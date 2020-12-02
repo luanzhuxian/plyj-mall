@@ -183,6 +183,11 @@
                     <span>优惠券</span>
                     <span>-¥{{ goodsModel.couponeAmount | formatAmount }}</span>
                 </p>
+                <!--福利红包-->
+                <p v-if="detail.welfareRedEnvelope">
+                    <span>福利红包</span>
+                    <span>-¥{{ detail.welfareRedEnvelope | formatAmount }}</span>
+                </p>
                 <!--奖学金-->
                 <p v-if="detail.scholarship">
                     <span>奖学金（红包）</span>
