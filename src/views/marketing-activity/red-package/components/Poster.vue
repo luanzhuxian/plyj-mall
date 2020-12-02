@@ -11,6 +11,7 @@ import {
     loadImage,
     drawRoundRect,
     createText,
+    cutArcImage,
     generateQrcode
 } from '../../../../assets/js/util'
 
@@ -83,9 +84,11 @@ export default {
         }
     },
     beforeDestroy () {
+        console.log(1)
         this.poster = ''
     },
     deactivated () {
+        console.log(2)
         this.poster = ''
     },
     methods: {
@@ -178,7 +181,12 @@ export default {
                     CTX.closePath()
                     CTX.fill()
                     const LOGO = await loadImage(logoUrl)
-                    CTX.drawImage(LOGO, 16, 12, 50, 50)
+                    CTX.drawImage(cutArcImage(LOGO), 8, 6, 66, 66)
+                    // CTX.save()
+                    // CTX.arc(41, 39, 33, 0, 2 * Math.PI)
+                    // CTX.clip()
+                    // CTX.drawImage(LOGO, 0, 0, 66, 66)
+                    // CTX.restore()
                 }
 
                 // 内容

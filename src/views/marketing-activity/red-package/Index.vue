@@ -127,22 +127,18 @@ export default {
                 case 0:
                     list = [productModel, productModel, productModel]
                     break
-
                 case 1:
                     list = [productModel, list[0], productModel]
                     break
-
                 case 2:
                     list = [list[0], list[1], productModel, productModel, productModel]
                     break
-
                 case 3:
                     list = [list[0], list[1], list[2], productModel, productModel]
                     break
                 case 4:
                     list = [...list, productModel]
                     break
-
                 default:
                     break
             }
