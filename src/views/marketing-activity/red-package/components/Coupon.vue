@@ -27,10 +27,13 @@
             <div :class="$style.top">
                 <div :class="$style.topLeft">
                     <b :class="$style.main">
-                        {{ `满${useLimitAmount}可抵${amount}` }}
+                        {{ price ? `${price}可抵${amount}` : `可免费抵${amount}` }}
                     </b>
                     <p :class="$style.sub">
                         {{ name }}
+                    </p>
+                    <p :class="$style.sub">
+                        {{ `指定商品满${useLimitAmount}元可用` }}
                     </p>
                 </div>
                 <template v-if="showBtn">
@@ -246,7 +249,7 @@ export default {
     @include elps();
 }
 .sub {
-    margin-top: 8px;
+    margin-top: 6px;
     @include elps();
 }
 .bottom {
