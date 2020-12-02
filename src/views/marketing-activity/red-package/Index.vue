@@ -87,8 +87,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['userName', 'mobile', 'appId', 'mallUrl'])
-    },
+        ...mapGetters(['userName', 'mobile', 'appId', 'mallUrl', 'isActivityAuth'
     async activated () {
         try {
             const request = [
@@ -169,7 +168,7 @@ export default {
                 if (!this.redPackageList.length) {
                     this.$alert('很遗憾，该活动已结束，请查看更多活动')
                         .finally(() => {
-                            this.$router.go(-1)
+                            this.$router.push({ name: this.isActivityAuth ? 'Activity' : 'Home' })
                         })
                     return false
                 }
