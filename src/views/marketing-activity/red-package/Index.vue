@@ -123,16 +123,28 @@ export default {
         },
         // 重新组装商品列表，填充占位图
         rebuid (list) {
-            if (list.length === 0) {
-                list = [productModel, productModel, productModel]
-            } else if (list.length === 1) {
-                list = [productModel, list[0], productModel]
-            } else if (list.length === 2) {
-                list = [productModel, list[0], productModel, list[1], productModel]
-            } else if (list.length === 3) {
-                list = [list[0], productModel, list[1], productModel, list[2]]
-            } else if (list.length === 4) {
-                list = [...list, productModel]
+            switch (list.length) {
+                case 0:
+                    list = [productModel, productModel, productModel]
+                    break
+
+                case 1:
+                    list = [productModel, list[0], productModel]
+                    break
+
+                case 2:
+                    list = [list[0], list[1], productModel, productModel, productModel]
+                    break
+
+                case 3:
+                    list = [list[0], list[1], list[2], productModel, productModel]
+                    break
+                case 4:
+                    list = [...list, productModel]
+                    break
+
+                default:
+                    break
             }
             return list
         },
