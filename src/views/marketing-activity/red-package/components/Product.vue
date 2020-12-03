@@ -10,6 +10,7 @@
         <div :class="$style.wrapper">
             <div :class="$style.left">
                 <img :src="img" :alt="main">
+                <div v-if="amount" :class="$style.amount">{{ `最高可抵${amount}元` }}</div>
             </div>
             <div :class="$style.right">
                 <b :class="$style.main" v-text="main" />
@@ -60,6 +61,10 @@ export default {
         sku2: {
             type: String,
             default: ''
+        },
+        amount: {
+            type: Number,
+            default: 0
         }
     }
 }
@@ -82,6 +87,7 @@ export default {
     align-items: center;
 }
 .left {
+    position: relative;
     width: 314px;
     height: 206px;
     border-radius: 16px;
@@ -90,6 +96,18 @@ export default {
         width: 100%;
         height: 100%;
         object-fit: cover;
+    }
+    .amount {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #FE7700;
+        text-align: center;
+        line-height: 46px;
+        font-size: 24px;
+        font-family: MicrosoftYaHei;
+        color: #FFFFFF;
     }
 }
 .right {

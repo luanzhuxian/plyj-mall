@@ -141,6 +141,7 @@
                                 :original="Number(prod.originPrice)"
                                 :sku1="prod.skuCode1Name"
                                 :sku2="prod.skuCode2Name"
+                                :amount="Number(redPackage.amount)"
                             />
                         </ul>
                     </section>
