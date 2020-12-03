@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { inputLivePassword } from './../../../apis/live'
+import { inputLivePassword } from '../../../apis/live'
 export default {
     name: 'LivePassword',
     props: {

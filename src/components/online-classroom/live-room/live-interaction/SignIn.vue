@@ -116,6 +116,6 @@ export default {
 
 <style lang='scss' module>
 
-@import './common.scss';
+@import 'common';
 
 </style>

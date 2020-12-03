@@ -39,10 +39,10 @@
 </template>
 
 <script>
-import { isPhone, checkLength } from './../../../assets/js/validate'
-import { liveSignUp } from './../../../apis/live'
-import Popup from './../../../components/penglai-ui/Popup'
-import CitySelector from './../../../components/common/City-Selector'
+import { isPhone, checkLength } from '../../../assets/js/validate'
+import { liveSignUp } from '../../../apis/live'
+import Popup from '../../penglai-ui/Popup'
+import CitySelector from '../../common/City-Selector'
 // 验证是否中英文数字，中间可以有空格
 const signValidator = value => {
     const reg = /^[a-zA-Z_\u4e00-\u9fa5_0-9_\s_\\-]{1,60}$/

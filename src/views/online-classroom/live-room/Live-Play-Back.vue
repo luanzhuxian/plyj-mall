@@ -49,19 +49,19 @@ import {
     // 是否有权限观看
     hasPermission,
     hasPied
-} from '../../apis/live.js'
+} from '../../../apis/live.js'
 import {
     submitOrder,
     getOrderPayData,
     cancleOrderListByBatchNumber
-} from '../../apis/order-manager'
-import { setTimeoutSync } from '../../assets/js/util'
-import { getLivePlayBackInfo } from './../../apis/live-library'
-import wechatPay from '../../assets/js/wechat/wechat-pay'
-import PaidPlayer from '../../components/common/Paid-Player.vue'
-import LivePassword from './components/Live-Password'
-import LiveSignUp from './components/Live-Sign-Up'
-import LiveGoods from './components/Live-goods'
+} from '../../../apis/order-manager'
+import { setTimeoutSync } from '../../../assets/js/util'
+import { getLivePlayBackInfo } from '../../../apis/live-library'
+import wechatPay from '../../../assets/js/wechat/wechat-pay'
+import PaidPlayer from '../../../components/common/Paid-Player.vue'
+import LivePassword from '../../../components/online-classroom/live-room/Live-Password'
+import LiveSignUp from '../../../components/online-classroom/live-room/Live-Sign-Up'
+import LiveGoods from '../../../components/online-classroom/live-room/Live-goods'
 import { mapGetters } from 'vuex'
 export default {
     name: 'LivePlayBack',

@@ -87,7 +87,7 @@ import { getCourse } from '../../apis/online-classroom.js'
 import LoadMore from '../../components/common/Load-More.vue'
 import CountDown from '../../components/product-detail/Courses-Count-Down.vue'
 import moment from 'moment'
-import CategorySelector from './components/Category-Selector.vue'
+import CategorySelector from '../../components/online-classroom/Category-Selector.vue'
 
 export default {
     name: 'SeriesOfCourses',

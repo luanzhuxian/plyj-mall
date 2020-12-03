@@ -49,7 +49,7 @@
 
 <script>
 import moment from 'moment'
-import { isRange } from './../../../../apis/live-library'
+import { isRange } from '../../../../apis/live-library'
 export default {
     name: 'StudyItem',
     props: {

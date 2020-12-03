@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import CheckGroup from './components/Check-Group'
+import CheckGroup from './Check-Group'
 
 export default {
     name: 'Answer',
@@ -197,7 +197,7 @@ export default {
 
 <style lang='scss' module>
 
-@import './common.scss';
+@import 'common';
 
 .answer {
     //

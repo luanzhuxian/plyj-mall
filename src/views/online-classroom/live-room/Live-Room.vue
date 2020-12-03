@@ -260,15 +260,15 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import CouponItem from '../../components/my/coupon/Coupon-Item.vue'
-import PaidPlayer from '../../components/common/Paid-Player.vue'
-import share from '../../assets/js/wechat/wechat-share'
+import CouponItem from '../../../components/my/coupon/Coupon-Item.vue'
+import PaidPlayer from '../../../components/common/Paid-Player.vue'
+import share from '../../../assets/js/wechat/wechat-share'
 // 直播口令输入
-import LivePassword from './components/Live-Password'
-import LiveMask from './components/Live-Mask'
-import LiveSignUp from './components/Live-Sign-Up'
-import LiveGoods from './components/Live-goods'
-import LiveInteract from './components/Live-Interact/Index'
+import LivePassword from '../../../components/online-classroom/live-room/Live-Password'
+import LiveMask from '../../../components/online-classroom/live-room/Live-Mask'
+import LiveSignUp from '../../../components/online-classroom/live-room/Live-Sign-Up'
+import LiveGoods from '../../../components/online-classroom/live-room/Live-goods'
+import LiveInteract from '../../../components/online-classroom/live-room/live-interaction/Index'
 import {
     getRoomStatus,
     getActiveCompleteInfo,
@@ -280,12 +280,12 @@ import {
     sign,
     // 是否有权限观看
     hasPermission
-} from '../../apis/live'
+} from '../../../apis/live'
 import {
     submitOrder,
     getOrderPayData,
     cancleOrderListByBatchNumber
-} from '../../apis/order-manager'
+} from '../../../apis/order-manager'
 import io from 'socket.io-client'
 import moment from 'moment'
 import {
@@ -295,8 +295,8 @@ import {
     createText,
     setTimeoutSync
     // throttle
-} from '../../assets/js/util'
-import wechatPay from '../../assets/js/wechat/wechat-pay'
+} from '../../../assets/js/util'
+import wechatPay from '../../../assets/js/wechat/wechat-pay'
 
 const POSTER_BG = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/live/live-poster.png'
 const PolyvLiveSdk = window.PolyvLiveSdk

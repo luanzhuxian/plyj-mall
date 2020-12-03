@@ -38,7 +38,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { getQuestionList } from './../../../../apis/live'
+import { getQuestionList } from '../../../../apis/live'
 export default {
     name: 'Questions',
     inheritAttrs: false,
@@ -149,7 +149,7 @@ export default {
 
 <style lang='scss' module>
 
-@import './common.scss';
+@import 'common';
 
 .questions {
     > .chat {
