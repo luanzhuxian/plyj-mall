@@ -180,7 +180,7 @@ import Product from './components/Product.vue'
 import Poster from './components/Poster.vue'
 import { checkLength, isPhone } from '../../../assets/js/validate'
 import { getRedPackage, getRedPackageBarrage } from '../../../apis/marketing-activity/red-package'
-import { submitRedPackageOrder, pay } from './pay'
+import { submitRedPackageOrder } from './pay'
 import {
     getDuration,
     getBulletTemplate,
@@ -371,12 +371,9 @@ export default {
                 }
 
                 this.submiting = true
-                const { payData, orderBatchNumber } = await submitRedPackageOrder(this.activityId, this.form.count)
-                const result = await pay(payData, payData.orderIds, payData.orderIds.length, orderBatchNumber, this.totalPrice)
-                if (result === true) {
-                    this.activity.userClaimed++
-                    await this.showModel('success')
-                }
+                await submitRedPackageOrder(this.activityId, this.form.count)
+                this.activity.userClaimed++
+                await this.showModel('success')
             } catch (error) {
                 throw error
             } finally {

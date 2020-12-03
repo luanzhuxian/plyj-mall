@@ -1,15 +1,9 @@
 // 福利红包下单
-
 import {
     submitOrder,
-    getOrderPayData,
     cancleOrderListByBatchNumber
 } from '../../../apis/order-manager'
-import { setTimeoutSync } from '../../../assets/js/util'
-import wechatPay from '../../../assets/js/wechat/wechat-pay'
-
-// 获取微信支付数据递归次数
-let requestPayDataCount = 0
+import { requestPayData, pay } from '../../../assets/js/wechat/submit-order'
 
 /**
  * 处理支付失败的场景
@@ -34,60 +28,23 @@ const handlepayError = async function (orderBatchNumber) {
  * @param {number} totalAmount 总价格
  * @returns {Promise<*>}
  */
-export const pay = async function (CREDENTIAL, orderIds, orderCount, orderBatchNumber, totalAmount) {
+export const wechatPay = async function (CREDENTIAL) {
     // const firstOrder = orderIds[0]
     try {
         if (CREDENTIAL.appId) {
-            return await wechatPay(CREDENTIAL)
+            await pay(CREDENTIAL)
             // this.$router.replace({ name: 'PaySuccess', params: { orderId: firstOrder, orderCount } })
-        } else if (totalAmount === 0) {
+        } else {
             // 免费红包 无需支付
             return true
-            // this.$router.replace({ name: 'PaySuccess', params: { orderId: firstOrder, orderCount } })
         }
-        throw new Error('支付失败')
     } catch (error) {
-        await handlepayError(orderBatchNumber)
         throw error
     }
 }
-
-/**
- * 获取微信支付数据，用批次号换取支付加密数据
- * @param {string} orderBatchNumber 支付批次号，支付失败时用来关闭此次订单
- * @returns {Promise<*>}
- */
-const requestPayData = async function (orderBatchNumber) {
-    try {
-        // 每500ms请求一次支付数据，如果请求次数超过20次，就终止请求
-        // 下次请求的开始时间 =  500ms + 当前请求时间
-        if (requestPayDataCount >= 20) {
-            requestPayDataCount = 0
-            throw new Error('支付失败')
-        }
-        await setTimeoutSync(500)
-        // 如果没有拿到请求数据，再次尝试发起请求
-        // 如果有，则发起支付
-        const { result: payData } = await getOrderPayData(orderBatchNumber)
-        if (!payData) {
-            requestPayDataCount++
-            return await requestPayData(orderBatchNumber)
-        }
-        requestPayDataCount = 0
-        return {
-            payData,
-            orderBatchNumber
-        }
-        // return await pay(payData, payData.orderIds, payData.orderIds.length, orderBatchNumber)
-    } catch (error) {
-        requestPayDataCount = 0
-        await handlepayError(orderBatchNumber)
-        throw error
-    }
-}
-
 // 提交福利红包订单，换取批次号
-export const submitRedPackageOrder = async function (activityId, count) {
+export const submitRedPackageOrder = async (activityId, count) => {
+    let orderBatchNumber = ''
     try {
         const data = {
             source: 9,
@@ -101,9 +58,12 @@ export const submitRedPackageOrder = async function (activityId, count) {
                 }
             ]
         }
-        const { result: orderBatchNumber } = await submitOrder(data)
-        return await requestPayData(orderBatchNumber)
+        const { result } = await submitOrder(data)
+        orderBatchNumber = result
+        const payData = await requestPayData(orderBatchNumber)
+        await wechatPay(payData)
     } catch (error) {
+        if (orderBatchNumber) handlepayError(orderBatchNumber)
         throw error
     }
 }
