@@ -27,7 +27,7 @@
             <div :class="$style.top">
                 <div :class="$style.topLeft">
                     <b :class="$style.main">
-                        {{ price ? `${price}可抵${amount}` : `可免费抵${amount}` }}
+                        {{ price ? `${price}可抵${amount}` : `可抵${amount}` }}
                     </b>
                     <p :class="$style.sub">
                         {{ name }}
