@@ -291,12 +291,6 @@ export default {
                 margin-top: 20px;
                 text-align: right;
 
-                button {
-                    width: 150px;
-                    line-height: 58px;
-                    font-size: 30px;
-                }
-
                 .not-start {
                     background-color: rgba(254, 119, 0, 0.3);
                 }
