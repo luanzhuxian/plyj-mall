@@ -32,7 +32,6 @@
                         :to="{ name: item.orderType === 'RED_ENVELOPE' ? 'RedPacketOrderDetail' : 'OrderDetail', params: { orderId: item.orderId } }"
                     >
                         <OrderListItem
-                            :detail="item"
                             :index="i"
                             v-bind="item"
                             :is-payloading="payloading && currentPayId === item.orderId"
