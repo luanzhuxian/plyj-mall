@@ -152,9 +152,9 @@ export default {
     }
   }
   .set {
-    width: 670px;
+    width: 642px;
     margin: 28px auto;
-    padding-left: 28px;
+    padding: 0 28px;
     border-radius: $--radius1;
     overflow: hidden;
     background-color: #fff;
