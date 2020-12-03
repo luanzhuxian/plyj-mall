@@ -130,17 +130,17 @@ export default {
                 let bgHeight
                 if (showCoupon) {
                     switch (bgIndex) {
-                        case 1:
+                        case 0:
                             bgc = '#077ce6'
                             bgi = 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/bg-detail-blue.png'
                             bgHeight = 468 * DPR
                             break
-                        case 2:
+                        case 1:
                             bgc = '#7e2ef1'
                             bgi = 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/bg-detail-purple.png'
                             bgHeight = 458 * DPR
                             break
-                        case 3:
+                        case 2:
                             bgc = '#f5b72f'
                             bgi = 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/bg-detail-yellow.png'
                             bgHeight = 466 * DPR

@@ -3,10 +3,10 @@
         class="red-package-detail"
         :class="{
             [$style.redPackageDetail]: true,
-            [$style.bgRed]: activity.bgUrlsIndex === 0,
-            [$style.bgBlue]: activity.bgUrlsIndex === 1,
-            [$style.bgPurple]: activity.bgUrlsIndex === 2,
-            [$style.bgYellow]: activity.bgUrlsIndex === 3
+            [$style.bgBlue]: activity.bgUrlsIndex === 0,
+            [$style.bgPurple]: activity.bgUrlsIndex === 1,
+            [$style.bgYellow]: activity.bgUrlsIndex === 2,
+            [$style.bgRed]: activity.bgUrlsIndex === 3
         }"
     >
         <div :class="$style.background">
