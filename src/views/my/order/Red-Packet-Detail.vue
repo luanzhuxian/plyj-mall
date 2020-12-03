@@ -26,20 +26,29 @@
         </div>
 
         <div :class="$style.buttons">
-            <pl-button type="default" round plain>联系我们</pl-button>
-            <pl-button type="warning" round @>删除订单</pl-button>
+            <pl-button type="default" round plain @click="isPopupShow = true">联系我们</pl-button>
+            <pl-button type="warning" round @click="deleteOrder">删除订单</pl-button>
         </div>
+
+        <!-- 联系我们底部弹窗 -->
+        <Contact :show.sync="isPopupShow" />
     </div>
 </template>
 
 <script>
 import { getOrderDetail, deleteOrder } from '../../../apis/order-manager'
 import { mapGetters } from 'vuex'
+import Contact from '../../../components/common/Contact.vue'
+
 export default {
     name: 'RedPacketOrderDetail',
+    components: {
+        Contact
+    },
     data () {
         return {
-            detail: {}
+            detail: {},
+            isPopupShow: false
         }
     },
     computed: {
@@ -66,7 +75,7 @@ export default {
             await this.$confirm('是否删除当前订单？ 删除后不可找回')
             await deleteOrder(this.orderId)
             this.$success('删除成功')
-            await this.$router.replace({ name: 'OrderList' })
+            await this.$router.replace({ name: 'Orders' })
         }
     }
 }

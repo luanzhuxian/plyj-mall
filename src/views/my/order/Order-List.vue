@@ -136,7 +136,7 @@ export default {
         this.$refresh = this.$refs.loadMore.refresh
     },
     activated () {
-        this.status = this.$route.params.status
+        this.status = this.$route.params.status || 'ALL_ORDER'
         this.form.orderStatus = this.status === 'ALL_ORDER' ? '' : this.status
         // 从 订单详情/物流 来的，需原地刷新页面
         if (this.orderList.length && this.$router.currentRoute.meta.noRefresh) {
