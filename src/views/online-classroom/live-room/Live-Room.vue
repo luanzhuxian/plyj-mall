@@ -171,7 +171,7 @@
                         @blur="messageBoxBlur"
                         :disabled="!socket || allowedSpeak"
                     />
-                    <pl-button :disabled="allowedSpeak" :class="$style.sendBtn">发送</pl-button>
+                    <pl-button :disabled="allowedSpeak" type="warning" :class="$style.sendBtn">发送</pl-button>
                 </form>
 
                 <div :class="{ [$style.liveBtn]: true, [$style.interactBtn]: detail.liveType === 'live'}">
@@ -283,7 +283,6 @@ import {
 } from '../../../apis/live'
 import {
     submitOrder,
-    getOrderPayData,
     cancleOrderListByBatchNumber
 } from '../../../apis/order-manager'
 import io from 'socket.io-client'
@@ -292,11 +291,10 @@ import {
     generateQrcode,
     cutArcImage,
     loadImage,
-    createText,
-    setTimeoutSync
+    createText
     // throttle
 } from '../../../assets/js/util'
-import wechatPay from '../../../assets/js/wechat/wechat-pay'
+import { requestPayData, pay } from '../../../assets/js/wechat/submit-order'
 
 const POSTER_BG = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/live/live-poster.png'
 const PolyvLiveSdk = window.PolyvLiveSdk
@@ -319,7 +317,6 @@ export default {
         }
     },
     data () {
-        this.requestPayDataCount = 0
         return {
             submiting: false,
             liveSdk: null,
@@ -1028,7 +1025,8 @@ export default {
                     invoiceInfoModel: null
                 }
                 const { result: orderBatchNumber } = await submitOrder(form)
-                await this.requestPayData(orderBatchNumber)
+                const payData = await requestPayData(orderBatchNumber)
+                await this.pay(payData)
                 // 在订单提交的过程中若切换页面，手动关闭订单
                 this.$once('hook:beforeRouteLeave', async () => {
                     if (this.submiting) await this.handlepayError(orderBatchNumber)
@@ -1037,31 +1035,6 @@ export default {
                 throw e
             } finally {
                 this.submiting = false
-            }
-        },
-        async requestPayData (orderBatchNumber) {
-            try {
-                // 每500ms请求一次支付数据，如果请求次数超过20次，就终止请求
-                // 下次请求的开始时间 =  500ms + 当前请求时间
-                if (this.requestPayDataCount >= 20) {
-                    this.requestPayDataCount = 0
-                    this.submiting = false
-                    throw new Error('支付失败')
-                }
-                await setTimeoutSync(500)
-                // 如果没有拿到请求数据，再次尝试发起请求
-                // 如果有，则发起支付
-                const { result: payData } = await getOrderPayData(orderBatchNumber)
-                if (!payData) {
-                    this.requestPayDataCount++
-                    await this.requestPayData(orderBatchNumber)
-                } else {
-                    await this.pay(payData)
-                }
-            } catch (e) {
-                this.requestPayDataCount = 0
-                await this.handlepayError(orderBatchNumber)
-                throw e
             }
         },
 
@@ -1076,7 +1049,7 @@ export default {
                     throw new Error('支付失败')
                 }
 
-                if (CREDENTIAL.appId) await wechatPay(CREDENTIAL)
+                if (CREDENTIAL.appId) await pay(CREDENTIAL)
                 this.$success('付款成功立即观看')
                 this.submiting = false
                 this.needPay = false
@@ -1435,16 +1408,7 @@ export default {
 
 .send-btn {
     position: absolute;
-    top: -1;
-    right: 0;
-    width: 124px;
-    line-height: 76px;
-    text-align: center;
-    color: #fff;
-    font-size: 28px;
-    border-bottom-right-radius: 8px;
-    border-top-right-radius: 8px;
-    background-color: #f2b036;
+    right: 10px;
 }
 
 .live-btn {
