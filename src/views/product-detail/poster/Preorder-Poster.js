@@ -34,7 +34,7 @@ export default class PreorderPoster extends ActivityPoster {
             const priceWidth = createText({
                 ctx: CTX,
                 x: 48 + 144 + 10,
-                y: 1105,
+                y: 1110,
                 text: String(this.price)
             })
             CTX.drawImage(yuanIcon, 48 + 144 + priceWidth + 10, 1090, 72, 104)
@@ -43,7 +43,7 @@ export default class PreorderPoster extends ActivityPoster {
             const originalPriceWidth = createText({
                 ctx: CTX,
                 x: 48 + 144 + 10,
-                y: 1220,
+                y: 1225,
                 text: String(this.originalPrice)
             })
             CTX.drawImage(yuanIcon, 48 + 144 + 10 + originalPriceWidth + 10, 1210, 66, 96)
