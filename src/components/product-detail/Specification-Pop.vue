@@ -299,9 +299,10 @@ export default {
             return currentSku1.productAttributeImage ? currentSku1.productAttributeImage[0] || this.productImage : this.productImage
         },
         residue () {
-            if (this.activeType === 4 && this.localCurrentSku.activityProduct) {
-                return this.localCurrentSku.stock
-            }
+            // 此商品是预购（this.activeType === 4）并且当前规格也是预购（this.localCurrentSku.activityProduc === true）
+            // if (this.activeType === 4 && this.localCurrentSku.activityProduct) {
+            //     return this.localCurrentSku.stock
+            // }
             return this.localCurrentSku.stock
         },
 
