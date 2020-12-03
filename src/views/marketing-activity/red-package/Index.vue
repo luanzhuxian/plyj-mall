@@ -246,12 +246,12 @@ export default {
             })
         },
         share () {
-            const { appId, mallUrl, shareUrl, userName } = this
+            const { appId, mallUrl, shareUrl } = this
             this.shareUrl = `${ mallUrl }/red-package/home?t=${ Date.now() }`
             share({
                 appId,
-                title: `${ userName } 邀您领取福利红包`,
-                desc: '小金额，大额券，边逛边优惠',
+                title: '福利红包 抢先领',
+                desc: '小金额，大额券，边逛边优惠！',
                 link: shareUrl,
                 imgUrl: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/share.png'
             })
