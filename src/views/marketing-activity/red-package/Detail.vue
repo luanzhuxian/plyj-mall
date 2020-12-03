@@ -102,7 +102,7 @@
                             <span v-if="totalPrice"> {{ `仅需￥${totalPrice}  敬请期待` }}</span>
                             <span v-else>敬情期待</span>
                         </button>
-                        <template v-if="status === 1">
+                        <template v-else-if="status === 1">
                             <button :class="$style.redPackageBtn" v-if="isUpLimitReached" @click.stop="$router.push({ name: 'MyCoupon' })">
                                 您已领取  立即查看
                             </button>
@@ -120,7 +120,11 @@
                                 <span v-else>数量有限 立即领取</span>
                             </button>
                         </template>
-                        <button :class="$style.redPackageBtn" v-if="status === 3" @click.stop="$router.push({ name: 'RedPackage' })">
+                        <button
+                            v-else
+                            :class="$style.redPackageBtn"
+                            @click.stop="$router.push({ name: 'RedPackage' })"
+                        >
                             领取更多福利
                         </button>
                     </section>
@@ -242,7 +246,7 @@ export default {
             return this.status === 0 || this.status === 1
         },
         isBarrageShow () {
-            return (this.status === 1 || this.status === 3) && this.bulletList && this.bulletList.length
+            return (this.status === 1 || this.status === 2 || this.status === 3) && this.bulletList && this.bulletList.length
         },
         isFormShow () {
             return this.status === 1 && this.redPackage.price > 0
@@ -285,6 +289,10 @@ export default {
         this.submiting = false
         this.creatingPoster = false
     },
+    beforeRouteEnter (to, from, next) {
+        to.meta.from = from.name
+        next()
+    },
     methods: {
         // 获取红包活动详情
         async getRedPackage () {
@@ -292,14 +300,14 @@ export default {
                 const { result } = await getRedPackage(this.activityId)
                 const { redPacketCouponVO, ...activity } = result
                 redPacketCouponVO.price = fenToYuan(redPacketCouponVO.price)
-                this.status = result.activityStatus
-                if (result.activityStatus === 2) {
-                    this.$alert('很遗憾，该活动已暂停，请查看更多活动')
+                // 从我的卡券进入不弹窗
+                if (this.$route.meta.from !== 'MyCoupon' && (result.activityStatus === 2 || result.activityStatus === 3)) {
+                    return this.$alert('很遗憾，该活动已结束，请查看更多活动')
                         .finally(() => {
                             this.$router.replace({ name: 'RedPackage' })
                         })
-                    return false
                 }
+                this.status = result.activityStatus
                 this.activity = activity
                 this.redPackage = redPacketCouponVO
                 this.productList = result.redPacketCouponVO.applicableGoodsVOS
