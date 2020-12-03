@@ -7,12 +7,17 @@
                 <div :class="$style.info">
                     <div :class="$style.name" v-text="goodsModel.name" />
                     <!-- 满减额 -->
-                    <div :class="$style.price" v-text="goodsModel.sku" />
+                    <div :class="$style.price">
+                        满 {{ goodsModel.sku }} 抵 {{ goodsModel.subSku }}
+                    </div>
                     <div :class="$style.tips">
                         <p>暂不支持退换货  不支持开具发票</p>
                         <p>使用后发生退款，不予退回</p>
                     </div>
-                    <span :class="$style.count">x{{ goodsModel.count }}</span>
+                    <div :class="$style.count">
+                        <p class="gray-1">￥{{ goodsModel.amount }}</p>
+                        <p>x{{ goodsModel.count }}</p>
+                    </div>
                 </div>
             </div>
             <div :class="$style.intro">
@@ -63,7 +68,7 @@ export default {
             default: ''
         }
     },
-    async created () {
+    async activated () {
         await this.getOrderDetail()
     },
     methods: {
@@ -127,6 +132,7 @@ export default {
                 position: absolute;
                 right: 0;
                 top: 0;
+                text-align: right;
                 font-size: 22px;
                 color: #999;
             }
