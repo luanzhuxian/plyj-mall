@@ -1,5 +1,5 @@
 <template>
-    <div :class="$style.templateXinchun">
+    <div :class="$style.templateSpring">
         <div :class="$style.background">
             <div :class="$style.container" v-if="allLoaded">
                 <div
@@ -66,17 +66,17 @@
 </template>
 
 <script>
-import Live from '../spring/Live.vue'
-// import Activity from '../spring/Activity.vue'
-import Propagate from '../spring/Propagate.vue'
-import Coupon from '../spring/Coupon.vue'
-import Chunyun from '../spring/Chunyun.vue'
-import Pintuan from '../spring/Pintuan.vue'
-import Yugou from '../spring/Yugou.vue'
+import Live from '../spring-2019/Live.vue'
+// import Activity from '../spring-2019/Activity.vue'
+import Propagate from '../spring-2019/Propagate.vue'
+import Coupon from '../spring-2019/Coupon.vue'
+import Chunyun from '../spring-2019/Chunyun.vue'
+import Pintuan from '../spring-2019/Pintuan.vue'
+import Yugou from '../spring-2019/Yugou.vue'
 import Recommend from '../../home/components/Recommend.vue'
 
 export default {
-    name: 'TemplateXinchun',
+    name: 'TemplateSpring2019',
     inject: ['parent'],
     components: {
         Live,

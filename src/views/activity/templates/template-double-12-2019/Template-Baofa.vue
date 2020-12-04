@@ -56,12 +56,12 @@
 </template>
 
 <script>
-import Live from '../../double-12/Live.vue'
-import Pintuan from '../../double-12/Pintuan.vue'
-import Coupon from '../../double-12/Coupon.vue'
-import Maisong from '../../double-12/Maisong.vue'
-import Fengqiang from '../../double-12/Fengqiang.vue'
-import Miaosha from '../../double-12/Miaosha.vue'
+import Live from '../../double-12-2019/Live.vue'
+import Pintuan from '../../double-12-2019/Pintuan.vue'
+import Coupon from '../../double-12-2019/Coupon.vue'
+import Maisong from '../../double-12-2019/Maisong.vue'
+import Fengqiang from '../../double-12-2019/Fengqiang.vue'
+import Miaosha from '../../double-12-2019/Miaosha.vue'
 
 export default {
     name: 'HomeTemplateB',

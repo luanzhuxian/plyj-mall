@@ -34,7 +34,7 @@
             <InviteNewcomersHomeEntry />
         </div>
         <!-- 新春 -->
-        <TemplateXinchun
+        <TemplateSpring2019
             v-if="type === 8"
             :data="modules"
             :type="type"
@@ -61,7 +61,7 @@ import Search from '../../components/activity/Search.vue'
 import TemplateFengqiang from './templates/template-double-12-2019/Template-Fengqiang.vue'
 import TemplateBaofa from './templates/template-double-12-2019/Template-Baofa.vue'
 import TemplateFanchang from './templates/template-double-12-2019/Template-Fanchang.vue'
-import TemplateXinchun from './templates/Template-Xinchun.vue'
+import TemplateSpring2019 from './templates/Template-Spring-2019.vue'
 import TemplateDragonGate from './templates/Template-Dragon-Gate.vue'
 import TemplateDouble122020 from './templates/Template-Double-12-2020.vue'
 import InviteNewcomersHomeEntry from '../marketing-activity/double-12/invitenewcomers/InviteNewcomersHomeEntry.vue'
@@ -74,7 +74,7 @@ export default {
         TemplateFengqiang,
         TemplateBaofa,
         TemplateFanchang,
-        TemplateXinchun,
+        TemplateSpring2019,
         TemplateDragonGate,
         TemplateDouble122020,
         InviteNewcomersHomeEntry
