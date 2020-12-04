@@ -153,7 +153,7 @@
                         @click="confirm(currentSku, limiting, limit)"
                         v-else
                     >
-                        {{ confirmText }}
+                        确定
                     </pl-button>
                 </div>
             </template>
