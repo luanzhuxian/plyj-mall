@@ -36,7 +36,7 @@
         </div>
         <pl-popup
             :show.sync="showCoupon"
-            title="领取优惠券"
+            title="选择优惠"
             title-align="left"
         >
             <div :class="$style.coupon">
