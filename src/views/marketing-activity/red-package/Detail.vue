@@ -190,6 +190,7 @@ import {
     isToday
 } from './utils'
 import share from '../../../assets/js/wechat/wechat-share'
+import { SET_SHARE_ID } from '../../../store/mutation-type'
 
 export default {
     name: 'RedPackageDetail',
@@ -238,7 +239,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['realName', 'userName', 'mobile', 'appId', 'mallUrl']),
+        ...mapGetters(['userId', 'realName', 'userName', 'mobile', 'appId', 'mallUrl']),
         isCountdownShow () {
             return this.status === 0 || this.status === 1
         },
@@ -267,6 +268,10 @@ export default {
     },
     async activated () {
         try {
+            // 保存分享人
+            if (this.$route.query.shareUserId) {
+                this.$store.commit(SET_SHARE_ID, this.$route.query.shareUserId)
+            }
             const request = [
                 this.getRedPackage(),
                 this.getRedPackageBarrage()
@@ -438,7 +443,7 @@ export default {
         },
         share () {
             const { appId, mallUrl } = this
-            this.shareUrl = `${ mallUrl }/red-package/detail/${ this.activityId }?t=${ Date.now() }`
+            this.shareUrl = `${ mallUrl }/red-package/detail/${ this.activityId }?shareUserId=${ this.userId }&t=${ Date.now() }`
             share({
                 appId,
                 title: '小金额，大额券，边逛边优惠！',

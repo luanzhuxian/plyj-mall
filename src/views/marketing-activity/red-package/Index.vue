@@ -59,6 +59,7 @@ import Poster from './components/Poster.vue'
 import { getRedPackageList, getRedPackageBarrage } from '../../../apis/marketing-activity/red-package'
 import { getBulletTemplate, isToday, fenToYuan } from './utils'
 import share from '../../../assets/js/wechat/wechat-share'
+import { SET_SHARE_ID } from '../../../store/mutation-type'
 
 const productModel = {
     goodsImage: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/奖品.png',
@@ -87,10 +88,14 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['userName', 'mobile', 'appId', 'mallUrl', 'isActivityAuth'])
+        ...mapGetters(['userId', 'userName', 'mobile', 'appId', 'mallUrl', 'isActivityAuth'])
     },
     async activated () {
         try {
+            // 保存分享人
+            if (this.$route.query.shareUserId) {
+                this.$store.commit(SET_SHARE_ID, this.$route.query.shareUserId)
+            }
             const request = [
                 this.getRedPackageList(),
                 this.getRedPackageBarrage()
@@ -247,7 +252,7 @@ export default {
         },
         share () {
             const { appId, mallUrl } = this
-            this.shareUrl = `${ mallUrl }/red-package/home?t=${ Date.now() }`
+            this.shareUrl = `${ mallUrl }/red-package/home?shareUserId=${ this.userId }&t=${ Date.now() }`
             share({
                 appId,
                 title: '福利红包 抢先领',
