@@ -1170,7 +1170,7 @@ export default {
 
   /** 联系人 **/
   .contact {
-    padding-left: 24px;
+    padding: 0 24px;
     .contact-detail {
       padding: 24px 0;
       > span:nth-of-type(1) {
