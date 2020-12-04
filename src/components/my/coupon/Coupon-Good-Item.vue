@@ -60,7 +60,7 @@
 import { mapGetters, mapActions } from 'vuex'
 import { GET_CART_COUNT } from '../../../store/mutation-type'
 import Price from '../../product-detail/Price.vue'
-import SpecificationPop from '../../product-detail/Specification-Pop.vue'
+import SpecificationPop from '../../product-detail/sku-pop/Index.vue'
 import { addToCart } from '../../../apis/shopping-cart'
 
 export default {

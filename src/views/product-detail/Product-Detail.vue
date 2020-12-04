@@ -122,11 +122,11 @@
                     :clickable="!noStock && !isDown"
                     @click="showSpecifica = true"
                 >
-                    <template v-if="currentModel.skuCode1Name">
+                    <template v-if="currentModel">
                         已选择：“<span v-text="currentModel.skuCode1Name" />
                     </template>
-                    <template v-if="currentModel.skuCode2Name">，<i v-text="currentModel.skuCode2Name" /></template>
-                    <span v-if="!currentModel.id">请选择规格</span>
+                    <template v-if="currentModel">，<i v-text="currentModel.skuCode2Name" />”</template>
+                    <span v-if="!currentModel">请选择规格</span>
                 </Field>
 
                 <TogetherRule v-if="(activeProduct === 2 || activeProduct === 4) && preActivity === 2" :active-product="activeProduct" :activity-brief="detail.activityProductModel.activityBrief" />
@@ -180,7 +180,7 @@
                 </div>
 
                 <!--底部购买按钮  -->
-                <BuyNow
+                <!--<BuyNow
                     v-if="!~[5, 6].indexOf(productActive) && mchId"
                     type="warning"
                     ref="buyNow"
@@ -202,11 +202,10 @@
                     @addToCart="addToCart"
                     @buyNow="buyNow"
                     :coupon-list="couponList"
-                />
+                />-->
 
                 <!-- 详情页面选择规格 - 弹框 -->
                 <SpecificationPop
-                    :default-count="defaultCount"
                     :sku-list="detail.productSkuModels"
                     :sku-attr-list="detail.productAttributes"
                     :product-image="detail.productMainImage"
@@ -224,7 +223,7 @@
                             <button
                                 v-if="showNormalBuy"
                                 :class="$style.add"
-                                :disabled="adding || !currentModel.stock || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0) || loading"
+                                :disabled="adding || !currentModel || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0) || loading"
                                 @click="buyNow(currentSku, 1, limiting, limit)"
                             >
                                 单独购买
@@ -245,7 +244,7 @@
                             <button
                                 v-if="showNormalBuy"
                                 :class="$style.add"
-                                :disabled="adding || !currentModel.stock || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0) || loading"
+                                :disabled="adding || !currentModel || currentModel.count > currentModel.stock || (detail.serverTime - detail.shoppingTimeLong < 0) || loading"
                                 @click="buyNow(currentSku, 1, limiting, limit)"
                             >
                                 原价购买
@@ -372,14 +371,14 @@ import DetailInfoBox from '../../components/product-detail/Info-Box.vue'
 import DetailTitle from '../../components/product-detail/Title.vue'
 import DetailDesc from '../../components/product-detail/Desc.vue'
 import DetailInfo from '../../components/product-detail/Detail.vue'
-import BuyNow from '../../components/product-detail/Buy-Now.vue'
+// import BuyNow from '../../components/product-detail/Buy-Now.vue'
 import Tags from '../../components/product-detail/Tags.vue'
 import UsefulLife from '../../components/product-detail/Useful-Life.vue'
 import InfoHeader from '../../components/product-detail/Info-Header.vue'
 import Instructions from '../../components/product-detail/Instructions.vue'
 import Field from '../../components/product-detail/Field.vue'
 import CounponField from '../../components/product-detail/Counpon-Field.vue'
-import SpecificationPop from '../../components/product-detail/Specification-Pop.vue'
+import SpecificationPop from '../../components/product-detail/sku-pop/Index.vue'
 import YouLike from '../home/components/YouLike.vue'
 import SoldOut from './Sold-Out.vue'
 import Comments from './Comments.vue'
@@ -428,7 +427,7 @@ export default {
         Field,
         CounponField,
         Tags,
-        BuyNow,
+        // BuyNow,
         DetailInfoBox,
         SpecificationPop,
         YouLike,
@@ -455,7 +454,7 @@ export default {
             productSkuModels: [],
             showSpecifica: false,
             // 当前选中的规格
-            currentModel: {},
+            currentModel: null,
             // 活动信息
             activityProductModel: {},
             commentForm: {
@@ -565,9 +564,9 @@ export default {
             }
             return false
         },
-        defaultCount () {
-            return this.currentModel.count || 1
-        },
+        // defaultCount () {
+        //     return this.currentModel.count || 1
+        // },
         limiting () {
             if (this.activeProduct !== 1 && this.preActivity === 2) {
                 return this.activityProductModel.activityLimit ? this.activityProductModel.activityLimitNumber : 0
@@ -642,7 +641,7 @@ export default {
         this.showSpecifica = false
         this.showHaibao = false
         this.haibao = ''
-        this.currentModel = {}
+        this.currentModel = null
         this.tab = 2
     },
     async mounted () {
@@ -655,7 +654,7 @@ export default {
         }),
         async refresh (productActive) {
             try {
-                this.currentModel = {}
+                this.currentModel = null
                 this.haibao = ''
                 this.tab = 2
                 this.showSpecifica = false
@@ -732,8 +731,8 @@ export default {
                 // 所有图片
                 this.banners = mediaInfoIds
                 this.productSkuModels = result.productSkuModels
-                this.currentModel = result.productSkuModels.find(item => item.activityPrice === result.activityProductModel.price) || result.productSkuModels[0]
-                this.currentModel.count = result.productSkuModels[0].minBuyNum
+                // this.currentModel = result.productSkuModels.find(item => item.activityPrice === result.activityProductModel.price) || result.productSkuModels[0]
+                // this.currentModel.count = result.productSkuModels[0].minBuyNum
                 this.detail = result
 
                 return result
@@ -753,7 +752,7 @@ export default {
             }
         },
         resetState () {
-            this.currentModel = {}
+            this.currentModel = null
             this.banners.splice(0, 1000000)
         },
 
@@ -778,7 +777,7 @@ export default {
             if (!this.hasBind()) {
                 return
             }
-            this.currentModel = selected
+            // this.currentModel = selected
             this.adding = true
             const { count, skuCode2 = '', skuCode1 } = selected
 
@@ -819,7 +818,7 @@ export default {
             /* if (!this.checkLimit(selected, limiting, limit)) {
                 return
             } */
-            this.currentModel = selected
+            // this.currentModel = selected
             const { skuCode1, count, skuCode2, price } = selected
 
             // 分享时携带的id
