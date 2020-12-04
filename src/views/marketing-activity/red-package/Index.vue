@@ -26,7 +26,7 @@
                                 :show-stock="item.activityStatus === 1"
                                 show-btn
                                 :name="item.name"
-                                :stock="Number(item.issueVolume) - Number(item.claimVolume)"
+                                :stock="Number(item.issueVolume)"
                                 :amount="Number(item.amount)"
                                 :use-limit-amount="Number(item.useLimitAmount)"
                                 :price="Number(item.price)"
@@ -159,7 +159,7 @@ export default {
                 const { result: { records = [] } } = await getRedPackageList(params)
                 // 过滤未隐藏且有库存的福利红包
                 this.redPackageList = records
-                    .filter(item => item.showStatus && (item.issueVolume > item.claimVolume))
+                    .filter(item => item.showStatus && item.issueVolume)
                     .map(item => {
                         item.price = fenToYuan(item.price)
                         return item

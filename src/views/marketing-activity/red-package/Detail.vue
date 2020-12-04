@@ -43,7 +43,7 @@
                     </Countdown>
                 </div>
                 <div :class="$style.count" v-if="allLoaded">
-                    {{ `${activity.claimVolume}人已领取 仅剩${activity.issueVolume - activity.claimVolume}张` }}
+                    {{ `${activity.claimVolume}人已领取 仅剩${activity.issueVolume}张` }}
                 </div>
                 <div :class="$style.mainWrapper" v-if="allLoaded">
                     <!-- 弹幕 -->
@@ -63,7 +63,7 @@
                                 :class="$style.redPackageListItem"
                                 :status.sync="status"
                                 :name="activity.name"
-                                :stock="Number(activity.issueVolume) - Number(activity.claimVolume)"
+                                :stock="Number(activity.issueVolume)"
                                 :amount="Number(redPackage.amount)"
                                 :use-limit-amount="Number(redPackage.useLimitAmount)"
                                 :price="Number(redPackage.price)"
@@ -252,7 +252,8 @@ export default {
         isInputNumberDisabled () {
             let { count } = this.form
             count += this.activity.userClaimed
-            return count >= (this.activity.issueVolume - this.activity.claimVolume) || count >= this.redPackage.quantityLimit
+            // 达到剩余库存 / 达到领用上限
+            return count >= this.activity.issueVolume || count >= this.redPackage.quantityLimit
         },
         // 是否达到领取上限
         isUpLimitReached () {

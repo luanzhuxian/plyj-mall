@@ -215,7 +215,7 @@ export default {
                     //         ctx: CTX,
                     //         x: 116 * DPR,
                     //         y: (150 + 470) * DPR,
-                    //         text: `仅剩${ issueVolume - claimVolume }张`,
+                    //         text: `仅剩${ issueVolume }张`,
                     //         lineHeight: 28 * DPR
                     //     })
                     // }
