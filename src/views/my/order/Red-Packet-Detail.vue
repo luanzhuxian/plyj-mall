@@ -20,13 +20,42 @@
                     </div>
                 </div>
             </div>
-            <div :class="$style.intro">
-                <span>使用时间</span>
-                <i>{{ detail.startExpire | dateFormat('YYYY-MM-DD') }} - {{ detail.endExpire | dateFormat('YYYY-MM-DD') }}</i>
+            <div :class="$style.explain">
+                <ModuleTitle
+                    title="使用说明"
+                    size="mini"
+                />
+                <pre
+                    :class="$style.explainBox"
+                    v-text="goodsModel.goodsDescription"
+                />
             </div>
-            <div :class="$style.intro">
-                <span>使用说明</span>
-                <pre :class="$style.explain" v-text="goodsModel.goodsDescription" />
+            <div :class="$style.amount">
+                <span :class="$style.totalCount">{{ `共${detail.count}件` }}</span>
+                <span class="fz-30">
+                    总价：
+                </span>
+                <!-- 商品待付尾款时，总价 = 定金 + 尾款 -->
+                <span :class="$style.totalMoney + ' fz-30 rmb'">{{ detail.amount | formatAmount }}</span>
+            </div>
+        </div>
+
+        <!-- 交易信息 -->
+        <div :class="[$style.otherInfo]">
+            <div :class="$style.infoTop">
+                <pl-list
+                    title="下单时间："
+                    :content="detail.createTime"
+                />
+                <pl-list
+                    title="订单编号："
+                    :content="orderId"
+                />
+                <pl-list
+                    v-if="payMethod"
+                    title="支付方式："
+                    :content="payMethod.paymentMethod === 'WX' ? '微信支付' : '-'"
+                />
             </div>
         </div>
 
@@ -35,20 +64,18 @@
             <pl-button type="warning" round @click="deleteOrder">删除订单</pl-button>
         </div>
 
-        <!-- 联系我们底部弹窗 -->
-        <Contact :show.sync="isPopupShow" />
     </div>
 </template>
 
 <script>
 import { getOrderDetail, deleteOrder } from '../../../apis/order-manager'
 import { mapGetters } from 'vuex'
-import Contact from '../../../components/common/Contact.vue'
+import ModuleTitle from '../../../components/common/Module-Title.vue'
 
 export default {
     name: 'RedPacketOrderDetail',
     components: {
-        Contact
+        ModuleTitle
     },
     data () {
         return {
@@ -60,6 +87,9 @@ export default {
         ...mapGetters(['orderStatusMap']),
         goodsModel () {
             return this.detail.goodsModel || {}
+        },
+        payMethod () {
+            return this.detail.orderPayTransInfos && this.detail.orderPayTransInfos.slice(-1)[0]
         }
     },
     props: {
@@ -100,6 +130,15 @@ export default {
         background-color: #fff;
         border-radius: 20px;
     }
+    .explain-box {
+        margin-top: 14px;
+        padding: 24px 30px;
+        border-radius: $--radius2;
+        font-size: 26px;
+        white-space: pre-wrap;
+        color: #666666;
+        background-color: #f3f3f3;
+    }
     .base-info {
         display: flex;
         margin-bottom: 24px;
@@ -138,22 +177,6 @@ export default {
             }
         }
     }
-    .intro {
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        margin-bottom: 26px;
-        font-size: 26px;
-        > .explain {
-            width: 654px;
-            word-break: break-all;
-            white-space: pre-wrap;
-            margin-top: 16px;
-            padding: 24px 30px;
-            color: #666;
-            background-color: #f3f3f3;
-        }
-    }
     .buttons {
         position: fixed;
         bottom: 0;
@@ -166,6 +189,50 @@ export default {
         background-color: #fff;
         > button {
             margin-right: 24px !important;
+        }
+    }
+
+    .amount {
+        position: relative;
+        display: flex;
+        margin-top: 24px;
+        padding: 24px 0;
+        justify-content: flex-end;
+        align-items: center;
+        border-top: 1px solid #e7e7e7;
+        .totalCount {
+            font-size: 24px;
+            color: #999999;
+            margin-right: 12px;
+        }
+        .totalMoney {
+            color: $--primary-color;
+        }
+    }
+
+    /** 交易信息 **/
+    .other-info {
+        position: relative;
+        margin-top: 24px;
+        line-height: 34px;
+        font-size: 24px;
+        border-radius: 20px;
+        background-color: #fff;
+        .info-top {
+            padding: 24px;
+            border-bottom: 1px solid #F0F0F0;
+            > div {
+                margin-bottom: 20px;
+                &:nth-last-of-type(1) {
+                    margin-bottom: 0;
+                }
+            }
+        }
+        .info-bottom {
+            padding: 24px;
+            &:nth-last-of-type(1) {
+                margin-bottom: 0;
+            }
         }
     }
 </style>
