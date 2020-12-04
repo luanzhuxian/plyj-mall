@@ -277,6 +277,7 @@ export default {
             if (this.$refs.barrage) {
                 this.$refs.barrage.run()
             }
+            this.share()
         } catch (error) {
             throw error
         } finally {
@@ -436,13 +437,13 @@ export default {
             }
         },
         share () {
-            const { appId, mallUrl, shareUrl } = this
+            const { appId, mallUrl } = this
             this.shareUrl = `${ mallUrl }/red-package/detail/${ this.activityId }?t=${ Date.now() }`
             share({
                 appId,
                 title: '小金额，大额券，边逛边优惠！',
                 desc: `快来抢 ${ this.activity.name }福利红包`,
-                link: shareUrl,
+                link: this.shareUrl,
                 imgUrl: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/share-new.png'
             })
         },

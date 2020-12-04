@@ -246,13 +246,13 @@ export default {
             })
         },
         share () {
-            const { appId, mallUrl, shareUrl } = this
+            const { appId, mallUrl } = this
             this.shareUrl = `${ mallUrl }/red-package/home?t=${ Date.now() }`
             share({
                 appId,
                 title: '福利红包 抢先领',
                 desc: '小金额，大额券，边逛边优惠！',
-                link: shareUrl,
+                link: this.shareUrl,
                 imgUrl: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/share-new.png'
             })
         },
