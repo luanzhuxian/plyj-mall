@@ -200,6 +200,7 @@ export default {
     display: block;
     font-size: 42px;
     line-height: 32px;
+    max-width: 184px;
     color: #F23D00;
     @include elps();
     &:before {
