@@ -39,24 +39,11 @@ export default {
             type: String,
             default: ''
         },
-        // 活动状态
-        status: {
-            type: Number,
-            default: 0
-        },
         amount: {
             type: Number,
             default: 0
         },
-        useLimitAmount: {
-            type: Number,
-            default: 0
-        },
-        issueVolume: {
-            type: Number,
-            default: 0
-        },
-        claimVolume: {
+        price: {
             type: Number,
             default: 0
         },
@@ -108,12 +95,12 @@ export default {
                     logoUrl,
                     showCoupon,
                     bgIndex,
-                    status,
+                    // status,
                     name,
                     amount,
-                    useLimitAmount,
-                    issueVolume,
-                    claimVolume,
+                    price,
+                    // issueVolume,
+                    // claimVolume,
                     useStartTime,
                     useEndTime,
                     shareUrl
@@ -220,20 +207,21 @@ export default {
                         lineHeight: 54 * DPR
                     })
                     // 剩余
-                    CTX.font = `normal ${ 20 * DPR }px sans-serif`
-                    CTX.fillStyle = '#F19874'
-                    let COUNT_WIDTH = 0
-                    if (status === 1) {
-                        COUNT_WIDTH = createText({
-                            ctx: CTX,
-                            x: 116 * DPR,
-                            y: (150 + 470) * DPR,
-                            text: `仅剩${ issueVolume - claimVolume }张`,
-                            lineHeight: 28 * DPR
-                        })
-                    }
+                    // CTX.font = `normal ${ 20 * DPR }px sans-serif`
+                    // CTX.fillStyle = '#F19874'
+                    // let COUNT_WIDTH = 0
+                    // if (status === 1) {
+                    //     COUNT_WIDTH = createText({
+                    //         ctx: CTX,
+                    //         x: 116 * DPR,
+                    //         y: (150 + 470) * DPR,
+                    //         text: `仅剩${ issueVolume - claimVolume }张`,
+                    //         lineHeight: 28 * DPR
+                    //     })
+                    // }
                     // 虚线的横坐标
-                    const LINE_START = Math.max(AMOUNT_WIDTH, COUNT_WIDTH)
+                    // const LINE_START = Math.max(AMOUNT_WIDTH, COUNT_WIDTH)
+                    const LINE_START = AMOUNT_WIDTH
                     // 虚线
                     CTX.beginPath()
                     CTX.lineWidth = 2 * DPR
@@ -252,7 +240,7 @@ export default {
                         ctx: CTX,
                         x: LINE_START + (116 + 2 + 35 * 2) * DPR,
                         y: (85 + 470) * DPR,
-                        text: `满${ useLimitAmount }可抵${ amount }`,
+                        text: price ? `${ price }可抵${ amount }` : `可抵${ amount }`,
                         lineHeight: 32 * DPR
                     })
                     // 名称
