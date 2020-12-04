@@ -154,7 +154,7 @@
                     </div>
 
                     <!-- 红包抵用提醒 -->
-                    <div class="fz-24" v-if="getRedPacket && activeType !== 4">
+                    <div class="fz-24" v-if="currentSku.activityProduct && getRedPacket && activeType !== 4">
                         可使用满 <i class=" primary-color">{{ getRedPacket.useLimitAmount }}减{{ getRedPacket.amount }}</i> 商品福利红包
                     </div>
 
