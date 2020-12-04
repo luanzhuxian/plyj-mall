@@ -253,7 +253,7 @@ export default {
                 title: '福利红包 抢先领',
                 desc: '小金额，大额券，边逛边优惠！',
                 link: shareUrl,
-                imgUrl: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/share.png'
+                imgUrl: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/share-new.png'
             })
         },
         // 创建海报

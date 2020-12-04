@@ -445,7 +445,7 @@ export default {
                 title: '小金额，大额券，边逛边优惠！',
                 desc: `快来抢 ${ this.activity.name }福利红包`,
                 link: shareUrl,
-                imgUrl: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/share.png'
+                imgUrl: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/share-new.png'
             })
         },
         // 创建海报
