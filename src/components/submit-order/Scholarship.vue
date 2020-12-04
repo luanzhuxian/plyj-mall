@@ -1,8 +1,7 @@
 <template>
-    <div v-if="redEnvelopeList.length > 0">
+    <div v-if="redEnvelopeList.length > 0 && isScholarship">
         <!-- v-if="(totalAmount + (currentRedEnvelope.amount || 0) - (freight || 0)) && redEnvelopeList.length && isScholarship" -->
         <div
-            v-if="redEnvelopeList.length && isScholarship"
             :class="$style.itemSelector"
             @click.capture="showRedEnvelopePopup = true"
         >

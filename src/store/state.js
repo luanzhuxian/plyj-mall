@@ -1,6 +1,5 @@
-const selectedAddress = JSON.parse(localStorage.getItem('selectedAddress'))
+const selectedAddress = JSON.parse(sessionStorage.getItem('selectedAddress'))
 const SHARE_ID = sessionStorage.getItem('SHARE_ID')
-
 export default {
     theme: 'base-theme',
     cartCount: 0,

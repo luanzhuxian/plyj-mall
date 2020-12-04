@@ -65,17 +65,17 @@ export default {
         }
         if (payload.length === 0) {
             state.selectedAddress = {}
-            localStorage.removeItem('selectedAddress')
+            sessionStorage.removeItem('selectedAddress')
         }
     },
     [type.SELETC_ADDRESS] (state, payload) {
         if (!payload) {
             state.selectedAddress = {}
-            localStorage.removeItem('selectedAddress')
+            sessionStorage.removeItem('selectedAddress')
             return
         }
         state.selectedAddress = payload
-        localStorage.setItem('selectedAddress', JSON.stringify(payload))
+        sessionStorage.setItem('selectedAddress', JSON.stringify(payload))
     },
     [type.LOG_OUT] () {
         Cookie.remove('mallId')
