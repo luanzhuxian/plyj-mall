@@ -54,11 +54,9 @@ export default {
     watch: {
         defaultSkuAttrs (val) {
             if (val === this.attrGroup) {
-                console.log('一样了')
                 return
             }
             this.$nextTick(() => {
-                console.log(val)
                 let labelSku = this
                 for (const attr of val) {
                     if (labelSku && attr) {
