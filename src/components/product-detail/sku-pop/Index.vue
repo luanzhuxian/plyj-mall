@@ -389,7 +389,7 @@ export default {
                 const skuAttrs = [...this.skuAttrList.map(item => item.productAttributeValues)].flat()
                 const skuAttr1 = skuAttrs.filter(item => item.id === skuCode1)[0]
                 const skuAttr2 = skuAttrs.filter(item => item.id === skuCode2)[0] || null
-                this.currentSkuAttrs = [skuAttr1, skuAttr2]
+                this.currentSkuAttrs = skuAttr2 ? [skuAttr1, skuAttr2] : [skuAttr1]
             }
 
             // 设置数量
