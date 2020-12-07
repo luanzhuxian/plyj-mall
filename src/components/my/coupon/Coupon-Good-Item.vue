@@ -42,12 +42,12 @@
             :sku-attr-list="detail.productAttributes"
             :sku-list="detail.productSkuModels"
         >
-            <template v-slot:footer="{ currentSku }">
+            <template v-slot:footer="{ currentSku, count }">
                 <pl-button
                     type="warning"
                     size="large"
                     :loading="adding"
-                    @click="addToCart(currentSku)"
+                    @click="addToCart(currentSku, count)"
                 >
                     确定
                 </pl-button>
@@ -60,7 +60,7 @@
 import { mapGetters, mapActions } from 'vuex'
 import { GET_CART_COUNT } from '../../../store/mutation-type'
 import Price from '../../product-detail/Price.vue'
-import SpecificationPop from '../../product-detail/Specification-Pop.vue'
+import SpecificationPop from '../../product-detail/sku-pop/Index.vue'
 import { addToCart } from '../../../apis/shopping-cart'
 
 export default {
@@ -150,12 +150,12 @@ export default {
             })
         },
         // 添加商品到购物车
-        addToCart (selected) {
+        addToCart (selected, count) {
             if (!this.hasBind()) {
                 return
             }
             this.adding = true
-            const { count, skuCode2 = '', skuCode1 } = selected
+            const { skuCode2 = '', skuCode1 } = selected
             return new Promise(async (resolve, reject) => {
                 try {
                     await addToCart({

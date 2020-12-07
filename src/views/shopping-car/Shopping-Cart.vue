@@ -1,5 +1,10 @@
 <template>
-    <div :class="$style.shoppingCart">
+    <div
+        :class="{
+            [$style.shoppingCart]: true,
+            [$style.hasCoupon]: couponList.length && mchId,
+        }"
+    >
         <div :class="$style.top">
             <span :class="$style.count">
                 购物车宝贝 <i v-text="total" /> 件
@@ -159,12 +164,12 @@
             :product-id="currentPro.cartProductId"
             :limiting="currentPro.purchaseQuantity"
         >
-            <template v-slot:footer="{ currentSku, revert, limiting, limit }">
+            <template v-slot:footer="{ currentSku, count }">
                 <pl-button
                     type="warning"
                     size="large"
                     :loading="updating"
-                    @click="specChanged(currentSku, revert, limiting, limit)"
+                    @click="specChanged(currentSku, count)"
                 >
                     确定
                 </pl-button>
@@ -177,7 +182,7 @@
 import CartItem from '../../components/item/Cart-Item.vue'
 import NoContent from '../../components/common/No-Content.vue'
 import CartItemSkeleton from '../../components/skeleton/Cart-Item.vue'
-import SpecificationPop from '../../components/product-detail/Specification-Pop.vue'
+import SpecificationPop from '../../components/product-detail/sku-pop/Index.vue'
 import {
     getCartList,
     deleteCartProducts,
@@ -386,7 +391,7 @@ export default {
         },
 
         // 改变规格
-        async specChanged (currentSku, revert, limiting, limit) {
+        async specChanged (currentSku, count) {
             /* if (limiting && option.count > limit) {
                 if (limiting === limit) {
                     return this.$warning(`您至多购买${ limit }件`)
@@ -399,7 +404,7 @@ export default {
             try {
                 // 请求修改
                 this.updating = true
-                const { skuCode1, count, skuCode2 } = currentSku
+                const { skuCode1, skuCode2 } = currentSku
                 const isUpdateSku = await updateCartProductSku({
                     id: this.currentPro.id,
                     skuCode: skuCode1,
@@ -426,11 +431,9 @@ export default {
                     this.setCoupon()
                 } else {
                     // 修改失败，回滚选框中的值
-                    revert()
                 }
             } catch (e) {
                 // 修改失败，回滚选框中的值
-                revert()
                 throw e
             } finally {
                 this.updating = false
@@ -582,6 +585,9 @@ export default {
 <style module lang="scss">
     .shoppingCart {
         padding-bottom: 200px;
+        &.hasCoupon {
+            padding-bottom: 260px;
+        }
     }
 
     .top {

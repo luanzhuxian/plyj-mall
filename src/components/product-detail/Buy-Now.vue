@@ -115,8 +115,9 @@
             :pre-activity="preActivity"
             :activity-product-model="activityProductModel"
             :coupon-list="couponList"
+            @change="specChanged"
         >
-            <template v-slot:footer="{ currentSku, limiting, limit, publicBenefitActiveStock }">
+            <template v-slot:footer="{ currentSku, count, publicBenefitActiveStock }">
                 <div>
                     <div :class="$style.buttons2" v-if="activeProduct === 4 && preActivity === 2 && !currentSku.activityProduct">
                         <button
@@ -139,7 +140,7 @@
                     <button
                         :class="$style.preBtn"
                         :disabled="activeStock <= 0"
-                        @click="confirm(currentSku, limiting, limit)"
+                        @click="confirm(currentSku, count)"
                         v-else-if="activeProduct === 4 && preActivity === 2 && currentSku.activityProduct"
                     >
                         {{ activeStock > 0 ? '定金购买' : '已售罄' }}
@@ -150,7 +151,7 @@
                         size="large"
                         :loading="loading"
                         :disabled="activeProduct === 7 && publicBenefitActiveStock <= 0"
-                        @click="confirm(currentSku, limiting, limit)"
+                        @click="confirm(currentSku, count)"
                         v-else
                     >
                         确定
@@ -167,7 +168,7 @@
 import { mapGetters, mapActions } from 'vuex'
 import { GET_CART_COUNT } from '../../store/mutation-type'
 import { addToCart } from '../../apis/shopping-cart'
-import SpecificationPop from './/Specification-Pop.vue'
+import SpecificationPop from './sku-pop/Index'
 import Contact from '../common/Contact.vue'
 
 export default {
@@ -238,7 +239,7 @@ export default {
         currentSku: {
             type: Object,
             default () {
-                return {}
+                return null
             }
         },
         productId: {
@@ -313,20 +314,19 @@ export default {
         /**
              * 购买
              * @param options {object} 选择的规格
-             * @param limiting {number} 总限购数量
-             * @param limit {number} 可买数量
+             * @param count {number} 数量
              */
-        async confirm (options, limiting, limit) {
+        async confirm (options, count) {
             try {
                 await this.$nextTick()
                 if (this.clickAddToCart) {
-                    await this.addToCart(options)
+                    await this.addToCart(options, count)
                 }
                 if (this.clickBuyNow) {
                     /* if (!this.checkLimit(options, limiting, limit)) {
                         return
                     } */
-                    await this.submit(options)
+                    await this.submit(options, count)
                 }
             } catch (e) {
                 throw e
@@ -334,25 +334,25 @@ export default {
         },
 
         // 检查限购
-        checkLimit (sku, limiting, limit) {
-            if (limiting && sku.count > limit) {
-                if (limiting === limit) {
-                    this.$warning(`您至多购买${ limit }件`)
-                    return false
-                }
-                if (limiting - limit === limiting) {
-                    this.$warning(`您已购买${ limiting }件，已达购买上限`)
-                    return false
-                }
-                this.$warning(`您已购买${ limiting - limit }件，您还可以购买${ limit }件`)
-                return false
-            }
-            return true
-        },
+        // checkLimit (sku, limiting, limit) {
+        //     if (limiting && sku.count > limit) {
+        //         if (limiting === limit) {
+        //             this.$warning(`您至多购买${ limit }件`)
+        //             return false
+        //         }
+        //         if (limiting - limit === limiting) {
+        //             this.$warning(`您已购买${ limiting }件，已达购买上限`)
+        //             return false
+        //         }
+        //         this.$warning(`您已购买${ limiting - limit }件，您还可以购买${ limit }件`)
+        //         return false
+        //     }
+        //     return true
+        // },
 
         // 跳转至提交订单页面
-        async submit (options) {
-            const { count, skuCode1, skuCode2 = '', price } = options
+        async submit (options, count) {
+            const { skuCode1, skuCode2 = '', price } = options
 
             // helper分享时携带的id
             this.$store.commit('submitOrder/setOrderProducts', {
@@ -404,9 +404,9 @@ export default {
             }
             this.showSpecifica = true
         },
-        addToCart (options) {
+        addToCart (options, count) {
             this.loading = true
-            const { count, skuCode1, skuCode2 = '' } = options
+            const { skuCode1, skuCode2 = '' } = options
 
             // helper分享时携带的id
             return new Promise(async (resolve, reject) => {
