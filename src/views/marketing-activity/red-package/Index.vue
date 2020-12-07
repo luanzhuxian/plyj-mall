@@ -164,7 +164,7 @@ export default {
                 const { result: { records = [] } } = await getRedPackageList(params)
                 // 过滤未隐藏且有库存的福利红包
                 this.redPackageList = records
-                    .filter(item => !item.showStatus && item.issueVolume)
+                    .filter(item => item.showStatus && item.issueVolume)
                     .map(item => {
                         item.price = fenToYuan(item.price)
                         return item
