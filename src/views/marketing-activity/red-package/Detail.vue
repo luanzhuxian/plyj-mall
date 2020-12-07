@@ -254,11 +254,11 @@ export default {
             let { count } = this.form
             count += this.activity.userClaimed
             // 达到剩余库存 / 达到领用上限
-            return count >= this.activity.issueVolume || (this.redPackage.activityLimit && count >= this.redPackage.quantityLimit)
+            return count >= this.activity.issueVolume || !!(this.redPackage.activityLimit && count >= this.redPackage.quantityLimit)
         },
         // 是否达到领取上限
         isUpLimitReached () {
-            return this.redPackage.activityLimit && this.activity.userClaimed >= this.redPackage.quantityLimit
+            return !!this.redPackage.activityLimit && this.activity.userClaimed >= this.redPackage.quantityLimit
         },
         totalPrice () {
             const { price } = this.redPackage
