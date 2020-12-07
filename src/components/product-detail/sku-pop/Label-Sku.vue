@@ -8,13 +8,14 @@
             <label
                 v-for="(item, i) of skuAttr.productAttributeValues"
                 :key="i"
-                @change="labelChange(skuAttr, item)"
             >
                 <input
                     type="radio"
-                    :name="skuAttr.productAttributeName"
-                    :value="item.productAttributeValueName"
+                    :name="skuAttr.id + '_' + _uid"
+                    :value="item.id"
                     :disabled="item.disabled"
+                    :checked="item.checked"
+                    @change="labelChange(skuAttr, item)"
                 >
                 <span v-text="item.productAttributeValueName" />
             </label>
@@ -23,8 +24,7 @@
             v-if="skuAttr.children"
             :sku-attr="skuAttr.children"
             :sku-list="skuList"
-            @labelChange="labelChange"
-            @change="change"
+            @change.capture="change"
         />
     </div>
 </template>
@@ -44,6 +44,15 @@ export default {
             }
         }
     },
+    watch: {
+        skuAttr: {
+            handler (val) {
+                console.log(val, this.$el)
+            },
+            deep: true,
+            immediate: true
+        }
+    },
     data () {
         return {
             currentSku: null
@@ -51,6 +60,11 @@ export default {
     },
     methods: {
         labelChange (attr, sku, child) {
+            console.log(sku, this.$el)
+            for (const SKU of attr.productAttributeValues) {
+                SKU.checked = false
+            }
+            sku.checked = true
             const currentLabel = child || this
             currentLabel.currentSku = sku
             // 按两级sku处理，要么有父级，要么有子级
@@ -62,28 +76,23 @@ export default {
                 // 假设点击的是父级，则去判断子级
                 currentLabel.checkSku(sku.id, currentLabel.$children[0].skuAttr.productAttributeValues)
             }
-            // sku.checked = true
-            // const children = attr.children
-            // this.currentSku = sku
-            // let parent = this
-            // while (parent.$parent.$options.name === 'LabelSku') {
-            //     parent = parent.$parent
-            // }
-            // const skus = []
-            // while (parent) {
-            //     parent.currentSku.checked = true
-            //     skus.push(parent.currentSku)
-            //     parent = parent.$children[0] || null
-            // }
-            // console.log(parent)
-            // console.log(skus)
-            // console.log(this.$parent.$children)
-            // console.log()
-            this.$emit('labelChange', attr, sku, this)
-            this.$emit('change', sku)
+            this.change([sku])
         },
-        change (...attr) {
-            this.$emit('change', this.currentSku, ...attr)
+        radioChange () {
+            console.log('asldjkg')
+        },
+        change (skus) {
+            let parent = this.$parent
+            let children = this.$children[0]
+            while (parent.$options.name === 'LabelSku') {
+                skus.unshift(parent.currentSku)
+                parent = parent.$parent
+            }
+            while (children && children.$options.name === 'LabelSku') {
+                skus.push(children.currentSku)
+                children = children.$children[0]
+            }
+            this.$emit('change', [...new Set(skus)])
         },
         checkSku (currentSkuId, skus) {
             for (const sku of skus) {

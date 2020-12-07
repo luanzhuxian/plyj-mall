@@ -12,7 +12,6 @@
                     <div>
                         <div :class="$style.baseInfo" v-if="currentSku">
                             <img v-imgError
-                                 v-if="currentSku.skuImage"
                                  v-img-error
                                  :src="skuImage + '?x-oss-process=style/thum'"
                                  alt=""
@@ -20,23 +19,24 @@
                             <div :class="$style.baseInfoRight">
                                 <!-- 公益活动 -->
                                 <p
-                                    v-if="activeProduct === 7"
+                                    v-if="activeType === 7"
                                     :class="$style.price"
                                     v-text="publicBenefitActivePrice"
                                 />
                                 <p
-                                    v-else-if="activeType === 1 || (activeProduct === 4 && !currentSku.activityProduct)"
+                                    v-else-if="activeType === 1 || (activeType === 4 && !currentSku.activityProduct)"
                                     :class="$style.price"
                                     v-text="currentSku.price"
                                 />
                                 <!-- 如果是预购的话，取当前选中规格的价格 -->
                                 <p
-                                    v-else-if="activeProduct === 4 && currentSku.activityProduct"
+                                    v-else-if="activeType === 4 && currentSku.activityProduct"
                                     :class="$style.price"
                                     v-text="currentSku.activityPrice"
                                 />
                                 <p :class="$style.original"
-                                   v-if="currentSku.price !== currentSku.originalPrice && currentSku.originalPrice">
+                                   v-if="currentSku.price !== currentSku.originalPrice && currentSku.originalPrice"
+                                >
                                     原价：
                                     <del class="rmb" v-text="currentSku.originalPrice" v-if="activeType !== 1" />
                                     <del class="rmb" v-else v-text="currentSku.originalPrice" />
@@ -47,6 +47,7 @@
                                     <template v-if="currentSku.skuCode2Name">，<i v-text="currentSku.skuCode2Name" /></template>
                                     ”
                                 </p>
+                                <p :class="$style.repertory" v-text="currentSku.noSku" />
                             </div>
                         </div>
                         <div :class="$style.skuBox" @touchmove.stop="() => {}">
@@ -55,152 +56,95 @@
                                 :sku-list="skuList"
                                 @change="skuChange"
                             />
-                            <!--<div
-                                :class="$style.color"
-                                v-for="attr of skuAttrList"
-                                :key="attr.id"
-                            >
-                                <div v-text="attr.productAttributeName" />
-                                <div :class="$style.colorList">
-                                    <label
-                                        v-for="(item, i) of attr.productAttributeValues"
-                                        :key="i"
-                                        @change="skuChange(attr, item)"
-                                    >
-                                        <input
-                                            type="radio"
-                                            :name="attr.productAttributeName"
-                                            :value="item.productAttributeValueName"
-                                            :disabled="item.disabled"
-                                            :checked="item.checked"
-                                        >
-                                        <span v-text="item.productAttributeValueName" />
-                                    </label>
-                                </div>
-                            </div>-->
                         </div>
                     </div>
-                    <!--<div>
-                        <div :class="$style.skuBox" @touchmove.stop="() => {}">
-                            &lt;!&ndash; 规格1 &ndash;&gt;
-                            <div :class="$style.color" v-if="skuAttrList && skuAttrList.length">
-                                <div v-text="skuAttrList[0].productAttributeName" />
-                                <div :class="$style.colorList">
-                                    <template v-for="(item, i) of skuAttrList[0].productAttributeValues">
-                                        <button
-                                            v-if="attrIsHear(item.id)"
-                                            :key="i"
-                                            @click.stop="skuChange(item.id)"
-                                            :disabled="sku1IsAllDisabled(item.id)"
-                                            :class="{ [$style.active]: currentSku1 === item.id }"
-                                            v-text="item.productAttributeValueName"
-                                        />
-                                    </template>
-                                </div>
-                            </div>
-                            &lt;!&ndash; 规格2 &ndash;&gt;
-                            <div :class="$style.color" v-if="skuCode2List.length && skuAttrList.length > 1">
-                                <div v-text="skuAttrList[1].productAttributeName" />
-                                <div :class="$style.colorList">
-                                    <button
-                                        v-for="(item, i) of skuCode2List"
-                                        :key="i"
-                                        @click.stop="subSkuChange(item.skuCode2)"
-                                        :disabled="item.disabled"
-                                        :class="{ [$style.active]: currentSku2 === item.skuCode2 }"
-                                        v-text="item.skuCode2Name"
-                                    />
-                                </div>
-                            </div>
+                    <div :class="$style.count">
+                        <div>
+                            <span>购买数量</span>
+                            <!-- 只有 进行中 + 秒杀活动 + 活动购买/从规格页面 按照活动限购显示，其他都按照普通商品的限购显示 -->
+                            <span
+                                v-if="activeType === 3 && activityProductModel && activityProductModel.activityLimit === 1"
+                                class="fz-20 ml-10"
+                                style="color: #B8B8B8; font-weight: normal;"
+                            >
+                                (每账号限购{{ activityProductModel.activityLimitNumber }}件)
+                            </span>
+                            <span
+                                v-else-if="limiting"
+                                class="fz-20 ml-10"
+                                style="color: #B8B8B8; font-weight: normal;"
+                            >
+                                (每账号限购{{ limiting }}件)
+                            </span>
                         </div>
-                        <div :class="$style.count">
-                            <div>
-                                <span>购买数量</span>
-                                &lt;!&ndash; 只有 进行中 + 秒杀活动 + 活动购买/从规格页面 按照活动限购显示，其他都按照普通商品的限购显示 &ndash;&gt;
-                                <span
-                                    v-if="activeType === 3 && activityProductModel && activityProductModel.activityLimit === 1"
-                                    class="fz-20 ml-10"
-                                    style="color: #B8B8B8; font-weight: normal;"
-                                >
-                                    (每账号限购{{ activityProductModel.activityLimitNumber }}件)
-                                </span>
-                                <span
-                                    v-else-if="limiting"
-                                    class="fz-20 ml-10"
-                                    style="color: #B8B8B8; font-weight: normal;"
-                                >
-                                    (每账号限购{{ limiting }}件)
-                                </span>
-                            </div>
-                            <div :class="$style.countCtr">
-                                <button
-                                    :disabled="(activeType === 1 && count <= min) || (activeType !== 1 && count <= 1)"
-                                    @click.stop="minus"
-                                >
-                                    -
-                                </button>
-                                <input
-                                    v-model.number="count"
-                                    type="number"
-                                    @blur="countChange"
-                                >
-                                &lt;!&ndash; 公益活动 &ndash;&gt;
-                                <button
-                                    v-if="activeProduct === 7"
-                                    :disabled="count >= publicBenefitActiveStock"
-                                    @click.stop="add"
-                                >
-                                    +
-                                </button>
-                                &lt;!&ndash; 其他 &ndash;&gt;
-                                <button
-                                    v-else
-                                    :disabled="(activeType === 1 && count >= localCurrentSku.stock) || (activeType !== 1 && activityProductModel && count >= activityProductModel.buyCount)"
-                                    @click.stop="add"
-                                >
-                                    +
-                                </button>
-                                <p :class="$style.residue">
-                                    &lt;!&ndash; 活动商品库存展示，如果商品不是预购且活动库存不足，则显示正常库存 &ndash;&gt;
-                                    &lt;!&ndash; 注意：公益活动例外 &ndash;&gt;
-                                    <template v-if="activeProduct === 7">
-                                        库存<i v-text="publicBenefitActiveStock" />件
-                                    </template>
-                                    <template v-else-if="activeType !== 1 && activeType !== 4">
-                                        总库存<i v-text="activeAllResidue" />件
-                                    </template>
-                                    <template v-else>
-                                        库存<i v-text="residue" />件
-                                    </template>
-                                </p>
-                            </div>
+                        <div :class="$style.countCtr">
+                            <button
+                                :disabled="(activeType === 1 && count <= min) || (activeType !== 1 && count <= 1)"
+                                @click.stop="minus"
+                            >
+                                -
+                            </button>
+                            <input
+                                v-model.number="count"
+                                type="number"
+                                @blur="countChange"
+                            >
+                            <!-- 公益活动 -->
+                            <button
+                                v-if="activeProduct === 7"
+                                :disabled="count >= publicBenefitActiveStock"
+                                @click.stop="add"
+                            >
+                                +
+                            </button>
+                            <!-- 其他 -->
+                            <button
+                                v-else
+                                :disabled="(activeType === 1 && count >= currentSku.stock) || (activeType !== 1 && activityProductModel && count >= activityProductModel.buyCount)"
+                                @click.stop="add"
+                            >
+                                +
+                            </button>
+                            <p :class="$style.residue" v-if="skuHasChecked">
+                                <!-- 活动商品库存展示，如果商品不是预购且活动库存不足，则显示正常库存 -->
+                                <!-- 注意：公益活动例外 -->
+                                <template v-if="activeProduct === 7">
+                                    库存<i v-text="publicBenefitActiveStock" />件
+                                </template>
+                                <template v-else-if="activeType !== 1 && activeType !== 4">
+                                    总库存<i v-text="activeAllResidue" />件
+                                </template>
+                                <template v-else>
+                                    库存<i v-text="residue" />件
+                                </template>
+                            </p>
                         </div>
-                    </div>-->
+                    </div>
 
                     <!-- 预购提醒 -->
-                    <!--<div :class="$style.bookPrice" v-if="activeProduct === 4 && preActivity === 2 && currentSku.activityProduct">
+                    <div :class="$style.bookPrice" v-if="activeProduct === 4 && preActivity === 2 && currentSku.activityProduct">
                         定金<span>{{ currentSku.activityPrice }}</span>
                         <div class="deposit">
                             抵<span>{{ currentSku.depositTotal }}</span>
                         </div>
-                    </div>-->
+                    </div>
 
                     <!-- 红包抵用提醒 -->
-                    <!--<div class="fz-24" v-if="currentSku.activityProduct && getRedPacket && activeType !== 4">
+                    <div class="fz-24" v-if="currentSku.activityProduct && getRedPacket && activeType !== 4">
                         可使用满 <i class=" primary-color">{{ getRedPacket.useLimitAmount }}减{{ getRedPacket.amount }}</i> 商品福利红包
-                    </div>-->
+                    </div>
 
-                    <!--<div :class="$style.footer" v-if="localCurrentSku.id" @click.capture="slotClickHandler">
+                    <div :class="$style.footer" @click.capture="slotClickHandler">
                         <slot
                             name="footer"
                             :publicBenefitActiveStock="publicBenefitActiveStock"
                             :publicBenefitActivePrice="publicBenefitActivePrice"
-                            :currentSku="localCurrentSku"
-                            :revert="revert"
-                            :limit="limit"
+                            :currentSku="currentSku"
+                            :count="count"
+                            :skuHasChecked="skuHasChecked"
                             :limiting="(activeType === 3 && activityProductModel && activityProductModel.activityLimit === 1) ? activityProductModel.activityLimitNumber : limiting"
                         />
-                    </div>-->
+                    </div>
                 </div>
             </transition>
         </div>
@@ -209,8 +153,9 @@
 
 <script>
 /* eslint-disable */
-import { getCurrentLimit } from '../../../apis/product'
+// import { getCurrentLimit } from '../../../apis/product'
 import LabelSku from './Label-Sku.vue'
+import { setTimeoutSync } from '../../../assets/js/util'
 
 export default {
     name: 'SpecificationPop',
@@ -242,7 +187,8 @@ export default {
         },
         productImage: {
             type: String,
-            default: ''
+            default: '',
+            required: true
         },
 
         // 默认数量
@@ -256,7 +202,7 @@ export default {
         sku: {
             type: Object,
             default () {
-                return {}
+                return null
             }
         },
         // 商品本身限购数量
@@ -284,13 +230,12 @@ export default {
         return {
             // 格式化后的sku属性数据，继承自skuAttrList
             formatedSkuAttrList: null,
-            // 当前选中的sku code
-            skus: [],
+            // 当前选中的sku属性
+            currentSkuAttrs: [],
             showBox: false,
             showSpec: false,
-            currentSku: null
-            // count: 1,
-            // min: 1,
+            // 选择的规格数量
+            count: 1,
             // 可买数量
             // limit: 0,
             // 当前规格，和计算属性 currentSku 基本一致，不同的是，这个的值可以被修改
@@ -312,43 +257,77 @@ export default {
         }
     },
     computed: {
-        // publicBenefitActive () {
-        //     const list = (this.activityProductModel && this.activityProductModel.productModels) || []
-        //     return list.find(({ sku1, sku2 }) => sku1 === this.currentSku1 && sku2 === this.currentSku2) || {}
-        // },
-        // 公益活动所选规格的库存
-        // publicBenefitActiveStock () {
-        //     return this.publicBenefitActive.activityStock
-        // },
-        // publicBenefitActivePrice () {
-        //     return this.publicBenefitActive.activityPrice
-        // },
-        // 当前选中的规格的原始值
-        // currentSku () {
-        //     const current = this.skuList.find(item => item.skuCode1 === this.currentSku1 && item.skuCode2 === this.currentSku2) || {}
-        //     if (this.sku.skuCode1 === current.skuCode1 && this.sku.skuCode2 === current.skuCode2) {
-        //         current.count = this.defaultCount || current.minBuyNum
-        //     } else {
-        //         current.count = current.minBuyNum
-        //     }
-        //     return { ...current }
-        // },
-        skuImage () {
-            const currentSku1 = this.skuAttrList[0].productAttributeValues.find(item => item.id === this.skus[0])
-            return currentSku1.productAttributeImage ? currentSku1.productAttributeImage[0] || this.productImage : this.productImage
+        publicBenefitActive () {
+            const list = (this.activityProductModel && this.activityProductModel.productModels) || []
+            return list.find(({ sku1, sku2 }) => sku1 === this.currentSku1 && sku2 === this.currentSku2) || {}
         },
-        // residue () {
-        //     // 此商品是预购（this.activeType === 4）并且当前规格也是预购（this.localCurrentSku.activityProduc === true）
-        //     // if (this.activeType === 4 && this.localCurrentSku.activityProduct) {
-        //     //     return this.localCurrentSku.stock
-        //     // }
-        //     return this.localCurrentSku.stock
-        // },
+        // 公益活动所选规格的库存
+        publicBenefitActiveStock () {
+            return this.publicBenefitActive.activityStock
+        },
+        publicBenefitActivePrice () {
+            return this.publicBenefitActive.activityPrice
+        },
+        /**
+         * 是否完全选中了规格
+         * 比如有A\B两种规格，但是只选中了A或者B，就返回false
+         * @return Boolean
+         */
+        skuHasChecked () {
+            return this.currentSkuAttrs.every(item => Boolean(item)) && Boolean(this.currentSkuAttrs.length)
+        },
+        // 当前选中的规格
+        currentSku: {
+            get () {
+                if (!this.skuHasChecked) {
+                    const priceList = this.skuList.map(item => item.price)
+                    const originalPriceList = this.skuList.map(item => item.originalPrice)
+                    const minPrice = Math.min(...priceList)
+                    const maxPrice = Math.max(...priceList)
+                    const minOriginalPrice = Math.min(...originalPriceList)
+                    const maxOriginalPrice = Math.max(...originalPriceList)
+                    return {
+                        price: [...new Set([minPrice, maxPrice])].join('~'),
+                        originalPrice: [...new Set([minOriginalPrice, maxOriginalPrice])].join('~'),
+                        noSku: `请选择 ${ this.skuAttrList.map(item => item.productAttributeName).join(' ') }`,
+                        stock: -1
+                    }
+                }
+                const skuCode1 = this.currentSkuAttrs[0].id
+                const skuCode2 = this.currentSkuAttrs[1] ? this.currentSkuAttrs[1].id : ''
+                const sku = this.skuList.find(item => item.skuCode1 === skuCode1 && item.skuCode2 === skuCode2)
+                return {
+                    ...sku,
+                    count: sku.minBuyNum,
+                }
+            },
+            set () {
 
-        // 活动期间总余
-        // activeAllResidue () {
-        //     return this.activityProductModel ? this.activityProductModel.buyCount : 0
-        // },
+            }
+        },
+        skuImage () {
+            if (!this.skuHasChecked) {
+                return this.skuHasChecked ? '' : this.productImage
+            }
+            return this.currentSkuAttrs[0].productAttributeImage[0] || this.productImage
+        },
+        // 最小购买量
+        min () {
+            return this.currentSku.minBuyNum
+        },
+        // 剩余库存
+        residue () {
+            // 此商品是预购（this.activeType === 4）并且当前规格也是预购（this.localCurrentSku.activityProduc === true）
+            // if (this.activeType === 4 && this.localCurrentSku.activityProduct) {
+            //     return this.localCurrentSku.stock
+            // }
+            return this.currentSku.stock || 0
+        },
+
+        // 活动剩余库存
+        activeAllResidue () {
+            return this.activityProductModel ? this.activityProductModel.buyCount : 0
+        },
 
         /**
          * 如果不是活动商品 或者活动未开始，返回1（按正常商品处理）
@@ -368,22 +347,22 @@ export default {
          * 找出合适的福利红包，如果没有返回null
          * 更加规格和规格价格，找出减免力度最大的红包展示出来
          */
-        // getRedPacket () {
-        //     const RED_PACKET = this.couponList.filter(item => item.couponType === 3).sort((a, b) => a.amount - b.amount)
-        //     if (!RED_PACKET.length) {
-        //         return null
-        //     }
-        //     // 找出匹配当前规格的红包
-        //     const filterRedPacket = []
-        //     const { skuCode1: CUR_SKUCODE1, skuCode2: CUR_SKUCODE2 } = this.currentSku
-        //     for (const redPacket of RED_PACKET) {
-        //         const { couponGoodsSkuDTOS } = redPacket
-        //         if (couponGoodsSkuDTOS.some(item => item.skuCode === CUR_SKUCODE1 && item.subSkuCode === CUR_SKUCODE2)) {
-        //             filterRedPacket.push(redPacket)
-        //         }
-        //     }
-        //     return filterRedPacket.slice(-1)[0] || null
-        // }
+        getRedPacket () {
+            const RED_PACKET = this.couponList.filter(item => item.couponType === 3).sort((a, b) => a.amount - b.amount)
+            if (!RED_PACKET.length) {
+                return null
+            }
+            // 找出匹配当前规格的红包
+            const filterRedPacket = []
+            const { skuCode1: CUR_SKUCODE1, skuCode2: CUR_SKUCODE2 } = this.currentSku
+            for (const redPacket of RED_PACKET) {
+                const { couponGoodsSkuDTOS } = redPacket
+                if (couponGoodsSkuDTOS.some(item => item.skuCode === CUR_SKUCODE1 && item.subSkuCode === CUR_SKUCODE2)) {
+                    filterRedPacket.push(redPacket)
+                }
+            }
+            return filterRedPacket.slice(-1)[0] || null
+        }
     },
     mounted () {
         // this.getGroups(0)
@@ -393,7 +372,8 @@ export default {
             // 格式化sku属性
             for (const skuAttr of this.skuAttrList) {
                 for (const skuAttr of skuAttr.productAttributeValues) {
-                    // this.$set(skuAttr, 'checked', false)
+                    // 设置默认选中
+                    this.$set(skuAttr, 'checked', this.sku ? (this.sku.skuCode1 === skuAttr.id || this.sku.skuCode2 === skuAttr.id) : false)
                     this.$set(skuAttr, 'disabled', false)
                 }
             }
@@ -404,12 +384,8 @@ export default {
                 preLastAttr.children = lastAttr
                 lastAttr = preLastAttr
             }
-            this.formatedSkuAttrList = lastAttr
 
-            // 未指定默认的sku，默认选中第一个规格
-            if (!this.sku) {
-                this.checkFirstSku()
-            } else {}
+            this.formatedSkuAttrList = lastAttr
         },
         close () {
             // this.revert()
@@ -428,26 +404,44 @@ export default {
             // this.$emit('change', firstSku)
             // this.$emit('update:sku', firstSku)
         },
-        skuChange (...attr) {
-            console.log(attr)
+        async skuChange (sku) {
+            this.currentSkuAttrs = sku
+            await this.$nextTick()
+            if (this.skuHasChecked) {
+                this.$emit('change', this.currentSku)
+                this.$emit('update:sku', this.currentSku)
+            }
+            // await this.getLimit()
             // 判断是第几个规格改变了
             // const index = this.skuAttrList.findIndex(item => item.id === attr.id)
             // 替换被改变的规格
             // this.skus.splice(index, 1, sku.id)
             // this.checkDisabled()
         },
+        // 获取剩余可购买数量
+        // async getLimit () {
+        //         if (this.limiting && this.skuHasChecked) {
+        //             try {
+        //                 const { result: limit } = await getCurrentLimit(this.currentSku.productId, this.activeType)
+        //                 this.limit = limit
+        //             } catch (e) {
+        //                 this.limit = this.limiting
+        //                 this.$error('商品限购检查错误')
+        //             }
+        //         }
+        // },
         // 检查当前规格是否被禁用
-        checkDisabled () {
-            const sku1 = this.sku[0]
-            const sku2 = this.sku[1] || ''
-            const skuModel = this.skuList.find(item => item.skuCode1 === sku1 && item.skuCode2 === sku2)
-            if (!skuModel) {
-                return true
-            }
-            if (skuModel.minBuyNum > skuModel.stock) {
-
-            }
-        },
+        // checkDisabled () {
+        //     const sku1 = this.sku[0]
+        //     const sku2 = this.sku[1] || ''
+        //     const skuModel = this.skuList.find(item => item.skuCode1 === sku1 && item.skuCode2 === sku2)
+        //     if (!skuModel) {
+        //         return true
+        //     }
+        //     if (skuModel.minBuyNum > skuModel.stock) {
+        //
+        //     }
+        // },
 
         // 初始化，会选中一个默认规格，如果没有默认规格，选中第一个(禁用的不能选中)，并触发一次change事件
         // init () {
@@ -490,7 +484,7 @@ export default {
                     this.showSpec = false
                 }, 300)
             }
-        }
+        },
         // sku1IsAllDisabled (skuCode1) {
         //     const sku1list = this.skuList.filter(item => item.skuCode1 === skuCode1)
         //     return sku1list.every(item => {
@@ -603,16 +597,60 @@ export default {
         //     this.localCurrentSku.count = this.count
         //     this.$emit('change', this.localCurrentSku)
         // },
-        // minus () {
-        //     this.count--
-        //     this.$set(this.localCurrentSku, 'count', this.count)
-        //     this.$emit('change', this.localCurrentSku)
-        // },
-        // add () {
-        //     this.count++
-        //     this.$set(this.localCurrentSku, 'count', this.count)
-        //     this.$emit('change', this.localCurrentSku)
-        // },
+        countChange () {
+            if (!this.skuHasChecked) {
+                if (this.count > 1) {
+                    this.$warning('请选择商品规格')
+                }
+                this.count = 1
+                return
+            }
+            if (this.count > this.currentSku.stock) {
+                this.count = this.currentSku.stock
+                this.$warning(`购买的宝贝数超过剩余库存`)
+                return
+            }
+            if (this.activeType === 1) {
+                if (this.count < this.min) {
+                    this.count = this.min
+                    this.$warning(`此规格最小购买量为${ this.min }`)
+                }
+                if (this.limiting && this.count > this.limiting) {
+                    this.count = this.limiting
+                    this.$warning(`每账号限购${ this.limiting }件`)
+                }
+            } else {
+                if (this.count < 1) {
+                    this.count = 1
+                    this.$warning(`此规格最小购买量为1`)
+                }
+                if (this.activityProductModel) {
+                    if (this.count > this.activityProductModel.buyCount) {
+                        this.count = this.activityProductModel.buyCount
+                        this.$warning(`购买的宝贝数超过剩余库存`)
+                    } else if (this.activityProductModel.activityLimit === 1 && this.count > this.activityProductModel.activityLimitNumber) {
+                        this.count = this.activityProductModel.activityLimitNumber
+                        this.$warning(`每账号限购${ this.activityProductModel.activityLimitNumber }件`)
+                    }
+                }
+            }
+        },
+        minus () {
+            if (!this.skuHasChecked) {
+                this.count = 1
+                this.$warning('请选择商品规格')
+                return
+            }
+            this.count--
+        },
+        add () {
+            if (!this.skuHasChecked) {
+                this.count = 1
+                this.$warning('请选择商品规格')
+                return
+            }
+            this.count++
+        },
         //
         // // 回滚（如果规格选择失败，或者没选，回滚到最初规格）
         // revert () {
@@ -624,17 +662,23 @@ export default {
         //         this.currentSku2 = this.sku.skuCode2
         //     }
         // },
-        //
-        // // 点击购买或者加入购物车时，更新当前可买数量
-        // async slotClickHandler () {
-        //     setTimeout(async () => {
-        //         // 当前商品限购的时候，检查可买数量
-        //         if (this.limiting) {
-        //             const { result: limit } = await getCurrentLimit(this.currentSku.productId, this.activeType)
-        //             this.limit = limit
-        //         }
-        //     }, 1500)
-        // }
+        /**
+         * 拦截购买，加入购物车等按钮
+         * 如果没有选择规格，则阻止事件的传递
+         * @param e {Event}
+         * @return {Promise<void>}
+         */
+        async slotClickHandler (e) {
+            if (!this.skuHasChecked) {
+                e.stopPropagation()
+                this.$warning('请选择商品规格')
+            }
+            // await setTimeoutSync(1500)
+            // if (this.limiting) {
+            //     const { result: limit } = await getCurrentLimit(this.currentSku.productId, this.activeType)
+            //     this.limit = limit
+            // }
+        }
     }
 }
 </script>
