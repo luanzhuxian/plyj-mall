@@ -76,7 +76,7 @@
                         <div :class="$style.redPackageForm" v-if="isFormShow">
                             <PlForm ref="form" :model="form" :rules="rules">
                                 <PlFormItem prop="number" label="领取数量" class="input-number">
-                                    <template v-if="redPackage.quantityLimit !== 1">
+                                    <template v-if="!(redPackage.activityLimit && redPackage.quantityLimit === 1)">
                                         <button type="button" :disabled="form.count <= 1" @click.stop="form.count--">
                                             -
                                         </button>
@@ -85,7 +85,7 @@
                                             +
                                         </button>
                                     </template>
-                                    <div :class="$style.redPackageLimit" v-if="redPackage.quantityLimit">
+                                    <div :class="$style.redPackageLimit" v-if="redPackage.activityLimit && redPackage.quantityLimit">
                                         {{ `每人限领${redPackage.quantityLimit}张` }}
                                     </div>
                                 </PlFormItem>
@@ -254,11 +254,11 @@ export default {
             let { count } = this.form
             count += this.activity.userClaimed
             // 达到剩余库存 / 达到领用上限
-            return count >= this.activity.issueVolume || count >= this.redPackage.quantityLimit
+            return count >= this.activity.issueVolume || (this.redPackage.activityLimit && count >= this.redPackage.quantityLimit)
         },
         // 是否达到领取上限
         isUpLimitReached () {
-            return this.activity.userClaimed >= this.redPackage.quantityLimit
+            return this.redPackage.activityLimit && this.activity.userClaimed >= this.redPackage.quantityLimit
         },
         totalPrice () {
             const { price } = this.redPackage
@@ -376,11 +376,13 @@ export default {
                         return false
                     }
                 }
-
-                if (this.form.count + this.activity.userClaimed > this.redPackage.quantityLimit) {
-                    return Number(this.activity.userClaimed)
-                        ? this.$warning(`每人至多领取${ this.redPackage.quantityLimit }张，您已领取${ Number(this.activity.userClaimed) }张`)
-                        : this.$warning(`每人至多领取${ this.redPackage.quantityLimit }张`)
+                // 有领取上限
+                if (this.redPackage.activityLimit) {
+                    if (this.form.count + this.activity.userClaimed > this.redPackage.quantityLimit) {
+                        return Number(this.activity.userClaimed)
+                            ? this.$warning(`每人至多领取${ this.redPackage.quantityLimit }张，您已领取${ Number(this.activity.userClaimed) }张`)
+                            : this.$warning(`每人至多领取${ this.redPackage.quantityLimit }张`)
+                    }
                 }
 
                 this.submiting = true
