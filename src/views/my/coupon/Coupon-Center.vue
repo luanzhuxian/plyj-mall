@@ -27,7 +27,7 @@
                             :key="item.id"
                             :coupon-id="item.id"
                             :coupon-type="Number(item.couponType)"
-                            :price="Number(item.price)"
+                            :price="Number(item.orderPrice)"
                             :name="item.couponName"
                             :amount="item.amount"
                             :full="item.useLimitAmount"

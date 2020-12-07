@@ -44,7 +44,7 @@
                             :use-end-time="item.useEndTime"
                             :use-start-time="item.useStartTime"
                             :receive-count="item.count"
-                            :price="Number(item.price)"
+                            :price="Number(item.orderPrice)"
                             :can-receive="item.canReceive"
                         />
                     </template>
