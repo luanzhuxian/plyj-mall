@@ -30,15 +30,15 @@
             <div :class="$style.title">一. 购买与使用</div>
             <ol>
                 <li>
-                    <div :class="$style.title2">1. 不与全网优惠叠加使用</div>
-                    <p :class="$style.tip">福利红包使用时不支持与满减券、品类券、奖学金等优惠叠加使用；且福利红包本身不可叠加使用，每次消费仅支持使用一张福利红包</p>
+                    <div :class="$style.title2">1. 支持与部分优惠券叠加使用</div>
+                    <p :class="$style.tip">福利红包使用时依据设置规则选择支持或不支持与满减券、品类券、奖学金等优惠叠加使用；且福利红包本身不可叠加使用，每次消费仅支持使用一张福利红包</p>
                 </li>
                 <li>
                     <div :class="$style.title2">2. 使用限制</div>
                     <p :class="$style.tip">不支持购买团购、预购、组合聚会学、秒杀等活动产品，不支持直播产品</p>
                 </li>
                 <li>
-                    <div :class="$style.title2">3. 查看储备金</div>
+                    <div :class="$style.title2">3. 查看福利红包</div>
                     <p :class="$style.tip">您可以在【我的】-【我的卡券】查看福利红包及使用记录</p>
                 </li>
             </ol>
