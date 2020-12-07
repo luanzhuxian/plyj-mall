@@ -40,7 +40,7 @@
                  v-if="isShowReceive"
                  @click.stop="couponClick"
             >
-                <div :class="$style.price" v-if="isPriceShow"> ￥{{ price }}</div>
+                <div :class="$style.price" v-if="isPriceShow"> ￥{{ price / 100 }}</div>
                 <div :class="$style.ctrl">
                     <!-- 根据是否可以去使用，目前只有我的卡券+提交订单显示'去使用'， 其他显示'立即领取' -->
                     <!-- 应当是能够显示立即领取的地方，都可能达到领取上限 -->

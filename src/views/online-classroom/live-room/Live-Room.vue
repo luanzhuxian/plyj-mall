@@ -147,7 +147,7 @@
                                 :use-end-time="item.useEndTime"
                                 :use-start-time="item.useStartTime"
                                 :can-receive="item.canReceive"
-                                :price="Number(item.price)"
+                                :price="Number(item.orderPrice)"
                                 source="live"
                                 direct-pay
                             />
