@@ -34,6 +34,11 @@
                                     :class="$style.price"
                                     v-text="currentSku.activityPrice"
                                 />
+                                <p
+                                    v-else-if="activeType !== 1 && activeType !== 4"
+                                    :class="$style.price"
+                                    v-text="activityProductModel.price"
+                                />
                                 <p :class="$style.original"
                                    v-if="currentSku.price !== currentSku.originalPrice && currentSku.originalPrice"
                                 >
@@ -54,6 +59,7 @@
                             <LabelSku
                                 :sku-attr="formatedSkuAttrList"
                                 :sku-list="skuList"
+                                :default-sku-attrs="currentSkuAttrs"
                                 @change="skuChange"
                             />
                         </div>
@@ -194,7 +200,7 @@ export default {
         // 默认数量
         defaultCount: {
             type: Number,
-            default: 0
+            default: 1
         },
 
         // 初始的规格，它可以作为一个默认值，用以回滚
@@ -235,14 +241,7 @@ export default {
             showBox: false,
             showSpec: false,
             // 选择的规格数量
-            count: 1,
-            // 可买数量
-            // limit: 0,
-            // 当前规格，和计算属性 currentSku 基本一致，不同的是，这个的值可以被修改
-            // localCurrentSku: {},
-            // skuCode2List: [],
-            // currentSku1: '',
-            // currentSku2: ''
+            count: 1
         }
     },
     deactivated () {
@@ -300,9 +299,6 @@ export default {
                     ...sku,
                     count: sku.minBuyNum,
                 }
-            },
-            set () {
-
             }
         },
         skuImage () {
@@ -365,7 +361,7 @@ export default {
         }
     },
     mounted () {
-        // this.getGroups(0)
+        this.init()
     },
     methods: {
         init () {
@@ -373,7 +369,7 @@ export default {
             for (const skuAttr of this.skuAttrList) {
                 for (const skuAttr of skuAttr.productAttributeValues) {
                     // 设置默认选中
-                    this.$set(skuAttr, 'checked', this.sku ? (this.sku.skuCode1 === skuAttr.id || this.sku.skuCode2 === skuAttr.id) : false)
+                    this.$set(skuAttr, 'checked', false)
                     this.$set(skuAttr, 'disabled', false)
                 }
             }
@@ -384,25 +380,24 @@ export default {
                 preLastAttr.children = lastAttr
                 lastAttr = preLastAttr
             }
-
             this.formatedSkuAttrList = lastAttr
+
+            // 设置默认的sku
+            if (this.sku) {
+                const skuCode1 = this.sku.skuCode1
+                const skuCode2 = this.sku.skuCode2
+                const skuAttrs = [...this.skuAttrList.map(item => item.productAttributeValues)].flat()
+                const skuAttr1 = skuAttrs.filter(item => item.id === skuCode1)[0]
+                const skuAttr2 = skuAttrs.filter(item => item.id === skuCode2)[0] || null
+                this.currentSkuAttrs = [skuAttr1, skuAttr2]
+            }
+
+            // 设置数量
+            this.count = this.defaultCount
+
         },
         close () {
-            // this.revert()
             this.$emit('update:visible', false)
-        },
-        // 找到第一个可用的规格
-        checkFirstSku () {
-            // const firstSku = this.skuList.filter(item => item.stock >= item.minBuyNum)[0]
-            // const skus = [firstSku.skuCode1, firstSku.skuCode2]
-            // for (const [i, skucode] of skus.entries()) {
-            //     const skuAttrValue = this.skuAttrList[i].productAttributeValues.find(item => item.id === skucode)
-            //     skuAttrValue.checked = true
-            // }
-            // this.skus = skus
-            // this.currentSku = JSON.parse(JSON.stringify(firstSku))
-            // this.$emit('change', firstSku)
-            // this.$emit('update:sku', firstSku)
         },
         async skuChange (sku) {
             this.currentSkuAttrs = sku
@@ -411,66 +406,7 @@ export default {
                 this.$emit('change', this.currentSku)
                 this.$emit('update:sku', this.currentSku)
             }
-            // await this.getLimit()
-            // 判断是第几个规格改变了
-            // const index = this.skuAttrList.findIndex(item => item.id === attr.id)
-            // 替换被改变的规格
-            // this.skus.splice(index, 1, sku.id)
-            // this.checkDisabled()
         },
-        // 获取剩余可购买数量
-        // async getLimit () {
-        //         if (this.limiting && this.skuHasChecked) {
-        //             try {
-        //                 const { result: limit } = await getCurrentLimit(this.currentSku.productId, this.activeType)
-        //                 this.limit = limit
-        //             } catch (e) {
-        //                 this.limit = this.limiting
-        //                 this.$error('商品限购检查错误')
-        //             }
-        //         }
-        // },
-        // 检查当前规格是否被禁用
-        // checkDisabled () {
-        //     const sku1 = this.sku[0]
-        //     const sku2 = this.sku[1] || ''
-        //     const skuModel = this.skuList.find(item => item.skuCode1 === sku1 && item.skuCode2 === sku2)
-        //     if (!skuModel) {
-        //         return true
-        //     }
-        //     if (skuModel.minBuyNum > skuModel.stock) {
-        //
-        //     }
-        // },
-
-        // 初始化，会选中一个默认规格，如果没有默认规格，选中第一个(禁用的不能选中)，并触发一次change事件
-        // init () {
-        //     // 有默认规格，并且默认规格有效
-        //     this.localCurrentSku.count = this.sku.count
-        //     this.count = this.sku.count
-        //     if (this.sku.id && this.sku.stock >= this.sku.minBuyNum && this.sku.count <= this.sku.stock) {
-        //         this.skuChange(this.sku.skuCode1, this.sku.skuCode2)
-        //     } else {
-        //         // 没有默认规格，并且默认规格失效，找出规格列表中，第一给没有禁用的规格
-        //         const noDisable = this.skuList.find(item => {
-        //             /**
-        //              * 规格按钮的禁用规则：
-        //              * 非活动商品或者活动商品但是活动未开始时，当库存大于最小购买量，按钮就不可选择
-        //              * 活动商品且活动已开始，当购买数量大于0 的情况下
-        //              */
-        //             if (this.activeType === 1 || this.preActivity !== 2) {
-        //                 return item.stock >= item.minBuyNum
-        //             }
-        //             return this.activityProductModel && this.activityProductModel.buyCount
-        //         })
-        //         if (!noDisable) {
-        //             this.$emit('change', {})
-        //             this.$emit('update:sku', {})
-        //             return
-        //         }
-        //         this.skuChange(noDisable.skuCode1, noDisable.skuCode2 || '')
-        //     }
-        // },
         setShow (show) {
             if (show) {
                 this.showSpec = true
@@ -485,118 +421,6 @@ export default {
                 }, 300)
             }
         },
-        // sku1IsAllDisabled (skuCode1) {
-        //     const sku1list = this.skuList.filter(item => item.skuCode1 === skuCode1)
-        //     return sku1list.every(item => {
-        //         if (this.activeType === 1 || this.preActivity !== 2) {
-        //             return item.stock < item.minBuyNum
-        //         }
-        //         return this.activityProductModel && this.activityProductModel.buyCount < 1
-        //     })
-        // },
-        // async skuChange (skuCode1, skuCode2) {
-        //     // 该行是有用的，目的是触发多次 watcher 更新，解决选择数量问题
-        //     this.currentSku1 = ''
-        //
-        //     this.currentSku1 = skuCode1
-        //     skuCode2 = skuCode2 || this.currentSku2 || ''
-        //     const skuCode2List = this.skuList.filter(item => item.skuCode1 === skuCode1)
-        //     for (const item of skuCode2List) {
-        //         // 普通商品才开启禁用
-        //         if (item.stock < item.minBuyNum && this.activeType === 1) {
-        //             this.$set(item, 'disabled', true)
-        //         } else {
-        //             this.$set(item, 'disabled', false)
-        //         }
-        //     }
-        //     const noDisabled = skuCode2List.filter(item => !item.disabled)
-        //     if (skuCode2) {
-        //         const currentSku2 = skuCode2List.find(item => item.skuCode2 === skuCode2)
-        //         if (currentSku2 && !currentSku2.disabled) {
-        //             this.currentSku2 = skuCode2
-        //         } else {
-        //             this.currentSku2 = noDisabled.length ? noDisabled[0].skuCode2 || '' : ''
-        //         }
-        //     } else {
-        //         this.currentSku2 = noDisabled.length ? noDisabled[0].skuCode2 || '' : ''
-        //     }
-        //     const sku2AttrList = []
-        //     for (const item of skuCode2List) {
-        //         if (item.skuCode2) {
-        //             sku2AttrList.push(item.skuCode2)
-        //         }
-        //     }
-        //     this.skuCode2List = skuCode2List
-        //     this.setCount()
-        //     await this.onSkuChange()
-        // },
-        // async subSkuChange (sku2) {
-        //     this.currentSku2 = sku2
-        //     this.setCount()
-        //     await this.onSkuChange()
-        // },
-        // // 初始化显示的数量
-        // setCount () {
-        //     this.min = this.currentSku.minBuyNum || 1
-        //     const max = Math.max(this.currentSku.count, this.min)
-        //     this.localCurrentSku.count = max
-        //     this.count = max
-        // },
-        // async onSkuChange () {
-        //     await this.$nextTick()
-        //     this.localCurrentSku = this.currentSku
-        //     this.$emit('change', this.currentSku)
-        //     this.$emit('update:sku', this.currentSku)
-        //
-        //     // 当前商品限购的时候，检查可买数量
-        //     if (this.limiting) {
-        //         try {
-        //             const { result: limit } = await getCurrentLimit(this.currentSku.productId, this.activeType)
-        //             this.limit = limit
-        //         } catch (e) {
-        //             this.limit = this.limiting
-        //             this.$error('商品限购检查错误')
-        //         }
-        //     }
-        // },
-        // attrIsHear (attrId) {
-        //     return this.skuList.some(item => item.skuCode1 === attrId || item.skuCode2 === attrId)
-        // },
-        // countChange () {
-        //     if (this.count === '') return
-        //     if (this.count > this.localCurrentSku.stock) {
-        //         this.count = this.localCurrentSku.stock
-        //         this.$warning(`购买的宝贝数超过剩余库存`)
-        //         return
-        //     }
-        //     if (this.activeType === 1) {
-        //         if (this.count < this.min) {
-        //             this.count = this.min
-        //             this.$warning(`此规格最小购买量为${ this.min }`)
-        //         }
-        //         if (this.limiting && this.count > this.limiting) {
-        //             this.count = this.limiting
-        //             this.$warning(`每账号限购${ this.limiting }件`)
-        //         }
-        //     } else {
-        //         if (this.count < 1) {
-        //             this.count = 1
-        //             this.$warning(`此规格最小购买量为1`)
-        //         }
-        //         if (this.activityProductModel) {
-        //             if (this.count > this.activityProductModel.buyCount) {
-        //                 this.count = this.activityProductModel.buyCount
-        //                 this.$warning(`购买的宝贝数超过剩余库存`)
-        //             } else if (this.activityProductModel.activityLimit === 1 && this.count > this.activityProductModel.activityLimitNumber) {
-        //                 this.count = this.activityProductModel.activityLimitNumber
-        //                 this.$warning(`每账号限购${ this.activityProductModel.activityLimitNumber }件`)
-        //             }
-        //         }
-        //     }
-        //     this.count = Number.parseInt(this.count)
-        //     this.localCurrentSku.count = this.count
-        //     this.$emit('change', this.localCurrentSku)
-        // },
         countChange () {
             if (!this.skuHasChecked) {
                 if (this.count > 1) {
@@ -651,17 +475,6 @@ export default {
             }
             this.count++
         },
-        //
-        // // 回滚（如果规格选择失败，或者没选，回滚到最初规格）
-        // revert () {
-        //     if (this.sku.id) {
-        //         this.$emit('change', this.sku)
-        //         this.localCurrentSku = this.sku
-        //         this.count = this.sku.count
-        //         this.currentSku1 = this.sku.skuCode1
-        //         this.currentSku2 = this.sku.skuCode2
-        //     }
-        // },
         /**
          * 拦截购买，加入购物车等按钮
          * 如果没有选择规格，则阻止事件的传递
@@ -673,11 +486,6 @@ export default {
                 e.stopPropagation()
                 this.$warning('请选择商品规格')
             }
-            // await setTimeoutSync(1500)
-            // if (this.limiting) {
-            //     const { result: limit } = await getCurrentLimit(this.currentSku.productId, this.activeType)
-            //     this.limit = limit
-            // }
         }
     }
 }

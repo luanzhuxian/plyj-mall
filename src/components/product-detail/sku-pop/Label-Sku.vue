@@ -15,7 +15,7 @@
                     :value="item.id"
                     :disabled="item.disabled"
                     :checked="item.checked"
-                    @change="labelChange(skuAttr, item)"
+                    @change="labelChange(item)"
                 >
                 <span v-text="item.productAttributeValueName" />
             </label>
@@ -42,15 +42,32 @@ export default {
             default () {
                 return []
             }
+        },
+        // 默认选中的skuAttrs
+        defaultSkuAttrs: {
+            type: Array,
+            default () {
+                return []
+            }
         }
     },
     watch: {
-        skuAttr: {
-            handler (val) {
-                console.log(val, this.$el)
-            },
-            deep: true,
-            immediate: true
+        defaultSkuAttrs (val) {
+            if (val === this.attrGroup) {
+                console.log('一样了')
+                return
+            }
+            this.$nextTick(() => {
+                console.log(val)
+                let labelSku = this
+                for (const attr of val) {
+                    if (labelSku && attr) {
+                        labelSku.labelChange(attr)
+                    }
+                    labelSku = this.$children[0]
+                }
+                this.$emit('change', val)
+            })
         }
     },
     data () {
@@ -59,48 +76,52 @@ export default {
         }
     },
     methods: {
-        labelChange (attr, sku, child) {
-            console.log(sku, this.$el)
-            for (const SKU of attr.productAttributeValues) {
-                SKU.checked = false
-            }
-            sku.checked = true
-            const currentLabel = child || this
-            currentLabel.currentSku = sku
+        async labelChange (attr) {
+            this.currentSku = attr
+            // for (const SKU of this.skuAttr.productAttributeValues) {
+            //     SKU.checked = false
+            // }
+            attr.checked = true
+
+            // const currentLabel = this
             // 按两级sku处理，要么有父级，要么有子级
-            if (currentLabel.$parent.$options.name === 'LabelSku') {
+            if (this.$parent.$options.name === 'LabelSku') {
                 // 假设点击的是子级，则去判断父级
-                currentLabel.checkSku(sku.id, currentLabel.$parent.skuAttr.productAttributeValues)
+                this.checkSku(attr.id, this.$parent.skuAttr.productAttributeValues)
             }
-            if (currentLabel.$children.length > 0) {
+            if (this.$children.length > 0) {
                 // 假设点击的是父级，则去判断子级
-                currentLabel.checkSku(sku.id, currentLabel.$children[0].skuAttr.productAttributeValues)
+                this.checkSku(attr.id, this.$children[0].skuAttr.productAttributeValues)
             }
-            this.change([sku])
+            this.change([attr])
         },
-        radioChange () {
-            console.log('asldjkg')
-        },
-        change (skus) {
+        change (attrs) {
             let parent = this.$parent
             let children = this.$children[0]
             while (parent.$options.name === 'LabelSku') {
-                skus.unshift(parent.currentSku)
+                attrs.unshift(parent.currentSku)
                 parent = parent.$parent
             }
             while (children && children.$options.name === 'LabelSku') {
-                skus.push(children.currentSku)
+                attrs.push(children.currentSku)
                 children = children.$children[0]
             }
-            this.$emit('change', [...new Set(skus)])
+            this.attrGroup = [...new Set(attrs)]
+            this.$emit('change', this.attrGroup)
         },
-        checkSku (currentSkuId, skus) {
-            for (const sku of skus) {
-                const findedSku = this.skuList.find(item => (item.skuCode1 === currentSkuId || item.skuCode2 === currentSkuId) && (item.skuCode1 === sku.id || item.skuCode2 === sku.id))
+
+        /**
+         * 检查和当前sku匹配的其它sku，并设置禁用状态
+         * @param currentSkuId 当前选中的sku属性id
+         * @param attrs 其它可以与当前sku组合的sku属性
+         */
+        checkSku (currentSkuId, attrs) {
+            for (const attr of attrs) {
+                const findedSku = this.skuList.find(item => (item.skuCode1 === currentSkuId || item.skuCode2 === currentSkuId) && (item.skuCode1 === attr.id || item.skuCode2 === attr.id))
                 if (!findedSku) {
-                    sku.disabled = true
+                    attr.disabled = true
                 } else {
-                    sku.disabled = findedSku.stock < findedSku.minBuyNum
+                    attr.disabled = findedSku.stock < findedSku.minBuyNum
                 }
             }
         }
