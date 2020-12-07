@@ -65,17 +65,15 @@ export default {
         return {
             swiperActiveIndex: 0,
             swiperOption: {
-                loop: true,
-                speed: 1000,
                 slidesPerView: 4,
                 spaceBetween: 24,
+                loop: true,
+                speed: 1000,
                 autoplay: {
                     delay: 1000,
                     disableOnInteraction: false,
                     stopOnLast: false
-                },
-                observer: true,
-                observeParents: true
+                }
             }
         }
     },
