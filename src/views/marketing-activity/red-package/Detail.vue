@@ -252,7 +252,7 @@ export default {
         // 购买上限
         isInputNumberDisabled () {
             let { count } = this.form
-            count += this.activity.userClaimed
+            count += Number(this.activity.userClaimed)
             // 达到剩余库存 / 达到领用上限
             return count >= this.activity.issueVolume || !!(this.redPackage.activityLimit && count >= this.redPackage.quantityLimit)
         },
