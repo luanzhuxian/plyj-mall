@@ -13,7 +13,7 @@
                     <span>优惠</span>
                 </div>
                 <div slot="right-content" :class="$style.couponContent">
-                    <div v-if="!this.coupon.copon && !this.coupon.redPacket">
+                    <div v-if="!this.coupon.coupon && !this.coupon.redPacket">
                         <span class="fz-26 mr-10">
                             可选 <i class="warn-color-active">{{ couponList.length }}</i> 张优惠券
                         </span>
