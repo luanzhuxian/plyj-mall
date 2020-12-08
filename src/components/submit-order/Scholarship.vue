@@ -60,10 +60,6 @@ export default {
         }
     },
     props: {
-        totalAmount: {
-            type: Number,
-            default: 0
-        },
         freight: {
             type: Number,
             default: 0
@@ -107,9 +103,21 @@ export default {
         isScholarship () {
             const { coupon, redPacket } = this.currentCoupon
             return (coupon ? coupon.scholarship : true) && (redPacket ? redPacket.scholarship : true)
+        },
+        totalAmount () {
+            return this.products.map(item => item.price * 100 * item.count).reduce((t, a) => t + a) / 100
         }
     },
     watch: {
+        products: {
+            handler () {
+                clearTimeout(this.timer2)
+                this.timer2 = setTimeout(() => {
+                    this.init()
+                }, 100)
+            },
+            deep: true
+        },
         exchangeCodeInfo (val) {
             if (val) {
                 this.$emit('update:currentRedEnvelope', null)
@@ -121,7 +129,7 @@ export default {
                 // 因为一旦触发change事件，就会导致多请求一次数据
                 // 所以这里仅仅只需要默默的修改当前选中的奖学金，更新数据在外部优惠券组件的change事件中完成
                 if (!val) {
-                    this.$emit('update:currentRedEnvelope', null)
+                    this.checkedRedEnvelope = null
                 }
             }
         },
@@ -139,16 +147,18 @@ export default {
         }
     },
     async mounted () {
-        await this.getList()
-        if (this.redEnvelopeList.length === 0) return
-
-        // 缓存的数据
-        const { discountModel } = this.orderProducts
-        if (discountModel && discountModel.scholarshipModel) {
-            this.checkedRedEnvelope = discountModel.scholarshipModel.id
-        }
+        await this.init()
     },
     methods: {
+        async init () {
+            await this.getList()
+            if (this.redEnvelopeList.length === 0) return
+            // 缓存的数据
+            const { discountModel } = this.orderProducts
+            if (discountModel && discountModel.scholarshipModel) {
+                this.checkedRedEnvelope = discountModel.scholarshipModel.id
+            }
+        },
         async getList () {
             // 获取服务器时间
             const { result } = await getRedEnvelopeListByPrice()
@@ -160,12 +170,6 @@ export default {
                 return item
             })
             this.$emit('loaded', this.couponList)
-        },
-        // 选择红包
-        async redEnvelopeClick (item) {
-            this.$emit('update:currentRedEnvelope', item)
-            this.$emit('change', item)
-            this.showRedEnvelopePopup = false
         }
     }
 }

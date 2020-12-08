@@ -90,8 +90,6 @@ import { mapGetters } from 'vuex'
 import {
     getCouponByPrice,
     getCouponOfMax
-
-    /* getRedEnvelopeListByPrice */
 } from '../../apis/my-coupon'
 import moment from 'moment'
 export default {
@@ -170,6 +168,15 @@ export default {
         }
     },
     watch: {
+        products: {
+            handler () {
+                clearTimeout(this.timer2)
+                this.timer2 = setTimeout(() => {
+                    this.init()
+                }, 100)
+            },
+            deep: true
+        },
         exchangeCodeInfo (val) {
             if (val) {
                 this.checkedRedpacket = ''
@@ -201,10 +208,14 @@ export default {
         },
         checkedRedpacket (val) {
             this.noJoin = !val && !this.checkedCoupon
+            const redPacket = this.couponList.find(item => item.id === val) || null
+            // 检查是否可以与优惠券叠加使用
+            const useWidthCoupon = redPacket ? Boolean(redPacket.useWidthCoupon) : true
+            this.checkedCoupon = useWidthCoupon ? this.checkedCoupon : ''
             clearTimeout(this.timer)
             this.timer = setTimeout(() => {
                 const data = {
-                    redPacket: this.couponList.find(item => item.id === val) || null,
+                    redPacket,
                     coupon: this.couponList.find(item => item.id === this.checkedCoupon) || null
                 }
                 this.$emit('change', data)
@@ -218,26 +229,27 @@ export default {
         }
     },
     async mounted () {
-        const COUPON_DATA = {
-            activeProduct: this.preActivity === 2 ? this.activeProduct : 1,
-            activityId: this.activityId,
-            cartProducts: this.products,
-            addressSeq: this.addressId
-        }
-        await this.getCouponList(COUPON_DATA)
-        if (this.couponList.length === 0) return
-
-        // 取出缓存的数据
-        const { discountModel } = this.orderProducts
-        discountModel.couponModel = discountModel.couponModel || { redPacket: null, coupon: null }
-        const { couponModel: { redPacket, coupon } } = discountModel
-        if (!redPacket && !coupon) {
-            await this.getRecommedCoupon(COUPON_DATA)
-        }
-        if (redPacket) this.checkedRedpacket = redPacket.id
-        if (coupon) this.checkedCoupon = coupon.id
+        await this.init()
     },
     methods: {
+        async init () {
+            const COUPON_DATA = {
+                activeProduct: this.preActivity === 2 ? this.activeProduct : 1,
+                activityId: this.activityId,
+                cartProducts: this.products,
+                addressSeq: this.addressId
+            }
+            await this.getCouponList(COUPON_DATA)
+            await this.getRecommedCoupon(COUPON_DATA)
+            // await this.getCouponList(COUPON_DATA)
+            // await this.getRecommedCoupon(COUPON_DATA)
+
+            // if (!redPacket && !coupon) {
+            //     await this.getRecommedCoupon(COUPON_DATA)
+            // }
+            // if (redPacket) this.checkedRedpacket = redPacket.id
+            // if (coupon) this.checkedCoupon = coupon.id
+        },
         // 优惠券列表
         async getCouponList (COUPON_DATA) {
             // 初始化优惠券列表
@@ -250,13 +262,42 @@ export default {
                 if (day < 4) item.timeDesc = day < 1 ? '即将过期' : `${ day }天后过期`
                 return item
             })
+
+            if (this.couponList.length === 0) {
+                this.checkedRedpacket = ''
+                this.checkedCoupon = ''
+                this.noJoin = true
+            }
             this.$emit('loaded', this.couponList)
         },
         // 推荐的优惠券
         async getRecommedCoupon (COUPON_DATA) {
-            const { result } = await getCouponOfMax(COUPON_DATA)
-            const recommend = this.couponList.find(item => item.id === result.id)
-            recommend ? recommend.couponType === 3 ? this.checkedRedpacket = recommend.id : this.checkedCoupon = recommend.id : this.noJoin = true
+            // 取出缓存的数据
+            const { discountModel } = this.orderProducts
+            discountModel.couponModel = discountModel.couponModel || { redPacket: null, coupon: null }
+            const { couponModel: { redPacket, coupon } } = discountModel
+            if (redPacket || coupon) {
+                this.checkedRedpacket = redPacket ? redPacket.id : ''
+                this.checkedCoupon = coupon ? coupon.id : ''
+                return
+            }
+
+            // 缓存的数据和推荐的数据做对比，推荐的数据优先
+            const { result: recommend } = await getCouponOfMax(COUPON_DATA)
+            // const recommend = this.couponList.find(item => item.id === result.id)
+
+            // 推荐的优惠券是福利红包
+            if (recommend && recommend.id && recommend.couponType === 3) {
+                // 福利红包不可与优惠券叠加使用
+                if (!recommend.useWidthCoupon) {
+                    this.checkedCoupon = ''
+                }
+                this.checkedRedpacket = recommend.id
+            } else if (recommend && recommend.id) {
+                this.checkedCoupon = recommend.id
+            }
+
+            // recommend ? recommend.couponType === 3 ? this.checkedRedpacket = recommend.id : this.checkedCoupon = recommend.id : this.noJoin = true
         }
     }
 }

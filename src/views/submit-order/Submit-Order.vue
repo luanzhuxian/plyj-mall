@@ -62,7 +62,7 @@
 
             <!--知识课程暂时不支持使用优惠券-->
             <Coupon
-                v-if="goodsAmount > 0 && activeProduct === 1 && !hasKnowlegeCourse"
+                v-if="activeProduct === 1 && !hasKnowlegeCourse"
                 :active-product="activeProduct"
                 :pre-activity="preActivity"
                 :coupon.sync="currentCoupon"
@@ -73,9 +73,8 @@
             />
             <!--知识课程暂时不支持使用奖学金-->
             <Scholarship
-                v-if="goodsAmount > 0 && activeProduct === 1 && !hasKnowlegeCourse"
+                v-if="activeProduct === 1 && !hasKnowlegeCourse"
                 :active-product="activeProduct"
-                :total-amount="totalAmount"
                 :freight="freight"
                 :products="CONFIRM_LIST"
                 :current-red-envelope.sync="currentRedEnvelope"
@@ -163,8 +162,6 @@ export default {
             freight: 0,
             // 商品价格，不含其它费用
             totalAmount: 0,
-            // 总消费价格
-            goodsAmount: 0,
             // 优惠券信息
             currentCoupon: {
                 redPacket: null,
@@ -267,18 +264,18 @@ export default {
     },
     methods: {
         // 初始化，执行顺序不能乱
-        async init () {
+        async init (noBack) {
             try {
                 // 获取服务器时间
                 const { result: serverTime } = await getServerTime()
                 // 设置服务器时间
                 this.serverTime = serverTime
                 // 要购买的商品列表
-                await this.initProductInfo()
+                this.initProductInfo()
                 // 设置默认学员
                 await this.setDefaultChecked()
                 // 商品价格及其它信息详情
-                await this.getProductDetail()
+                await this.getProductDetail(noBack)
             } catch (e) {
                 throw e
             }
@@ -290,14 +287,12 @@ export default {
                 const { result } = await confirmOrder(form)
                 const {
                     amount,
-                    goodsTotalPrice,
                     freightAmount,
                     skus,
                     skusGrouping: {
                         PHYSICAL_GOODS = []
                     }
                 } = result
-                this.goodsAmount = goodsTotalPrice / 100
                 this.totalAmount = amount / 100
                 this.freight = Number(freightAmount) / 100
                 this.physicalProducts = PHYSICAL_GOODS
@@ -315,7 +310,7 @@ export default {
             }
         },
         // 初始化商品基本信息
-        async initProductInfo () {
+        initProductInfo () {
             /*
                 CONFIRM_LIST 的格式
                 [
@@ -389,6 +384,7 @@ export default {
          * @param redPacket {Object | null} 当前红包
          */
         async couponChange ({ coupon, redPacket }) {
+            console.warn('couponChange')
             this.form.cartCouponModel = coupon && coupon.id ? { userCouponId: coupon.id } : null
             this.form.welfareRedPackage = redPacket && redPacket.id ? { userCouponId: redPacket.id } : null
             // 选中时情况兑换码
@@ -398,9 +394,8 @@ export default {
         },
         // 修改红包(奖学金)
         async scholarshipChange (scholarship) {
+            console.warn('scholarshipChange')
             this.form.scholarshipModel = scholarship ? { scholarshipId: scholarship.id } : null
-            // 选中时情况兑换码
-            // if (scholarship) this.exchangeCodeInfo = null
             await this.getProductDetail()
         },
         // 修改兑换码
@@ -489,13 +484,13 @@ export default {
                 }
             }
             try {
-                await this.getProductDetail(true)
                 // 修改成功后需要更新缓存中的数据
                 cache.count = count
                 this.$store.commit('submitOrder/setOrderProducts', {
                     products: this.CONFIRM_LIST
                 })
-                await this.init()
+                await this.init(true)
+                // 商品价格及其它信息详情
                 await this.$nextTick()
                 next()
             } catch (e) {
@@ -586,7 +581,7 @@ export default {
             return true
         }
     },
-    async beforeRouteLeave (to, from, next) {
+    beforeRouteLeave (to, from, next) {
         const customRouteName = ['ApplyInvoice', 'Address', 'AddAddress', 'StudentList']
         if (!customRouteName.includes(to.name)) {
             this.$store.commit('submitOrder/removeOrderProducts')
