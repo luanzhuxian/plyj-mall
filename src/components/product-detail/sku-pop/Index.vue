@@ -63,81 +63,82 @@
                                 @change="skuChange"
                             />
                         </div>
-                    </div>
-                    <div :class="$style.count">
-                        <div>
-                            <span>购买数量</span>
-                            <!-- 只有 进行中 + 秒杀活动 + 活动购买/从规格页面 按照活动限购显示，其他都按照普通商品的限购显示 -->
-                            <span
-                                v-if="activeType === 3 && activityProductModel && activityProductModel.activityLimit === 1"
-                                class="fz-20 ml-10"
-                                style="color: #B8B8B8; font-weight: normal;"
-                            >
-                                (每账号限购{{ activityProductModel.activityLimitNumber }}件)
-                            </span>
-                            <span
-                                v-else-if="limiting"
-                                class="fz-20 ml-10"
-                                style="color: #B8B8B8; font-weight: normal;"
-                            >
-                                (每账号限购{{ limiting }}件)
-                            </span>
-                        </div>
-                        <div :class="$style.countCtr">
-                            <button
-                                :disabled="(activeType === 1 && count <= min) || (activeType !== 1 && count <= 1)"
-                                @click.stop="minus"
-                            >
-                                -
-                            </button>
-                            <input
-                                v-model.number="count"
-                                type="number"
-                                @blur="countChange"
-                            >
-                            <!-- 公益活动 -->
-                            <button
-                                v-if="activeProduct === 7"
-                                :disabled="count >= publicBenefitActiveStock"
-                                @click.stop="add"
-                            >
-                                +
-                            </button>
-                            <!-- 其他 -->
-                            <button
-                                v-else
-                                :disabled="(activeType === 1 && count >= currentSku.stock) || (activeType !== 1 && activityProductModel && count >= activityProductModel.buyCount)"
-                                @click.stop="add"
-                            >
-                                +
-                            </button>
-                            <p :class="$style.residue" v-if="skuHasChecked">
-                                <!-- 活动商品库存展示，如果商品不是预购且活动库存不足，则显示正常库存 -->
-                                <!-- 注意：公益活动例外 -->
-                                <template v-if="activeProduct === 7">
-                                    库存<i v-text="publicBenefitActiveStock" />件
-                                </template>
-                                <template v-else-if="activeType !== 1 && activeType !== 4">
-                                    总库存<i v-text="activeAllResidue" />件
-                                </template>
-                                <template v-else>
-                                    库存<i v-text="residue" />件
-                                </template>
-                            </p>
-                        </div>
-                    </div>
 
-                    <!-- 预购提醒 -->
-                    <div :class="$style.bookPrice" v-if="activeProduct === 4 && preActivity === 2 && currentSku.activityProduct">
-                        定金<span>{{ currentSku.activityPrice }}</span>
-                        <div class="deposit">
-                            抵<span>{{ currentSku.depositTotal }}</span>
+                        <div :class="$style.count">
+                            <div>
+                                <span>购买数量</span>
+                                <!-- 只有 进行中 + 秒杀活动 + 活动购买/从规格页面 按照活动限购显示，其他都按照普通商品的限购显示 -->
+                                <span
+                                    v-if="activeType === 3 && activityProductModel && activityProductModel.activityLimit === 1"
+                                    class="fz-20 ml-10"
+                                    style="color: #B8B8B8; font-weight: normal;"
+                                >
+                                    (每账号限购{{ activityProductModel.activityLimitNumber }}件)
+                                </span>
+                                <span
+                                    v-else-if="limiting"
+                                    class="fz-20 ml-10"
+                                    style="color: #B8B8B8; font-weight: normal;"
+                                >
+                                    (每账号限购{{ limiting }}件)
+                                </span>
+                            </div>
+                            <div :class="$style.countCtr">
+                                <button
+                                    :disabled="(activeType === 1 && count <= min) || (activeType !== 1 && count <= 1)"
+                                    @click.stop="minus"
+                                >
+                                    -
+                                </button>
+                                <input
+                                    v-model.number="count"
+                                    type="number"
+                                    @blur="countChange"
+                                >
+                                <!-- 公益活动 -->
+                                <button
+                                    v-if="activeProduct === 7"
+                                    :disabled="count >= publicBenefitActiveStock"
+                                    @click.stop="add"
+                                >
+                                    +
+                                </button>
+                                <!-- 其他 -->
+                                <button
+                                    v-else
+                                    :disabled="(activeType === 1 && count >= currentSku.stock) || (activeType !== 1 && activityProductModel && count >= activityProductModel.buyCount)"
+                                    @click.stop="add"
+                                >
+                                    +
+                                </button>
+                                <p :class="$style.residue" v-if="skuHasChecked">
+                                    <!-- 活动商品库存展示，如果商品不是预购且活动库存不足，则显示正常库存 -->
+                                    <!-- 注意：公益活动例外 -->
+                                    <template v-if="activeProduct === 7">
+                                        库存<i v-text="publicBenefitActiveStock" />件
+                                    </template>
+                                    <template v-else-if="activeType !== 1 && activeType !== 4">
+                                        总库存<i v-text="activeAllResidue" />件
+                                    </template>
+                                    <template v-else>
+                                        库存<i v-text="residue" />件
+                                    </template>
+                                </p>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- 红包抵用提醒 -->
-                    <div class="fz-24" v-if="currentSku.activityProduct && getRedPacket && activeType !== 4">
-                        可使用满 <i class=" primary-color">{{ getRedPacket.useLimitAmount }}减{{ getRedPacket.amount }}</i> 商品福利红包
+                        <!-- 预购提醒 -->
+                        <div :class="$style.bookPrice" v-if="activeProduct === 4 && preActivity === 2 && currentSku.activityProduct">
+                            定金<span>{{ currentSku.activityPrice }}</span>
+                            <div class="deposit">
+                                抵<span>{{ currentSku.depositTotal }}</span>
+                            </div>
+                        </div>
+
+                        <!-- 红包抵用提醒 -->
+                        <div class="fz-24" v-if="getRedPacket && activeType !== 4">
+                            可使用满 <i class=" primary-color">{{ getRedPacket.useLimitAmount }}减{{ getRedPacket.amount }}</i> 商品福利红包
+                        </div>
                     </div>
 
                     <div :class="$style.footer" @click.capture="slotClickHandler">
