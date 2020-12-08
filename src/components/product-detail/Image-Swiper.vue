@@ -81,7 +81,7 @@ export default {
         }
     },
     methods: {
-        async init () {
+        init () {
             try {
                 const gallery = new window.PhotoSwipe(this.$refs.pswp, window.PhotoSwipeUI_Default, this.items, this.options)
                 gallery.init()
@@ -109,7 +109,7 @@ export default {
                 }
             })
         },
-        async afterChange () {
+        afterChange () {
             const current = this.gallery.getCurrentIndex()
             this.currentIndex = current
             this.$emit('slideChange', current, this.total)

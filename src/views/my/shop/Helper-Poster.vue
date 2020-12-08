@@ -74,14 +74,14 @@ export default {
         }
     },
     methods: {
-        async drawPost () {
+        drawPost () {
             const canImg = new Image()
             canImg.crossOrigin = ''
             canImg.src = `https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/helper-poster.png?time=${ Date.now() }`
             const userImg = new Image()
             userImg.crossOrigin = ''
             userImg.src = `${ this.avatar }?x-oss-process=image/resize,h_100/circle,r_500/format,png&time=${ Date.now() }`
-            canImg.onload = async () => {
+            canImg.onload = () => {
                 const canvas = document.createElement('canvas')
                 canvas.width = canImg.width
                 canvas.height = canImg.height

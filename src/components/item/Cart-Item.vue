@@ -178,7 +178,7 @@ export default {
         }
     },
     methods: {
-        async goDetail () {
+        goDetail () {
             const productId = this.data.cartProductId
             this.$router.push({
                 name: 'Product',

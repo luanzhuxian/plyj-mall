@@ -124,7 +124,7 @@ export default {
     methods: {
         async handleClick () {
             const { id, type } = this
-            this.$router.push({
+            await this.$router.push({
                 name: type === 'COURSE' ? 'Curriculum' : 'Product',
                 params: { productId: id }
             })

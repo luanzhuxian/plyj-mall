@@ -179,14 +179,14 @@ export default {
                 throw e
             }
         },
-        async reClaimed () {
+        reClaimed () {
             return this.$alert({
                 confirmText: '朕知道了',
                 viceMessage: '优惠券大礼包您已经领取成功，新注册会员仅可领取一次',
                 message: '领取成功'
             })
         },
-        async gameOver () {
+        gameOver () {
             return this.$alert({
                 confirmText: '朕知道了',
                 viceMessage: '活动结束，感谢您参与活动',

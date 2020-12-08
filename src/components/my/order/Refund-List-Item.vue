@@ -161,7 +161,7 @@ export default {
     },
     methods: {
     // 取消订单
-        async doOperation (operationName) {
+        doOperation (operationName) {
             try {
                 this.$emit(operationName, this.index)
             } catch (e) {

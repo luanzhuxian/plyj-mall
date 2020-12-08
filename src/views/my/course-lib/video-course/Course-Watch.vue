@@ -114,7 +114,7 @@ export default {
             } catch (e) { throw e }
         },
         // 向后台存储播放进度
-        async updateProgress () {
+        updateProgress () {
             if (this.duration === 0) return
             window.clearTimeout(this.setProgressTimer)
 

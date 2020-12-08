@@ -76,7 +76,7 @@ export default {
     created () {
     },
     methods: {
-        async change (e) {
+        change (e) {
             const fileList = Array.from(e.target.files)
             const legitimate = fileList.some(file => !/.jpg|.png|.gif|.jpeg|.bmp/i.test(file.name))
             if (legitimate) {
@@ -123,7 +123,7 @@ export default {
                 this.ups = []
             }
         },
-        async removeImg (index) {
+        removeImg (index) {
             try {
                 const rm = this.images.splice(index, 1)
                 this.$emit('change', this.images)

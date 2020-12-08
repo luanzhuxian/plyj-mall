@@ -74,7 +74,7 @@ export default {
         }
     },
     methods: {
-        async labelChange (attr) {
+        labelChange (attr) {
             this.currentSku = attr
             // for (const SKU of this.skuAttr.productAttributeValues) {
             //     SKU.checked = false

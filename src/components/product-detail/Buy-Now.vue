@@ -351,7 +351,7 @@ export default {
         // },
 
         // 跳转至提交订单页面
-        async submit (options, count) {
+        submit (options, count) {
             const { skuCode1, skuCode2 = '', price } = options
 
             // helper分享时携带的id

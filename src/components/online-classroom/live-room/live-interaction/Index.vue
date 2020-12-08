@@ -46,7 +46,7 @@ export default {
         show: Boolean
     },
     methods: {
-        async init () {
+        init () {
             try {
                 const { notice, signIn, lottery, answer, questions } = this.$refs
 

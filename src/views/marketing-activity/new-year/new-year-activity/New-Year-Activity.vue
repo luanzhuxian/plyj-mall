@@ -884,7 +884,7 @@ export default {
                 this.isLoading = false
             }
         },
-        async presentWarning (item) {
+        presentWarning (item) {
             // 只有礼品支持此提示
             if (!item.isPresent) return
             // 已领取的奖品不提示
@@ -896,7 +896,7 @@ export default {
         },
 
         // 加载图片
-        async loadImage (src) {
+        loadImage (src) {
             const img = new Image()
             img.crossOrigin = ''
             img.src = `${ src }?time=${ Date.now() }`

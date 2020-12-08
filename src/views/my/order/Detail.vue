@@ -680,7 +680,7 @@ export default {
             throw e
         }
     },
-    async deactivated () {
+    deactivated () {
         this.poster = ''
         this.orderStatusTip = ''
         this.collapseQrCode = true
@@ -795,7 +795,7 @@ export default {
         // 生成核销码二维码
         generateQrcode () {
             generateQrcode({ size: 300, text: this.orderId, padding: 34 })
-                .then(async base64 => {
+                .then(base64 => {
                     this.qrImg = base64
                 })
                 .catch(() => {

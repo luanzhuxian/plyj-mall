@@ -92,12 +92,12 @@ export default {
     },
     watch: {
         fill: {
-            async handler (val) {
+            handler (val) {
                 if (val) this.change(val)
             },
             immediate: true
         },
-        async name (val) {
+        name (val) {
             if (this.fill && val) {
                 this.change(this.fill)
             } else {

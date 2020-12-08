@@ -106,7 +106,7 @@ export default {
         }
     },
     methods: {
-        async jump () {
+        jump () {
             const { productId } = this
             if (this.replace) {
                 this.$router.replace({ name: 'Product', params: { productId } })

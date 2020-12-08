@@ -147,7 +147,7 @@ export default {
     },
     watch: {
         $route: {
-            async handler (to) {
+            handler (to) {
                 clearTimeout(this.timer)
                 if (this.showNavbar.includes(to.name)) {
                     if (this.userId) {

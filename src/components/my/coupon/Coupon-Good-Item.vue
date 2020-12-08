@@ -144,7 +144,7 @@ export default {
         }),
         // 商品详情
         async handleClick () {
-            this.$router.push({
+            await this.$router.push({
                 name: 'Product',
                 params: { productId: this.id }
             })
