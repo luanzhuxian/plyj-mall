@@ -20,7 +20,7 @@
                 </div>
                 <div :class="$style.price" v-if="!!price">
                     <b :class="$style.current" v-text="price" />
-                    <span :class="$style.original" v-text="`¥${original}`" />
+                    <span :class="$style.original" v-text="`¥${original}`" v-if="original && price !== original" />
                 </div>
             </div>
         </div>
