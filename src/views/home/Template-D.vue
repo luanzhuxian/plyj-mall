@@ -1,107 +1,109 @@
 <template>
     <div :class="[$style.homeTemplateD, $style[skinClassNameMap[skinId]]]">
         <div :class="$style.container">
-            <search :class="$style.search" placeholder="搜索商品" />
+            <Search :class="$style.search" placeholder="搜索商品" />
             <!-- banner -->
-            <banner :class="$style.banner" :data="BANNER" />
+            <Banner :class="$style.banner" :data="BANNER" />
             <!-- 双12 -->
-            <a href="https://insure.youpenglai.com/" :class="$style.wwec" v-if="mallDomain === 'pljs'">
+            <!-- <a href="https://insure.youpenglai.com/" :class="$style.wwec" v-if="mallDomain === 'pljs'">
                 <img src="https://mallcdn.youpenglai.com/static/admall/mall-management/double-12-2020/jiaoyubao.jpg" alt="君学教育保">
-            </a>
+            </a> -->
+            <!-- 福利红包 -->
+            <div :class="$style.redPackage">
+                <img src="https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/rp-banner.png" alt="" @click="$router.push({ name: 'RedPackage' })">
+            </div>
             <!-- 优惠券 -->
-            <coupon :class="$style.coupon" :data="COUPON" v-if="isCouponShow" />
+            <Coupon :class="$style.coupon" :data="COUPON" v-if="isCouponShow" />
             <!-- 活动 -->
-            <activity :class="$style.activity" :data="ACTIVITY" v-if="isActivityShow" />
+            <Activity :class="$style.activity" :data="ACTIVITY" v-if="isActivityShow" />
             <!-- 直播 -->
-            <live :class="$style.live" :data="LIVE" v-if="isLiveShow" />
+            <Live :class="$style.live" :data="LIVE" v-if="isLiveShow" />
             <!-- 单课 -->
-            <online-course :class="$style.onlineCourse" :data="COURSE" v-if="isOnlineCourseShow" />
+            <OnlineCourse :class="$style.onlineCourse" :data="COURSE" v-if="isOnlineCourseShow" />
             <!-- 系列课 -->
-            <series-course :class="$style.seriesCourse" :data="SERIES" v-if="isSeriesCourseShow" />
+            <SeriesCourse :class="$style.seriesCourse" :data="SERIES" v-if="isSeriesCourseShow" />
             <!-- 图文资料 -->
-            <image-text :class="$style.imageText" :data="ImageText" v-if="isImageTextShow" />
-            <!-- 疫情 -->
-            <!-- <campaign v-if="isCampaignShow" /> -->
+            <ImageText :class="$style.imageText" :data="ImageText" v-if="isImageTextShow" />
             <!-- 预约 -->
-            <appointment :class="$style.appointment" :data="APPOINTMENT" :slides-per-view="2" v-if="APPOINTMENT.showStatue === 1" />
+            <Appointment :class="$style.appointment" :data="APPOINTMENT" :slides-per-view="2" v-if="APPOINTMENT.showStatue === 1" />
             <!-- 秒杀 -->
             <div :class="$style.miaosha" v-if="isMiaoshaShow">
-                <skin-title
+                <SkinTitle
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
                     :data="MIAO_SHA.moduleName"
                     :skin-id="skinId"
                 />
                 <div v-else-if="skinId !== null" :class="$style.title" v-text="MIAO_SHA.moduleName" />
-                <miaosha :data="MIAO_SHA" />
+                <Miaosha :data="MIAO_SHA" />
             </div>
             <!-- 组合课 -->
             <div :class="$style.package" v-if="isPackageShow">
-                <skin-title
+                <SkinTitle
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
                     :data="PACKAGE.moduleName"
                     :skin-id="skinId"
                 />
                 <div v-else-if="skinId !== null" :class="$style.title" v-text="PACKAGE.moduleName" />
-                <package :data="PACKAGE" />
+                <Package :data="PACKAGE" />
             </div>
             <!-- 团购 -->
             <div :class="$style.pintuan" v-if="isPintuanShow">
-                <skin-title
+                <SkinTitle
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
                     :data="PIN_TUAN.moduleName"
                     :skin-id="skinId"
                 />
                 <div v-else-if="skinId !== null" :class="$style.title" v-text="PIN_TUAN.moduleName" />
-                <pintuan :data="PIN_TUAN" />
+                <Pintuan :data="PIN_TUAN" />
             </div>
             <!-- 预购 -->
             <div :class="$style.yugou" v-if="isYugouShow">
-                <skin-title
+                <SkinTitle
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
                     :data="YU_GOU.moduleName"
                     :skin-id="skinId"
                 />
                 <div v-else-if="skinId !== null" :class="$style.title" v-text="YU_GOU.moduleName" />
-                <yugou :data="YU_GOU" />
+                <Yugou :data="YU_GOU" />
             </div>
             <!-- 品宣 -->
-            <propagate :class="$style.propagate" :data="PROPAGATE" v-if="PROPAGATE.showStatue === 1" />
+            <Propagate :class="$style.propagate" :data="PROPAGATE" v-if="PROPAGATE.showStatue === 1" />
             <!-- 商品 -->
             <div :class="$style.popular" v-if="isPopularShow">
-                <skin-title
+                <SkinTitle
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
                     :data="POPULAR.moduleName"
                     :skin-id="skinId"
                 />
                 <div v-else-if="skinId !== null" :class="$style.title" v-text="POPULAR.moduleName" />
-                <popular :data="POPULAR" />
+                <Popular :data="POPULAR" />
             </div>
             <!-- 课程 -->
             <div :class="$style.class" v-if="isClassShow">
-                <skin-title
+                <SkinTitle
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
                     :data="CLASS.moduleName"
                     :skin-id="skinId"
                 />
                 <div v-else-if="skinId !== null" :class="$style.title" v-text="CLASS.moduleName" />
-                <class :data="CLASS" />
+                <Class :data="CLASS" />
             </div>
             <!-- 精品推荐 -->
             <div :class="$style.recommend" v-if="RECOMMEND.values && RECOMMEND.values.length">
-                <skin-title
+                <SkinTitle
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
                     :data="RECOMMEND.moduleName"
                     :skin-id="skinId"
                 />
                 <div v-else-if="skinId !== null" :class="$style.title" v-text="RECOMMEND.moduleName" />
-                <recommend :data="RECOMMEND" />
+                <Recommend :data="RECOMMEND" />
             </div>
             <footer :class="$style.footer">
                 — 技术支持 朋来科技 —
@@ -238,9 +240,6 @@ export default {
         isImageTextShow () {
             return this.ImageText.showStatue === 1 && this.ImageText.values && this.ImageText.values.length
         },
-        // isCampaignShow () {
-        //     return this.parent.isReportShow || this.parent.isBookShow
-        // },
         isCouponShow () {
             return this.COUPON.values && this.COUPON.values.length
         },
@@ -337,14 +336,25 @@ export default {
     color: #999;
 }
 
-.wwec {
+// .wwec {
+//     display: block;
+//     margin: 20px 24px 0;
+//     border-radius: 20px;
+//     overflow: hidden;
+//     > img {
+//         width: 100%;
+//         height: 187px;
+//         object-fit: cover;
+//     }
+// }
+
+.red-package {
     display: block;
-    margin: 20px 24px 0;
-    border-radius: 20px;
-    overflow: hidden;
+    padding: 20px 24px 0;
+    text-align: center;
     > img {
-        width: 100%;
-        height: 187px;
+        width: 678px;
+        height: 144px;
         object-fit: cover;
     }
 }

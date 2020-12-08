@@ -1,12 +1,6 @@
 <template>
     <div :class="$style.home">
         <template v-if="allLoaded">
-            <h3
-                style="font-size: 100px"
-                @click="$router.push({ name: 'RedPackage' })"
-            >
-                main
-            </h3>
             <TemplateB
                 v-if="~[3, 4].indexOf(type)"
                 :type="type"

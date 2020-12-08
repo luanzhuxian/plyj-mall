@@ -1,59 +1,56 @@
 <template>
     <div :class="[$style.homeTemplateD, $style[skinClassNameMap[skinId]]]">
         <div :class="$style.container">
-            <search :class="$style.search" placeholder="搜索商品" />
-            <propagate :class="$style.propagate" :data="PROPAGATE" />
-            <!-- 820 -->
-            <a href="https://m.youpenglai.com/new/activity/22449" :class="$style.wwec" v-if="mallDomain === 'pljs'">
-                <img src="https://mallcdn.youpenglai.com/static/820/wwec2020.jpg" alt="wwec2020">
-            </a>
-            <live :class="$style.live" :data="LIVE" v-if="isLiveShow" />
-            <online-course :class="$style.onlineCourse" :data="COURSE" v-if="isOnlineCourseShow" />
-            <series-course :class="$style.seriesCourse" :data="SERIES" v-if="isSeriesCourseShow" />
-            <image-text :class="$style.imageText" :data="ImageText" v-if="isImageTextShow" />
-            <!-- <campaign v-if="isCampaignShow" /> -->
-            <!-- <activity :class="$style.activity" v-if="isNwEventShow" /> -->
-            <!-- <d12-activity :class="$style.activity" /> -->
-            <appointment :class="$style.appointment" :data="APPOINTMENT" :style-type="2" v-if="APPOINTMENT.showStatue === 1" />
+            <Search :class="$style.search" placeholder="搜索商品" />
+            <Propagate :class="$style.propagate" :data="PROPAGATE" />
+            <!-- 福利红包 -->
+            <div :class="$style.redPackage">
+                <img src="https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/rp-banner.png" alt="" @click="$router.push({ name: 'RedPackage' })">
+            </div>
+            <Live :class="$style.live" :data="LIVE" v-if="isLiveShow" />
+            <OnlineCourse :class="$style.onlineCourse" :data="COURSE" v-if="isOnlineCourseShow" />
+            <SeriesCourse :class="$style.seriesCourse" :data="SERIES" v-if="isSeriesCourseShow" />
+            <ImageText :class="$style.imageText" :data="ImageText" v-if="isImageTextShow" />
+            <Appointment :class="$style.appointment" :data="APPOINTMENT" :style-type="2" v-if="APPOINTMENT.showStatue === 1" />
             <div :class="$style.popular" v-if="isPopularShow">
-                <skin-title
+                <SkinTitle
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
                     :data="POPULAR.moduleName"
                     :skin-id="skinId"
                 />
                 <div v-else-if="skinId !== null" :class="$style.title" v-text="POPULAR.moduleName" />
-                <popular :data="POPULAR" />
+                <Popular :data="POPULAR" />
             </div>
             <div :class="$style.teachers" v-if="isTeachersShow">
-                <skin-title
+                <SkinTitle
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
                     :data="TEACHERS.moduleName"
                     :skin-id="skinId"
                 />
                 <div v-else-if="skinId !== null" :class="$style.title" v-text="TEACHERS.moduleName" />
-                <teachers :data="TEACHERS" />
+                <Teachers :data="TEACHERS" />
             </div>
             <div :class="$style.class" v-if="isClassShow">
-                <skin-title
+                <SkinTitle
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
                     :data="CLASS.moduleName"
                     :skin-id="skinId"
                 />
                 <div v-else-if="skinId !== null" :class="$style.title" v-text="CLASS.moduleName" />
-                <class :data="CLASS" />
+                <Class :data="CLASS" />
             </div>
             <div :class="$style.recommend" v-if="RECOMMEND.values && RECOMMEND.values.length">
-                <skin-title
+                <SkinTitle
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
                     :data="RECOMMEND.moduleName"
                     :skin-id="skinId"
                 />
                 <div v-else-if="skinId !== null" :class="$style.title" v-text="RECOMMEND.moduleName" />
-                <recommend :data="RECOMMEND" />
+                <Recommend :data="RECOMMEND" />
             </div>
             <footer :class="$style.footer">
                 — 技术支持 朋来科技 —
@@ -164,12 +161,6 @@ export default {
         isImageTextShow () {
             return this.ImageText.showStatue === 1 && this.ImageText.values && this.ImageText.values.length
         },
-        // isNwEventShow () {
-        //     return this.parent.nwEvent && this.parent.nwEvent.permissionStatus
-        // },
-        // isCampaignShow () {
-        //     return this.parent.isReportShow || this.parent.isBookShow
-        // },
         isPopularShow () {
             return this.POPULAR.showStatue === 1 && this.POPULAR.values && this.POPULAR.values.length
         },
@@ -276,14 +267,13 @@ export default {
     color: #999;
 }
 
-.wwec {
+.red-package {
     display: block;
-    margin: 20px 24px 0;
-    border-radius: 20px;
-    overflow: hidden;
+    padding: 20px 24px 0;
+    text-align: center;
     > img {
-        width: 100%;
-        height: 187px;
+        width: 678px;
+        height: 144px;
         object-fit: cover;
     }
 }
