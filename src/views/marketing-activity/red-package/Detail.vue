@@ -386,7 +386,7 @@ export default {
                 }
 
                 this.submiting = true
-                await submitRedPackageOrder(this.activityId, this.form.count)
+                await submitRedPackageOrder(this.activityId, this.form.count, this.userId)
                 this.activity.userClaimed++
                 await this.showModel('success')
             } catch (error) {

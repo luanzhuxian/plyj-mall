@@ -43,12 +43,13 @@ export const wechatPay = async function (CREDENTIAL) {
     }
 }
 // 提交福利红包订单，换取批次号
-export const submitRedPackageOrder = async (activityId, count) => {
+export const submitRedPackageOrder = async (activityId, count, userId) => {
     let orderBatchNumber = ''
     try {
         const data = {
             source: 9,
             activityId,
+            helper: userId,
             skus: [
                 {
                     goodsId: activityId,

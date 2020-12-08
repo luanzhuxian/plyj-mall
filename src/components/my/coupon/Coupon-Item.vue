@@ -263,6 +263,7 @@ export default {
                     const { result } = await submitOrder({
                         source: 9,
                         activityId: this.redPacketActivityId,
+                        helper: this.userId,
                         skus: [
                             {
                                 goodsId: this.redPacketActivityId,
