@@ -283,8 +283,8 @@ export default {
                     const originalPriceList = this.skuList.map(item => item.originalPrice)
                     const minPrice = Math.min(...priceList)
                     const maxPrice = Math.max(...priceList)
-                    const minOriginalPrice = Math.min(...originalPriceList)
-                    const maxOriginalPrice = Math.max(...originalPriceList)
+                    const minOriginalPrice = Math.min(...originalPriceList) || ''
+                    const maxOriginalPrice = Math.max(...originalPriceList) || ''
                     return {
                         price: [...new Set([minPrice, maxPrice])].join('~'),
                         originalPrice: [...new Set([minOriginalPrice, maxOriginalPrice])].join('~'),
