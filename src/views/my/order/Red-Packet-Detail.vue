@@ -40,6 +40,22 @@
             </div>
         </div>
 
+        <!-- 联系人信息 -->
+        <div :class="[$style.panel, $style.contact]" v-if="receiverModel && receiverModel.name">
+            <pl-fields size="middle">
+                <div>
+                    <pl-svg class="mr-10" name="icon-contact" width="40" />
+                    <span>联系人信息</span>
+                </div>
+                <div :class="$style.contactDetail" slot="collapse">
+                    <span class="fz-28" v-text="receiverModel.name" />
+                    <span class="fz-28">
+                        {{ receiverModel.mobile | formatAccount }}
+                    </span>
+                </div>
+            </pl-fields>
+        </div>
+
         <!-- 交易信息 -->
         <div :class="[$style.otherInfo]">
             <div :class="$style.infoTop">
@@ -79,6 +95,7 @@ export default {
     },
     data () {
         return {
+            receiverModel: null,
             detail: {},
             isPopupShow: false
         }
@@ -105,6 +122,12 @@ export default {
         async getOrderDetail () {
             const { result } = await getOrderDetail(this.orderId)
             this.detail = result
+            // 联系人信息
+            this.receiverModel = {
+                name: result.consigneeName,
+                mobile: result.consigneeMobile,
+                address: result.address
+            }
         },
         async deleteOrder () {
             await this.$confirm('是否删除当前订单？ 删除后不可找回')
@@ -118,7 +141,7 @@ export default {
 
 <style module lang="scss">
     .red-packet-detail {
-        padding: 58px 24px 88px 24px;
+        padding: 58px 24px 108px 24px;
     }
     .status {
         margin-bottom: 50px;
@@ -207,6 +230,24 @@ export default {
         }
         .totalMoney {
             color: $--primary-color;
+        }
+    }
+
+    .panel {
+        margin-top: 24px;
+        background-color: #fff;
+        border-radius: $--radius1;
+        overflow: hidden;
+    }
+
+    .contact {
+        padding: 0 24px;
+        .contact-detail {
+            padding: 24px 0;
+            > span:nth-of-type(1) {
+                margin-right: 24px;
+                font-weight: 500;
+            }
         }
     }
 
