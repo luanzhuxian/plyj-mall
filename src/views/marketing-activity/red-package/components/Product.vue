@@ -18,7 +18,7 @@
                     <span :class="$style.tag" v-if="sku1" v-text="sku1" />
                     <span :class="$style.tag" v-if="sku2" v-text="sku2" />
                 </div>
-                <div :class="$style.price">
+                <div :class="$style.price" v-if="!!price">
                     <b :class="$style.current" v-text="price" />
                     <span :class="$style.original" v-text="`¥${original}`" />
                 </div>
