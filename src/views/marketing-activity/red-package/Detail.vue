@@ -239,7 +239,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['userId', 'realName', 'userName', 'mobile', 'appId', 'mallUrl']),
+        ...mapGetters(['userId', 'realName', 'userName', 'mobile', 'appId', 'mallUrl', 'SHARE_ID']),
         isCountdownShow () {
             return this.status === 0 || this.status === 1
         },
@@ -386,7 +386,7 @@ export default {
                 }
 
                 this.submiting = true
-                await submitRedPackageOrder(this.activityId, this.form.count, this.userId)
+                await submitRedPackageOrder(this.activityId, this.form.count, this.SHARE_ID)
                 this.activity.userClaimed++
                 await this.showModel('success')
             } catch (error) {
