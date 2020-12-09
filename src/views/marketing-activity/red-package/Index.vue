@@ -56,7 +56,7 @@ import Swiper from './components/Swiper.vue'
 import Barrage from '../longmen-festival/action/components/Barrage.vue'
 import Coupon from './components/Coupon.vue'
 import Poster from './components/Poster.vue'
-import { getRedPackageList, getRedPackageBarrage } from '../../../apis/marketing-activity/red-package'
+import { getRedPackageListAfterSort, getRedPackageBarrage } from '../../../apis/marketing-activity/red-package'
 import { getBulletTemplate, isToday, fenToYuan } from './utils'
 import share from '../../../assets/js/wechat/wechat-share'
 import { SET_SHARE_ID } from '../../../store/mutation-type'
@@ -161,7 +161,7 @@ export default {
                     size: 99
                 }
 
-                const { result: { records = [] } } = await getRedPackageList(params)
+                const { result: { records = [] } } = await getRedPackageListAfterSort(params)
                 // 过滤未隐藏且有库存的福利红包
                 this.redPackageList = records
                     .filter(item => item.showStatus && item.issueVolume)
