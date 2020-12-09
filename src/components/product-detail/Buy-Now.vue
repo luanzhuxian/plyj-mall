@@ -124,7 +124,6 @@
                             :class="$style.add"
                             @click="$emit('addToCart', currentSku, limiting, limit)"
                             :disabled="loading || allDisabled"
-                            :style="{'line-height': 80 / 7.5 + 'vw'}"
                         >
                             <span>加入购物车</span>
                         </button>
@@ -132,7 +131,6 @@
                             :class="$style.buy"
                             @click="$emit('buyNow', currentSku, 1, limiting, limit)"
                             :disabled="loading || allDisabled || disableConfirm"
-                            :style="{'line-height': 80 / 7.5 + 'vw'}"
                         >
                             <span>{{ confirmText }}</span>
                         </button>
@@ -379,7 +377,7 @@ export default {
                 name: 'SubmitOrder'
             })
         },
-        async clickHandler (type) {
+        clickHandler (type) {
             if (!this.hasBind()) return
 
             // type 等于1、2 时表示正常购买
