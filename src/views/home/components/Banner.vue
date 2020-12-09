@@ -6,7 +6,7 @@
             :options="swiperOptionBanner"
         >
             <swiperSlide v-for="(item, i) of data.values" :key="i">
-                <count-down
+                <Countdown
                     v-if="item.shoppingStatus === 1"
                     :data="item"
                     :fields="{ start: 'serverTime', end: 'shoppingTime' }"
@@ -22,14 +22,14 @@
 import moment from 'moment'
 import { mapGetters } from 'vuex'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
-import CountDown from '../../../components/product-detail/Count-Down.vue'
+import Countdown from '../../../components/product-detail/Count-Down.vue'
 
 export default {
     name: 'Banner',
     components: {
         swiper,
         swiperSlide,
-        CountDown
+        Countdown
     },
     props: {
         data: {

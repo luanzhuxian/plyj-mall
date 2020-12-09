@@ -670,7 +670,7 @@ export default {
             }
         },
         // 播放开始跳转到固定时间,且隐藏控件
-        async controlVideo () {
+        controlVideo () {
             let {
                 liveStartTime,
                 liveEndTime,
@@ -877,7 +877,7 @@ export default {
         async sendMessage (message) {
             try {
                 const { channelId } = this
-                this.socket.emit('message', JSON.stringify({
+                await this.socket.emit('message', JSON.stringify({
                     EVENT: 'SPEAK',
                     // 发言内容
                     values: [message],

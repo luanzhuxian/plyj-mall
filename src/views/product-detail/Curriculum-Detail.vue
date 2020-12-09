@@ -422,7 +422,7 @@ export default {
         this.haibao = ''
         this.preview.show = false
     },
-    async mounted () {
+    mounted () {
         this.$store.commit(SET_SHARE_ID, this.brokerId)
     },
     methods: {
@@ -592,7 +592,7 @@ export default {
             this.$router.push({ name: 'SubmitOrder' })
         },
         // 生成分享
-        async createShare () {
+        createShare () {
             const { courseName, courseBrief, courseImg } = this.detail
             try {
                 let shareUrl = ''
