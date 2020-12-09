@@ -183,7 +183,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['userId']),
+        ...mapGetters(['userId', 'userName', 'mobile']),
         // 福利红包价格展示
         isPriceShow () {
             return this.couponType === 3 && this.price
@@ -264,6 +264,10 @@ export default {
                         source: 9,
                         activityId: this.redPacketActivityId,
                         helper: this.userId,
+                        userAddress: {
+                            mobile: this.mobile,
+                            name: this.userName
+                        },
                         skus: [
                             {
                                 goodsId: this.redPacketActivityId,
