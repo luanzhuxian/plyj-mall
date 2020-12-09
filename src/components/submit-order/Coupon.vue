@@ -47,7 +47,7 @@
                         :key="i"
                         position="right"
                         :label="item.id"
-                        :cancel-value="''"
+                        :cancel-value="null"
                     >
                         <div :key="i" :class="$style.couponItem">
                             <div :class="$style.button">省{{ item.amount }}</div>
@@ -64,7 +64,7 @@
                         :key="i"
                         position="right"
                         :label="item.id"
-                        :cancel-value="''"
+                        :cancel-value="null"
                     >
                         <div :key="i" :class="$style.couponItem">
                             <div :class="$style.button">省{{ item.amount }}</div>
@@ -191,6 +191,12 @@ export default {
         },
         checkedCoupon (val) {
             this.noJoin = !val && !this.checkedRedpacket
+            const redPacket = this.couponList.find(item => item.id === this.checkedRedpacket) || null
+            const useWidthCoupon = redPacket ? Boolean(redPacket.useWidthCoupon) : true
+            // 当前福利红包不可与优惠券叠加使用
+            if (val && !useWidthCoupon && this.checkedRedpacket) {
+                this.checkedRedpacket = ''
+            }
             clearTimeout(this.timer)
             this.timer = setTimeout(() => {
                 const data = {
@@ -209,9 +215,11 @@ export default {
         checkedRedpacket (val) {
             this.noJoin = !val && !this.checkedCoupon
             const redPacket = this.couponList.find(item => item.id === val) || null
-            // 检查是否可以与优惠券叠加使用
             const useWidthCoupon = redPacket ? Boolean(redPacket.useWidthCoupon) : true
-            this.checkedCoupon = useWidthCoupon ? this.checkedCoupon : ''
+            // 当前福利红包不可与优惠券叠加使用
+            if (val && !useWidthCoupon && this.checkedCoupon) {
+                this.checkedCoupon = ''
+            }
             clearTimeout(this.timer)
             this.timer = setTimeout(() => {
                 const data = {
