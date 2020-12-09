@@ -161,15 +161,14 @@ export default {
                     size: 99
                 }
 
-                const { result: { records = [] } } = await getRedPackageListAfterSort(params)
+                const { result } = await getRedPackageListAfterSort(params)
                 // 过滤未隐藏且有库存的福利红包
-                this.redPackageList = records
+                this.redPackageList = result
                     .filter(item => item.showStatus && item.issueVolume)
                     .map(item => {
                         item.price = fenToYuan(item.price)
                         return item
                     })
-
                 // 没有可用红包返回上一页
                 if (!this.redPackageList.length) {
                     this.$alert('很遗憾，该活动已结束，请查看更多活动')

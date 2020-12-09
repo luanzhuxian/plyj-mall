@@ -1,6 +1,6 @@
 export default [
     {
-        path: '/red-package/home/',
+        path: '/red-package/home',
         name: 'RedPackage',
         component: () => import('../../views/marketing-activity/red-package/Index.vue'),
         meta: {
