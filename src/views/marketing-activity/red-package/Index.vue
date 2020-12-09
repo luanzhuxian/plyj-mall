@@ -100,7 +100,27 @@ export default {
                 this.getRedPackageList(),
                 this.getRedPackageBarrage()
             ]
-            await Promise.all(request.map(p => p.catch(e => console.error(e))))
+            const [redPackageList] = await Promise.all(request.map(p => p.catch(e => console.error(e))))
+
+            // 过滤未隐藏且有库存的福利红包
+            this.redPackageList = redPackageList
+                .filter(item => item.showStatus && item.issueVolume)
+                .map(item => {
+                    item.price = fenToYuan(item.price)
+                    return item
+                })
+
+            // 没有可用红包返回上一页
+            if (!this.redPackageList.length) {
+                this.$alert('很遗憾，该活动已结束，请查看更多活动')
+                    .finally(() => {
+                        this.$router.push({ name: this.isActivityAuth ? 'Activity' : 'Home' })
+                    })
+                return false
+            }
+
+            this.getProduct()
+
             if (this.$refs.barrage) {
                 this.$refs.barrage.run()
             }
@@ -152,8 +172,6 @@ export default {
         // 获取红包活动列表
         async getRedPackageList () {
             try {
-                let productList = []
-                const map = new Map()
                 // 0 未开始 1 进行中 2 暂停 3 结束
                 const params = {
                     activityStatus: '0, 1',
@@ -162,50 +180,7 @@ export default {
                 }
 
                 const { result } = await getRedPackageListAfterSort(params)
-                // 过滤未隐藏且有库存的福利红包
-                this.redPackageList = result
-                    .filter(item => item.showStatus && item.issueVolume)
-                    .map(item => {
-                        item.price = fenToYuan(item.price)
-                        return item
-                    })
-                // 没有可用红包返回上一页
-                if (!this.redPackageList.length) {
-                    this.$alert('很遗憾，该活动已结束，请查看更多活动')
-                        .finally(() => {
-                            this.$router.push({ name: this.isActivityAuth ? 'Activity' : 'Home' })
-                        })
-                    return false
-                }
-
-                for (const redPackage of this.redPackageList) {
-                    if (redPackage.goodsVOS && redPackage.goodsVOS.length) {
-                        for (const product of redPackage.goodsVOS) {
-                            if (map.has(product.goodsId)) {
-                                const prod = map.get(product.goodsId)
-                                prod.redPackages.push({
-                                    activityId: redPackage.id,
-                                    amount: redPackage.amount
-                                })
-                                map.set(product.goodsId, prod)
-                            } else {
-                                map.set(product.goodsId, {
-                                    ...product,
-                                    isProduct: true,
-                                    redPackages: [{
-                                        activityId: redPackage.id,
-                                        amount: redPackage.amount
-                                    }]
-                                })
-                            }
-                        }
-                    }
-                }
-                productList = [...map.values()]
-                // 排序
-                this.sort(productList)
-                // 长度不够，填充占位图
-                this.productList = productList.length <= 4 ? this.rebuid(productList) : productList.slice(0, 20)
+                return result
             } catch (error) {
                 throw error
             }
@@ -224,6 +199,40 @@ export default {
             } catch (error) {
                 throw error
             }
+        },
+        // 获取商品
+        getProduct () {
+            let productList = []
+            const map = new Map()
+
+            for (const redPackage of this.redPackageList) {
+                if (redPackage.goodsVOS && redPackage.goodsVOS.length) {
+                    for (const product of redPackage.goodsVOS) {
+                        if (map.has(product.goodsId)) {
+                            const prod = map.get(product.goodsId)
+                            prod.redPackages.push({
+                                activityId: redPackage.id,
+                                amount: redPackage.amount
+                            })
+                            map.set(product.goodsId, prod)
+                        } else {
+                            map.set(product.goodsId, {
+                                ...product,
+                                isProduct: true,
+                                redPackages: [{
+                                    activityId: redPackage.id,
+                                    amount: redPackage.amount
+                                }]
+                            })
+                        }
+                    }
+                }
+            }
+            productList = [...map.values()]
+            // 排序
+            this.sort(productList)
+            // 长度不够，填充占位图
+            this.productList = productList.length <= 4 ? this.rebuid(productList) : productList.slice(0, 20)
         },
         // 检查是否绑定手机号
         checkMobile () {
