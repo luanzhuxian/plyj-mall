@@ -386,7 +386,17 @@ export default {
                 }
 
                 this.submiting = true
-                await submitRedPackageOrder(this.activityId, this.form.count, this.shareId)
+                const {
+                    count,
+                    name,
+                    mobile
+                } = this.form
+                await submitRedPackageOrder({
+                    activityId: this.activityId,
+                    count,
+                    helper: this.shareId,
+                    userAddress: this.isFormShow ? { name, mobile } : null
+                })
                 this.activity.userClaimed++
                 await this.showModel('success')
             } catch (error) {
