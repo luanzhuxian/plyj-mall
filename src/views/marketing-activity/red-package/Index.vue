@@ -100,7 +100,7 @@ export default {
                 this.getRedPackageList(),
                 this.getRedPackageBarrage()
             ]
-            const [redPackageList] = await Promise.all(request.map(p => p.catch(e => console.error(e))))
+            const [redPackageList, bulletList] = await Promise.all(request.map(p => p.catch(e => console.error(e))))
 
             // 过滤未隐藏且有库存的福利红包
             this.redPackageList = redPackageList
@@ -119,7 +119,8 @@ export default {
                 return false
             }
 
-            this.getProduct()
+            this.bulletList = Object.freeze(bulletList)
+            this.productList = this.getProduct()
 
             if (this.$refs.barrage) {
                 this.$refs.barrage.run()
@@ -195,7 +196,7 @@ export default {
                         item.msg = item.message ? item.message.replace(/\.\d+0+/g, '') : ''
                     }
                 }
-                this.bulletList = Object.freeze(result)
+                return result
             } catch (error) {
                 throw error
             }
@@ -232,7 +233,7 @@ export default {
             // 排序
             this.sort(productList)
             // 长度不够，填充占位图
-            this.productList = productList.length <= 4 ? this.rebuid(productList) : productList.slice(0, 20)
+            return productList.length <= 4 ? this.rebuid(productList) : productList.slice(0, 20)
         },
         // 检查是否绑定手机号
         checkMobile () {
