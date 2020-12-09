@@ -104,6 +104,7 @@
                 <CounponField
                     v-if="couponList.length && preActivity !== 2 && !~[5, 6].indexOf(productActive)"
                     :coupon-list="couponList"
+                    @received="getCouponList"
                 />
 
                 <Field
@@ -644,7 +645,7 @@ export default {
         this.currentModel = null
         this.tab = 2
     },
-    async mounted () {
+    mounted () {
         // 缓存分享人的id
         this.$store.commit(SET_SHARE_ID, this.brokerId)
     },
@@ -859,7 +860,7 @@ export default {
         //     return true
         // },
         // 生成分享
-        async createShare () {
+        createShare () {
             const { productName, productDesc, productMainImage } = this.detail
             try {
                 let shareUrl = ''

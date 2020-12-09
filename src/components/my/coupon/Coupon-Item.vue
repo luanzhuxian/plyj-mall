@@ -248,6 +248,7 @@ export default {
                 } else {
                     await receiveCoupon({ couponId: this.couponId })
                 }
+                this.$emit('received')
                 this.$success('领取成功，请在我的卡券中查看')
                 this.isClaimed = true
             }
@@ -283,6 +284,7 @@ export default {
                     if (payData.appId) {
                         await pay(payData)
                     } else if (!this.price) {
+                        this.$emit('received')
                         this.$success('领取成功，请在我的卡券中查看')
                         this.isClaimed = true
                     } else {

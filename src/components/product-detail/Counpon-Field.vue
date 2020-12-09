@@ -46,6 +46,7 @@
                             :receive-count="item.count"
                             :price="Number(item.orderPrice)"
                             :can-receive="item.canReceive"
+                            @received="received"
                         />
                     </template>
                 </div>
@@ -91,6 +92,9 @@ export default {
     methods: {
         clickHandler (e) {
             this.showCoupon = true
+        },
+        received () {
+            this.$emit('received')
         }
     }
 }
