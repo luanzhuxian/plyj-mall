@@ -198,7 +198,7 @@ export default {
         },
 
         // 手动刷新前恢复参数到最初状态
-        async beforeRefresh () {
+        beforeRefresh () {
             this.init()
             return true
         },

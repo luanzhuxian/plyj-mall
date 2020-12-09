@@ -66,17 +66,17 @@
 </template>
 
 <script>
-import Live from '../spring-2019/Live.vue'
-// import Activity from '../spring-2019/Activity.vue'
-import Propagate from '../spring-2019/Propagate.vue'
-import Coupon from '../spring-2019/Coupon.vue'
-import Chunyun from '../spring-2019/Chunyun.vue'
-import Pintuan from '../spring-2019/Pintuan.vue'
-import Yugou from '../spring-2019/Yugou.vue'
+import Live from '../spring-2020/Live.vue'
+// import Activity from '../spring-2020/Activity.vue'
+import Propagate from '../spring-2020/Propagate.vue'
+import Coupon from '../spring-2020/Coupon.vue'
+import Chunyun from '../spring-2020/Chunyun.vue'
+import Pintuan from '../spring-2020/Pintuan.vue'
+import Yugou from '../spring-2020/Yugou.vue'
 import Recommend from '../../home/components/Recommend.vue'
 
 export default {
-    name: 'TemplateSpring2019',
+    name: 'TemplateSpring2020',
     inject: ['parent'],
     components: {
         Live,

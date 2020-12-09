@@ -43,7 +43,7 @@
     </div>
 </template>
 <script>
-import Item from '../../activity/spring-2019/Item-Pintuan'
+import Item from '../../activity/spring-2020/Item-Pintuan'
 import { groupActivityPage } from '../../../apis/product'
 
 export default {

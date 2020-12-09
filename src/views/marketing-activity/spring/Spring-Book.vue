@@ -43,7 +43,7 @@
     </div>
 </template>
 <script>
-import Item from '../../activity/spring-2019/Item-Yugou'
+import Item from '../../activity/spring-2020/Item-Yugou'
 import { bookActivityPage } from '../../../apis/product'
 
 export default {
