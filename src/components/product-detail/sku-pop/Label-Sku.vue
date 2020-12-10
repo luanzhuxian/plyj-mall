@@ -120,9 +120,7 @@ export default {
                 const findedSku = this.skuList.find(item => (item.skuCode1 === currentSkuId || item.skuCode2 === currentSkuId) && (item.skuCode1 === attr.id || item.skuCode2 === attr.id))
                 if (!findedSku) {
                     attr.disabled = true
-                    attr.hidden = true
                 } else {
-                    attr.hidden = false
                     attr.disabled = findedSku.stock < findedSku.minBuyNum
                 }
             }

@@ -372,7 +372,6 @@ export default {
                     // 设置默认选中
                     this.$set(skuAttr, 'checked', false)
                     this.$set(skuAttr, 'disabled', false)
-                    this.$set(skuAttr, 'hidden', false)
                 }
             }
             const attrs = [...this.skuAttrList]
