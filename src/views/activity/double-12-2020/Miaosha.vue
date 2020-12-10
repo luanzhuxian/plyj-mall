@@ -3,7 +3,7 @@
         custom-class="double-12-2020-miaosha-panel"
         title="福利秒杀"
         subtitle="双十二福利来袭，限时秒杀"
-        @click="$router.push({ name: 'SecondActivity' })"
+        @click="$router.push({ name: 'SecKillActivity' })"
     >
         <ul :class="$style.miaoshaList" v-if="data.values.length">
             <MiaoshaItem

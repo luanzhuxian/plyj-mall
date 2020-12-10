@@ -2,8 +2,8 @@
 import {
     submitOrder,
     cancleOrderListByBatchNumber
-} from '../../../apis/order-manager'
-import { requestPayData, pay } from '../../../assets/js/wechat/submit-order'
+} from '../../../../apis/order-manager'
+import { requestPayData, pay } from '../../../../assets/js/wechat/submit-order'
 
 /**
  * 处理支付失败的场景

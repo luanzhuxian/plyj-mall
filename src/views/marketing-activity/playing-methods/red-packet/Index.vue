@@ -53,13 +53,13 @@
 <script>
 import { mapGetters } from 'vuex'
 import Swiper from './components/Swiper.vue'
-import Barrage from '../longmen-festival/action/components/Barrage.vue'
+import Barrage from '../../longmen-festival/action/components/Barrage.vue'
 import Coupon from './components/Coupon.vue'
 import Poster from './components/Poster.vue'
-import { getRedPackageListAfterSort, getRedPackageBarrage } from '../../../apis/marketing-activity/red-package'
+import { getRedPackageListAfterSort, getRedPackageBarrage } from '../../../../apis/marketing-activity/red-package'
 import { getBulletTemplate, isToday, fenToYuan } from './utils'
-import share from '../../../assets/js/wechat/wechat-share'
-import { SET_SHARE_ID } from '../../../store/mutation-type'
+import share from '../../../../assets/js/wechat/wechat-share'
+import { SET_SHARE_ID } from '../../../../store/mutation-type'
 
 const productModel = {
     goodsImage: 'https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/奖品.png',

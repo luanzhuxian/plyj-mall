@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { loadImage, cutArcImage, drawRoundRect, createText, generateQrcode } from '../../../../assets/js/util'
+import { loadImage, cutArcImage, drawRoundRect, createText, generateQrcode } from '../../../../../assets/js/util'
 import { mapGetters } from 'vuex'
 export default {
     name: 'Rules',

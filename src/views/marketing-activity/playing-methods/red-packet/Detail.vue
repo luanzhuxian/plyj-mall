@@ -175,13 +175,13 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import Barrage from '../longmen-festival/action/components/Barrage.vue'
-import Countdown from '../../../components/activity/Countdown.vue'
+import Barrage from '../../longmen-festival/action/components/Barrage.vue'
+import Countdown from '../../../../components/activity/Countdown.vue'
 import Coupon from './components/Coupon.vue'
 import Product from './components/Product.vue'
 import Poster from './components/Poster.vue'
-import { checkLength, isPhone } from '../../../assets/js/validate'
-import { getRedPackage, getRedPackageBarrage } from '../../../apis/marketing-activity/red-package'
+import { checkLength, isPhone } from '../../../../assets/js/validate'
+import { getRedPackage, getRedPackageBarrage } from '../../../../apis/marketing-activity/red-package'
 import { submitRedPackageOrder } from './pay'
 import {
     getDuration,
@@ -189,8 +189,8 @@ import {
     fenToYuan,
     isToday
 } from './utils'
-import share from '../../../assets/js/wechat/wechat-share'
-import { SET_SHARE_ID } from '../../../store/mutation-type'
+import share from '../../../../assets/js/wechat/wechat-share'
+import { SET_SHARE_ID } from '../../../../store/mutation-type'
 
 export default {
     name: 'RedPackageDetail',

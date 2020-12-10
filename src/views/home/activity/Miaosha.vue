@@ -1,6 +1,6 @@
 <template>
     <div :class="$style.miaosha">
-        <router-link :class="$style.miaoshaTitle" tag="div" :to="{ name: 'SecondActivity' }">
+        <router-link :class="$style.miaoshaTitle" tag="div" :to="{ name: 'SecKillActivity' }">
             <div :class="$style.miaoshaTitleBtn">
                 查看更多
             </div>

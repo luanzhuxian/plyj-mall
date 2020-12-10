@@ -1,5 +1,5 @@
 <template>
-    <div :class="$style.group">
+    <div :class="$style.second">
         <main>
             <div :class="$style.top" />
             <div :class="$style.content">
@@ -13,7 +13,7 @@
                         </div>
                         <ul>
                             <template v-for="(item, i) of ongoingList">
-                                <product-item :key="'ongoing-' + i" :data="item" size="long" />
+                                <product-item :key="'ongoing-' + i" :data="item" />
                             </template>
                         </ul>
                     </section>
@@ -26,7 +26,7 @@
                         </div>
                         <ul>
                             <template v-for="(item, i) of incomingList">
-                                <product-item :key="'incoming-' + i" :data="item" size="long" />
+                                <product-item :key="'incoming-' + i" :data="item" />
                             </template>
                         </ul>
                     </section>
@@ -37,7 +37,7 @@
                         width="300"
                         height="200"
                     />
-                    <p>当前没有团购商品</p>
+                    <p>当前没有秒杀商品</p>
                 </div>
             </div>
         </main>
@@ -45,11 +45,11 @@
 </template>
 
 <script>
-import ProductItem from '../components/Group-Product-Item.vue'
-import { groupActivityPage } from '../../../apis/product'
+import ProductItem from '../../components/Second-Product-Item.vue'
+import { secondActivityPage } from '../../../../apis/product'
 
 export default {
-    name: 'GroupActivity',
+    name: 'SecKillActivity',
     components: {
         ProductItem
     },
@@ -76,11 +76,11 @@ export default {
     methods: {
         async getList () {
             try {
-                const { result = { map0: [], map1: [] } } = await groupActivityPage()
+                const { result = { map0: [], map1: [] } } = await secondActivityPage()
 
                 if (!result.map0.length && !result.map1.length) {
                     return this.$alert({
-                        message: '暂无团购商品',
+                        message: '暂无秒杀商品',
                         viceMessage: '再逛逛吧~',
                         confirmText: '再逛逛'
                     }).finally(() => {
@@ -96,17 +96,20 @@ export default {
                             pageviews: item.pageViews,
                             activityInfo: {
                                 status: item.status,
-                                prizePool: item.prizePool,
                                 number: item.number,
+                                activityStock: item.stock,
                                 activityPrice: item.price,
                                 activityStartTime: item.activityStartTime,
                                 activityEndTime: item.activityEndTime
-                            }
+                            },
+                            productSkuModels: [{
+                                originalPrice: item.productMaxOriginPrice
+                            }]
                         }
                     }
                 }
-                this.ongoingList = result.map0
-                this.incomingList = result.map1
+                this.ongoingList = result.map1
+                this.incomingList = result.map0
                 return result
             } catch (e) {
                 throw e
@@ -119,7 +122,7 @@ export default {
 </script>
 
 <style lang="scss" module>
-.group {
+.second {
     box-sizing: border-box;
     padding: 30px 20px 56px;
     min-height: 100vh;
@@ -134,7 +137,7 @@ export default {
     .top {
         width: 100%;
         height: 210px;
-        background: url('https://mallcdn.youpenglai.com/static/mall/2.8.0/pin-tuan-top.png') no-repeat center;
+        background: url('https://mallcdn.youpenglai.com/static/mall/2.8.0/miao-sha-top.png') no-repeat center;
         background-size: 100%;
     }
     .content {

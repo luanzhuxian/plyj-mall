@@ -113,7 +113,7 @@
 <script>
 import moment from 'moment'
 import { mapGetters } from 'vuex'
-import share from '../../../assets/js/wechat/wechat-share'
+import share from '../../../../assets/js/wechat/wechat-share'
 import Coupon from './components/Coupon.vue'
 import Scholarship from './components/Scholarship.vue'
 import Gift from './components/Gift.vue'
@@ -124,7 +124,7 @@ import {
     akeyToGet,
     isNewUser,
     getInfoById
-} from '../../../apis/newcomers'
+} from '../../../../apis/newcomers'
 
 export default {
     name: 'Newcomers',

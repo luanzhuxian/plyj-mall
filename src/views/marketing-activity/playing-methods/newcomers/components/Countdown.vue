@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import Countdown from '../../../../assets/js/Countdown'
+import Countdown from '../../../../../assets/js/Countdown'
 export default {
     name: 'Countdown',
     data () {

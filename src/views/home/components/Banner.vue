@@ -89,7 +89,7 @@ export default {
                 },
                 44: {
                     name: '秒杀',
-                    path: 'SecondActivity'
+                    path: 'SecKillActivity'
                 },
                 45: {
                     name: '组合聚惠学',

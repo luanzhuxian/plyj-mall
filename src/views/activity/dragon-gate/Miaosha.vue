@@ -1,5 +1,5 @@
 <template>
-    <panel :title="panelTitle" @click="$router.push({ name: 'SecondActivity' })">
+    <panel :title="panelTitle" @click="$router.push({ name: 'SecKillActivity' })">
         <ul :class="$style.list" v-if="data.values.length">
             <template v-for="(item, index) of data.values">
                 <router-link

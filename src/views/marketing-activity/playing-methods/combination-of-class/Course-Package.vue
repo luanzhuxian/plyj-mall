@@ -157,18 +157,18 @@
 <script>
 import moment from 'moment'
 import { mapGetters } from 'vuex'
-import SpringPloughingProItem from '../components/Spring-Ploughing-Pro-Item.vue'
-import SpringPloughingGiftItem from '../components/Spring-Ploughing-Gift-Item.vue'
-import { getSpringCombination } from '../../../apis/product'
+import SpringPloughingProItem from '../../components/Spring-Ploughing-Pro-Item.vue'
+import SpringPloughingGiftItem from '../../components/Spring-Ploughing-Gift-Item.vue'
+import { getSpringCombination } from '../../../../apis/product'
 import {
     generateQrcode,
     createText,
     cutArcImage,
     loadImage
-} from '../../../assets/js/util'
-import Countdown from '../../../assets/js/Countdown'
-import share from '../../../assets/js/wechat/wechat-share'
-import { SET_SHARE_ID } from '../../../store/mutation-type'
+} from '../../../../assets/js/util'
+import Countdown from '../../../../assets/js/Countdown'
+import share from '../../../../assets/js/wechat/wechat-share'
+import { SET_SHARE_ID } from '../../../../store/mutation-type'
 
 const PRODUCT_HEIGHT = 220
 const GIFT_HEIGHT = 120

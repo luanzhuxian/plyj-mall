@@ -10,9 +10,10 @@ export default [
 
     /* 营销中心常规方案 start */
     {
-        path: '/second',
-        name: 'SecondActivity',
-        component: () => import('../../views/marketing-activity/second/Second-Activity.vue'),
+        path: '/sec-kill',
+        alias: '/second',
+        name: 'SecKillActivity',
+        component: () => import('../../views/marketing-activity/playing-methods/sec-kill/Index.vue'),
         meta: {
             title: '秒杀'
         }
@@ -20,7 +21,7 @@ export default [
     {
         path: '/group',
         name: 'GroupActivity',
-        component: () => import('../../views/marketing-activity/group-purchase/Group-Activity.vue'),
+        component: () => import('../../views/marketing-activity/playing-methods/group-purchase/Group-Activity.vue'),
         meta: {
             title: '团购'
         }
@@ -29,7 +30,7 @@ export default [
         path: '/purchase-in-advance',
         alias: '/book',
         name: 'PurchaseInAdvance',
-        component: () => import('../../views/marketing-activity/purchase-in-advance/Index.vue'),
+        component: () => import('../../views/marketing-activity/playing-methods/purchase-in-advance/Index.vue'),
         meta: {
             title: '预购'
         }
@@ -37,7 +38,7 @@ export default [
     {
         path: '/helper',
         name: 'HelperActivity',
-        component: () => import('../../views/marketing-activity/helper/Helper-Activity.vue'),
+        component: () => import('../../views/marketing-activity/playing-methods/helper/Helper-Activity.vue'),
         meta: {
             title: '全民来分销'
         }
@@ -45,7 +46,7 @@ export default [
     {
         path: '/course-package/:brokerId?',
         name: 'CoursePackage',
-        component: () => import('../../views/marketing-activity/combination-of-class/Course-Package.vue'),
+        component: () => import('../../views/marketing-activity/playing-methods/combination-of-class/Course-Package.vue'),
         props: true,
         meta: {
             title: '组合聚惠学'
@@ -54,7 +55,7 @@ export default [
     {
         path: '/newcomers/:id/:shareId?',
         name: 'Newcomers',
-        component: () => import('../../views/marketing-activity/newcomers/Index.vue'),
+        component: () => import('../../views/marketing-activity/playing-methods/newcomers/Index.vue'),
         props: true,
         meta: {
             title: '新人有礼'
