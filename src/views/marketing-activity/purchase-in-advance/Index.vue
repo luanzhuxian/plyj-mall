@@ -49,7 +49,7 @@ import ProductItem from '../components/Book-Product-Item.vue'
 import { bookActivityPage } from '../../../apis/product'
 
 export default {
-    name: 'BookActivity',
+    name: 'PurchaseInAdvance',
     components: {
         ProductItem
     },

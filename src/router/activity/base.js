@@ -26,9 +26,10 @@ export default [
         }
     },
     {
-        path: '/book',
-        name: 'BookActivity',
-        component: () => import('../../views/marketing-activity/purchase-in-advance/Book-Activity.vue'),
+        path: '/purchase-in-advance',
+        alias: '/book',
+        name: 'PurchaseInAdvance',
+        component: () => import('../../views/marketing-activity/purchase-in-advance/Index.vue'),
         meta: {
             title: '预购'
         }
@@ -53,16 +54,7 @@ export default [
     {
         path: '/newcomers/:id/:shareId?',
         name: 'Newcomers',
-        component: () => import('../../views/marketing-activity/newcomers/Newcomers.vue'),
-        props: true,
-        meta: {
-            title: '新人有礼'
-        }
-    },
-    {
-        path: '/newcomers/:activityId',
-        name: 'newYearNewcomers',
-        component: () => import('../../views/marketing-activity/new-year/newcomers/Newcomers.vue'),
+        component: () => import('../../views/marketing-activity/newcomers/Index.vue'),
         props: true,
         meta: {
             title: '新人有礼'

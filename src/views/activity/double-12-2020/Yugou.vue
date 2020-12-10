@@ -3,7 +3,7 @@
         custom-class="double-12-2020-yugou-panel"
         title="定金翻翻翻"
         subtitle="双十二特惠大礼来袭，定金翻倍享不停"
-        @click="$router.push({ name: 'BookActivity' })"
+        @click="$router.push({ name: 'PurchaseInAdvance' })"
     >
         <ul :class="$style.yugouList" v-if="data.values.length">
             <YugouItemLarge

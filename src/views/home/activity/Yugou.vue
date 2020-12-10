@@ -1,6 +1,6 @@
 <template>
     <div :class="$style.yugou">
-        <router-link :class="$style.yugouTitle" tag="div" :to="{ name: 'BookActivity' }">
+        <router-link :class="$style.yugouTitle" tag="div" :to="{ name: 'PurchaseInAdvance' }">
             <div :class="$style.yugouTitleBtn">
                 查看更多
             </div>

@@ -85,7 +85,7 @@ export default {
                 },
                 43: {
                     name: '预购',
-                    path: 'BookActivity'
+                    path: 'PurchaseInAdvance'
                 },
                 44: {
                     name: '秒杀',
