@@ -104,7 +104,7 @@ export default {
 
             // 过滤未隐藏且有库存的福利红包
             this.redPackageList = redPackageList
-                .filter(item => item.showStatus && item.issueVolume)
+                .filter(item => ~[0, 1].indexOf(item.activityStatus) && item.showStatus && item.issueVolume)
                 .map(item => {
                     item.price = fenToYuan(item.price)
                     return item
