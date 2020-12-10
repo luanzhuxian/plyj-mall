@@ -9,28 +9,28 @@
                     </Panel>
                 </section>
                 <!-- 优惠券 -->
-                <section :class="[$style.coupon, $style.module]" v-if="COUPON.values.length">
-                    <Coupon :data="COUPON" />
+                <section :class="[$style.coupon, $style.module]" v-if="Coupon.values.length">
+                    <Coupon :data="Coupon" />
                 </section>
                 <!-- 秒杀 -->
-                <section :class="[$style.miaosha, $style.module]" v-if="MIAO_SHA.showStatue === 1 && MIAO_SHA.values.length">
-                    <Miaosha :data="MIAO_SHA" />
+                <section :class="[$style.miaosha, $style.module]" v-if="Miaosha.showStatue === 1 && Miaosha.values.length">
+                    <Miaosha :data="Miaosha" />
                 </section>
                 <!-- 拼团 -->
-                <section :class="[$style.pintuan, $style.module]" v-if="PIN_TUAN.showStatue === 1 && PIN_TUAN.values.length">
-                    <Pintuan :data="PIN_TUAN" />
+                <section :class="[$style.pintuan, $style.module]" v-if="Pintuan.showStatue === 1 && Pintuan.values.length">
+                    <Pintuan :data="Pintuan" />
                 </section>
                 <!-- 预购 -->
-                <section :class="[$style.yugou, $style.module]" v-if="YU_GOU.showStatue === 1 && YU_GOU.values.length">
-                    <Yugou :data="YU_GOU" />
+                <section :class="[$style.yugou, $style.module]" v-if="Yugou.showStatue === 1 && Yugou.values.length">
+                    <Yugou :data="Yugou" />
                 </section>
                 <!-- 组合课 -->
-                <section :class="[$style.package, $style.module]" v-if="PACKAGE.showStatue === 1 && PACKAGE.values.length">
-                    <Package :data="PACKAGE" />
+                <section :class="[$style.package, $style.module]" v-if="Package.showStatue === 1 && Package.values.length">
+                    <Package :data="Package" />
                 </section>
                 <!-- 精品推荐 -->
-                <section :class="[$style.popular, $style.module]" v-if="POPULAR.showStatue === 1 && POPULAR.values.length">
-                    <Popular :data="POPULAR" />
+                <section :class="[$style.popular, $style.module]" v-if="Popular.showStatue === 1 && Popular.values.length">
+                    <Popular :data="Popular" />
                 </section>
                 <footer :class="$style.footer">
                     — 技术支持 朋来科技 —
@@ -55,7 +55,7 @@ import Panel from '../double-12-2020/Panel.vue'
 import BackToTop from '../../../components/activity/BackToTop.vue'
 
 export default {
-    name: 'TemplateDragonGate',
+    name: 'TemplateDouble122020',
     inject: ['parent'],
     components: {
         Live,
@@ -80,27 +80,24 @@ export default {
             default: 0
         }
     },
-    data () {
-        return {}
-    },
     computed: {
-        COUPON () {
-            return this.data.COUPON || { values: [] }
+        Coupon () {
+            return this.data.Coupon || { values: [] }
         },
-        MIAO_SHA () {
-            return this.data.MIAO_SHA || { values: [] }
+        Miaosha () {
+            return this.data.Miaosha || { values: [] }
         },
-        PIN_TUAN () {
-            return this.data.PIN_TUAN || { values: [] }
+        Pintuan () {
+            return this.data.Pintuan || { values: [] }
         },
-        YU_GOU () {
-            return this.data.YU_GOU || { values: [] }
+        Yugou () {
+            return this.data.Yugou || { values: [] }
         },
-        PACKAGE () {
-            return this.data.PACKAGE || { values: [] }
+        Package () {
+            return this.data.Package || { values: [] }
         },
-        POPULAR () {
-            return this.data.POPULAR || { values: [] }
+        Popular () {
+            return this.data.Popular || { values: [] }
         },
         isLiveShow () {
             const { liveInfo } = this.parent
@@ -197,6 +194,7 @@ export default {
     }
 }
 </style>
+
 <style module lang="scss">
 .template-double-12 {
     background-color: #DB451B;
@@ -221,13 +219,11 @@ export default {
         margin-top: 0 !important;
     }
 }
-
 .coupon,
 .yugou,
 .popular {
     margin-top: 40px;
 }
-
 .miaosha,
 .pintuan,
 .yugou,
@@ -236,7 +232,6 @@ export default {
     padding-left: 0;
     padding-right: 0;
 }
-
 footer {
     display: flex;
     justify-content: center;

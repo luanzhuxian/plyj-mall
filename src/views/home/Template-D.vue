@@ -3,107 +3,103 @@
         <div :class="$style.container">
             <Search :class="$style.search" placeholder="搜索商品" />
             <!-- banner -->
-            <Banner :class="$style.banner" :data="BANNER" />
-            <!-- 双12 -->
-            <!-- <a href="https://insure.youpenglai.com/" :class="$style.wwec" v-if="mallDomain === 'pljs'">
-                <img src="https://mallcdn.youpenglai.com/static/admall/mall-management/double-12-2020/jiaoyubao.jpg" alt="君学教育保">
-            </a> -->
+            <Banner :class="$style.banner" :data="Banner" />
             <!-- 福利红包 -->
             <div :class="$style.redPackage">
                 <img src="https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/rp-banner.png" alt="" @click="$router.push({ name: 'RedPackage' })">
             </div>
             <!-- 优惠券 -->
-            <Coupon :class="$style.coupon" :data="COUPON" v-if="isCouponShow" />
+            <Coupon :class="$style.coupon" :data="Coupon" v-if="isCouponShow" />
             <!-- 活动 -->
-            <Activity :class="$style.activity" :data="ACTIVITY" v-if="isActivityShow" />
+            <Activity :class="$style.activity" :data="Activity" v-if="isActivityShow" />
             <!-- 直播 -->
-            <Live :class="$style.live" :data="LIVE" v-if="isLiveShow" />
+            <Live :class="$style.live" :data="Live" v-if="isLiveShow" />
             <!-- 单课 -->
-            <OnlineCourse :class="$style.onlineCourse" :data="COURSE" v-if="isOnlineCourseShow" />
+            <SingleCourse :class="$style.singleCourse" :data="SingleCourse" v-if="isSingleCourseShow" />
             <!-- 系列课 -->
-            <SeriesCourse :class="$style.seriesCourse" :data="SERIES" v-if="isSeriesCourseShow" />
+            <SeriesCourse :class="$style.seriesCourse" :data="SeriesCourse" v-if="isSeriesCourseShow" />
             <!-- 图文资料 -->
             <ImageText :class="$style.imageText" :data="ImageText" v-if="isImageTextShow" />
             <!-- 预约 -->
-            <Appointment :class="$style.appointment" :data="APPOINTMENT" :slides-per-view="2" v-if="APPOINTMENT.showStatue === 1" />
+            <Appointment :class="$style.appointment" :data="Appointment" :slides-per-view="2" v-if="Appointment.showStatue === 1" />
             <!-- 秒杀 -->
             <div :class="$style.miaosha" v-if="isMiaoshaShow">
                 <SkinTitle
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
-                    :data="MIAO_SHA.moduleName"
+                    :data="Miaosha.moduleName"
                     :skin-id="skinId"
                 />
-                <div v-else-if="skinId !== null" :class="$style.title" v-text="MIAO_SHA.moduleName" />
-                <Miaosha :data="MIAO_SHA" />
+                <div v-else-if="skinId !== null" :class="$style.title" v-text="Miaosha.moduleName" />
+                <Miaosha :data="Miaosha" />
             </div>
             <!-- 组合课 -->
             <div :class="$style.package" v-if="isPackageShow">
                 <SkinTitle
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
-                    :data="PACKAGE.moduleName"
+                    :data="Package.moduleName"
                     :skin-id="skinId"
                 />
-                <div v-else-if="skinId !== null" :class="$style.title" v-text="PACKAGE.moduleName" />
-                <Package :data="PACKAGE" />
+                <div v-else-if="skinId !== null" :class="$style.title" v-text="Package.moduleName" />
+                <Package :data="Package" />
             </div>
             <!-- 团购 -->
             <div :class="$style.pintuan" v-if="isPintuanShow">
                 <SkinTitle
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
-                    :data="PIN_TUAN.moduleName"
+                    :data="Pintuan.moduleName"
                     :skin-id="skinId"
                 />
-                <div v-else-if="skinId !== null" :class="$style.title" v-text="PIN_TUAN.moduleName" />
-                <Pintuan :data="PIN_TUAN" />
+                <div v-else-if="skinId !== null" :class="$style.title" v-text="Pintuan.moduleName" />
+                <Pintuan :data="Pintuan" />
             </div>
             <!-- 预购 -->
             <div :class="$style.yugou" v-if="isYugouShow">
                 <SkinTitle
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
-                    :data="YU_GOU.moduleName"
+                    :data="Yugou.moduleName"
                     :skin-id="skinId"
                 />
-                <div v-else-if="skinId !== null" :class="$style.title" v-text="YU_GOU.moduleName" />
-                <Yugou :data="YU_GOU" />
+                <div v-else-if="skinId !== null" :class="$style.title" v-text="Yugou.moduleName" />
+                <Yugou :data="Yugou" />
             </div>
             <!-- 品宣 -->
-            <Propagate :class="$style.propagate" :data="PROPAGATE" v-if="PROPAGATE.showStatue === 1" />
+            <Propagate :class="$style.propagate" :data="Propagate" v-if="Propagate.showStatue === 1" />
             <!-- 商品 -->
             <div :class="$style.popular" v-if="isPopularShow">
                 <SkinTitle
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
-                    :data="POPULAR.moduleName"
+                    :data="Popular.moduleName"
                     :skin-id="skinId"
                 />
-                <div v-else-if="skinId !== null" :class="$style.title" v-text="POPULAR.moduleName" />
-                <Popular :data="POPULAR" />
+                <div v-else-if="skinId !== null" :class="$style.title" v-text="Popular.moduleName" />
+                <Popular :data="Popular" />
             </div>
             <!-- 课程 -->
             <div :class="$style.class" v-if="isClassShow">
                 <SkinTitle
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
-                    :data="CLASS.moduleName"
+                    :data="Class.moduleName"
                     :skin-id="skinId"
                 />
-                <div v-else-if="skinId !== null" :class="$style.title" v-text="CLASS.moduleName" />
-                <Class :data="CLASS" />
+                <div v-else-if="skinId !== null" :class="$style.title" v-text="Class.moduleName" />
+                <Class :data="Class" />
             </div>
             <!-- 精品推荐 -->
-            <div :class="$style.recommend" v-if="RECOMMEND.values && RECOMMEND.values.length">
+            <div :class="$style.recommend" v-if="Recommend.values && Recommend.values.length">
                 <SkinTitle
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
-                    :data="RECOMMEND.moduleName"
+                    :data="Recommend.moduleName"
                     :skin-id="skinId"
                 />
-                <div v-else-if="skinId !== null" :class="$style.title" v-text="RECOMMEND.moduleName" />
-                <Recommend :data="RECOMMEND" />
+                <div v-else-if="skinId !== null" :class="$style.title" v-text="Recommend.moduleName" />
+                <Recommend :data="Recommend" />
             </div>
             <footer :class="$style.footer">
                 — 技术支持 朋来科技 —
@@ -119,7 +115,7 @@ import Banner from './components/Banner.vue'
 import Appointment from './components/Appointment.vue'
 import Propagate from './components/Propagate-Small.vue'
 import Live from './components/Live.vue'
-import OnlineCourse from './components/Online-Course.vue'
+import SingleCourse from './components/Single-Course.vue'
 import SeriesCourse from './components/Series-Course.vue'
 import ImageText from './components/Image-Text.vue'
 import Coupon from './activity/Coupon.vue'
@@ -143,7 +139,7 @@ export default {
         Appointment,
         Propagate,
         Live,
-        OnlineCourse,
+        SingleCourse,
         SeriesCourse,
         ImageText,
         Coupon,
@@ -180,89 +176,89 @@ export default {
     },
     computed: {
         ...mapGetters(['mallDomain']),
-        BANNER () {
-            return this.data.BANNER || {}
+        Banner () {
+            return this.data.Banner || {}
         },
-        COUPON () {
-            return this.data.COUPON || {}
+        Coupon () {
+            return this.data.Coupon || {}
         },
-        ACTIVITY () {
-            return this.data.ACTIVITY || {}
+        Activity () {
+            return this.data.Activity || {}
         },
-        LIVE () {
-            return this.data.LIVE || {}
+        Live () {
+            return this.data.Live || {}
         },
-        COURSE () {
-            return this.data.COURSE || {}
+        SingleCourse () {
+            return this.data.SingleCourse || {}
         },
-        SERIES () {
-            return this.data.SERIES || {}
+        SeriesCourse () {
+            return this.data.SeriesCourse || {}
         },
         ImageText () {
             return this.data.ImageText || {}
         },
-        APPOINTMENT () {
-            return this.data.APPOINTMENT || {}
+        Appointment () {
+            return this.data.Appointment || {}
         },
-        MIAO_SHA () {
-            return this.data.MIAO_SHA || {}
+        Miaosha () {
+            return this.data.Miaosha || {}
         },
-        PIN_TUAN () {
-            return this.data.PIN_TUAN || {}
+        Pintuan () {
+            return this.data.Pintuan || {}
         },
-        YU_GOU () {
-            return this.data.YU_GOU || {}
+        Yugou () {
+            return this.data.Yugou || {}
         },
-        PACKAGE () {
-            return this.data.PACKAGE || {}
+        Package () {
+            return this.data.Package || {}
         },
-        PROPAGATE () {
-            return this.data.PROPAGATE || {}
+        Propagate () {
+            return this.data.Propagate || {}
         },
-        POPULAR () {
-            return this.data.POPULAR || {}
+        Popular () {
+            return this.data.Popular || {}
         },
-        CLASS () {
-            return this.data.CLASS || {}
+        Class () {
+            return this.data.Class || {}
         },
-        RECOMMEND () {
-            return this.data.RECOMMEND || {}
+        Recommend () {
+            return this.data.Recommend || {}
         },
         isLiveShow () {
-            return this.LIVE.showStatue === 1 && this.LIVE.values && this.LIVE.values.length
+            return this.Live.showStatue === 1 && this.Live.values && this.Live.values.length
         },
-        isOnlineCourseShow () {
-            return this.COURSE.showStatue === 1 && this.COURSE.values && this.COURSE.values.length
+        isSingleCourseShow () {
+            return this.SingleCourse.showStatue === 1 && this.SingleCourse.values && this.SingleCourse.values.length
         },
         isSeriesCourseShow () {
-            return this.SERIES.showStatue === 1 && this.SERIES.values && this.SERIES.values.length
+            return this.SeriesCourse.showStatue === 1 && this.SeriesCourse.values && this.SeriesCourse.values.length
         },
         isImageTextShow () {
             return this.ImageText.showStatue === 1 && this.ImageText.values && this.ImageText.values.length
         },
         isCouponShow () {
-            return this.COUPON.values && this.COUPON.values.length
+            return this.Coupon.values && this.Coupon.values.length
         },
         isActivityShow () {
-            return this.ACTIVITY.showStatue === 1 && this.ACTIVITY.values && this.ACTIVITY.values.length
+            return this.Activity.showStatue === 1 && this.Activity.values && this.Activity.values.length
         },
         isMiaoshaShow () {
-            return this.MIAO_SHA.showStatue === 1 && this.MIAO_SHA.values && this.MIAO_SHA.values.length
+            return this.Miaosha.showStatue === 1 && this.Miaosha.values && this.Miaosha.values.length
         },
         isPintuanShow () {
-            return this.PIN_TUAN.showStatue === 1 && this.PIN_TUAN.values && this.PIN_TUAN.values.length
+            return this.Pintuan.showStatue === 1 && this.Pintuan.values && this.Pintuan.values.length
         },
         isYugouShow () {
-            return this.YU_GOU.showStatue === 1 && this.YU_GOU.values && this.YU_GOU.values.length
+            return this.Yugou.showStatue === 1 && this.Yugou.values && this.Yugou.values.length
         },
         isPackageShow () {
-            return this.PACKAGE.showStatue === 1 && this.PACKAGE.values && this.PACKAGE.values.length
+            return this.Package.showStatue === 1 && this.Package.values && this.Package.values.length
         },
         isPopularShow () {
-            return this.POPULAR.showStatue === 1 && this.POPULAR.values && this.POPULAR.values.length
+            return this.Popular.showStatue === 1 && this.Popular.values && this.Popular.values.length
         },
         isClassShow () {
-            return this.CLASS.showStatue === 1 && this.CLASS.values && this.CLASS.values.length
+            return this.Class.showStatue === 1 && this.Class.values && this.Class.values.length
         },
         isSkinShow () {
             return skinClassNameMap.has(this.skinId)
@@ -318,7 +314,7 @@ export default {
 
 .activity,
 .live,
-.online-course,
+.single-course,
 .series-course,
 .image-text,
 .coupon,
@@ -326,28 +322,6 @@ export default {
 .appointment {
     padding: 20px 24px 0;
 }
-
-.footer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 140px;
-    font-size: 26px;
-    color: #999;
-}
-
-// .wwec {
-//     display: block;
-//     margin: 20px 24px 0;
-//     border-radius: 20px;
-//     overflow: hidden;
-//     > img {
-//         width: 100%;
-//         height: 187px;
-//         object-fit: cover;
-//     }
-// }
-
 .red-package {
     display: block;
     padding: 20px 24px 0;
@@ -357,6 +331,14 @@ export default {
         height: 144px;
         object-fit: cover;
     }
+}
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 140px;
+    font-size: 26px;
+    color: #999;
 }
 
 </style>

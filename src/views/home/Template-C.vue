@@ -2,55 +2,55 @@
     <div :class="[$style.homeTemplateD, $style[skinClassNameMap[skinId]]]">
         <div :class="$style.container">
             <Search :class="$style.search" placeholder="搜索商品" />
-            <Propagate :class="$style.propagate" :data="PROPAGATE" />
+            <Propagate :class="$style.propagate" :data="Propagate" />
             <!-- 福利红包 -->
             <div :class="$style.redPackage">
                 <img src="https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/rp-banner.png" alt="" @click="$router.push({ name: 'RedPackage' })">
             </div>
-            <Live :class="$style.live" :data="LIVE" v-if="isLiveShow" />
-            <OnlineCourse :class="$style.onlineCourse" :data="COURSE" v-if="isOnlineCourseShow" />
-            <SeriesCourse :class="$style.seriesCourse" :data="SERIES" v-if="isSeriesCourseShow" />
+            <Live :class="$style.live" :data="Live" v-if="isLiveShow" />
+            <SingleCourse :class="$style.singleCourse" :data="SingleCourse" v-if="isSingleCourseShow" />
+            <SeriesCourse :class="$style.seriesCourse" :data="SeriesCourse" v-if="isSeriesCourseShow" />
             <ImageText :class="$style.imageText" :data="ImageText" v-if="isImageTextShow" />
-            <Appointment :class="$style.appointment" :data="APPOINTMENT" :style-type="2" v-if="APPOINTMENT.showStatue === 1" />
+            <Appointment :class="$style.appointment" :data="Appointment" :style-type="2" v-if="Appointment.showStatue === 1" />
             <div :class="$style.popular" v-if="isPopularShow">
                 <SkinTitle
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
-                    :data="POPULAR.moduleName"
+                    :data="Popular.moduleName"
                     :skin-id="skinId"
                 />
-                <div v-else-if="skinId !== null" :class="$style.title" v-text="POPULAR.moduleName" />
-                <Popular :data="POPULAR" />
+                <div v-else-if="skinId !== null" :class="$style.title" v-text="Popular.moduleName" />
+                <Popular :data="Popular" />
             </div>
             <div :class="$style.teachers" v-if="isTeachersShow">
                 <SkinTitle
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
-                    :data="TEACHERS.moduleName"
+                    :data="Teachers.moduleName"
                     :skin-id="skinId"
                 />
-                <div v-else-if="skinId !== null" :class="$style.title" v-text="TEACHERS.moduleName" />
-                <Teachers :data="TEACHERS" />
+                <div v-else-if="skinId !== null" :class="$style.title" v-text="Teachers.moduleName" />
+                <Teachers :data="Teachers" />
             </div>
             <div :class="$style.class" v-if="isClassShow">
                 <SkinTitle
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
-                    :data="CLASS.moduleName"
+                    :data="Class.moduleName"
                     :skin-id="skinId"
                 />
-                <div v-else-if="skinId !== null" :class="$style.title" v-text="CLASS.moduleName" />
-                <Class :data="CLASS" />
+                <div v-else-if="skinId !== null" :class="$style.title" v-text="Class.moduleName" />
+                <Class :data="Class" />
             </div>
-            <div :class="$style.recommend" v-if="RECOMMEND.values && RECOMMEND.values.length">
+            <div :class="$style.recommend" v-if="Recommend.values && Recommend.values.length">
                 <SkinTitle
                     v-if="isSkinShow"
                     :class="$style.skinTitle"
-                    :data="RECOMMEND.moduleName"
+                    :data="Recommend.moduleName"
                     :skin-id="skinId"
                 />
-                <div v-else-if="skinId !== null" :class="$style.title" v-text="RECOMMEND.moduleName" />
-                <Recommend :data="RECOMMEND" />
+                <div v-else-if="skinId !== null" :class="$style.title" v-text="Recommend.moduleName" />
+                <Recommend :data="Recommend" />
             </div>
             <footer :class="$style.footer">
                 — 技术支持 朋来科技 —
@@ -63,7 +63,7 @@
 import { mapGetters } from 'vuex'
 import Search from './components/Search.vue'
 import Live from './components/Live.vue'
-import OnlineCourse from './components/Online-Course.vue'
+import SingleCourse from './components/Single-Course.vue'
 import SeriesCourse from './components/Series-Course.vue'
 import ImageText from './components/Image-Text.vue'
 // import Activity from '../activity/spring-2020/Activity.vue'
@@ -83,7 +83,7 @@ export default {
     components: {
         Search,
         Live,
-        OnlineCourse,
+        SingleCourse,
         SeriesCourse,
         ImageText,
         // Activity,
@@ -119,56 +119,56 @@ export default {
     },
     computed: {
         ...mapGetters(['mallDomain']),
-        PROPAGATE () {
-            return this.data.PROPAGATE || {}
+        Propagate () {
+            return this.data.Propagate || {}
         },
-        LIVE () {
-            return this.data.LIVE || {}
+        Live () {
+            return this.data.Live || {}
         },
-        COURSE () {
-            return this.data.COURSE || {}
+        SingleCourse () {
+            return this.data.SingleCourse || {}
         },
-        SERIES () {
-            return this.data.SERIES || {}
+        SeriesCourse () {
+            return this.data.SeriesCourse || {}
         },
         ImageText () {
             return this.data.ImageText || {}
         },
-        APPOINTMENT () {
-            return this.data.APPOINTMENT || {}
+        Appointment () {
+            return this.data.Appointment || {}
         },
-        POPULAR () {
-            return this.data.POPULAR || {}
+        Popular () {
+            return this.data.Popular || {}
         },
-        TEACHERS () {
-            return this.data.TEACHERS || {}
+        Teachers () {
+            return this.data.Teachers || {}
         },
-        CLASS () {
-            return this.data.CLASS || {}
+        Class () {
+            return this.data.Class || {}
         },
-        RECOMMEND () {
-            return this.data.RECOMMEND || {}
+        Recommend () {
+            return this.data.Recommend || {}
         },
         isLiveShow () {
-            return this.LIVE.showStatue === 1 && this.LIVE.values && this.LIVE.values.length
+            return this.Live.showStatue === 1 && this.Live.values && this.Live.values.length
         },
-        isOnlineCourseShow () {
-            return this.COURSE.showStatue === 1 && this.COURSE.values && this.COURSE.values.length
+        isSingleCourseShow () {
+            return this.SingleCourse.showStatue === 1 && this.SingleCourse.values && this.SingleCourse.values.length
         },
         isSeriesCourseShow () {
-            return this.SERIES.showStatue === 1 && this.SERIES.values && this.SERIES.values.length
+            return this.SeriesCourse.showStatue === 1 && this.SeriesCourse.values && this.SeriesCourse.values.length
         },
         isImageTextShow () {
             return this.ImageText.showStatue === 1 && this.ImageText.values && this.ImageText.values.length
         },
         isPopularShow () {
-            return this.POPULAR.showStatue === 1 && this.POPULAR.values && this.POPULAR.values.length
+            return this.Popular.showStatue === 1 && this.Popular.values && this.Popular.values.length
         },
         isClassShow () {
-            return this.CLASS.showStatue === 1 && this.CLASS.values && this.CLASS.values.length
+            return this.Class.showStatue === 1 && this.Class.values && this.Class.values.length
         },
         isTeachersShow () {
-            return this.TEACHERS.showStatue === 1 && this.TEACHERS.values && this.TEACHERS.values.length
+            return this.Teachers.showStatue === 1 && this.Teachers.values && this.Teachers.values.length
         },
         isSkinShow () {
             return skinClassNameMap.has(this.skinId)
@@ -244,7 +244,7 @@ export default {
 }
 
 .live,
-.online-course,
+.single-course,
 .series-course,
 .image-text {
     padding: 24px 24px 0;

@@ -1,7 +1,7 @@
 <template>
     <div :class="$style.templateFengqiang">
         <!-- 直播-->
-        <live :class="$style.live" v-if="isLiveShow" :data="parent.liveInfo" />
+        <Live :class="$style.live" v-if="isLiveShow" :data="parent.liveInfo" />
         <!-- 活动 -->
         <!-- <div :class="$style.moduleActivity" v-if="hasInvitingEvent || hasJxEvent">
             <router-link
@@ -29,36 +29,36 @@
                 :to="{ name: 'InviteNewcomers', params: { activityId: invitingEvent.id } }"
             />
         </div> -->
-        <miaosha-small
-            v-if="MIAO_SHA.values && MIAO_SHA.values.length && MIAO_SHA.values[0].goodsInfo"
-            :data="MIAO_SHA"
+        <Miaosha
+            v-if="Miaosha.values && Miaosha.values.length && Miaosha.values[0].goodsInfo"
+            :data="Miaosha"
         />
-        <pintuan
-            v-if="PIN_TUAN.values && PIN_TUAN.values.length"
-            :data="PIN_TUAN"
+        <Pintuan
+            v-if="Pintuan.values && Pintuan.values.length"
+            :data="Pintuan"
         />
-        <maisong
-            v-if="MAI_SONG.values && MAI_SONG.values.length"
-            :data="MAI_SONG"
+        <Maisong
+            v-if="Maisong.values && Maisong.values.length"
+            :data="Maisong"
             :type="type"
         />
-        <coupon
-            v-if="COUPON.values && COUPON.values.length"
-            :data="COUPON"
+        <Coupon
+            v-if="Coupon.values && Coupon.values.length"
+            :data="Coupon"
             :type="type"
         />
-        <yugou
-            v-if="YU_GOU.values && YU_GOU.values.length"
-            :data="YU_GOU"
+        <Yugou
+            v-if="Yugou.values && Yugou.values.length"
+            :data="Yugou"
         />
-        <fengqiang
-            v-if="FENG_QIANG.values && FENG_QIANG.values.length"
-            :data="FENG_QIANG"
+        <Fengqiang
+            v-if="Fengqiang.values && Fengqiang.values.length"
+            :data="Fengqiang"
             :type="type"
         />
-        <div :class="$style.recommend" v-if="RECOMMEND.values && RECOMMEND.values.length">
+        <div :class="$style.recommend" v-if="Recommend.values && Recommend.values.length">
             <div :class="$style.btnBottom" />
-            <recommend :data="RECOMMEND" />
+            <Recommend :data="Recommend" />
         </div>
     </div>
 </template>
@@ -70,7 +70,7 @@ import Coupon from '../../double-12-2019/Coupon.vue'
 import Maisong from '../../double-12-2019/Maisong.vue'
 import Yugou from '../../double-12-2019/Yugou.vue'
 import Fengqiang from '../../double-12-2019/Fengqiang.vue'
-import MiaoshaSmall from '../../double-12-2019/Miaosha-Small.vue'
+import Miaosha from '../../double-12-2019/Miaosha-Small.vue'
 import Recommend from '../../../home/components/Recommend.vue'
 
 export default {
@@ -83,7 +83,7 @@ export default {
         Maisong,
         Yugou,
         Fengqiang,
-        MiaoshaSmall,
+        Miaosha,
         Recommend
     },
     props: {
@@ -102,26 +102,26 @@ export default {
         return {}
     },
     computed: {
-        MIAO_SHA () {
-            return this.data.MIAO_SHA || {}
+        Miaosha () {
+            return this.data.Miaosha || {}
         },
-        PIN_TUAN () {
-            return this.data.PIN_TUAN || {}
+        Pintuan () {
+            return this.data.Pintuan || {}
         },
-        MAI_SONG () {
-            return this.data.MAI_SONG || {}
+        Maisong () {
+            return this.data.Maisong || {}
         },
-        COUPON () {
-            return this.data.COUPON || {}
+        Coupon () {
+            return this.data.Coupon || {}
         },
-        YU_GOU () {
-            return this.data.YU_GOU || {}
+        Yugou () {
+            return this.data.Yugou || {}
         },
-        FENG_QIANG () {
-            return this.data.FENG_QIANG || {}
+        Fengqiang () {
+            return this.data.Fengqiang || {}
         },
-        RECOMMEND () {
-            return this.data.RECOMMEND || {}
+        Recommend () {
+            return this.data.Recommend || {}
         },
         // invitingEvent () {
         //     return (this.parent && this.parent.invitingEvent) || {}

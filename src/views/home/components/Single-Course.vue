@@ -1,18 +1,18 @@
 <template>
     <div>
-        <div :class="$style.onlineCourseWrapper">
-            <div :class="$style.onlineCourseHead">
+        <div :class="$style.singleCourseWrapper">
+            <div :class="$style.singleCourseHead">
                 <pl-svg name="icon-tv-76530" width="36" height="45" />
                 <b>{{ data.moduleName }}</b>
                 <router-link
-                    :class="$style.onlineCourseHeadMore"
+                    :class="$style.singleCourseHeadMore"
                     :to="{ name: 'OnlineClassroom' }"
                 >
                     查看全部
                     <pl-svg name="icon-right" height="20" fill="#cccccc" />
                 </router-link>
             </div>
-            <div :class="$style.onlineCourseHeadSub" v-if="data.otherValue > 0">
+            <div :class="$style.singleCourseHeadSub" v-if="data.otherValue > 0">
                 {{ `${data.otherValue}个精选单课，等你来学习` }}
             </div>
             <ul :class="$style.list" v-if="data.values.length">
@@ -66,7 +66,7 @@
 import moment from 'moment'
 
 export default {
-    name: 'OnlineCourse',
+    name: 'SingleCourse',
     props: {
         data: {
             type: Object,
@@ -99,13 +99,13 @@ export default {
 </script>
 
 <style module lang="scss">
-.online-course-wrapper {
+.single-course-wrapper {
     padding: 20px;
     background-color: #fff;
     border-radius: 20px;
     overflow: hidden;
 }
-.online-course-head {
+.single-course-head {
     display: flex;
     align-items: center;
     margin-bottom: 12px;

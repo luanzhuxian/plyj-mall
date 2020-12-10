@@ -14,48 +14,48 @@
                 </div>
                 <!-- 直播-->
                 <div :class="[$style.live, $style.module]" v-if="isLiveShow">
-                    <live :data="parent.liveInfo" />
+                    <Live :data="parent.liveInfo" />
                 </div>
                 <!-- 活动-->
-                <!-- <activity
+                <!-- <Activity
                     v-if="isNwEventShow"
                     :class="[$style.activity, $style.module]"
                     background="#FFFAE6"
                     box-shadow="0px 8px 12px rgba(121, 30, 5, 0.2)"
                 /> -->
                 <!-- 品宣 -->
-                <div :class="[$style.propagate, $style.module]" v-if="PIN_XUAN && PIN_XUAN.showStatue === 1">
-                    <propagate :data="PIN_XUAN" />
+                <div :class="[$style.propagate, $style.module]" v-if="Propagate && Propagate.showStatue === 1">
+                    <Propagate :data="Propagate" />
                 </div>
                 <!-- 领券 -->
-                <div :class="[$style.coupon, $style.module]" v-if="COUPON.values && COUPON.values.length">
-                    <coupon :data="COUPON" />
+                <div :class="[$style.coupon, $style.module]" v-if="Coupon.values && Coupon.values.length">
+                    <Coupon :data="Coupon" />
                 </div>
                 <!-- 春耘 -->
-                <div :class="[$style.chunyun, $style.module]" v-if="!!CHUN_YUN.otherValue && CHUN_YUN.values && CHUN_YUN.values.length">
-                    <chunyun :data="CHUN_YUN" />
+                <div :class="[$style.chunyun, $style.module]" v-if="!!Chunyun.otherValue && Chunyun.values && Chunyun.values.length">
+                    <Chunyun :data="Chunyun" />
                 </div>
                 <!-- 拼团 -->
-                <div :class="[$style.pintuan, $style.module]" v-if="PIN_TUAN.values && PIN_TUAN.values.length">
-                    <pintuan :data="PIN_TUAN" />
+                <div :class="[$style.pintuan, $style.module]" v-if="Pintuan.values && Pintuan.values.length">
+                    <Pintuan :data="Pintuan" />
                 </div>
                 <!-- 预购 -->
-                <div :class="[$style.yugou, $style.module]" v-if="YU_GOU.values && YU_GOU.values.length">
-                    <yugou :data="YU_GOU" />
+                <div :class="[$style.yugou, $style.module]" v-if="Yugou.values && Yugou.values.length">
+                    <Yugou :data="Yugou" />
                 </div>
                 <!-- 疯抢 -->
-                <div :class="[$style.fengqiang, $style.module]" v-if="FENG_QIANG.values && FENG_QIANG.values.length">
+                <div :class="[$style.fengqiang, $style.module]" v-if="Fengqiang.values && Fengqiang.values.length">
                     <div :class="$style.title">
                         — 新春优惠感恩大回馈 —
                     </div>
-                    <recommend :data="FENG_QIANG">
+                    <Recommend :data="Fengqiang">
                         <template v-slot:price="{ price }">
                             <div :class="$style.priceWrapper">
                                 <img src="https://mallcdn.youpenglai.com/static/mall/icons/olds/fengqiangjia.png">
                                 <span :class="$style.price" v-text="price" />
                             </div>
                         </template>
-                    </recommend>
+                    </Recommend>
                 </div>
                 <footer :class="$style.footer">
                     — 技术支持 朋来科技 —
@@ -104,23 +104,23 @@ export default {
         return {}
     },
     computed: {
-        PIN_XUAN () {
-            return this.data.PIN_XUAN || {}
+        Propagate () {
+            return this.data.Propagate || {}
         },
-        COUPON () {
-            return this.data.COUPON || {}
+        Coupon () {
+            return this.data.Coupon || {}
         },
-        CHUN_YUN () {
-            return this.data.CHUN_YUN || {}
+        Chunyun () {
+            return this.data.Chunyun || {}
         },
-        PIN_TUAN () {
-            return this.data.PIN_TUAN || {}
+        Pintuan () {
+            return this.data.Pintuan || {}
         },
-        YU_GOU () {
-            return this.data.YU_GOU || {}
+        Yugou () {
+            return this.data.Yugou || {}
         },
-        FENG_QIANG () {
-            return this.data.FENG_QIANG || {}
+        Fengqiang () {
+            return this.data.Fengqiang || {}
         },
         isLiveShow () {
             const { liveInfo } = this.parent
@@ -162,7 +162,6 @@ export default {
         }
     }
 }
-
 .btn-top {
     position: relative;
     box-sizing: border-box;
@@ -190,25 +189,20 @@ export default {
         right: -45px;
     }
 }
-
 .live {
     padding: 54px 24px 0;
 }
-
 .propagate,
 .coupon {
     padding: 32px 24px 0;
 }
-
 .chunyun {
     padding: 48px 0 0;
 }
-
 .pintuan,
 .yugou {
     padding: 32px 0 0;
 }
-
 .fengqiang {
     padding: 34px 24px 0;
     background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/xinchun/9f67ef6c-6a54-4e6b-ac11-090b8853a1ba.png') no-repeat right top;
@@ -243,7 +237,6 @@ export default {
         }
     }
 }
-
 footer {
     display: flex;
     justify-content: center;

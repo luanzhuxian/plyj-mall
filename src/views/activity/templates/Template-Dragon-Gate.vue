@@ -3,8 +3,8 @@
         <div :class="$style.background">
             <div :class="$style.container" v-if="allLoaded">
                 <!-- 优惠券 -->
-                <div :class="[$style.coupon, $style.module]" v-if="COUPON.values.length">
-                    <Coupon :data="COUPON" />
+                <div :class="[$style.coupon, $style.module]" v-if="Coupon.values.length">
+                    <Coupon :data="Coupon" />
                 </div>
                 <!-- 直播-->
                 <div :class="[$style.live, $style.module]" v-if="isLiveShow">
@@ -13,37 +13,37 @@
                     </Panel>
                 </div>
                 <!-- 公益-->
-                <div :class="[$style.charity, $style.module]" v-if="CHARITY.showStatue === 1 && CHARITY.values.length">
-                    <Charity :data="CHARITY" />
+                <div :class="[$style.charity, $style.module]" v-if="Charity.showStatue === 1 && Charity.values.length">
+                    <Charity :data="Charity" />
                 </div>
                 <!-- 活动-->
-                <div :class="[$style.activity, $style.module]" v-if="ACTIVITY.showStatue === 1 && ACTIVITY.values.length && (ACTIVITY.values[0].haveSigninActivity || ACTIVITY.values[0].haveLuckDrawActivity)">
-                    <Activity :data="ACTIVITY" />
+                <div :class="[$style.activity, $style.module]" v-if="Activity.showStatue === 1 && Activity.values.length && (Activity.values[0].haveSigninActivity || Activity.values[0].haveLuckDrawActivity)">
+                    <Activity :data="Activity" />
                 </div>
                 <!-- 秒杀 -->
-                <div :class="[$style.miaosha, $style.module]" v-if="MIAO_SHA.showStatue === 1 && MIAO_SHA.values.length">
-                    <Miaosha :data="MIAO_SHA" />
+                <div :class="[$style.miaosha, $style.module]" v-if="Miaosha.showStatue === 1 && Miaosha.values.length">
+                    <Miaosha :data="Miaosha" />
                 </div>
                 <!-- 分销 -->
-                <div :class="[$style.distribution, $style.module]" v-if="DISTRIBUTION.showStatue === 1 && DISTRIBUTION.values.length">
-                    <Distribution :data="DISTRIBUTION" />
+                <div :class="[$style.distribution, $style.module]" v-if="Distribution.showStatue === 1 && Distribution.values.length">
+                    <Distribution :data="Distribution" />
                 </div>
                 <!-- 拼团 -->
-                <div :class="[$style.pintuan, $style.module]" v-if="PIN_TUAN.showStatue === 1 && PIN_TUAN.values.length">
-                    <Pintuan :data="PIN_TUAN" />
+                <div :class="[$style.pintuan, $style.module]" v-if="Pintuan.showStatue === 1 && Pintuan.values.length">
+                    <Pintuan :data="Pintuan" />
                 </div>
                 <!-- 预购 -->
-                <div :class="[$style.yugou, $style.module]" v-if="YU_GOU.showStatue === 1 && YU_GOU.values.length">
-                    <Yugou :data="YU_GOU" />
+                <div :class="[$style.yugou, $style.module]" v-if="Yugou.showStatue === 1 && Yugou.values.length">
+                    <Yugou :data="Yugou" />
                 </div>
                 <!-- 组合课 -->
-                <div :class="[$style.package, $style.module]" v-if="PACKAGE.showStatue === 1 && PACKAGE.values.length">
-                    <Package :data="PACKAGE" />
+                <div :class="[$style.package, $style.module]" v-if="Package.showStatue === 1 && Package.values.length">
+                    <Package :data="Package" />
                 </div>
                 <!-- 精品推荐 -->
-                <div :class="[$style.recommend, $style.module]" v-if="RECOMMEND.values.length">
+                <div :class="[$style.recommend, $style.module]" v-if="Recommend.values.length">
                     <Panel :class="$style.panel" :title="recommendPanelTitle" hide-button>
-                        <Recommend :data="RECOMMEND" btn-color="#FF341B" border="4px solid #222222" />
+                        <Recommend :data="Recommend" btn-color="#FF341B" border="4px solid #222222" />
                     </Panel>
                 </div>
                 <footer :class="$style.footer">
@@ -110,32 +110,32 @@ export default {
         }
     },
     computed: {
-        COUPON () {
-            return this.data.COUPON || { values: [] }
+        Coupon () {
+            return this.data.Coupon || { values: [] }
         },
-        CHARITY () {
-            return this.data.CHARITY || { values: [] }
+        Charity () {
+            return this.data.Charity || { values: [] }
         },
-        ACTIVITY () {
-            return this.data.ACTIVITY || { values: [] }
+        Activity () {
+            return this.data.Activity || { values: [] }
         },
-        MIAO_SHA () {
-            return this.data.MIAO_SHA || { values: [] }
+        Miaosha () {
+            return this.data.Miaosha || { values: [] }
         },
-        DISTRIBUTION () {
-            return this.data.DISTRIBUTION || { values: [] }
+        Distribution () {
+            return this.data.Distribution || { values: [] }
         },
-        PIN_TUAN () {
-            return this.data.PIN_TUAN || { values: [] }
+        Pintuan () {
+            return this.data.Pintuan || { values: [] }
         },
-        YU_GOU () {
-            return this.data.YU_GOU || { values: [] }
+        Yugou () {
+            return this.data.Yugou || { values: [] }
         },
-        PACKAGE () {
-            return this.data.PACKAGE || { values: [] }
+        Package () {
+            return this.data.Package || { values: [] }
         },
-        RECOMMEND () {
-            return this.data.RECOMMEND || { values: [] }
+        Recommend () {
+            return this.data.Recommend || { values: [] }
         },
         isLiveShow () {
             const { liveInfo } = this.parent
@@ -179,7 +179,6 @@ export default {
 .coupon {
     padding: 0 ;
 }
-
 footer {
     display: flex;
     justify-content: center;
@@ -189,7 +188,6 @@ footer {
     font-size: 26px;
     font-weight: 600;
 }
-
 .panel {
     padding-top: 64px;
 }

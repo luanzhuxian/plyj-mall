@@ -111,59 +111,59 @@ export default {
                 }.bind(moduleModels)
 
                 if (type === 3) {
-                    modules.BANNER = findModule(1)
-                    modules.LIVE = findModule(20)
-                    modules.COURSE = findModule(21)
-                    modules.SERIES = findModule(22)
+                    modules.Banner = findModule(1)
+                    modules.Live = findModule(20)
+                    modules.SingleCourse = findModule(21)
+                    modules.SeriesCourse = findModule(22)
                     modules.ImageText = findModule(23)
-                    modules.POPULAR = findModule(2)
-                    modules.APPOINTMENT = findModule(5)
-                    modules.PROPAGATE = findModule(6)
-                    modules.CLASS = findModule(3)
-                    modules.RECOMMEND = findModule(4)
+                    modules.Popular = findModule(2)
+                    modules.Appointment = findModule(5)
+                    modules.Propagate = findModule(6)
+                    modules.Class = findModule(3)
+                    modules.Recommend = findModule(4)
                 }
                 if (type === 4) {
-                    modules.BANNER = moduleModels[0]
-                    modules.ADV = moduleModels[1]
-                    modules.LIVE = findModule(20)
-                    modules.COURSE = findModule(21)
-                    modules.SERIES = findModule(22)
+                    modules.Banner = moduleModels[0]
+                    modules.Adv = moduleModels[1]
+                    modules.Live = findModule(20)
+                    modules.SingleCourse = findModule(21)
+                    modules.SeriesCourse = findModule(22)
                     modules.ImageText = findModule(23)
-                    modules.POPULAR = findModule(2)
-                    modules.APPOINTMENT = findModule(5)
-                    modules.PROPAGATE = findModule(6)
-                    modules.CLASS = findModule(3)
-                    modules.RECOMMEND = findModule(4)
+                    modules.Popular = findModule(2)
+                    modules.Appointment = findModule(5)
+                    modules.Propagate = findModule(6)
+                    modules.Class = findModule(3)
+                    modules.Recommend = findModule(4)
                 }
                 if (type === -1) {
-                    modules.PROPAGATE = findModule(6)
-                    modules.LIVE = findModule(20)
-                    modules.COURSE = findModule(21)
-                    modules.SERIES = findModule(22)
+                    modules.Propagate = findModule(6)
+                    modules.Live = findModule(20)
+                    modules.SingleCourse = findModule(21)
+                    modules.SeriesCourse = findModule(22)
                     modules.ImageText = findModule(23)
-                    modules.APPOINTMENT = findModule(5)
-                    modules.POPULAR = findModule(2)
-                    modules.TEACHERS = findModule(12)
-                    modules.CLASS = findModule(3)
-                    modules.RECOMMEND = findModule(4)
+                    modules.Appointment = findModule(5)
+                    modules.Popular = findModule(2)
+                    modules.Teachers = findModule(12)
+                    modules.Class = findModule(3)
+                    modules.Recommend = findModule(4)
                 }
                 if (type === 9) {
-                    modules.BANNER = findModule(1)
-                    modules.COUPON = findModule(9)
-                    modules.ACTIVITY = findModule(15)
-                    modules.LIVE = findModule(20)
-                    modules.COURSE = findModule(21)
-                    modules.SERIES = findModule(22)
+                    modules.Banner = findModule(1)
+                    modules.Coupon = findModule(9)
+                    modules.Activity = findModule(15)
+                    modules.Live = findModule(20)
+                    modules.SingleCourse = findModule(21)
+                    modules.SeriesCourse = findModule(22)
                     modules.ImageText = findModule(23)
-                    modules.APPOINTMENT = findModule(5)
-                    modules.MIAO_SHA = findModule(10)
-                    modules.PACKAGE = findModule(16)
-                    modules.PIN_TUAN = findModule(8)
-                    modules.YU_GOU = findModule(11)
-                    modules.PROPAGATE = findModule(6)
-                    modules.POPULAR = findModule(2)
-                    modules.CLASS = findModule(3)
-                    modules.RECOMMEND = findModule(4)
+                    modules.Appointment = findModule(5)
+                    modules.Miaosha = findModule(10)
+                    modules.Package = findModule(16)
+                    modules.Pintuan = findModule(8)
+                    modules.Yugou = findModule(11)
+                    modules.Propagate = findModule(6)
+                    modules.Popular = findModule(2)
+                    modules.Class = findModule(3)
+                    modules.Recommend = findModule(4)
                 }
                 this.type = type
                 this.modules = modules
@@ -179,6 +179,7 @@ export default {
     }
 }
 </script>
+
 <style lang="scss" module>
 .home {
     padding-bottom: 88px;

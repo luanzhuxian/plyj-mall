@@ -1,20 +1,20 @@
 <template>
     <div :class="$style.templateBaofa">
-        <coupon
-            v-if="COUPON.values && COUPON.values.length"
-            :data="COUPON"
+        <Coupon
+            v-if="Coupon.values && Coupon.values.length"
+            :data="Coupon"
             :type="type"
         />
         <!-- 直播-->
-        <live :class="$style.live" v-if="isLiveShow" :data="parent.liveInfo" />
-        <maisong
-            v-if="MAI_SONG.values && MAI_SONG.values.length"
-            :data="MAI_SONG"
+        <Live :class="$style.live" v-if="isLiveShow" :data="parent.liveInfo" />
+        <Maisong
+            v-if="Maisong.values && Maisong.values.length"
+            :data="Maisong"
             :type="type"
         />
-        <miaosha
-            v-if="MIAO_SHA.values && MIAO_SHA.values.length"
-            :data="MIAO_SHA"
+        <Miaosha
+            v-if="Miaosha.values && Miaosha.values.length"
+            :data="Miaosha"
         />
         <!-- 活动 -->
         <!-- <div :class="$style.moduleActivity" v-if="hasInvitingEvent || hasJxEvent">
@@ -43,13 +43,13 @@
                 :to="{ name: 'InviteNewcomers', params: { activityId: invitingEvent.id } }"
             />
         </div> -->
-        <pintuan
-            v-if="PIN_TUAN.values && PIN_TUAN.values.length"
-            :data="PIN_TUAN"
+        <Pintuan
+            v-if="Pintuan.values && Pintuan.values.length"
+            :data="Pintuan"
         />
-        <fengqiang
-            v-if="FENG_QIANG.values && FENG_QIANG.values.length"
-            :data="FENG_QIANG"
+        <Fengqiang
+            v-if="Fengqiang.values && Fengqiang.values.length"
+            :data="Fengqiang"
             :type="type"
         />
     </div>
@@ -90,20 +90,20 @@ export default {
         return {}
     },
     computed: {
-        COUPON () {
-            return this.data.COUPON || {}
+        Coupon () {
+            return this.data.Coupon || {}
         },
-        MAI_SONG () {
-            return this.data.MAI_SONG || {}
+        Maisong () {
+            return this.data.Maisong || {}
         },
-        MIAO_SHA () {
-            return this.data.MIAO_SHA || {}
+        Miaosha () {
+            return this.data.Miaosha || {}
         },
-        PIN_TUAN () {
-            return this.data.PIN_TUAN || {}
+        Pintuan () {
+            return this.data.Pintuan || {}
         },
-        FENG_QIANG () {
-            return this.data.FENG_QIANG || {}
+        Fengqiang () {
+            return this.data.Fengqiang || {}
         },
         // invitingEvent () {
         //     return (this.parent && this.parent.invitingEvent) || {}

@@ -156,21 +156,21 @@ export default {
                 }
 
                 if (type === 5) {
-                    this.modules.MIAO_SHA = moduleModels[0]
-                    this.modules.PIN_TUAN = moduleModels[1]
-                    this.modules.MAI_SONG = moduleModels[2]
-                    this.modules.COUPON = moduleModels[3]
-                    this.modules.YU_GOU = moduleModels[4]
-                    this.modules.FENG_QIANG = moduleModels[5]
-                    this.modules.RECOMMEND = moduleModels[6]
+                    this.modules.Miaosha = moduleModels[0]
+                    this.modules.Pintuan = moduleModels[1]
+                    this.modules.Maisong = moduleModels[2]
+                    this.modules.Coupon = moduleModels[3]
+                    this.modules.Yugou = moduleModels[4]
+                    this.modules.Fengqiang = moduleModels[5]
+                    this.modules.Recommend = moduleModels[6]
                 }
                 if (type === 6) {
-                    this.modules.COUPON = moduleModels[0]
-                    this.modules.MAI_SONG = moduleModels[1]
-                    this.modules.MIAO_SHA = moduleModels[2]
-                    this.modules.PIN_TUAN = moduleModels[3]
-                    this.modules.FENG_QIANG = moduleModels[4]
-                    this.modules.MIAO_SHA.values.forEach((item, index) => {
+                    this.modules.Coupon = moduleModels[0]
+                    this.modules.Maisong = moduleModels[1]
+                    this.modules.Miaosha = moduleModels[2]
+                    this.modules.Pintuan = moduleModels[3]
+                    this.modules.Fengqiang = moduleModels[4]
+                    this.modules.Miaosha.values.forEach((item, index) => {
                         if (!item.goodsInfo || !Array.isArray(item.goodsInfo)) {
                             item.goodsInfo = []
                         }
@@ -178,38 +178,38 @@ export default {
                     })
                 }
                 if (type === 7) {
-                    this.modules.MAI_SONG = moduleModels[0]
-                    this.modules.MIAO_SHA = moduleModels[1]
-                    this.modules.PIN_TUAN = moduleModels[2]
-                    this.modules.FENG_QIANG = moduleModels[3]
-                    this.modules.RECOMMEND = moduleModels[4]
+                    this.modules.Maisong = moduleModels[0]
+                    this.modules.Miaosha = moduleModels[1]
+                    this.modules.Pintuan = moduleModels[2]
+                    this.modules.Fengqiang = moduleModels[3]
+                    this.modules.Recommend = moduleModels[4]
                 }
                 if (type === 8) {
-                    this.modules.PIN_XUAN = moduleModels[0]
-                    this.modules.COUPON = moduleModels[1]
-                    this.modules.CHUN_YUN = moduleModels[2]
-                    this.modules.PIN_TUAN = moduleModels[3]
-                    this.modules.YU_GOU = moduleModels[4]
-                    this.modules.FENG_QIANG = moduleModels[5]
+                    this.modules.Propagate = moduleModels[0]
+                    this.modules.Coupon = moduleModels[1]
+                    this.modules.Chunyun = moduleModels[2]
+                    this.modules.Pintuan = moduleModels[3]
+                    this.modules.Yugou = moduleModels[4]
+                    this.modules.Fengqiang = moduleModels[5]
                 }
                 if (type === 10) {
-                    this.modules.COUPON = moduleModels[0]
-                    this.modules.CHARITY = moduleModels[1]
-                    this.modules.ACTIVITY = moduleModels[2]
-                    this.modules.MIAO_SHA = moduleModels[3]
-                    this.modules.DISTRIBUTION = moduleModels[4]
-                    this.modules.PIN_TUAN = moduleModels[5]
-                    this.modules.YU_GOU = moduleModels[6]
-                    this.modules.PACKAGE = moduleModels[7]
-                    this.modules.RECOMMEND = moduleModels[8]
+                    this.modules.Coupon = moduleModels[0]
+                    this.modules.Charity = moduleModels[1]
+                    this.modules.Activity = moduleModels[2]
+                    this.modules.Miaosha = moduleModels[3]
+                    this.modules.Distribution = moduleModels[4]
+                    this.modules.Pintuan = moduleModels[5]
+                    this.modules.Yugou = moduleModels[6]
+                    this.modules.Package = moduleModels[7]
+                    this.modules.Recommend = moduleModels[8]
                 }
                 if (type === 11) {
-                    this.modules.COUPON = findModuleById(9)
-                    this.modules.MIAO_SHA = findModuleById(10)
-                    this.modules.PIN_TUAN = findModuleById(8)
-                    this.modules.YU_GOU = findModuleById(11)
-                    this.modules.PACKAGE = findModuleById(16)
-                    this.modules.POPULAR = findModuleById(2)
+                    this.modules.Coupon = findModuleById(9)
+                    this.modules.Miaosha = findModuleById(10)
+                    this.modules.Pintuan = findModuleById(8)
+                    this.modules.Yugou = findModuleById(11)
+                    this.modules.Package = findModuleById(16)
+                    this.modules.Popular = findModuleById(2)
                 }
                 this.type = type
             } catch (e) {
