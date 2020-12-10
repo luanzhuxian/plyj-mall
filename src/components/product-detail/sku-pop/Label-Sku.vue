@@ -5,20 +5,22 @@
             v-text="skuAttr.productAttributeName"
         />
         <div :class="$style.labelList">
-            <label
-                v-for="(item, i) of skuAttr.productAttributeValues"
-                :key="i"
-            >
-                <input
-                    type="radio"
-                    :name="skuAttr.id + '_' + _uid"
-                    :value="item.id"
-                    :disabled="item.disabled"
-                    :checked="item.checked"
-                    @change="labelChange(item)"
+            <template v-for="(item, i) of skuAttr.productAttributeValues">
+                <label
+                    :key="i"
+                    v-if="!item.hidden"
                 >
-                <span v-text="item.productAttributeValueName" />
-            </label>
+                    <input
+                        type="radio"
+                        :name="skuAttr.id + '_' + _uid"
+                        :value="item.id"
+                        :disabled="item.disabled"
+                        :checked="item.checked"
+                        @change="labelChange(item)"
+                    >
+                    <span v-text="item.productAttributeValueName" />
+                </label>
+            </template>
         </div>
         <LabelSku
             v-if="skuAttr.children"
@@ -118,7 +120,9 @@ export default {
                 const findedSku = this.skuList.find(item => (item.skuCode1 === currentSkuId || item.skuCode2 === currentSkuId) && (item.skuCode1 === attr.id || item.skuCode2 === attr.id))
                 if (!findedSku) {
                     attr.disabled = true
+                    attr.hidden = true
                 } else {
+                    attr.hidden = false
                     attr.disabled = findedSku.stock < findedSku.minBuyNum
                 }
             }
