@@ -119,8 +119,8 @@ export default {
                 return false
             }
 
-            this.bulletList = Object.freeze(bulletList)
             this.productList = this.getProduct()
+            this.bulletList = Object.freeze(bulletList)
 
             if (this.$refs.barrage) {
                 this.$refs.barrage.run()

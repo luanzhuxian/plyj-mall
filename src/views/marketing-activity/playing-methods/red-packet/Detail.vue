@@ -3,10 +3,10 @@
         class="red-package-detail"
         :class="{
             [$style.redPackageDetail]: true,
-            [$style.bgBlue]: bgUrlsIndex === 0,
-            [$style.bgPurple]: bgUrlsIndex === 1,
-            [$style.bgYellow]: bgUrlsIndex === 2,
-            [$style.bgRed]: bgUrlsIndex === 3
+            [$style.bgBlue]: activity.bgUrlsIndex === 0,
+            [$style.bgPurple]: activity.bgUrlsIndex === 1,
+            [$style.bgYellow]: activity.bgUrlsIndex === 2,
+            [$style.bgRed]: activity.bgUrlsIndex === 3
         }"
     >
         <div :class="$style.background">
@@ -58,7 +58,7 @@
                                 规则
                             </router-link>
                         </div>
-                        <ul :class="$style.redPackageList">
+                        <ul :class="$style.redPackageList" v-if="isCouponShow">
                             <Coupon
                                 :class="$style.redPackageListItem"
                                 :status.sync="status"
@@ -159,7 +159,7 @@
         </div>
         <Poster
             ref="poster"
-            :bg-index="bgUrlsIndex"
+            :bg-index="Number(activity.bgUrlsIndex)"
             show-coupon
             :show-logo="activity.logoShow"
             :logo-url="activity.logoUrl"
@@ -215,8 +215,6 @@ export default {
             submiting: false,
             // 0 未开始 1 进行中 2 暂停 3 结束
             status: 0,
-            // 背景
-            bgUrlsIndex: '',
             activity: {},
             redPackage: {},
             bulletList: [],
@@ -248,6 +246,9 @@ export default {
         isBarrageShow () {
             return (this.status === 1 || this.status === 2 || this.status === 3) && this.bulletList && this.bulletList.length
         },
+        isCouponShow () {
+            return this.redPackage && Reflect.ownKeys(this.redPackage).length
+        },
         isFormShow () {
             return this.status === 1 && this.redPackage.price > 0
         },
@@ -278,7 +279,19 @@ export default {
                 this.getRedPackage(),
                 this.getRedPackageBarrage()
             ]
-            await Promise.all(request.map(p => p.catch(e => console.error(e))))
+            const [redPackage, bulletList] = await Promise.all(request.map(p => p.catch(e => console.error(e))))
+            // 从我的卡券进入不弹窗
+            if (this.$route.meta.from !== 'MyCoupon' && (this.status === 2 || this.status === 3)) {
+                await this.$alert('很遗憾，该活动已结束，请查看更多活动')
+                    .finally(() => {
+                        this.$router.replace({ name: 'RedPackage' })
+                    })
+                return
+            }
+            this.redPackage = redPackage
+            this.productList = redPackage.applicableGoodsVOS
+            this.bulletList = Object.freeze(bulletList)
+
             this.form.name = this.realName
             this.form.mobile = this.mobile
             if (this.$refs.barrage) {
@@ -306,18 +319,9 @@ export default {
                 const { result } = await getRedPackage(this.activityId)
                 const { redPacketCouponVO, ...activity } = result
                 this.status = result.activityStatus
-                this.bgUrlsIndex = result.bgUrlsIndex
-                // 从我的卡券进入不弹窗
-                if (this.$route.meta.from !== 'MyCoupon' && (result.activityStatus === 2 || result.activityStatus === 3)) {
-                    return this.$alert('很遗憾，该活动已结束，请查看更多活动')
-                        .finally(() => {
-                            this.$router.replace({ name: 'RedPackage' })
-                        })
-                }
-                redPacketCouponVO.price = fenToYuan(redPacketCouponVO.price)
                 this.activity = activity
-                this.redPackage = redPacketCouponVO
-                this.productList = result.redPacketCouponVO.applicableGoodsVOS
+                redPacketCouponVO.price = fenToYuan(redPacketCouponVO.price)
+                return redPacketCouponVO
             } catch (error) {
                 throw error
             }
@@ -332,7 +336,7 @@ export default {
                         item.msg = item.message ? item.message.replace(/\.\d+0+/g, '') : ''
                     }
                 }
-                this.bulletList = Object.freeze(result)
+                return result
             } catch (error) {
                 throw error
             }
