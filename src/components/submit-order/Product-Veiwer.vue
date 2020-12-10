@@ -59,7 +59,7 @@
                     <!--知识课程 (图文资料) + 购物车的确认订单 不支持修改数量; 普通商品/团购/预购/公益-->
                     <InfoItem
                         v-if="[1, 2, 3, 4, 7].includes(activeProduct) &&
-                            !products.length === 1 &&
+                            products.length === 1 &&
                             [orderTypeKeyMap.KNOWLEDGE_COURSE, orderTypeKeyMap.SERIES_OF_COURSE, orderTypeKeyMap.GRAPHIC_DATA].indexOf(item.goodsType) === -1"
                     >
                         <template slot="label">购买数量</template>
