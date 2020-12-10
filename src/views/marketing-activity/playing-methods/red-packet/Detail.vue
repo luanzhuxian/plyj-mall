@@ -3,10 +3,10 @@
         class="red-package-detail"
         :class="{
             [$style.redPackageDetail]: true,
-            [$style.bgBlue]: activity.bgUrlsIndex === 0,
-            [$style.bgPurple]: activity.bgUrlsIndex === 1,
-            [$style.bgYellow]: activity.bgUrlsIndex === 2,
-            [$style.bgRed]: activity.bgUrlsIndex === 3
+            [$style.bgBlue]: bgUrlsIndex === 0,
+            [$style.bgPurple]: bgUrlsIndex === 1,
+            [$style.bgYellow]: bgUrlsIndex === 2,
+            [$style.bgRed]: bgUrlsIndex === 3
         }"
     >
         <div :class="$style.background">
@@ -159,7 +159,7 @@
         </div>
         <Poster
             ref="poster"
-            :bg-index="activity.bgUrlsIndex"
+            :bg-index="bgUrlsIndex"
             show-coupon
             :show-logo="activity.logoShow"
             :logo-url="activity.logoUrl"
@@ -215,6 +215,8 @@ export default {
             submiting: false,
             // 0 未开始 1 进行中 2 暂停 3 结束
             status: 0,
+            // 背景
+            bgUrlsIndex: '',
             activity: {},
             redPackage: {},
             bulletList: [],
@@ -303,7 +305,8 @@ export default {
             try {
                 const { result } = await getRedPackage(this.activityId)
                 const { redPacketCouponVO, ...activity } = result
-                redPacketCouponVO.price = fenToYuan(redPacketCouponVO.price)
+                this.status = result.activityStatus
+                this.bgUrlsIndex = result.bgUrlsIndex
                 // 从我的卡券进入不弹窗
                 if (this.$route.meta.from !== 'MyCoupon' && (result.activityStatus === 2 || result.activityStatus === 3)) {
                     return this.$alert('很遗憾，该活动已结束，请查看更多活动')
@@ -311,7 +314,7 @@ export default {
                             this.$router.replace({ name: 'RedPackage' })
                         })
                 }
-                this.status = result.activityStatus
+                redPacketCouponVO.price = fenToYuan(redPacketCouponVO.price)
                 this.activity = activity
                 this.redPackage = redPacketCouponVO
                 this.productList = result.redPacketCouponVO.applicableGoodsVOS
