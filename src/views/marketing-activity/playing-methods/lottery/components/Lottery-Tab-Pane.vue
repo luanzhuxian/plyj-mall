@@ -1,8 +1,5 @@
 <template>
-    <div :class="$style.lotteryTab">
-        <div :class="$style.tabItem">
-            {{ label }}
-        </div>
+    <div @click="clickHandler">
         <slot />
     </div>
 </template>
@@ -15,10 +12,15 @@ export default {
             type: [String, Number],
             default: ''
         }
+    },
+    methods: {
+        clickHandler (e) {
+            this.$emit('pane-click', e)
+        }
     }
+    // created () {
+    //     // 可用来动态新增tab,暂时用不到
+    //     this.$emit('lottery-pane-updated')
+    // }
 }
 </script>
-
-<style module lang="scss">
-    .lotteryTab {}
-</style>
