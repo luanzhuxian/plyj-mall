@@ -60,5 +60,13 @@ export default [
         meta: {
             title: '新人有礼'
         }
+    },
+    {
+        path: '/lottery',
+        name: 'Lottery',
+        component: () => import('../../views/marketing-activity/playing-methods/lottery/Index.vue'),
+        meta: {
+            title: '抽奖乐翻天'
+        }
     }
 ]

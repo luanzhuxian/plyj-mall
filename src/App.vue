@@ -1,5 +1,14 @@
 <template>
     <div id="app">
+
+        <router-link
+            tag="h1"
+            to="/lottery"
+            style="font-size: 60px;"
+            v-if="$route.name !== 'Lottery'"
+        >
+            抽奖乐翻天
+        </router-link>
         <keep-alive :exclude="exclude">
             <router-view />
         </keep-alive>
