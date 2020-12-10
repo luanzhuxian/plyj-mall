@@ -8,7 +8,7 @@
                 tag="li"
                 :to="{
                     name: 'Classify',
-                    params: { optionId: item.value }
+                    params: { optionId: getClassifyId(item) }
                 }"
             >
                 <img :class="$style.classifyListItemIcon" :src="item.image" alt="">
@@ -36,6 +36,15 @@ export default {
 
         show () {
             return this.list.length
+        }
+    },
+    methods: {
+        getClassifyId ({ value }) {
+            if (!value) return null
+            const result = value.split(',')
+            if (result.length) {
+                return result[0]
+            }
         }
     }
 }
