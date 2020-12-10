@@ -1,9 +1,13 @@
-<template>
+<!--<template>
     <div :class="$style.tabs">
-        <slot />
+        <div :class="$style.tabList">
+            <slot />
+        </div>
+        <div>
+            <slot />
+        </div>
     </div>
-</template>
-
+</template>-->
 <script>
 export default {
     name: 'LotteryTabs'

@@ -1,12 +1,15 @@
 <template>
     <div :class="$style.lotteryTab">
+        <div :class="$style.tabItem">
+            {{ label }}
+        </div>
         <slot />
     </div>
 </template>
 
 <script>
 export default {
-    name: 'LotteryTabs',
+    name: 'LotteryTabPane',
     props: {
         label: {
             type: [String, Number],
