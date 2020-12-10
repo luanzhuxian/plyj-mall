@@ -51,6 +51,12 @@
             :data="modules"
             :type="type"
         />
+        <!-- 新春 2021 -->
+        <TemplateSpring2021
+            v-if="type === 12"
+            :data="modules"
+            :type="type"
+        />
         <PlSvg :class="$style.loading" name="icon-loading" fill="#FFF" width="90" v-if="!allLoaded" />
     </div>
 </template>
@@ -64,6 +70,7 @@ import TemplateFanchang from './templates/template-double-12-2019/Template-Fanch
 import TemplateSpring2020 from './templates/Template-Spring-2020.vue'
 import TemplateDragonGate from './templates/Template-Dragon-Gate.vue'
 import TemplateDouble122020 from './templates/Template-Double-12-2020.vue'
+import TemplateSpring2021 from './templates/Template-Spring-2021-Green.vue'
 import InviteNewcomersHomeEntry from '../marketing-activity/double-12/invitenewcomers/InviteNewcomersHomeEntry.vue'
 import { GET_ACTIVITY_DATA } from '../../store/mutation-type'
 
@@ -77,6 +84,7 @@ export default {
         TemplateSpring2020,
         TemplateDragonGate,
         TemplateDouble122020,
+        TemplateSpring2021,
         InviteNewcomersHomeEntry
     },
     provide () {
@@ -99,21 +107,25 @@ export default {
         allLoaded () {
             let result = false
 
-            // 双十二
+            // 双十二2019
             if ([5, 6, 7].includes(this.activityId)) {
                 result = (this.liveInfo !== null && !!this.liveInfo) &&
                 this.couponToReceive !== null
             }
 
-            // 新春
+            // 新春2020
             if (this.activityId === 8) {
                 result = (this.liveInfo !== null && !!this.liveInfo) &&
                 this.couponToReceive !== null
             }
 
-            // 龙门节
+            // 龙门节、双十二2020
             if (this.activityId === 10 || this.activityId === 11) {
                 result = (this.liveInfo !== null && !!this.liveInfo)
+            }
+            // 新春2021
+            if (this.activityId === 12) {
+                result = true
             }
             return result
         }
@@ -204,6 +216,16 @@ export default {
                     this.modules.Recommend = moduleModels[8]
                 }
                 if (type === 11) {
+                    this.modules.Coupon = findModuleById(9)
+                    this.modules.Miaosha = findModuleById(10)
+                    this.modules.Pintuan = findModuleById(8)
+                    this.modules.Yugou = findModuleById(11)
+                    this.modules.Package = findModuleById(16)
+                    this.modules.Popular = findModuleById(2)
+                }
+                if (type === 12) {
+                    this.modules.Live = findModuleById(20)
+                    this.modules.RedPackage = findModuleById(24)
                     this.modules.Coupon = findModuleById(9)
                     this.modules.Miaosha = findModuleById(10)
                     this.modules.Pintuan = findModuleById(8)

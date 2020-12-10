@@ -1,24 +1,24 @@
 <template>
-    <ul :class="$style.liveList">
-        <template v-for="(live, index) of liveModel.slice(0, 3)">
+    <ul :class="$style.liveList" class="live-list" v-if="data.values.length">
+        <template v-for="(live, index) of data.values">
             <li
-                v-if="~(liveModel.length > 2 ? [0] : [0, 1]).indexOf(index)"
+                v-if="~(data.values.length > 2 ? [0] : [0, 1]).indexOf(index)"
+                class="first"
                 :class="$style.first"
                 :key="index"
-                @click="toLivePage(live)"
             >
                 <label>
-                    <span v-if="live.isNoticeShow">即将开始</span>
+                    <span v-if="isNoticeShow(live)">即将开始</span>
                     <span v-if="live.statue === 4">直播中</span>
                     <span v-if="live.statue === 0">看回放</span>
                 </label>
                 <div :class="$style.imgWrapper">
-                    <img :src="(live.isNoticeShow ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-middle'">
+                    <img :src="(isNoticeShow(live) ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-middle'">
                 </div>
                 <div :class="$style.liveInfo">
                     <h4 v-text="live.name" />
                     <p>
-                        <template v-if="live.isNoticeShow">
+                        <template v-if="isNoticeShow(live)">
                             <span>{{ `直播时间 ${getTime(live.liveStartTime)}` }}</span>
                         </template>
                         <template v-if="live.statue === 4">
@@ -27,35 +27,35 @@
                             <span>{{ `${live.visitTimes}人观看` }}</span>
                         </template>
                         <template v-if="live.statue === 0">
-                            <span>直播已结束</span>
+                            <span>直播已结束，去看回放</span>
                         </template>
                     </p>
                 </div>
             </li>
             <li
                 v-else
+                class="others"
                 :class="$style.others"
                 :key="index"
-                @click="toLivePage(live)"
             >
                 <label>
-                    <span v-if="live.isNoticeShow">即将开始</span>
+                    <span v-if="isNoticeShow(live)">即将开始</span>
                     <span v-if="live.statue === 4">直播中</span>
                     <span v-if="live.statue === 0">看回放</span>
                 </label>
                 <div :class="$style.imgWrapper">
-                    <img :src="(live.isNoticeShow ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-small'">
+                    <img :src="(isNoticeShow(live) ? live.noticeImg : live.coverImg) + '?x-oss-process=style/thum-small'">
                 </div>
                 <div :class="$style.liveInfo">
                     <h4 v-text="live.name" />
-                    <p v-if="live.isNoticeShow">
+                    <p v-if="isNoticeShow(live)">
                         {{ `直播时间 ${getTime(live.liveStartTime)}` }}
                     </p>
                     <p v-if="live.statue === 4">
                         {{ `${live.visitTimes}人正在观看` }}
                     </p>
                     <p v-if="live.statue === 0">
-                        直播已结束
+                        直播已结束，去看回放
                     </p>
                 </div>
             </li>
@@ -64,90 +64,24 @@
 </template>
 
 <script>
-import moment from 'moment'
-import { getLiveViewers } from '../../../apis/home'
-
 export default {
     name: 'Live',
     props: {
         data: {
             type: Object,
             default () {
-                return {}
+                return { values: [] }
             }
-        }
-    },
-    computed: {
-        liveModel () {
-            const { data } = this
-
-            if (!data.liveModel || !data.liveModel.length) {
-                return []
-            }
-            return data.liveModel.filter(item => item.statue === 0 || item.statue === 4 || (item.statue === 2 && item.hasNotice))
-        },
-        isLiveShow () {
-            return !!this.liveModel.length
-        }
-    },
-    created () {
-        for (const live of this.liveModel) {
-            const { liveStartTime, hasNotice } = live
-
-            if (hasNotice && liveStartTime) {
-                this.$set(live, 'ts', moment(liveStartTime).valueOf())
-            }
-            this.$set(live, 'isNoticeShow', live.statue === 2 && live.hasNotice)
-
-            // 单独查每个直播的在线人数
-            this.getLiveViewers(live).catch(err => console.error(err))
         }
     },
     methods: {
-        async getLiveViewers (live) {
-            try {
-                const { result: { count = 1 } } = await getLiveViewers({ roomId: live.roomId })
-                live.visitTimes = Number(live.visitTimes) + Number(count)
-            } catch (error) {
-                throw error
-            }
-        },
-        done () {
-            if (this.live.statue === 2) {
-                this.live.statue = 4
-            } else if (this.live.statue === 4) {
-                this.live.statue = 0
-            }
+        isNoticeShow (live) {
+            return live.statue === 2 && live.hasNotice
         },
         getTime (time) {
             if (!time) return ''
             const index = time.lastIndexOf(':')
             return time.slice(0, index)
-        },
-        toLivePage (live) {
-            // 直播已结束
-            if (live.statue === 0) {
-                if (!live.videoLibId) {
-                    // 没有往期回放
-                    this.$router.push({ name: 'InteractiveLive' })
-                } else {
-                    this.$router.push({
-                        name: 'LivePlayBack',
-                        params: {
-                            id: live.videoLibId,
-                            activityId: live.id,
-                            isValidateEndTime: '0'
-                        }
-                    })
-                }
-            } else {
-                this.$router.push({
-                    name: 'LiveRoom',
-                    params: {
-                        id: live.roomValue
-                    }
-                })
-            }
         }
     }
 }
@@ -253,8 +187,8 @@ export default {
         }
         .img-wrapper {
             flex: 1;
-            // width: 100%;
-            // height: 0;
+            width: 100%;
+            height: 0;
         }
         img {
             width: 100%;

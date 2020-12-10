@@ -1,6 +1,11 @@
 <template>
-    <router-link :class="$style.coupon" tag="div" :to="{ name: 'CouponCenter' }">
-        <div :class="$style.couponTitle">
+    <router-link
+        :class="$style.coupon"
+        class="coupon-wrapper"
+        tag="div"
+        :to="{ name: 'CouponCenter' }"
+    >
+        <div :class="$style.couponTitle" class="coupon-title">
             <h3>领券不停，福利多多</h3>
             <span>·  更多优惠——快来领取  ·</span>
         </div>

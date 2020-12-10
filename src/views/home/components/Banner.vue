@@ -42,17 +42,17 @@ export default {
     data () {
         return {
             swiperOptionBanner: {
-                autoplay: this.data.values.length > 1
-                    ? {
-                        disableOnInteraction: false
-                    }
-                    : false,
                 spaceBetween: 40,
                 pagination: {
                     el: '.swiper-pagination',
                     clickable: true
                 },
-                loop: true
+                loop: true,
+                autoplay: this.data.values.length > 1
+                    ? {
+                        disableOnInteraction: false
+                    }
+                    : false
             }
         }
     },

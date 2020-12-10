@@ -73,10 +73,13 @@
                 </swiper-slide>
             </swiper>
             <div :class="$style.packageItemBtnWrapper">
-                <button :class="{
-                    [$style.packageItemBtn]: true,
-                    [$style.disabled]: !data.combinationDetailList[0].stock || data.combinationDetailList[0].status !== 1
-                }">
+                <button
+                    class="package-item-btn"
+                    :class="{
+                        [$style.packageItemBtn]: true,
+                        [$style.disabled]: !data.combinationDetailList[0].stock || data.combinationDetailList[0].status !== 1
+                    }"
+                >
                     <template v-if="data.combinationDetailList[0].status === 2">
                         已结束
                     </template>
