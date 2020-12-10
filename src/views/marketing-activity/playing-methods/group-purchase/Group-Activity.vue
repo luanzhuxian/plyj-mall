@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import ProductItem from '../../components/Group-Product-Item.vue'
+import ProductItem from './components/Group-Product-Item.vue'
 import { groupActivityPage } from '../../../../apis/product'
 
 export default {

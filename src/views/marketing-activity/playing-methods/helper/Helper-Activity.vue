@@ -41,7 +41,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import ProductItem from '../../components/Helper-Product-Item'
+import ProductItem from './components/Helper-Product-Item'
 import { getHelperProductList } from '../../../../apis/helper-manager'
 
 export default {

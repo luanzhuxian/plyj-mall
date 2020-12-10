@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import ProductItem from '../../components/Second-Product-Item.vue'
+import ProductItem from './components/Second-Product-Item.vue'
 import { secondActivityPage } from '../../../../apis/product'
 
 export default {

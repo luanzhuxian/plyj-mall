@@ -69,8 +69,8 @@
 </template>
 
 <script>
-import Countdown from '../../../components/activity/Countdown.vue'
-import { getDuration, reset } from '../../activity/helper'
+import Countdown from '../../../../../components/activity/Countdown.vue'
+import { getDuration, reset } from '../../../../activity/helper'
 
 export default {
     name: 'GroupProductItem',

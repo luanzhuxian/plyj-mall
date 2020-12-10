@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import ProductItem from '../../marketing-activity/components/Book-Product-Item.vue'
+import ProductItem from '../../marketing-activity/playing-methods/purchase-in-advance/components/Book-Product-Item.vue'
 
 export default {
     name: 'Yugou',

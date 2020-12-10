@@ -175,7 +175,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import Barrage from '../../longmen-festival/action/components/Barrage.vue'
+import Barrage from '../../longmen-festival-2020/action/components/Barrage.vue'
 import Countdown from '../../../../components/activity/Countdown.vue'
 import Coupon from './components/Coupon.vue'
 import Product from './components/Product.vue'

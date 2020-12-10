@@ -53,7 +53,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import Swiper from './components/Swiper.vue'
-import Barrage from '../../longmen-festival/action/components/Barrage.vue'
+import Barrage from '../../longmen-festival-2020/action/components/Barrage.vue'
 import Coupon from './components/Coupon.vue'
 import Poster from './components/Poster.vue'
 import { getRedPackageListAfterSort, getRedPackageBarrage } from '../../../../apis/marketing-activity/red-package'

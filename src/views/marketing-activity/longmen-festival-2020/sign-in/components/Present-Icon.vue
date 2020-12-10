@@ -81,12 +81,8 @@ export default {
         }
     },
     methods: {
-        async clickHandler () {
-            try {
-                this.$emit('clickHandler', this.detail)
-            } catch (e) {
-                throw e
-            }
+        clickHandler () {
+            this.$emit('clickHandler', this.detail)
         }
     }
 }

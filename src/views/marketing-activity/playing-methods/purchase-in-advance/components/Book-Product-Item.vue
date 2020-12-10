@@ -1,7 +1,7 @@
 <template>
     <li
-        :class="$style.itemMiaosha"
-        @click="$router.push({ name: 'Product', params: { productId: data.goodsInfo.id }, query: { currentProductStatus: 3 } })"
+        :class="$style.itemYugou"
+        @click="$router.push({ name: 'Product', params: { productId: data.goodsInfo.id }, query: { currentProductStatus: 4 } })"
     >
         <div :class="$style.imgWrapper">
             <img :src="data.goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">
@@ -31,49 +31,27 @@
             <div :class="$style.main">
                 {{ data.goodsInfo.productName }}
             </div>
-            <div :class="$style.current">
-                秒杀价
-                <b :class="$style.price">{{ data.goodsInfo.activityInfo.activityPrice }}</b>
+            <div :class="$style.rule">
+                <span>{{ `预交定金￥${data.goodsInfo.activityInfo.price}` }}</span>
+                <span v-if="data.goodsInfo.activityInfo.multiple && data.goodsInfo.activityInfo.multipleNumber > 1 && data.goodsInfo.activityInfo.activityPrice">{{ `抵￥${data.goodsInfo.activityInfo.activityPrice}` }}</span>
             </div>
-            <div :class="$style.sub">
-                <div :class="$style.subLeft">
-                    <div :class="$style.original">
-                        <span v-if="data.goodsInfo.productSkuModels && data.goodsInfo.productSkuModels.length && getPrice(data.goodsInfo.productSkuModels)('originalPrice')">
-                            原价：<del>{{ getPrice(data.goodsInfo.productSkuModels)('originalPrice') }}</del>
-                        </span>
-                    </div>
-                    <div :class="$style.progress">
-                        <div :class="$style.progressInner" :style="{ width: `${(Number(data.goodsInfo.activityInfo.number) - Number(data.goodsInfo.activityInfo.activityStock)) / Number(data.goodsInfo.activityInfo.number) * 100}%` }" />
-                    </div>
-                    <div :class="$style.saled" v-if="data.goodsInfo.activityInfo.status === 0">
-                        {{ `${data.goodsInfo.pageviews}人已关注` }}
-                    </div>
-                    <div :class="$style.saled" v-if="data.goodsInfo.activityInfo.status > 0 && data.goodsInfo.activityInfo.activityStock > 0">
-                        {{ `已抢${Number(data.goodsInfo.activityInfo.number) - Number(data.goodsInfo.activityInfo.activityStock)}件` }}
-                    </div>
-                    <div :class="$style.saled" v-if="data.goodsInfo.activityInfo.status > 0 && data.goodsInfo.activityInfo.activityStock === 0" style="color: #999999;">
-                        已抢完
-                    </div>
-                </div>
-                <div
-                    :class="{
-                        [$style.subRight]: true,
-                        [$style.disabled]: data.goodsInfo.activityInfo.status !== 1
-                    }"
-                >
-                    <pl-svg name="icon-vie-for" width="32" height="32" />
-                </div>
+            <div :class="$style.original">
+                原价：<del>{{ getPrice(data.goodsInfo.productSkuModels)('originalPrice') }}</del>
+            </div>
+            <div :class="$style.price">
+                预计到手价
+                <b>{{ getTotalPrice(data) }}</b>
             </div>
         </div>
     </li>
 </template>
 
 <script>
-import Countdown from '../../../components/activity/Countdown.vue'
-import { getPrice, getDuration } from '../../activity/helper'
+import Countdown from '../../../../../components/activity/Countdown.vue'
+import { getDuration, getPrice, getTotalPrice } from '../../../../activity/helper'
 
 export default {
-    name: 'SecondProductItem',
+    name: 'BookProductItem',
     components: {
         Countdown
     },
@@ -89,13 +67,14 @@ export default {
         return {}
     },
     methods: {
+        getDuration,
         getPrice,
-        getDuration
+        getTotalPrice
     }
 }
 </script>
 <style lang="scss" module>
-.item-miaosha {
+.item-yugou {
     display: flex;
     box-sizing: border-box;
     margin-top: 20px;
@@ -103,7 +82,7 @@ export default {
     width: 100%;
     height: 220px;
     background-color: #fff;
-    border-radius: 10px;
+    border-radius: 20px;
     overflow: hidden;
     &:nth-of-type(1) {
         margin-top: 0;
@@ -167,75 +146,44 @@ export default {
         color: #000;
         @include elps();
     }
-    .current {
+    .rule {
+        margin-top: 14px;
+        padding: 0 10px;
+        width: max-content;
+        max-width: 100%;
+        line-height: 38px;
+        background: #fbefd7;
+        font-size: 20px;
+        font-family: Microsoft YaHei;
+        color: #7e6e4d;
+        @include elps();
+    }
+    .original {
         margin-top: auto;
+        font-size: 20px;
+        color: #999;
+        @include elps();
+        > del {
+            &:before {
+                content: '￥';
+            }
+        }
+    }
+    .price {
+        margin-top: 2px;
+        vertical-align: -2px;
         font-size: 24px;
         font-weight: bold;
         color: #fe7700;
         @include elps();
-        .price {
-            vertical-align: -2px;
+        > b {
+            margin-left: 4px;
             font-size: 32px;
             font-family: Microsoft YaHei;
             @include elps();
             &:before {
                 content: '￥';
                 font-size: 20px;
-            }
-        }
-    }
-    .sub {
-        display: flex;
-        align-items: flex-end;
-        &-left {
-            flex: 1;
-            width: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            .original {
-                display: flex;
-                align-items: flex-end;
-                font-size: 20px;
-                color: #999;
-                @include elps();
-                > del {
-                    &:before {
-                        content: '￥';
-                    }
-                }
-            }
-            .progress {
-                margin-top: 16px;
-                width: 230px;
-                height: 14px;
-                background: #f9dfc8;
-                border-radius: 206px;
-                overflow: hidden;
-                &-inner {
-                    height: 100%;
-                    background: #fe7700;
-                    border-radius: 206px;
-                }
-            }
-            .saled {
-                font-size: 20px;
-                font-weight: 600;
-                color: #fe7700;
-            }
-        }
-        &-right {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 58px;
-            height: 58px;
-            background: #fe7700;
-            border-radius: 50%;
-            overflow: hidden;
-            color: #fff;
-            &.disabled {
-                background: linear-gradient(231deg, rgba(204, 204, 204, 1) 0%, rgba(153, 153, 153, 1) 100%);
             }
         }
     }
