@@ -193,7 +193,7 @@ export default {
                 if (result.length) {
                     for (const item of result) {
                         item.time = isToday(item.createTime) ? '刚刚' : ''
-                        item.msg = item.message ? item.message.replace(/\.\d+0+/g, '') : ''
+                        // item.msg = item.message ? item.message.replace(/\.\d+0+/g, '') : ''
                     }
                 }
                 return result
