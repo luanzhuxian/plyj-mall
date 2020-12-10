@@ -122,14 +122,14 @@
                     <div :class="$style.buttons2" v-if="activeProduct === 4 && preActivity === 2 && !currentSku.activityProduct">
                         <button
                             :class="$style.add"
-                            @click="$emit('addToCart', currentSku, limiting, limit)"
+                            @click="$emit('addToCart', currentSku)"
                             :disabled="loading || allDisabled"
                         >
                             <span>加入购物车</span>
                         </button>
                         <button
                             :class="$style.buy"
-                            @click="$emit('buyNow', currentSku, 1, limiting, limit)"
+                            @click="$emit('buyNow', currentSku, 1)"
                             :disabled="loading || allDisabled || disableConfirm"
                         >
                             <span>{{ confirmText }}</span>
