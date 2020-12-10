@@ -78,7 +78,7 @@ module.exports = {
                 camelCase: 'only'
             },
             sass: {
-                data: `@import "@/assets/scss/config.scss";`,
+                data: `@import "@/assets/scss/config.scss";@import "@/assets/scss/mixin.scss";`,
                 options: {
                     implementation: require('sass')
                 }

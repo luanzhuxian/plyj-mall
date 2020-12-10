@@ -18,19 +18,64 @@
 
         <button :class="$style.startBtn" />
 
+        <h2 :class="$style.title">活动奖品</h2>
+        <ul :class="$style.prizeList">
+            <li :class="$style.prize">
+                <img src="https://mallcdn.youpenglai.com/static/mall/lottery/prize-bg.png" alt="奖品图片">
+                <div>
+                    <strong :class="[$style.grade, $style.first]">一等奖</strong>
+                    <span :class="$style.name">最好的礼品伴手礼</span>
+                </div>
+            </li>
+            <li :class="$style.prize">
+                <img src="https://mallcdn.youpenglai.com/static/mall/lottery/prize-bg.png" alt="奖品图片">
+                <div>
+                    <strong :class="[$style.grade, $style.second]">二等奖</strong>
+                    <span :class="$style.name">最好的礼品伴手礼</span>
+                </div>
+            </li>
+            <li :class="$style.prize">
+                <img src="https://mallcdn.youpenglai.com/static/mall/lottery/prize-bg.png" alt="奖品图片">
+                <div>
+                    <strong :class="$style.grade">三等奖</strong>
+                    <span :class="$style.name">最好的礼品伴手礼</span>
+                </div>
+            </li>
+            <li :class="$style.prize">
+                <img src="https://mallcdn.youpenglai.com/static/mall/lottery/prize-bg.png" alt="奖品图片">
+                <div>
+                    <strong :class="$style.grade">四等奖</strong>
+                    <span :class="$style.name">最好的礼品伴手礼</span>
+                </div>
+            </li>
+        </ul>
+
+        <div :class="$style.prizeRecords">
+            <LotteryTabs>
+                <LotteryTabPane label="我的奖品">我的奖品</LotteryTabPane>
+                <LotteryTabPane label="获奖记录">获奖记录</LotteryTabPane>
+            </LotteryTabs>
+        </div>
+
         <div :class="[$style.fixedTop, $style.poster]">分享海报</div>
         <div :class="[$style.fixedTop, $style.activityIntro]">活动锦囊</div>
     </div>
 </template>
 
 <script>
+import LotteryTabs from './components/Lottery-Tabs.vue'
+import LotteryTabPane from './components/Lottery-Tab-Pane.vue'
 export default {
     name: 'LotteryAvtivity',
+    components: {
+        LotteryTabs,
+        LotteryTabPane
+    },
     data () {
         return {
             theme: null,
             theme1: {
-                '--bg': 'url(https://mallcdn.youpenglai.com/static/mall/lottery/bg-1.png?t=121233)',
+                '--bg': 'url(https://mallcdn.youpenglai.com/static/mall/lottery/lottery-bg.png)',
                 '--bgc': '#ffb5b0'
             }
         }
@@ -91,6 +136,66 @@ export default {
         height: 164px;
         background: url("https://mallcdn.youpenglai.com/static/mall/lottery/start-btn.png") no-repeat center center;
         background-size: 100%;
+        &:active {
+            transform-origin: center bottom;
+            transform: scaleY(0.9);
+        }
+    }
+    .title {
+        font-size: 0;
+        margin: 164px auto 0;
+        width: 287px;
+        height: 65px;
+        background: url("https://mallcdn.youpenglai.com/static/mall/lottery/activity-award.png") no-repeat center center;
+        background-size: 287px;
+    }
+    @mixin listBg {
+        width: 702px;
+        margin-left: 22px;
+        margin-top: 36px;
+        padding: 64px 0;
+        background-color: #fff;
+        border-radius: 30px;
+        box-shadow: 10px 17px 0 #F58882;
+    }
+    .prizeList {
+        @include listBg();
+        > .prize {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            padding: 0 54px;
+            &:nth-last-of-type(1) {
+                margin-bottom: 0;
+            }
+            > img {
+                width: 160px;
+                height: 160px;
+                object-fit: cover;
+                margin-right: 30px;
+            }
+            .grade {
+                display: block;
+                margin-top: 24px;
+                font-size: 36px;
+                color: #BE9B62;
+                &.first {
+                    color: #E63303;
+                }
+                &.second {
+                    color: #F79F1A;
+                }
+            }
+            .name {
+                display: block;
+                margin-top: 16px;
+                font-size: 28px;
+                @include elps-wrap(2);
+            }
+        }
+    }
+    .prizeRecords {
+        @include listBg();
     }
 
     .fixedTop {
