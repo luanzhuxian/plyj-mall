@@ -59,7 +59,7 @@
                     <!--知识课程 (图文资料) + 购物车的确认订单 不支持修改数量; 普通商品/团购/预购/公益-->
                     <InfoItem
                         v-if="[1, 2, 3, 4, 7].includes(activeProduct) &&
-                            !isCart &&
+                            !products.length === 1 &&
                             [orderTypeKeyMap.KNOWLEDGE_COURSE, orderTypeKeyMap.SERIES_OF_COURSE, orderTypeKeyMap.GRAPHIC_DATA].indexOf(item.goodsType) === -1"
                     >
                         <template slot="label">购买数量</template>
@@ -123,7 +123,7 @@
                     <!--产品建议: 确认订单页面，不显示详细优惠信息，防止产品再变，前台先手动计算-->
                     <InfoItem>
                         <template slot="label">小计</template>
-                        <span slot="content" class="gray-1">¥ {{ (item.amount + item.couponAmount + item.scholarship - item.postageAmount) | formatAmount }}</span>
+                        <span slot="content" class="gray-1">¥ {{ (item.amount + item.couponAmount + item.scholarship + item.redCouponAmount - item.postageAmount) | formatAmount }}</span>
                     </InfoItem>
                 </OtherInfo>
             </div>

@@ -151,7 +151,7 @@ export const submitOrder = {
         },
         removeOrderProducts: state => {
             sessionStorage.removeItem('CONFIRM_LIST')
-            state.orderProducts = ORDER_PRODUCTS
+            state.orderProducts = { discountModel: {}, params: {}, products: [] }
         }
     },
     getters: {
