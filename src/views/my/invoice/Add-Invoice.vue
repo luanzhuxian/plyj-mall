@@ -183,7 +183,7 @@ export default {
         localStorage.removeItem('EDIT_INVOICE_FROM')
         next()
     },
-    async beforeRouteEnter (to, from, next) {
+    beforeRouteEnter (to, from, next) {
         next(async vm => {
             if (!vm.mobile) {
                 try {

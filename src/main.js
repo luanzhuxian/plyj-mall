@@ -58,7 +58,7 @@ const render = () => {
     router.onError(onError)
 
     /* 处理所有组件抛出的错误 */
-    Vue.config.errorHandler = async function (err, vm, info) {
+    Vue.config.errorHandler = function (err, vm, info) {
         if (err) {
             if (err.name === 'ResponseError') {
                 // 响应出错

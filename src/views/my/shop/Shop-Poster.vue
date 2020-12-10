@@ -24,7 +24,7 @@ export default {
         this.drawPost()
     },
     methods: {
-        async drawPost () {
+        drawPost () {
             const canImg = new Image()
             canImg.crossOrigin = ''
             canImg.src = `https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/1.9.4/store-haibao.jpg?time=${ Date.now() }`

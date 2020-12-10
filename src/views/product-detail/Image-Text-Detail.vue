@@ -299,7 +299,7 @@ export default {
         this.isPreviewerShow = false
         this.pdfUrl = ''
     },
-    async mounted () {
+    mounted () {
         this.$store.commit(SET_SHARE_ID, this.brokerId)
     },
     methods: {
@@ -410,7 +410,7 @@ export default {
             this.$router.push({ name: 'SubmitOrder' })
         },
         // 生成分享
-        async createShare () {
+        createShare () {
             const { graphicName, graphicBrief, graphicMainImg } = this.detail
             try {
                 let shareUrl = ''

@@ -129,7 +129,7 @@ export default {
         }
     },
     methods: {
-        async classifyChanged (item) {
+        classifyChanged (item) {
             try {
                 this.form.current = 1
                 this.form.categoryId = item.id

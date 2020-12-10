@@ -96,7 +96,7 @@ export default {
                 this.maxWidth = UL.offsetWidth
             })
         },
-        async classifyClick (item) {
+        classifyClick (item) {
             this.categoryId = item.id
             this.isShowAll = false
             setTimeout(() => {

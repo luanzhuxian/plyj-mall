@@ -30,7 +30,7 @@ export default {
         return {}
     },
     methods: {
-        async handleClick (index) {
+        handleClick (index) {
             this.$emit('preview', index)
         }
     }

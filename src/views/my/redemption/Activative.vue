@@ -53,11 +53,7 @@ export default {
         ...mapGetters(['userId'])
     },
     async activated () {
-        try {
-            this.getInfo()
-        } catch (e) {
-            throw e
-        }
+        await this.getInfo()
     },
     methods: {
         async getInfo () {

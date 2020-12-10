@@ -98,7 +98,7 @@ export default {
         this.$refs.input.focus()
     },
     methods: {
-        async search (keyword) {
+        search (keyword) {
             if (!keyword) return this.$warning('请输入要搜索的内容')
             this.searchContent = keyword
             this.searched = true

@@ -124,7 +124,7 @@ export default class Poster {
      * 绘制二维码
      * @param qrcode {CanvasImageSource}
      */
-    async drawQrCode (qrcode) {
+    drawQrCode (qrcode) {
         try {
             const CTX = this.CTX
             CTX.drawImage(qrcode, 750, 978, 320, 320)
@@ -184,7 +184,7 @@ export default class Poster {
      * 获取头像，如果头像加载失败，就加载默认的头像
      * @return {Promise<CanvasImageSource>}
      */
-    async getAvatar () {
+    getAvatar () {
         return new Promise((resolve, reject) => {
             loadImage(this.avatar)
                 .then(img => {
@@ -207,7 +207,7 @@ export default class Poster {
      * @param img {CanvasImageSource}
      * @return {Promise<CanvasImageSource>}
      */
-    async generateQrcode (img) {
+    generateQrcode (img) {
         try {
             return generateQrcode({
                 size: 300,

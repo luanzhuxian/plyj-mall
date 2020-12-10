@@ -167,7 +167,7 @@ export default {
         try {
             // 打开'我的礼品'页面后，默认进入第一个Tab
             this.activeId = 0
-            this.getList()
+            await this.getList()
         } catch (e) {
             throw e
         }
@@ -203,7 +203,7 @@ export default {
             }
         },
         // 编辑
-        async edit () {
+        edit () {
             if (!this.currentList.length) return
             this.isEdit = !this.isEdit
         },
@@ -239,7 +239,7 @@ export default {
             this.checkCodeComplete(item.id)
         },
         // 核销中
-        async checkCodeComplete (id) {
+        checkCodeComplete (id) {
             clearInterval(this.timer)
             this.timer = setInterval(async () => {
                 const { result: res } = await getGiftDetailById({ id })
