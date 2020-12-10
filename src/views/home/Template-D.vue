@@ -4,6 +4,8 @@
             <Search :class="$style.search" placeholder="搜索商品" />
             <!-- banner -->
             <Banner :class="$style.banner" :data="Banner" />
+            <!-- 分类 -->
+            <Classify :class="$style.classify" :data="Classify" v-if="isClassifyShow" />
             <!-- 福利红包 -->
             <div :class="$style.redPackage">
                 <img src="https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/rp-banner.png" alt="" @click="$router.push({ name: 'RedPackage' })">
@@ -112,14 +114,15 @@
 import { mapGetters } from 'vuex'
 import Search from './components/Search.vue'
 import Banner from './components/Banner.vue'
-import Appointment from './components/Appointment.vue'
-import Propagate from './components/Propagate-Small.vue'
+import Classify from './components/Classify.vue'
+import Activity from './activity/Activity.vue'
+import Coupon from './activity/Coupon.vue'
 import Live from './components/Live.vue'
 import SingleCourse from './components/Single-Course.vue'
 import SeriesCourse from './components/Series-Course.vue'
 import ImageText from './components/Image-Text.vue'
-import Coupon from './activity/Coupon.vue'
-import Activity from './activity/Activity.vue'
+import Appointment from './components/Appointment.vue'
+import Propagate from './components/Propagate-Small.vue'
 import Miaosha from './activity/Miaosha.vue'
 import Pintuan from './activity/Pintuan.vue'
 import Yugou from './activity/Yugou.vue'
@@ -136,14 +139,15 @@ export default {
     components: {
         Search,
         Banner,
-        Appointment,
-        Propagate,
+        Classify,
+        Coupon,
+        Activity,
         Live,
         SingleCourse,
         SeriesCourse,
         ImageText,
-        Coupon,
-        Activity,
+        Appointment,
+        Propagate,
         Miaosha,
         Pintuan,
         Yugou,
@@ -178,6 +182,9 @@ export default {
         ...mapGetters(['mallDomain']),
         Banner () {
             return this.data.Banner || {}
+        },
+        Classify () {
+            return this.data.Classify || {}
         },
         Coupon () {
             return this.data.Coupon || {}
@@ -238,6 +245,9 @@ export default {
         },
         isCouponShow () {
             return this.Coupon.values && this.Coupon.values.length
+        },
+        isClassifyShow () {
+            return this.Classify.showStatue === 1 && this.Classify.values && this.Classify.values.length
         },
         isActivityShow () {
             return this.Activity.showStatue === 1 && this.Activity.values && this.Activity.values.length
@@ -321,6 +331,9 @@ export default {
 .propagate,
 .appointment {
     padding: 20px 24px 0;
+}
+.classify {
+    margin-top: 20px;
 }
 .red-package {
     display: block;
