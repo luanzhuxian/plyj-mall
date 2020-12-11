@@ -9,7 +9,7 @@
             query: { currentProductStatus: 4 }
         }"
     >
-        <div :class="$style.imgWrapper">
+        <div :class="$style.imgWrapper" class="img-wrapper">
             <img :src="data.goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">
             <div :class="$style.bar">
                 <div :class="$style.rule">
