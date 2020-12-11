@@ -278,7 +278,7 @@ export default {
 </script>
 
 <style module lang="scss">
-@import './skin/common.scss';
+@import './skin/style/common.scss';
 
 .home-template-d {
     background-color: #f4f5f9;

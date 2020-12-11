@@ -19,7 +19,9 @@ export const skinClassNameMap = {
     17: 'skinSports',
     18: 'skinArts',
     19: 'skinDouble12',
-    // 99: 'skinCampaign',
+    20: 'skinParty',
+    21: 'skinGoodCourse',
+    22: 'skinWelcomeNew',
     has (id) {
         return Reflect.has(this, id)
     }
@@ -215,6 +217,36 @@ export const skinNavMap = {
         shoppingCartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/double-12/cart.png',
         my: 'https://mallcdn.youpenglai.com/static/admall/skin/double-12/my.png',
         myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/double-12/my.png'
+    },
+    20: {
+        home: 'https://mallcdn.youpenglai.com/static/admall/skin/party/home.png',
+        homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/party/home.png',
+        classify: 'https://mallcdn.youpenglai.com/static/admall/skin/party/classify.png',
+        classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/party/classify.png',
+        shoppingCart: 'https://mallcdn.youpenglai.com/static/admall/skin/party/cart.png',
+        shoppingCartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/party/cart.png',
+        my: 'https://mallcdn.youpenglai.com/static/admall/skin/party/my.png',
+        myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/party/my.png'
+    },
+    21: {
+        home: 'https://mallcdn.youpenglai.com/static/admall/skin/good-course/home.png',
+        homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/good-course/home.png',
+        classify: 'https://mallcdn.youpenglai.com/static/admall/skin/good-course/classify.png',
+        classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/good-course/classify.png',
+        shoppingCart: 'https://mallcdn.youpenglai.com/static/admall/skin/good-course/cart.png',
+        shoppingCartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/good-course/cart.png',
+        my: 'https://mallcdn.youpenglai.com/static/admall/skin/good-course/my.png',
+        myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/good-course/my.png'
+    },
+    22: {
+        home: 'https://mallcdn.youpenglai.com/static/admall/skin/welcome-new/home.png',
+        homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/welcome-new/home.png',
+        classify: 'https://mallcdn.youpenglai.com/static/admall/skin/welcome-new/classify.png',
+        classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/welcome-new/classify.png',
+        shoppingCart: 'https://mallcdn.youpenglai.com/static/admall/skin/welcome-new/cart.png',
+        shoppingCartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/welcome-new/cart.png',
+        my: 'https://mallcdn.youpenglai.com/static/admall/skin/welcome-new/my.png',
+        myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/welcome-new/my.png'
     }
 //     99: {
 //         home: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/98e32f2b-679b-485d-8a9a-6e62659f91b1.png',

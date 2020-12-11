@@ -1,5 +1,5 @@
 <template>
-    <div :class="$style.personalCenter">
+    <div :class="[$style.personalCenter, $style[skinClassNameMap[skinId]]]">
         <div :class="$style.top">
             <img v-imgError :src="avatar" alt="头像">
             <div :class="$style.basicInfo">
@@ -241,14 +241,15 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
 import youLike from './../home/components/YouLike.vue'
 import Modal from '../../components/penglai-ui/Modal.vue'
 import Progress from '../../components/common/Progress.vue'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { orderPhysicalorderSummary, getHelperApplicationProgress } from '../../apis/order-manager'
 import { getAduitNotice, updateNoticeStatus } from '../../apis/broker-manager'
-import { mapGetters, mapActions } from 'vuex'
 import { Get_ADUIT_NOTICE } from '../../store/mutation-type'
+import { skinClassNameMap } from '..//home/skin/map'
 
 // const orderStatusMapCamel = {
 //   new: 'NEW',
@@ -281,11 +282,12 @@ export default {
             // newFreight: [],
             progress: [],
             applyStatus: 'NOT_APPLY',
-            isModalShow: false
+            isModalShow: false,
+            skinClassNameMap
         }
     },
     computed: {
-        ...mapGetters(['avatar', 'userName', 'isAdmin', 'userId', 'currentBalance', 'balance', 'roleName', 'roleCode', 'lockStatus']),
+        ...mapGetters(['avatar', 'userName', 'isAdmin', 'userId', 'currentBalance', 'balance', 'roleName', 'roleCode', 'lockStatus', 'skinId']),
         isHelper () {
             return this.roleCode === 'HELPER'
         },
@@ -453,6 +455,8 @@ export default {
 </script>
 
 <style module lang="scss">
+@import '../home/skin/style/my.scss';
+
 .personal-center {
     box-sizing: border-box;
     min-height: 100vh;

@@ -450,22 +450,63 @@
     }
 }
 
-// 共战疫
-// .skin-campaign {
-//     @extend .skin-common;
-//     background-color: #d1e5fe !important;
-//     .container {
-//         $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/847981f6-e571-4dcd-a105-ee1a6a8ccddc.png';
-//         @include container(136px, $background-image);
-//     }
-//     .search {
-//         padding: 0 92px;
-//     }
-//     .footer {
-//         @include footer(90px, #fff);
-//     }
-//     .skin-title {
-//         margin: 42px -24px 22px;
-//     }
-// }
+// 狂欢派对
+.skin-party {
+    @extend .skin-common;
+    background: #53A272 !important;
+    .container {
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/party/bg-home.jpg';
+        @include container(130px, $background-image);
+        .search {
+            @include search();
+        }
+        .footer {
+            @include footer(150px, #FFFFFF);
+            padding-top: 10px;
+        }
+        .skin-title {
+            margin: 20px -24px 30px;
+        }
+    }
+}
+
+// 好课连连
+.skin-good-course {
+    @extend .skin-common;
+    background: #F33C45 !important;
+    .container {
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/good-course/bg-home.png';
+        @include container(130px, $background-image);
+        .search {
+            @include search();
+        }
+        .footer {
+            @include footer(150px, #FFFFFF);
+            padding-top: 10px;
+        }
+        .skin-title {
+            margin: 40px -24px 30px;
+        }
+    }
+}
+
+// 欢迎新同学
+.skin-welcome-new {
+    @extend .skin-common;
+    background: #25B9BB !important;
+    .container {
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/welcome-new/bg-home.png';
+        @include container(130px, $background-image);
+        .search {
+            @include search();
+        }
+        .footer {
+            @include footer(150px, #FFFFFF);
+            padding-top: 10px;
+        }
+        .skin-title {
+            margin: 20px -24px 30px;
+        }
+    }
+}
 
