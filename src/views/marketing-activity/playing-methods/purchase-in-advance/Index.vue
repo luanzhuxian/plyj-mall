@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import YugouItem from '../../../home/activity/item/Yugou-Item.vue'
+import YugouItem from '../../../home/activity/items/Yugou-Item.vue'
 import { bookActivityPage } from '../../../../apis/product'
 
 export default {

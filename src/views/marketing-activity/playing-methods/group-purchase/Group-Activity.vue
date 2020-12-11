@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import PintuanItem from '../../../home/activity/item/Pintuan-Item.vue'
+import PintuanItem from '../../../home/activity/items/Pintuan-Item.vue'
 import { groupActivityPage } from '../../../../apis/product'
 
 export default {

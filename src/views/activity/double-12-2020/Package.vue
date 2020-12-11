@@ -19,7 +19,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import Panel from './Panel.vue'
-import PackageItem from './components/Package-Item.vue'
+import PackageItem from './items/Package-Item.vue'
 
 export default {
     name: 'Package',

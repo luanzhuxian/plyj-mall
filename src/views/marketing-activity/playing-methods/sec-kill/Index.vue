@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import MiaoshaItem from '../../../home/activity/item/Miaosha-Item.vue'
+import MiaoshaItem from '../../../home/activity/items/Miaosha-Item.vue'
 import { secondActivityPage } from '../../../../apis/product'
 
 export default {

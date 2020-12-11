@@ -23,8 +23,8 @@
 
 <script>
 import Panel from './Panel.vue'
-import YugouItemLarge from './components/Yugou-Item-Large.vue'
-import YugouItemSmall from './components/Yugou-Item-Small.vue'
+import YugouItemLarge from './items/Yugou-Item-Large.vue'
+import YugouItemSmall from './items/Yugou-Item-Small.vue'
 
 export default {
     name: 'Yugou',

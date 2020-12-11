@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import YugouItem from './item/Yugou-Item.vue'
+import YugouItem from './items/Yugou-Item.vue'
 
 export default {
     name: 'Yugou',

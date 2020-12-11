@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import MiaoshaItem from './item/Miaosha-Item.vue'
+import MiaoshaItem from './items/Miaosha-Item.vue'
 export default {
     name: 'Miaosha',
     components: {

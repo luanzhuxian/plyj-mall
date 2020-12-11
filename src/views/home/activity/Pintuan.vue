@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import PintuanItem from './item/Pintuan-Item.vue'
+import PintuanItem from './items/Pintuan-Item.vue'
 
 export default {
     name: 'Pintuan',

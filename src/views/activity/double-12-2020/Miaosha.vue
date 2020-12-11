@@ -18,7 +18,7 @@
 
 <script>
 import Panel from './Panel.vue'
-import MiaoshaItem from './components/Miaosha-Item.vue'
+import MiaoshaItem from './items/Miaosha-Item.vue'
 
 export default {
     name: 'Miaosha',

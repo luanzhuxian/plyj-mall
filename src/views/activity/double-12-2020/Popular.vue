@@ -26,8 +26,8 @@
 <script>
 import { mapGetters } from 'vuex'
 import Panel from './Panel.vue'
-import ProductItemLarge from './components/Product-Item-Large.vue'
-import ProductItemSmall from './components/Product-Item-Small.vue'
+import ProductItemLarge from './items/Product-Item-Large.vue'
+import ProductItemSmall from './items/Product-Item-Small.vue'
 
 export default {
     name: 'Popular',
