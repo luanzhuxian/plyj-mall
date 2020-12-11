@@ -69,10 +69,12 @@ export default {
             object-fit: cover;
         }
         &-name {
+            max-width: 150px;
             font-size: 20px;
             line-height: 28px;
             color: #333333;
             text-align: center;
+            @include elps();
         }
     }
 }
