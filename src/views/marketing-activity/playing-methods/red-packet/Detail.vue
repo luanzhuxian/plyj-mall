@@ -289,7 +289,16 @@ export default {
                 return
             }
             this.redPackage = redPackage
+
             this.productList = redPackage.applicableGoodsVOS
+            if (!this.productList.length) {
+                await this.$alert('很遗憾，该活动已结束，请查看更多活动')
+                    .finally(() => {
+                        this.$router.replace({ name: 'RedPackage' })
+                    })
+                return
+            }
+
             this.bulletList = Object.freeze(bulletList)
 
             this.form.name = this.realName
