@@ -64,7 +64,7 @@ export default [
     {
         path: '/lottery',
         name: 'Lottery',
-        component: () => import('../../views/marketing-activity/playing-methods/lottery/Index.vue'),
+        component: () => import('../../views/marketing-activity/playing-methods/happy-lottery/Index.vue'),
         meta: {
             title: '抽奖乐翻天'
         }
