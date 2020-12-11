@@ -290,7 +290,8 @@ export default {
             }
             this.redPackage = redPackage
 
-            this.productList = redPackage.applicableGoodsVOS
+            // showStatus === 1 商品显示 productStatus === 2 商品上架
+            this.productList = redPackage.applicableGoodsVOS.filter(good => good.showStatus === 1 && good.productStatus === 2 && !good.oldSku)
             if (!this.productList.length) {
                 await this.$alert('很遗憾，该活动已结束，请查看更多活动')
                     .finally(() => {
