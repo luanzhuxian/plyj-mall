@@ -98,14 +98,11 @@ export default {
                                 multiple: item.multiple,
                                 multipleNumber: item.multipleNumber,
                                 price: item.price,
-                                activityPrice: item.price * (item.multiple ? item.multipleNumber : 1),
+                                activityPrice: item.activityPrice,
+                                skuPrice: item.skuPrice,
                                 activityStartTime: item.activityStartTime,
                                 activityEndTime: item.activityEndTime
-                            },
-                            productSkuModels: [{
-                                price: item.productPrice,
-                                originalPrice: item.productOriginPrice
-                            }]
+                            }
                         }
                     }
                 }
