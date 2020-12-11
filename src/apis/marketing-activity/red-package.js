@@ -4,7 +4,7 @@ import axios from 'axios'
 export const getRedPackageList = params => axios.get('/apis/v2/red-package-activities', { params })
 
 // 获取福利红包列表(排序后的)
-export const getRedPackageListAfterSort = params => axios.get('/apis/v2/red-package-activities/sortList', { params })
+export const getRedPackageListAfterSort = () => axios.get('/apis/v2/red-package-activities/sortList')
 
 // 获取福利红包活动信息
 export const getRedPackage = id => axios.get(`/apis/v2/red-package-activities/${ id }`)

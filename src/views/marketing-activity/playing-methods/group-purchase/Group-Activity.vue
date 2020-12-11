@@ -13,7 +13,7 @@
                         </div>
                         <ul>
                             <template v-for="(item, i) of ongoingList">
-                                <product-item :key="'ongoing-' + i" :data="item" size="long" />
+                                <PintuanItem :key="'ongoing-' + i" :data="item" size="long" />
                             </template>
                         </ul>
                     </section>
@@ -26,13 +26,13 @@
                         </div>
                         <ul>
                             <template v-for="(item, i) of incomingList">
-                                <product-item :key="'incoming-' + i" :data="item" size="long" />
+                                <PintuanItem :key="'incoming-' + i" :data="item" size="long" />
                             </template>
                         </ul>
                     </section>
                 </template>
                 <div v-if="loaded && noContent" :class="$style.noContent">
-                    <pl-svg
+                    <PlSvg
                         name="icon-no-content"
                         width="300"
                         height="200"
@@ -45,13 +45,13 @@
 </template>
 
 <script>
-import ProductItem from './components/Group-Product-Item.vue'
+import PintuanItem from '../../../home/activity/items/Pintuan-Item.vue'
 import { groupActivityPage } from '../../../../apis/product'
 
 export default {
     name: 'GroupActivity',
     components: {
-        ProductItem
+        PintuanItem
     },
     data () {
         return {

@@ -134,6 +134,7 @@ export default {
     box-sizing: border-box;
     margin-right: 10px;
     padding: 0 6px;
+    max-width: 100%;
     height: 36px;
     line-height: 32px;
     text-align: center;

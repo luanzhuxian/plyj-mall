@@ -1,6 +1,6 @@
 <template>
     <li
-        :class="[ $style.itemPintuan, $style[size]]"
+        :class="[ $style.pintuanItem, $style[size]]"
         @click="$router.push({ name: 'Product', params: { productId: data.goodsInfo.id }, query: { currentProductStatus: 2 } })"
     >
         <div :class="$style.imgWrapper">
@@ -10,7 +10,7 @@
                 <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 1">距结束</span>
                 <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 2">已成功</span>
                 <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 3">已结束</span>
-                <countdown
+                <Countdown
                     :class="$style.countdown"
                     v-if="~[0, 1].indexOf(data.goodsInfo.activityInfo.status)"
                     :duration="getDuration(data.goodsInfo.activityInfo)"
@@ -25,7 +25,7 @@
                         <span :class="$style.colon">:</span>
                         <i :class="$style.block">{{ String(time.seconds).padStart(2, '0') }}</i>
                     </template>
-                </countdown>
+                </Countdown>
             </div>
         </div>
         <div :class="$style.info">
@@ -61,7 +61,7 @@
                         [$style.disabled]: data.goodsInfo.activityInfo.status !== 1
                     }"
                 >
-                    <pl-svg name="icon-vie-for" :width="size === 'large' ? 40 : 32" />
+                    <PlSvg name="icon-vie-for" :width="size === 'large' ? 40 : 32" />
                 </div>
             </div>
         </div>
@@ -69,11 +69,11 @@
 </template>
 
 <script>
-import Countdown from '../../../../../components/activity/Countdown.vue'
-import { getDuration, reset } from '../../../../activity/helper'
+import Countdown from '../../../../components/activity/Countdown.vue'
+import { getDuration, reset } from '../../../activity/helper'
 
 export default {
-    name: 'GroupProductItem',
+    name: 'PintuanItem',
     components: {
         Countdown
     },
@@ -100,7 +100,7 @@ export default {
 }
 </script>
 <style lang="scss" module>
-.item-pintuan {
+.pintuan-item {
     display: flex;
     flex-direction: column;
     box-sizing: border-box;

@@ -54,8 +54,11 @@ export default {
 .classify-list {
     display: flex;
     justify-content: space-around;
-    align-items: center;
+    // align-items: center;
+    box-sizing: border-box;
     background: #fff;
+    border-radius: 20px;
+    padding-top: 44px;
     height: 214px;
     &-item {
         display: flex;
@@ -72,6 +75,7 @@ export default {
             line-height: 28px;
             color: #333333;
             text-align: center;
+            @include elps-wrap(2);
         }
     }
 }

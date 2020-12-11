@@ -13,7 +13,7 @@
                         </div>
                         <ul>
                             <template v-for="(item, i) of ongoingList">
-                                <product-item :key="'ongoing-' + i" :data="item" />
+                                <YugouItem :key="'ongoing-' + i" :data="item" />
                             </template>
                         </ul>
                     </section>
@@ -26,13 +26,13 @@
                         </div>
                         <ul>
                             <template v-for="(item, i) of incomingList">
-                                <product-item :key="'incoming-' + i" :data="item" />
+                                <YugouItem :key="'incoming-' + i" :data="item" />
                             </template>
                         </ul>
                     </section>
                 </template>
                 <div v-if="loaded && noContent" :class="$style.noContent">
-                    <pl-svg
+                    <PlSvg
                         name="icon-no-content"
                         width="300"
                         height="200"
@@ -45,13 +45,13 @@
 </template>
 
 <script>
-import ProductItem from './components/Book-Product-Item.vue'
+import YugouItem from '../../../home/activity/items/Yugou-Item.vue'
 import { bookActivityPage } from '../../../../apis/product'
 
 export default {
     name: 'PurchaseInAdvance',
     components: {
-        ProductItem
+        YugouItem
     },
     data () {
         return {
@@ -98,14 +98,11 @@ export default {
                                 multiple: item.multiple,
                                 multipleNumber: item.multipleNumber,
                                 price: item.price,
-                                activityPrice: item.price * (item.multiple ? item.multipleNumber : 1),
+                                activityPrice: item.activityPrice,
+                                skuPrice: item.skuPrice,
                                 activityStartTime: item.activityStartTime,
                                 activityEndTime: item.activityEndTime
-                            },
-                            productSkuModels: [{
-                                price: item.productPrice,
-                                originalPrice: item.productOriginPrice
-                            }]
+                            }
                         }
                     }
                 }

@@ -29,7 +29,7 @@
                     <Pintuan :data="Pintuan" />
                 </section>
                 <!-- 预购 -->
-                <section :class="[$style.yugou, $style.module]" v-if="Yugou.showStatue === 1 && Yugou.values.length">
+                <section :class="[$style.yugou, $style.module]" class="spring-2021-green-yugou" v-if="Yugou.showStatue === 1 && Yugou.values.length">
                     <Yugou :data="Yugou" />
                 </section>
                 <!-- 组合课 -->
@@ -193,6 +193,11 @@ export default {
             > .coupon-title {
                 background: none;
             }
+        }
+    }
+    .spring-2021-green-yugou {
+        .img-wrapper::before {
+            display: none;
         }
     }
     .back-to-top {

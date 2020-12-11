@@ -56,11 +56,10 @@ export const sub = (arg1, arg2) => {
 }
 
 export const getTotalPrice = item => {
-    if (!item.goodsInfo || !item.goodsInfo.productSkuModels || !item.goodsInfo.productSkuModels.length) return ''
-    const prodPrice = getPrice(item.goodsInfo.productSkuModels)('price')
+    if (!item.goodsInfo) return ''
 
-    if (item.goodsInfo.activityInfo.activityPrice >= prodPrice) {
+    if (item.goodsInfo.activityInfo.activityPrice >= item.goodsInfo.activityInfo.skuPrice) {
         return item.goodsInfo.activityInfo.price
     }
-    return sub(prodPrice, sub(item.goodsInfo.activityInfo.activityPrice, item.goodsInfo.activityInfo.price))
+    return sub(Number(item.goodsInfo.activityInfo.skuPrice), Number(sub(Number(item.goodsInfo.activityInfo.activityPrice), Number(item.goodsInfo.activityInfo.price))))
 }

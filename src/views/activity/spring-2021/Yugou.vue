@@ -25,8 +25,8 @@
 
 <script>
 import Panel from './Panel.vue'
-import YugouItemLarge from '../double-12-2020/components/Yugou-Item-Large.vue'
-import YugouItemSmall from '../double-12-2020/components/Yugou-Item-Small.vue'
+import YugouItemLarge from '../double-12-2020/items/Yugou-Item-Large.vue'
+import YugouItemSmall from '../double-12-2020/items/Yugou-Item-Small.vue'
 
 export default {
     name: 'Yugou',

@@ -248,6 +248,9 @@ export default {
                 border-color: #FEECC7;
             }
         }
+        .img-wrapper::before {
+            display: none;
+        }
     }
     .back-to-top {
         display: flex;

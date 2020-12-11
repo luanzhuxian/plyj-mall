@@ -18,7 +18,7 @@
 
 <script>
 import Panel from './Panel.vue'
-import PackageItem from '../double-12-2020/components/Package-Item.vue'
+import PackageItem from '../double-12-2020/items/Package-Item.vue'
 
 export default {
     name: 'Package',

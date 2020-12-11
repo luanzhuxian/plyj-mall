@@ -1,6 +1,6 @@
 <template>
     <li
-        :class="$style.itemMiaosha"
+        :class="$style.miaoshaItem"
         @click="$router.push({ name: 'Product', params: { productId: data.goodsInfo.id }, query: { currentProductStatus: 3 } })"
     >
         <div :class="$style.imgWrapper">
@@ -9,7 +9,7 @@
                 <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 0">距开始</span>
                 <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 1">距结束</span>
                 <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 2">已结束</span>
-                <countdown
+                <Countdown
                     :class="$style.countdown"
                     v-if="~[0, 1].indexOf(data.goodsInfo.activityInfo.status)"
                     :duration="getDuration(data.goodsInfo.activityInfo)"
@@ -24,7 +24,7 @@
                         <span :class="$style.colon">:</span>
                         <i :class="$style.block">{{ String(time.seconds).padStart(2, '0') }}</i>
                     </template>
-                </countdown>
+                </Countdown>
             </div>
         </div>
         <div :class="$style.info">
@@ -61,7 +61,7 @@
                         [$style.disabled]: data.goodsInfo.activityInfo.status !== 1
                     }"
                 >
-                    <pl-svg name="icon-vie-for" width="32" height="32" />
+                    <PlSvg name="icon-vie-for" width="32" height="32" />
                 </div>
             </div>
         </div>
@@ -69,11 +69,11 @@
 </template>
 
 <script>
-import Countdown from '../../../../../components/activity/Countdown.vue'
-import { getPrice, getDuration } from '../../../../activity/helper'
+import Countdown from '../../../../components/activity/Countdown.vue'
+import { getPrice, getDuration } from '../../../activity/helper'
 
 export default {
-    name: 'SecondProductItem',
+    name: 'MiaoshaItem',
     components: {
         Countdown
     },
@@ -95,7 +95,7 @@ export default {
 }
 </script>
 <style lang="scss" module>
-.item-miaosha {
+.miaosha-item {
     display: flex;
     box-sizing: border-box;
     margin-top: 20px;
