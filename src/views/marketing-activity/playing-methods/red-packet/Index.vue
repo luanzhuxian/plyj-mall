@@ -166,14 +166,7 @@ export default {
         // 获取红包活动列表
         async getRedPackageList () {
             try {
-                // 0 未开始 1 进行中 2 暂停 3 结束
-                const params = {
-                    activityStatus: '0, 1',
-                    page: 1,
-                    size: 99
-                }
-
-                const { result } = await getRedPackageListAfterSort(params)
+                const { result } = await getRedPackageListAfterSort()
                 // 过滤未开始/进行中、未隐藏且有库存的福利红包
                 const redPackageList = result.filter(item => ~[0, 1].indexOf(item.activityStatus) && item.showStatus && item.issueVolume)
                     .map(item => {
