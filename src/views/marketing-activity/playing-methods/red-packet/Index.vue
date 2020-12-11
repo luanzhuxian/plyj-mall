@@ -261,7 +261,7 @@ export default {
         },
         share () {
             const { appId, mallUrl } = this
-            this.shareUrl = `${ mallUrl }/red-package/home?shareUserId=${ this.userId }&t=${ Date.now() }`
+            this.shareUrl = `${ mallUrl }/red-packet/home?shareUserId=${ this.userId }&t=${ Date.now() }`
             share({
                 appId,
                 title: '福利红包 抢先领',
