@@ -52,8 +52,48 @@
 
         <div :class="$style.prizeRecords">
             <LotteryTabs>
-                <LotteryTabPane label="我的奖品">我的奖品</LotteryTabPane>
-                <LotteryTabPane label="获奖记录">获奖记录</LotteryTabPane>
+                <LotteryTabPane label="我的奖品" value="1">
+                    <ul :class="[$style.records]">
+                        <li :class="$style.myPrize">
+                            <img src="https://mallcdn.youpenglai.com/static/mall/lottery/prize-bg.png" alt="奖品图片">
+                            <div>
+                                <p :class="$style.name">这是一个奖品的名称</p>
+                                <p :class="$style.date">2020.0203 15:39:20</p>
+                            </div>
+                        </li>
+                        <li :class="$style.myPrize">
+                            <img src="https://mallcdn.youpenglai.com/static/mall/lottery/prize-bg.png" alt="奖品图片">
+                            <div>
+                                <p :class="$style.name">这是一个奖品的名称</p>
+                                <p :class="$style.date">2020.0203 15:39:20</p>
+                            </div>
+                        </li>
+                    </ul>
+                </LotteryTabPane>
+                <LotteryTabPane label="获奖记录" value="2">
+                    <ul :class="[$style.records]">
+                        <li :class="$style.record">
+                            <img src="https://mallcdn.youpenglai.com/static/mall/lottery/prize-bg.png" alt="奖品图片">
+                            <div>
+                                <div class="flex space-between">
+                                    <span :class="$style.username">法外狂徒张三</span>
+                                    <span :class="$style.date">2020.0203 15:39:20</span>
+                                </div>
+                                <div :class="$style.prizeName">获得三等奖5元优惠券</div>
+                            </div>
+                        </li>
+                        <li :class="$style.record">
+                            <img src="https://mallcdn.youpenglai.com/static/mall/lottery/prize-bg.png" alt="奖品图片">
+                            <div>
+                                <div class="flex space-between">
+                                    <span :class="$style.username">法外狂徒张三</span>
+                                    <span :class="$style.date">2020.0203 15:39:20</span>
+                                </div>
+                                <div :class="$style.prizeName">获得三等奖5元优惠券</div>
+                            </div>
+                        </li>
+                    </ul>
+                </LotteryTabPane>
             </LotteryTabs>
         </div>
 
@@ -196,6 +236,60 @@ export default {
     }
     .prizeRecords {
         @include listBg();
+    }
+    .records {
+        padding: 60px 54px;
+        > .myPrize {
+            display: flex;
+            margin-bottom: 40px;
+            &:nth-last-of-type(1) {
+                margin-bottom: 0;
+            }
+            > img {
+                width: 120px;
+                height: 120px;
+                margin-right: 30px;
+            }
+            > div {
+                padding-top: 18px;
+                > .name {
+                    margin-bottom: 10px;
+                    font-size: 28px;
+                }
+                > .date {
+                    font-size: 24px;
+                    color: $--font-color_gray3;
+                }
+            }
+        }
+        > .record {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 48px;
+            > div {
+                padding-top: 6px;
+            }
+            > img {
+                width: 96px;
+                height: 96px;
+                margin-right: 24px;
+                border-radius: 48px;
+            }
+            .username {
+                font-size: 28px;
+                width: 240px;
+                @include elps();
+            }
+            .date {
+                font-size: 24px;
+                color: $--font-color_gray3;
+            }
+            .prizeName {
+                margin-top: 10px;
+                font-size: 24px;
+                color: #F79F1A;
+            }
+        }
     }
 
     .fixedTop {

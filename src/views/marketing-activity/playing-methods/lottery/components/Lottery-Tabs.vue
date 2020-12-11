@@ -3,18 +3,15 @@ export default {
     name: 'LotteryTabs',
     data () {
         return {
+            headers: [],
             panes: [],
             activityColor: '#E63303',
             noniusWidth: '0px',
-            noniusLeft: '0px'
+            noniusLeft: '0px',
+            currentValue: ''
         }
     },
     render (h) {
-        const tabNav = (
-            <div class="lottery-tabs__nav">
-                { this.panes }
-            </div>
-        )
         return (
             <div
                 class="lottery-tabs"
@@ -26,37 +23,68 @@ export default {
                     }
                 }
             >
-                {tabNav}
+                <div class="lottery-tabs__nav">
+                    { this.headers }
+                </div>
                 <div class="lottery-tabs__content">
-                    {this.$slots.default}
+                    {this.panes}
                 </div>
             </div>
         )
     },
     mounted () {
+        this.headersUpdated()
         this.paneUpdated()
-        this.$on('pane-click', this.paneClick)
     },
     methods: {
         paneUpdated () {
-            const panes = this.$slots.default.map((item, i) => (
-                <div
-                    class="lottery-tabs__pane" id={`pane${ i }`}
-                    on-click={this.paneClick}
-                >
-                    {item.componentInstance.label}
-                </div>
-            ))
-            panes.push(<div class="lottery-tabs__nonius"/>)
-            this.panes = <div class="lottery-tabs__pane-list">
-                { panes }
+            const panes = this.$slots.default.map((item, i) => {
+                const { value } = item.componentOptions.propsData
+                return (
+                    <div
+                        key={i}
+                        class="lottery-tabs__pane"
+                        style={
+                            {
+                                display: value === this.currentValue ? 'block' : 'none'
+                            }
+                        }
+                    >
+                        {item}
+                    </div>
+                )
+            })
+            this.panes = panes
+        },
+        headersUpdated () {
+            const headers = this.$slots.default.map((item, i) => {
+                const { value, label } = item.componentOptions.propsData
+                const paneClick = this.paneClick.bind(this, value)
+                return (
+                    <div
+                        key={i}
+                        class={
+                            { activity: value === this.currentValue, 'lottery-tabs__item': true }
+                        }
+                        id={`pane${ i }`}
+                        onClick={paneClick}
+                    >
+                        {label}
+                    </div>
+                )
+            })
+            headers.push(<div class="lottery-tabs__nonius"/>)
+            this.headers = <div class="lottery-tabs__headers">
+                { headers }
             </div>
         },
-        paneClick (e) {
-            console.log(e.currentTarget.offsetLeft)
+        paneClick (val, e) {
+            this.currentValue = val
             this.noniusWidth = `${ e.currentTarget.offsetWidth }px`
             this.noniusLeft = `${ e.currentTarget.offsetLeft }px`
-            console.log(e)
+            this.headersUpdated()
+            this.paneUpdated()
+            this.$emit('paneClick', val)
         }
     }
 }
@@ -84,7 +112,7 @@ export default {
         align-items: flex-start;
     }
 
-    @include b(pane-list) {
+    @include b(headers) {
         position: relative;
         width: max-content;
         height: 80px;
@@ -103,9 +131,12 @@ export default {
         }
     }
 
-    @include b(pane) {
+    @include b(item) {
         display: inline-block;
         padding: 0 33px;
+        &.activity {
+            color: var(--activityColor);
+        }
     }
 
     @include b(nonius) {
@@ -114,9 +145,9 @@ export default {
         bottom: 0;
         padding: 0;
         width: var(--nonius-width);
-        height: 4px;
+        height: 8px;
         background-color: var(--activityColor);
-        border-radius: 2px;
+        border-radius: 4px;
         z-index: 2;
         transition: left .2s ease-in-out, width .2s ease-in-out;
     }

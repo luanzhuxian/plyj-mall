@@ -1,5 +1,5 @@
 <template>
-    <div @click="clickHandler">
+    <div>
         <slot />
     </div>
 </template>
@@ -11,16 +11,11 @@ export default {
         label: {
             type: [String, Number],
             default: ''
-        }
-    },
-    methods: {
-        clickHandler (e) {
-            this.$emit('pane-click', e)
+        },
+        value: {
+            type: [String, Number],
+            default: ''
         }
     }
-    // created () {
-    //     // 可用来动态新增tab,暂时用不到
-    //     this.$emit('lottery-pane-updated')
-    // }
 }
 </script>
