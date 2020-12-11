@@ -305,8 +305,9 @@ export default {
             const Y = (dialHeight / 2 - Math.sin(angle) * R).toPrecision(2)
             console.log(ORIGINAL_POINT, X, Y, angle)
             angle += Math.PI / 4
-            if (angle === Math.PI * 2 + Math.PI / 4) {
-
+            if (angle >= Math.PI * 2 + Math.PI / 4) {
+                console.log('123123')
+                angle = Math.PI / 4
             }
         }
     }
