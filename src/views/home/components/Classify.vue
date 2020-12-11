@@ -56,6 +56,7 @@ export default {
     justify-content: space-around;
     align-items: center;
     background: #fff;
+    border-radius: 20px;
     height: 214px;
     &-item {
         display: flex;
