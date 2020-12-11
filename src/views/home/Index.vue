@@ -46,6 +46,7 @@ import InviteNewcomersHomeEntry from '../marketing-activity/double-12/invitenewc
 import SplitBurse from './../../components/common/Split-Burse.vue'
 import SendLive from './../../components/common/Send-Live.vue'
 import { getTemplate } from '../../apis/home'
+import { getRedPackageListAfterSort } from '../../apis/marketing-activity/red-package'
 
 export default {
     name: 'Home',
@@ -67,10 +68,7 @@ export default {
             loaded: false,
             type: 0,
             modules: {},
-            isReportShow: false,
-            isBookShow: false,
-            reportId: '',
-            bookId: ''
+            isRedPackageShow: false
         }
     },
     computed: {
@@ -81,11 +79,13 @@ export default {
                 this.mallQRCodeInfo !== null
         }
     },
-    watch: {
-    },
     async activated () {
         try {
-            await this.getTemplate()
+            const requests = [
+                this.getTemplate(),
+                this.getRedPackage()
+            ]
+            await Promise.all(requests.map(p => p.catch(e => console.error(e))))
         } catch (e) {
             throw e
         }
@@ -171,6 +171,23 @@ export default {
                 this.loaded = true
             } catch (e) {
                 throw e
+            }
+        },
+        async getRedPackage () {
+            try {
+                // 0 未开始 1 进行中 2 暂停 3 结束
+                const params = {
+                    activityStatus: '0, 1',
+                    page: 1,
+                    size: 99
+                }
+
+                const { result } = await getRedPackageListAfterSort(params)
+                // 过滤未开始/进行中、未隐藏且有库存的福利红包
+                const redPackageList = result.filter(item => ~[0, 1].indexOf(item.activityStatus) && item.showStatus && item.issueVolume)
+                this.isRedPackageShow = !!(redPackageList && redPackageList.length)
+            } catch (error) {
+                throw error
             }
         }
     },

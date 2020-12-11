@@ -96,20 +96,13 @@ export default {
             if (this.$route.query.shareUserId) {
                 this.$store.commit(SET_SHARE_ID, this.$route.query.shareUserId)
             }
-            const request = [
+            const requests = [
                 this.getRedPackageList(),
                 this.getRedPackageBarrage()
             ]
-            const [redPackageList, bulletList] = await Promise.all(request.map(p => p.catch(e => console.error(e))))
+            const [redPackageList, bulletList] = await Promise.all(requests.map(p => p.catch(e => console.error(e))))
 
-            // 过滤未隐藏且有库存的福利红包
             this.redPackageList = redPackageList
-                .filter(item => ~[0, 1].indexOf(item.activityStatus) && item.showStatus && item.issueVolume)
-                .map(item => {
-                    item.price = fenToYuan(item.price)
-                    return item
-                })
-
             // 没有可用红包返回上一页
             if (!this.redPackageList.length) {
                 this.$alert('很遗憾，该活动已结束，请查看更多活动')
@@ -181,7 +174,14 @@ export default {
                 }
 
                 const { result } = await getRedPackageListAfterSort(params)
-                return result
+                // 过滤未开始/进行中、未隐藏且有库存的福利红包
+                const redPackageList = result.filter(item => ~[0, 1].indexOf(item.activityStatus) && item.showStatus && item.issueVolume)
+                    .map(item => {
+                        item.price = fenToYuan(item.price)
+                        return item
+                    })
+
+                return redPackageList
             } catch (error) {
                 throw error
             }
