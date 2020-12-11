@@ -3,9 +3,9 @@
 
         <router-link
             tag="h1"
-            to="/lottery"
+            to="/happy-lottery/123123"
             style="font-size: 60px;"
-            v-if="$route.name !== 'Lottery'"
+            v-if="$route.name !== 'HappyLottery'"
         >
             抽奖乐翻天
         </router-link>

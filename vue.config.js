@@ -90,7 +90,7 @@ module.exports = {
                         unitPrecision: 6,
                         minPixelValue: 1,
                         viewportUnit: 'vw',
-                        mediaQuery: false,
+                        mediaQuery: true,
                         selectorBlackList: ['html', 'body'],
                         exclude: /node_modules/
                     })
