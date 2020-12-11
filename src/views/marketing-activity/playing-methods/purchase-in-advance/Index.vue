@@ -13,7 +13,7 @@
                         </div>
                         <ul>
                             <template v-for="(item, i) of ongoingList">
-                                <product-item :key="'ongoing-' + i" :data="item" />
+                                <YugouItem :key="'ongoing-' + i" :data="item" />
                             </template>
                         </ul>
                     </section>
@@ -26,13 +26,13 @@
                         </div>
                         <ul>
                             <template v-for="(item, i) of incomingList">
-                                <product-item :key="'incoming-' + i" :data="item" />
+                                <YugouItem :key="'incoming-' + i" :data="item" />
                             </template>
                         </ul>
                     </section>
                 </template>
                 <div v-if="loaded && noContent" :class="$style.noContent">
-                    <pl-svg
+                    <PlSvg
                         name="icon-no-content"
                         width="300"
                         height="200"
@@ -45,13 +45,13 @@
 </template>
 
 <script>
-import ProductItem from './components/Book-Product-Item.vue'
+import YugouItem from '../../../home/activity/item/Yugou-Item.vue'
 import { bookActivityPage } from '../../../../apis/product'
 
 export default {
     name: 'PurchaseInAdvance',
     components: {
-        ProductItem
+        YugouItem
     },
     data () {
         return {

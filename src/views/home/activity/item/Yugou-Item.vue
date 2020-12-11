@@ -1,6 +1,6 @@
 <template>
     <li
-        :class="$style.itemYugou"
+        :class="$style.yugouItem"
         @click="$router.push({ name: 'Product', params: { productId: data.goodsInfo.id }, query: { currentProductStatus: 4 } })"
     >
         <div :class="$style.imgWrapper">
@@ -9,7 +9,7 @@
                 <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 0">距开始</span>
                 <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 1">距结束</span>
                 <span :class="$style.text" v-if="data.goodsInfo.activityInfo.status === 2">已结束</span>
-                <countdown
+                <Countdown
                     :class="$style.countdown"
                     v-if="~[0, 1].indexOf(data.goodsInfo.activityInfo.status)"
                     :duration="getDuration(data.goodsInfo.activityInfo)"
@@ -24,7 +24,7 @@
                         <span :class="$style.colon">:</span>
                         <i :class="$style.block">{{ String(time.seconds).padStart(2, '0') }}</i>
                     </template>
-                </countdown>
+                </Countdown>
             </div>
         </div>
         <div :class="$style.info">
@@ -36,7 +36,7 @@
                 <span v-if="data.goodsInfo.activityInfo.multiple && data.goodsInfo.activityInfo.multipleNumber > 1 && data.goodsInfo.activityInfo.activityPrice">{{ `抵￥${data.goodsInfo.activityInfo.activityPrice}` }}</span>
             </div>
             <div :class="$style.original">
-                原价：<del>{{ getPrice(data.goodsInfo.productSkuModels)('originalPrice') }}</del>
+                原价：<del>{{ data.goodsInfo.activityInfo.skuPrice }}</del>
             </div>
             <div :class="$style.price">
                 预计到手价
@@ -47,11 +47,11 @@
 </template>
 
 <script>
-import Countdown from '../../../../../components/activity/Countdown.vue'
-import { getDuration, getPrice, getTotalPrice } from '../../../../activity/helper'
+import Countdown from '../../../../components/activity/Countdown.vue'
+import { getDuration, getTotalPrice } from '../../../activity/helper'
 
 export default {
-    name: 'BookProductItem',
+    name: 'YugouItem',
     components: {
         Countdown
     },
@@ -68,13 +68,12 @@ export default {
     },
     methods: {
         getDuration,
-        getPrice,
         getTotalPrice
     }
 }
 </script>
 <style lang="scss" module>
-.item-yugou {
+.yugou-item {
     display: flex;
     box-sizing: border-box;
     margin-top: 20px;

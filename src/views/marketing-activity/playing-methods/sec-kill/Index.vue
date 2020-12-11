@@ -13,7 +13,7 @@
                         </div>
                         <ul>
                             <template v-for="(item, i) of ongoingList">
-                                <product-item :key="'ongoing-' + i" :data="item" />
+                                <MiaoshaItem :key="'ongoing-' + i" :data="item" />
                             </template>
                         </ul>
                     </section>
@@ -26,13 +26,13 @@
                         </div>
                         <ul>
                             <template v-for="(item, i) of incomingList">
-                                <product-item :key="'incoming-' + i" :data="item" />
+                                <MiaoshaItem :key="'incoming-' + i" :data="item" />
                             </template>
                         </ul>
                     </section>
                 </template>
                 <div v-if="loaded && noContent" :class="$style.noContent">
-                    <pl-svg
+                    <PlSvg
                         name="icon-no-content"
                         width="300"
                         height="200"
@@ -45,13 +45,13 @@
 </template>
 
 <script>
-import ProductItem from './components/Second-Product-Item.vue'
+import MiaoshaItem from '../../../home/activity/item/Miaosha-Item.vue'
 import { secondActivityPage } from '../../../../apis/product'
 
 export default {
     name: 'SecKillActivity',
     components: {
-        ProductItem
+        MiaoshaItem
     },
     data () {
         return {

@@ -37,7 +37,7 @@
                 <div :class="$style.price">
                     到手价：<b>{{ getTotalPrice(data) }}</b>
                 </div>
-                <del :class="$style.original">{{ `现价：¥${getPrice(data.goodsInfo.productSkuModels)('price')}` }}</del>
+                <del :class="$style.original">{{ `现价：¥${data.goodsInfo.activityInfo.skuPrice}` }}</del>
                 <span :class="$style.count">{{ `${data.goodsInfo.activityInfo.number}人预交` }}</span>
             </div>
         </div>
@@ -46,7 +46,7 @@
 
 <script>
 import Countdown from '../../../../components/activity/Countdown.vue'
-import { getDuration, getTotalPrice, getPrice } from '../../helper'
+import { getDuration, getTotalPrice } from '../../helper'
 
 export default {
     name: 'YugouItemLarge',
@@ -63,8 +63,7 @@ export default {
     },
     methods: {
         getDuration,
-        getTotalPrice,
-        getPrice
+        getTotalPrice
     }
 }
 </script>
