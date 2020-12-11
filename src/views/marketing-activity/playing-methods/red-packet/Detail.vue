@@ -471,7 +471,7 @@ export default {
         },
         share () {
             const { appId, mallUrl } = this
-            this.shareUrl = `${ mallUrl }/red-package/detail/${ this.activityId }?shareUserId=${ this.userId }&t=${ Date.now() }`
+            this.shareUrl = `${ mallUrl }/red-packet/detail/${ this.activityId }?shareUserId=${ this.userId }&t=${ Date.now() }`
             share({
                 appId,
                 title: '小金额，大额券，边逛边优惠！',
