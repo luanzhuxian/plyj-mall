@@ -90,17 +90,17 @@ export default {
     height: 284px;
     background: #FFFBF1;
     border-radius: 8px;
-    &::after {
-        content: '';
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        width: 60px;
-        height: 16px;
-        background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/double-12-2020/logo-mini.png') no-repeat center;
-        background-size: 100%;
-        z-index: 1;
-    }
+    // &::after {
+    //     content: '';
+    //     position: absolute;
+    //     top: 20px;
+    //     right: 20px;
+    //     width: 60px;
+    //     height: 16px;
+    //     background: url('https://mallcdn.youpenglai.com/static/admall/mall-management/double-12-2020/logo-mini.png') no-repeat center;
+    //     background-size: 100%;
+    //     z-index: 1;
+    // }
     .img-wrapper {
         width: 240px;
         height: 160px;
