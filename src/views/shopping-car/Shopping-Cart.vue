@@ -32,12 +32,12 @@
                         border
                         :disabled="item.disabled"
                     >
-                        <template v-slot:suffix="{ data }">
+                        <template v-slot:suffix>
                             <CartItem
-                                :data="data"
+                                :data="item"
                                 :disabled="isManage"
                                 @countChange="computeMoney"
-                                @skuClick="skuClick(data)"
+                                @skuClick="skuClick(item)"
                                 @change="getList"
                             />
                         </template>

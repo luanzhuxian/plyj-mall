@@ -9,6 +9,7 @@ import { getServerTime } from '../../apis/base-api'
 export default class Countdown {
     timer = 0
     total = 0
+    step = 1000
     // 倒计时结束的时间戳，如果它减当前时间小于等于0，说明倒计时结束
     // 这样一来就可以避免因锁屏导致的定时器停止问题
     endTime = Date.now()
@@ -19,8 +20,9 @@ export default class Countdown {
      * @constructor
      * @param duration {number} 倒计时时长, 毫秒值
      * @param callback {function} 接收倒计时数据
+     * @param step {number} 1000
      */
-    constructor (duration, callback) {
+    constructor (duration, callback, step = 1000) {
         if (new.target !== Countdown) {
             console.error('必须new实例才能使用')
             return
@@ -28,6 +30,7 @@ export default class Countdown {
         // this.duration = duration
         this.total = duration
         this.callback = callback
+        this.step = step
         // 倒计时结束时间等于当前时间+倒计时持续时间
         this.endTime = Date.now() + duration
     }
@@ -51,7 +54,7 @@ export default class Countdown {
         this.callback(data)
         this.timer = setTimeout(() => {
             this.start()
-        }, 1000)
+        }, this.step)
     }
 
     // 手动停止
