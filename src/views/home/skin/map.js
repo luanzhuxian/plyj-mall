@@ -27,6 +27,36 @@ export const skinClassNameMap = {
     }
 }
 
+// 各个皮肤对应的标题组件名
+export const skinTitleMap = {
+    1: 'TitleXmas',
+    2: 'TitleYuanDan',
+    3: 'TitleNewYear',
+    4: 'TitleXiaoNian',
+    5: 'TitleYuanXiao',
+    6: 'TitleWomenDay',
+    7: 'TitleNianNianFan',
+    8: 'TitleEarthDay',
+    9: 'TitleLabourDay',
+    10: 'TitleMothersDay',
+    11: 'TitleChildrenDay',
+    12: 'TitleFathersDay',
+    13: 'TitleDragonBoat',
+    14: 'TitleMidAutumnFestival',
+    15: 'TitleNationalDay',
+    16: 'TitleCulture',
+    17: 'TitleSports',
+    18: 'TitleArts',
+    19: 'TitleDouble12',
+    20: 'TitleParty',
+    21: 'TitleGoodCourse',
+    22: 'TitleWelcomeNew',
+    23: 'TitleXmas2020',
+    get (id) {
+        return Reflect.has(this, id) ? this[id] : this[0]
+    }
+}
+
 export const skinNavMap = {
     1: {
         home: 'https://mallcdn.youpenglai.com/static/admall/skin/xmas/239b454f-454c-4ca5-93e7-a51bbd65a85a.png',

@@ -1,27 +1,6 @@
 <template>
     <div>
-        <TitleXmas v-if="skinId === 1" :data="data" />
-        <TitleYuanDan v-if="skinId === 2" :data="data" />
-        <TitleNewYear v-if="skinId === 3" :data="data" />
-        <TitleXiaoNian v-if="skinId === 4" :data="data" />
-        <TitleYuanXiao v-if="skinId === 5" :data="data" />
-        <TitleWomenDay v-if="skinId === 6" :data="data" />
-        <TitleNianNianFan v-if="skinId === 7" :data="data" />
-        <TitleEarthDay v-if="skinId === 8" :data="data" />
-        <TitleLabourDay v-if="skinId === 9" :data="data" />
-        <TitleMothersDay v-if="skinId === 10" :data="data" />
-        <TitleChildrenDay v-if="skinId === 11" :data="data" />
-        <TitleFathersDay v-if="skinId === 12" :data="data" />
-        <TitleDragonBoat v-if="skinId === 13" :data="data" />
-        <TitleMidAutumnFestival v-if="skinId === 14" :data="data" />
-        <TitleNationalDay v-if="skinId === 15" :data="data" />
-        <TitleCulture v-if="skinId === 16" :data="data" />
-        <TitleSports v-if="skinId === 17" :data="data" />
-        <TitleArts v-if="skinId === 18" :data="data" />
-        <TitleDouble12 v-if="skinId === 19" :data="data" />
-        <TitleParty v-if="skinId === 20" :data="data" />
-        <TitleGoodCourse v-if="skinId === 21" :data="data" />
-        <TitleWelcomeNew v-if="skinId === 22" :data="data" />
+        <components :is="currentSkinTitle" :data="data" />
     </div>
 </template>
 
@@ -48,6 +27,7 @@ import TitleDouble12 from './Title-Double-12.vue'
 import TitleParty from './Title-Party.vue'
 import TitleGoodCourse from './Title-Good-Course.vue'
 import TitleWelcomeNew from './Title-Welcome-New.vue'
+import { skinTitleMap } from './map'
 
 export default {
     name: 'SkinTitle',
@@ -83,6 +63,11 @@ export default {
         skinId: {
             type: [Number, String],
             default: ''
+        }
+    },
+    computed: {
+        currentSkinTitle () {
+            return skinTitleMap.get(this.skinId)
         }
     }
 }
