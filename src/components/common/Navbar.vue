@@ -172,7 +172,7 @@ export default {
 </script>
 
 <style module lang="scss">
-@import '../../views/home/skin/navbar.scss';
+@import '../../views/home/skin/style/navbar.scss';
 
 .navbar {
     position: fixed;

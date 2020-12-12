@@ -331,6 +331,7 @@ export default {
                 this.status = result.activityStatus
                 this.activity = activity
                 redPacketCouponVO.price = fenToYuan(redPacketCouponVO.price)
+                localStorage.setItem('redPackageBrief', redPacketCouponVO.brief.replace(/\n/g, '<br>'))
                 return redPacketCouponVO
             } catch (error) {
                 throw error

@@ -1,25 +1,10 @@
 <template>
-    <div>
-        <title-xmas v-if="skinId === 1" :data="data" />
-        <title-yuan-dan v-if="skinId === 2" :data="data" />
-        <title-new-year v-if="skinId === 3" :data="data" />
-        <title-xiao-nian v-if="skinId === 4" :data="data" />
-        <title-yuan-xiao v-if="skinId === 5" :data="data" />
-        <title-women-day v-if="skinId === 6" :data="data" />
-        <title-nian-nian-fan v-if="skinId === 7" :data="data" />
-        <title-earth-day v-if="skinId === 8" :data="data" />
-        <title-labour-day v-if="skinId === 9" :data="data" />
-        <title-mothers-day v-if="skinId === 10" :data="data" />
-        <title-children-day v-if="skinId === 11" :data="data" />
-        <title-fathers-day v-if="skinId === 12" :data="data" />
-        <title-dragon-boat v-if="skinId === 13" :data="data" />
-        <title-mid-autumn-festival v-if="skinId === 14" :data="data" />
-        <title-national-day v-if="skinId === 15" :data="data" />
-        <title-culture v-if="skinId === 16" :data="data" />
-        <title-sports v-if="skinId === 17" :data="data" />
-        <title-arts v-if="skinId === 18" :data="data" />
-        <title-double-12 v-if="skinId === 19" :data="data" />
-        <!-- <title-campaign v-if="skinId === 99" :data="data" /> -->
+    <div class="skin-title">
+        <components
+            :is="currentSkinTitle"
+            :data="data"
+            v-bind="$attrs"
+        />
     </div>
 </template>
 
@@ -43,7 +28,11 @@ import TitleCulture from './Title-Culture.vue'
 import TitleSports from './Title-Sports.vue'
 import TitleArts from './Title-Arts.vue'
 import TitleDouble12 from './Title-Double-12.vue'
-// import TitleCampaign from './Title-Campaign.vue'
+import TitleParty from './Title-Party.vue'
+import TitleGoodCourse from './Title-Good-Course.vue'
+import TitleWelcomeNew from './Title-Welcome-New.vue'
+import TitleXmas2020 from './Title-Xmas-2020.vue'
+import { skinTitleMap } from './map'
 
 export default {
     name: 'SkinTitle',
@@ -66,8 +55,11 @@ export default {
         TitleCulture,
         TitleSports,
         TitleArts,
-        TitleDouble12
-        // TitleCampaign
+        TitleDouble12,
+        TitleParty,
+        TitleGoodCourse,
+        TitleWelcomeNew,
+        TitleXmas2020
     },
     props: {
         data: {
@@ -79,12 +71,10 @@ export default {
             default: ''
         }
     },
-    data () {
-        return {}
+    computed: {
+        currentSkinTitle () {
+            return skinTitleMap.get(this.skinId)
+        }
     }
 }
 </script>
-
-<style lang="scss" module>
-
-</style>
