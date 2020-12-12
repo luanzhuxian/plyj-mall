@@ -6,8 +6,7 @@
 
         <div :class="[$style.module, $style.content, $style.border]" v-if="$route.query.from && $route.query.from === 'RedPackageDetail'">
             <div :class="[$style.title, $style.left]">使用须知</div>
-            <p :class="$style.tip">发券时间：2020.1.2.-2020.6.30</p>
-            <p :class="$style.tip">使用时间：2020.1.2.-2020.6.30</p>
+            <p :class="$style.tip" v-html="brief" />
         </div>
 
         <div :class="[$style.module, $style.content, $style.border]">
@@ -70,7 +69,15 @@
 
 <script>
 export default {
-    name: 'RedPacketIntro'
+    name: 'RedPacketIntro',
+    data () {
+        return {
+            brief: ''
+        }
+    },
+    activated () {
+        this.brief = localStorage.getItem('redPackageBrief')
+    }
 }
 </script>
 
