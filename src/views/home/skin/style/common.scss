@@ -490,22 +490,22 @@
     }
 }
 
-// 欢迎新同学
-.skin-welcome-new {
+// 圣诞
+.skin-xmas-2020 {
     @extend .skin-common;
-    background: #25B9BB !important;
+    background: #0A866A !important;
     .container {
-        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/welcome-new/bg-home.png';
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/xmas-2020/bg.png';
         @include container(130px, $background-image);
         .search {
             @include search();
         }
         .footer {
-            @include footer(150px, #FFFFFF);
+            @include footer(150px, #E5800E);
             padding-top: 10px;
         }
         .skin-title {
-            margin: 20px -24px 30px;
+            margin: 20px -24px 20px;
         }
     }
 }

@@ -132,10 +132,12 @@ import Class from './components/Class.vue'
 import Recommend from './components/Recommend.vue'
 import SkinTitle from './skin/Skin-Title.vue'
 import { skinClassNameMap } from './skin/map'
+import SkinMixin from './skin/mixin'
 
 export default {
     name: 'HomeTemplateD',
     inject: ['parent'],
+    mixins: [SkinMixin],
     components: {
         Search,
         Banner,
@@ -272,6 +274,11 @@ export default {
         },
         isSkinShow () {
             return skinClassNameMap.has(this.skinId)
+        }
+    },
+    mounted () {
+        if (this.skinId === 23) {
+            this.setSkinTitleClassName()
         }
     }
 }

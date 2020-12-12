@@ -22,6 +22,7 @@ export const skinClassNameMap = {
     20: 'skinParty',
     21: 'skinGoodCourse',
     22: 'skinWelcomeNew',
+    23: 'skinXmas2020',
     has (id) {
         return Reflect.has(this, id)
     }
@@ -277,15 +278,15 @@ export const skinNavMap = {
         shoppingCartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/welcome-new/cart.png',
         my: 'https://mallcdn.youpenglai.com/static/admall/skin/welcome-new/my.png',
         myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/welcome-new/my.png'
+    },
+    23: {
+        home: 'https://mallcdn.youpenglai.com/static/admall/skin/xmas-2020/home.png',
+        homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/xmas-2020/home.png',
+        classify: 'https://mallcdn.youpenglai.com/static/admall/skin/xmas-2020/classify.png',
+        classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/xmas-2020/classify.png',
+        shoppingCart: 'https://mallcdn.youpenglai.com/static/admall/skin/xmas-2020/cart.png',
+        shoppingCartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/xmas-2020/cart.png',
+        my: 'https://mallcdn.youpenglai.com/static/admall/skin/xmas-2020/my.png',
+        myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/xmas-2020/my.png'
     }
-//     99: {
-//         home: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/98e32f2b-679b-485d-8a9a-6e62659f91b1.png',
-//         homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/98e32f2b-679b-485d-8a9a-6e62659f91b1.png',
-//         classify: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/0961a842-6724-45d2-b804-33bf81278b54.png',
-//         classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/0961a842-6724-45d2-b804-33bf81278b54.png',
-//         shoppingCart: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/f3f17e23-c82d-405f-848f-e7ba14b49d43.png',
-//         shoppingCartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/f3f17e23-c82d-405f-848f-e7ba14b49d43.png',
-//         my: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/8a291b28-fb88-4292-968b-c1f02de91e03.png',
-//         myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/8a291b28-fb88-4292-968b-c1f02de91e03.png'
-//     }
 }

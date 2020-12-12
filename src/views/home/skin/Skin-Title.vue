@@ -1,6 +1,10 @@
 <template>
-    <div>
-        <components :is="currentSkinTitle" :data="data" />
+    <div class="skin-title">
+        <components
+            :is="currentSkinTitle"
+            :data="data"
+            v-bind="$attrs"
+        />
     </div>
 </template>
 
@@ -27,6 +31,7 @@ import TitleDouble12 from './Title-Double-12.vue'
 import TitleParty from './Title-Party.vue'
 import TitleGoodCourse from './Title-Good-Course.vue'
 import TitleWelcomeNew from './Title-Welcome-New.vue'
+import TitleXmas2020 from './Title-Xmas-2020.vue'
 import { skinTitleMap } from './map'
 
 export default {
@@ -53,7 +58,8 @@ export default {
         TitleDouble12,
         TitleParty,
         TitleGoodCourse,
-        TitleWelcomeNew
+        TitleWelcomeNew,
+        TitleXmas2020
     },
     props: {
         data: {

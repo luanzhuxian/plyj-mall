@@ -19,9 +19,6 @@ export default {
             type: String,
             default: ''
         }
-    },
-    data () {
-        return {}
     }
 }
 </script>
