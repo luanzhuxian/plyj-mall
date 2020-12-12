@@ -70,9 +70,9 @@
         </ul>
 
         <div :class="$style.prizeRecords">
-            <LotteryTabs>
+            <LotteryTabs v-model="prizeType">
                 <LotteryTabPane label="我的奖品" value="1">
-                    <ul :class="[$style.records]">
+                    <ul :class="[$style.records]" v-if="awardRecords.length">
                         <li :class="$style.myPrize">
                             <img src="https://mallcdn.youpenglai.com/static/mall/lottery/prize-bg.png" alt="奖品图片">
                             <div>
@@ -88,10 +88,10 @@
                             </div>
                         </li>
                     </ul>
-                    <img height="300" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/no-awards.png" alt="">
+                    <img :class="$style.noPrize" v-else height="300" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/no-awards.png" alt="">
                 </LotteryTabPane>
                 <LotteryTabPane label="获奖记录" value="2">
-                    <ul :class="[$style.records]">
+                    <ul :class="[$style.records]" v-if="lotteryRecords.length">
                         <li :class="$style.record">
                             <img src="https://mallcdn.youpenglai.com/static/mall/lottery/prize-bg.png" alt="奖品图片">
                             <div>
@@ -113,7 +113,7 @@
                             </div>
                         </li>
                     </ul>
-                    <img height="300" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/no-awards.png" alt="">
+                    <img :class="$style.noPrize" v-else height="300" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/no-awards.png" alt="">
                 </LotteryTabPane>
             </LotteryTabs>
         </div>
@@ -134,8 +134,8 @@ import {
     getAwardRecords,
     getDetail,
     getLotteryCount,
-    getLotteryRecords
-    // lottery
+    getLotteryRecords,
+    lottery
 } from '../../../../apis/longmen-festival/lottery'
 import Countdown from '../../../../assets/js/Countdown'
 
@@ -155,7 +155,7 @@ const C = 500
 // 初始位置（初始的速度）
 const B = velocity
 // 转盘的总转动次数
-const D = 40
+let D = 40
 // 当前转动第几次了
 let t = 0
 
@@ -192,7 +192,8 @@ export default {
             // 我的奖品
             awardRecords: [],
             currentX: 0,
-            currentY: 0
+            currentY: 0,
+            prizeType: '1'
         }
     },
     props: {
@@ -305,15 +306,20 @@ export default {
             }
         },
         // 开始抽奖
-        drawLottery () {
+        // 1337640967882883074
+        async drawLottery () {
             if (drawing) return
             if (this.status === 1) return this.$warning('活动未开始')
             if (this.status === 3 || this.status === 4) return this.$warning('活动已结束')
             try {
                 drawing = true
-                // const { result } = await lottery(this.id)
-                // console.log(result)
-                this.run()
+                const { result } = await lottery(this.id)
+                if (result.isAward) {
+                    const index = this.turntableAwards.findIndex(item => item.id === result.id)
+                    console.log(result)
+                    D += index
+                    this.run()
+                }
             } catch (e) {
                 throw e
             } finally {
@@ -485,14 +491,12 @@ export default {
                 background: none;
                 > span:nth-of-type(2) {
                     color: #FFEC5D;
-                    font-size: 60px;
+                    font-size: 50px;
                 }
                 &:before {
                     content: none;
                 }
             }
-            /*width: 154px;*/
-            /*height: 154px;*/
         }
     }
     .startBtn {
@@ -616,5 +620,9 @@ export default {
                 color: #F79F1A;
             }
         }
+    }
+    .noPrize {
+        display: block;
+        margin: 50px auto 0;
     }
 </style>
