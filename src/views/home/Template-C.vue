@@ -76,10 +76,12 @@ import Propagate from './components/Propagate.vue'
 import Teachers from './components/Teachers'
 import SkinTitle from './skin/Skin-Title.vue'
 import { skinClassNameMap } from './skin/map'
+import SkinMixin from './skin/mixin'
 
 export default {
     name: 'HomeTemplateC',
     inject: ['parent'],
+    mixins: [SkinMixin],
     components: {
         Search,
         Live,
@@ -173,12 +175,17 @@ export default {
         isSkinShow () {
             return skinClassNameMap.has(this.skinId)
         }
+    },
+    mounted () {
+        if (this.skinId === 23) {
+            this.setSkinTitleClassName()
+        }
     }
 }
 </script>
 
 <style module lang="scss">
-@import './skin/common.scss';
+@import './skin/style/common.scss';
 
 .home-template-c {
     background-color: #ededed;

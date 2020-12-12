@@ -21,9 +21,6 @@ export default {
             default: ''
         }
     },
-    data () {
-        return {}
-    },
     computed: {
         length () {
             return this.data ? this.data.length : 0

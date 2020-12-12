@@ -11,6 +11,16 @@ export default {
             currentValue: ''
         }
     },
+    props: {
+        value: {
+            type: [Number, String],
+            default: ''
+        }
+    },
+    model: {
+        prop: 'value',
+        event: 'change'
+    },
     render (h) {
         return (
             <div
@@ -33,8 +43,14 @@ export default {
         )
     },
     mounted () {
+        this.currentValue = this.value
         this.headersUpdated()
         this.paneUpdated()
+        if (this.value !== undefined) {
+            this.$nextTick(() => {
+                this.moveNonius(this.value, document.getElementById(`pane-${ this.value }`))
+            })
+        }
     },
     methods: {
         paneUpdated () {
@@ -66,7 +82,7 @@ export default {
                         class={
                             { activity: value === this.currentValue, 'lottery-tabs__item': true }
                         }
-                        id={`pane${ i }`}
+                        id={`pane-${ value }`}
                         onClick={paneClick}
                     >
                         {label}
@@ -80,11 +96,14 @@ export default {
         },
         paneClick (val, e) {
             this.currentValue = val
-            this.noniusWidth = `${ e.currentTarget.offsetWidth }px`
-            this.noniusLeft = `${ e.currentTarget.offsetLeft }px`
+            this.moveNonius(val, e.currentTarget)
             this.headersUpdated()
             this.paneUpdated()
             this.$emit('paneClick', val)
+        },
+        moveNonius (val, el) {
+            this.noniusWidth = `${ el.offsetWidth }px`
+            this.noniusLeft = `${ el.offsetLeft }px`
         }
     }
 }

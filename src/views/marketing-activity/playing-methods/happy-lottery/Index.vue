@@ -4,12 +4,17 @@
         :style="theme"
     >
         <div :class="$style.countDown">
-            <span>距活动结束</span>
-            <i>21天 12小时 23分钟</i>
+            <span v-if="status === 2">距活动结束</span>
+            <span v-else-if="status === 1">距活动开始</span>
+            <span v-else>活动已结束</span>
+            <template v-if="date">
+                <i>{{ date.days }}天 {{ date.hours }}小时 {{ date.minutes }}分钟</i>
+            </template>
+
         </div>
 
         <div :class="$style.joinCount">
-            <i>已有2333人参与</i>
+            <i>已有{{ detail.joinUserNumber }}人参与</i>
         </div>
 
         <div :class="$style.dial">
@@ -20,7 +25,7 @@
                 :class="{
                     [$style.dialItem]: true,
                     [$style.first]: item.grade === '一等奖',
-                    [$style.activity]: i === currentPrize
+                    [$style.activity]: item.x === currentX && item.y === currentY
                 }"
             >
                 <img :src="item.icon" alt="icon">
@@ -28,7 +33,7 @@
             </div>
             <div :class="[$style.dialItem, $style.count]">
                 <span>我的次数</span>
-                <span>x1</span>
+                <span>x{{ count }}</span>
             </div>
             <div
                 v-for="(item, i) of turntableAwards.slice(4)"
@@ -37,7 +42,7 @@
                 :class="{
                     [$style.dialItem]: true,
                     [$style.first]: item.grade === '一等奖',
-                    [$style.activity]: false
+                    [$style.activity]: item.x === currentX && item.y === currentY
                 }"
             >
                 <img :src="item.icon" alt="icon">
@@ -49,40 +54,25 @@
 
         <h2 :class="$style.title">活动奖品</h2>
         <ul :class="$style.prizeList">
-            <li :class="$style.prize">
-                <img src="https://mallcdn.youpenglai.com/static/mall/lottery/prize-bg.png" alt="奖品图片">
+            <li
+                :class="$style.prize"
+                v-for="(prize, i) of awardList"
+                :key="i"
+            >
+                <img v-if="Number(prize.awardType) === 2" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/scholarship.png" alt="奖品图片">
+                <img v-else-if="Number(prize.awardType) === 3 || Number(prize.awardType) === 4" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/coupon.png" alt="奖品图片">
+                <img v-else :src="prize.giftImage" alt="奖品图片">
                 <div>
-                    <strong :class="[$style.grade, $style.first]">一等奖</strong>
-                    <span :class="$style.name">最好的礼品伴手礼</span>
-                </div>
-            </li>
-            <li :class="$style.prize">
-                <img src="https://mallcdn.youpenglai.com/static/mall/lottery/prize-bg.png" alt="奖品图片">
-                <div>
-                    <strong :class="[$style.grade, $style.second]">二等奖</strong>
-                    <span :class="$style.name">最好的礼品伴手礼</span>
-                </div>
-            </li>
-            <li :class="$style.prize">
-                <img src="https://mallcdn.youpenglai.com/static/mall/lottery/prize-bg.png" alt="奖品图片">
-                <div>
-                    <strong :class="$style.grade">三等奖</strong>
-                    <span :class="$style.name">最好的礼品伴手礼</span>
-                </div>
-            </li>
-            <li :class="$style.prize">
-                <img src="https://mallcdn.youpenglai.com/static/mall/lottery/prize-bg.png" alt="奖品图片">
-                <div>
-                    <strong :class="$style.grade">四等奖</strong>
-                    <span :class="$style.name">最好的礼品伴手礼</span>
+                    <strong :class="[$style.grade, $style.first]" v-text="prize.grade" />
+                    <span :class="$style.name" v-text="prize.awardName" />
                 </div>
             </li>
         </ul>
 
         <div :class="$style.prizeRecords">
-            <LotteryTabs>
+            <LotteryTabs v-model="prizeType">
                 <LotteryTabPane label="我的奖品" value="1">
-                    <ul :class="[$style.records]">
+                    <ul :class="[$style.records]" v-if="awardRecords.length">
                         <li :class="$style.myPrize">
                             <img src="https://mallcdn.youpenglai.com/static/mall/lottery/prize-bg.png" alt="奖品图片">
                             <div>
@@ -98,9 +88,10 @@
                             </div>
                         </li>
                     </ul>
+                    <img :class="$style.noPrize" v-else height="300" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/no-awards.png" alt="">
                 </LotteryTabPane>
                 <LotteryTabPane label="获奖记录" value="2">
-                    <ul :class="[$style.records]">
+                    <ul :class="[$style.records]" v-if="lotteryRecords.length">
                         <li :class="$style.record">
                             <img src="https://mallcdn.youpenglai.com/static/mall/lottery/prize-bg.png" alt="奖品图片">
                             <div>
@@ -122,18 +113,20 @@
                             </div>
                         </li>
                     </ul>
+                    <img :class="$style.noPrize" v-else height="300" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/no-awards.png" alt="">
                 </LotteryTabPane>
             </LotteryTabs>
         </div>
-
-        <div :class="[$style.fixedTop, $style.poster]">分享海报</div>
-        <div :class="[$style.fixedTop, $style.activityIntro]">活动锦囊</div>
+        <SilkBag :detail="detail" />
+        <Poster />
     </div>
 </template>
 
 <script>
 import LotteryTabs from './components/Lottery-Tabs.vue'
 import LotteryTabPane from './components/Lottery-Tab-Pane.vue'
+import Poster from './components/Poster.vue'
+import SilkBag from './components/Silk-Bag.vue'
 import { SectionToChinese } from '../../../../assets/js/util'
 import { shuffle } from '../../../../assets/js/loadsh'
 import moment from 'moment'
@@ -141,12 +134,13 @@ import {
     getAwardRecords,
     getDetail,
     getLotteryCount,
-    getLotteryRecords
+    getLotteryRecords,
+    lottery
 } from '../../../../apis/longmen-festival/lottery'
 import Countdown from '../../../../assets/js/Countdown'
 
 // 是否正在抽奖
-// let drawing = false
+let drawing = false
 let countDownInstance = null
 const AWARD_ICON = [
     'https://mallcdn.youpenglai.com/static/mall/lottery/first-prize.png',
@@ -155,11 +149,23 @@ const AWARD_ICON = [
 ]
 // 旋转的角度
 let angle = Math.PI / 4
+let velocity = 5
+// 位置变化量（最后的速度）
+const C = 500
+// 初始位置（初始的速度）
+const B = velocity
+// 转盘的总转动次数
+let D = 40
+// 当前转动第几次了
+let t = 0
+
 export default {
     name: 'LotteryAvtivity',
     components: {
         LotteryTabs,
-        LotteryTabPane
+        LotteryTabPane,
+        SilkBag,
+        Poster
     },
     data () {
         return {
@@ -168,24 +174,26 @@ export default {
                 '--bg': 'url(https://mallcdn.youpenglai.com/static/mall/lottery/lottery-bg.png)',
                 '--bgc': '#ffb5b0'
             },
+            date: null,
+            // 抽奖机会（次）
+            count: 0,
             // 要显示在转盘上的奖品，如果奖品时8个，那么就等于awards，如果不是8个，需要填充
             turntableAwards: [],
             // 当前抽中的奖品的下标
             currentPrize: 0,
             // 奖品列表
-            awardList: [
-                { id: '1' },
-                { id: '2' },
-                { id: '3' }
-            ],
+            awardList: [],
             // 详情
-            detail: null,
+            detail: {},
             // 状态
             status: '',
             // 获奖记录
             lotteryRecords: [],
             // 我的奖品
-            awardRecords: []
+            awardRecords: [],
+            currentX: 0,
+            currentY: 0,
+            prizeType: '1'
         }
     },
     props: {
@@ -194,10 +202,9 @@ export default {
             default: ''
         }
     },
-    created () {
+    async activated () {
         this.theme = this.theme1
-        // await this.getDetail()
-        this.setAwards()
+        await this.getDetail()
     },
     methods: {
         // 活动详情
@@ -218,7 +225,8 @@ export default {
         },
         // 设置奖品
         setAwards () {
-            const turntableAwards = []
+            let turntableAwards = []
+            let index = 0
             for (const [i, award] of this.awardList.entries()) {
                 award.grade = i < 3 ? `${ SectionToChinese(i + 1) }等奖` : '好礼'
                 turntableAwards.push({
@@ -235,7 +243,20 @@ export default {
                 })
             }
             // 打乱奖品数据
-            this.turntableAwards = shuffle(turntableAwards)
+            turntableAwards = shuffle(turntableAwards)
+
+            for (let y = 0; y < 3; y++) {
+                for (let x = 0; x < 3; x++) {
+                    if (x === 1 && y === 1) {
+                        continue
+                    }
+                    const award = turntableAwards[index]
+                    award.x = x
+                    award.y = y
+                    index++
+                }
+            }
+            this.turntableAwards = turntableAwards
         },
         // 倒计时
         async countDown () {
@@ -264,7 +285,7 @@ export default {
                             hours,
                             days
                         }
-                    })
+                    }, 1000 * 60)
                     countDownInstance.start()
                 }
             } catch (e) {
@@ -285,30 +306,74 @@ export default {
             }
         },
         // 开始抽奖
-        drawLottery () {
-            const A = Number.parseInt(Math.random() * 10)
-            console.log(A)
-            this.loop()
-            // 顺时针旋转，每次转45度，以转盘的中心坐标为原点
+        // 1337640967882883074
+        async drawLottery () {
+            if (drawing) return
+            if (this.status === 1) return this.$warning('活动未开始')
+            if (this.status === 3 || this.status === 4) return this.$warning('活动已结束')
+            try {
+                drawing = true
+                const { result } = await lottery(this.id)
+                if (result.isAward) {
+                    const index = this.turntableAwards.findIndex(item => item.id === result.id)
+                    console.log(result)
+                    D += index
+                    this.run()
+                }
+            } catch (e) {
+                throw e
+            } finally {
+                drawing = false
+            }
         },
-        loop () {
+        // 旋转函数
+        rotate () {
             // 获取转盘的宽度
-            // const dial = document.querySelector(`.${ this.$style.dial }`)
             const dialWidth = 3
             const dialHeight = 3
-            // 原点坐标，转盘将围绕此点顺时针旋转，每次旋转45度，求圆上的点在哪个奖品上即可知道转到哪个商品上了
-            const ORIGINAL_POINT = [dialWidth / 2, dialHeight / 2]
             // 圆的半径
-            const R = dialWidth / 2
+            const R = dialWidth / 2 - 0.5
             // 转标的坐标
             const X = (dialWidth / 2 - Math.cos(angle) * R).toPrecision(2)
             const Y = (dialHeight / 2 - Math.sin(angle) * R).toPrecision(2)
-            console.log(ORIGINAL_POINT, X, Y, angle)
+            this.setActivity(X, Y)
             angle += Math.PI / 4
             if (angle >= Math.PI * 2 + Math.PI / 4) {
-                console.log('123123')
                 angle = Math.PI / 4
             }
+        },
+
+        /**
+         * 判断当前转盘的位置（奖品）
+         * 该函数通过传入的坐标可找到该坐标对应的奖品
+         * 奖品是九宫格的，可以建设每个格子的大小是1x1，则转盘的大小就是3x3
+         * @param x {String | Number}
+         * @param y {String | Number}
+         */
+        setActivity (x, y) {
+            x = Number(x)
+            y = Number(y)
+            for (let x1 = 0; x1 < 3; x1++) {
+                for (let y1 = 0; y1 < 3; y1++) {
+                    if (x >= x1 && x < x1 + 1 && y >= y1 && y < y1 + 1) {
+                        this.currentX = x1
+                        this.currentY = y1
+                    }
+                }
+            }
+        },
+        // 转起来，此函数觉得转的速度和转的方式
+        run () {
+            setTimeout(() => {
+                this.rotate()
+                velocity = C * t / D + B
+                t++
+                if (t <= D) {
+                    this.run()
+                } else {
+                    t = 0
+                }
+            }, velocity)
         }
     }
 }
@@ -426,14 +491,12 @@ export default {
                 background: none;
                 > span:nth-of-type(2) {
                     color: #FFEC5D;
-                    font-size: 60px;
+                    font-size: 50px;
                 }
                 &:before {
                     content: none;
                 }
             }
-            /*width: 154px;*/
-            /*height: 154px;*/
         }
     }
     .startBtn {
@@ -558,25 +621,8 @@ export default {
             }
         }
     }
-
-    .fixedTop {
-        position: fixed;
-        right: 0;
-        top: 39px;
-        padding: 30px 16px;
-        text-align: center;
-        width: 27px;
-        font-size: 20px;
-        font-weight: bold;
-        border-radius: 20px 0 0 20px;
-        &.poster {
-            background: linear-gradient(180deg, #FFF0A2, #FFEFC6) no-repeat;
-            color: #C36304;
-        }
-        &.activityIntro {
-            top: 228px;
-            background: linear-gradient(180deg, #FCD612, #FFB700) no-repeat;
-            color: #fff;
-        }
+    .noPrize {
+        display: block;
+        margin: 50px auto 0;
     }
 </style>

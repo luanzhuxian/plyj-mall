@@ -18,7 +18,11 @@
 .skin-sports,
 .skin-arts,
 .skin-national-day,
-.skin-double-12 {
+.skin-double-12,
+.skin-party,
+.skin-good-course,
+.skin-welcome-new,
+.skin-xmas-2020 {
     .route {
         padding: 0 0 4px;
         &.active > .tab-name {
@@ -150,15 +154,31 @@
         }
     }
 }
-// .skin-campaign {
-//     background: url('https://mallcdn.youpenglai.com/static/admall/skin/cmapagin/0ab57391-3717-43c2-bc47-549f7b1a94a3.png') no-repeat center;
-//     background-size: 100%;
-//     .route {
-//         .tab-name {
-//             color: #fff;
-//         }
-//         &.active > .tab-name {
-//             color: #ad0f02;
-//         }
-//     }
-// }
+.skin-party {
+    .route {
+        &.active > .tab-name {
+            color: #53A272;
+        }
+    }
+}
+.skin-good-course {
+    .route {
+        &.active > .tab-name {
+            color: #F33C45;
+        }
+    }
+}
+.skin-welcome-new {
+    .route {
+        &.active > .tab-name {
+            color: #25B9BB;
+        }
+    }
+}
+.skin-xmas-2020 {
+    .route {
+        &.active > .tab-name {
+            color: #E5800E;
+        }
+    }
+}
