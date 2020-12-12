@@ -1,6 +1,13 @@
 <template>
     <div id="app">
-
+        <router-link
+            tag="h1"
+            to="/new-year-2021/sign-in/123123"
+            style="font-size: 60px;"
+            v-if="$route.name !== 'NewYearSignIn'"
+        >
+            打卡聪明年
+        </router-link>
         <router-link
             tag="h1"
             to="/happy-lottery/123123"
