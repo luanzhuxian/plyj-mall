@@ -115,8 +115,17 @@
                 </LotteryTabPane>
             </LotteryTabs>
         </div>
+
         <SilkBag :detail="detail" />
         <Poster />
+        <LotterySuccess
+            :show.sync="showLotterySuccess"
+            :grade="lotterAward.grade"
+            :award-type="lotterAward.awardType"
+            :gift-image="lotterAward.giftImage"
+            :gift-name="lotterAward.awardName"
+            :date="lotterAward.giftUseEndTime"
+        />
     </div>
 </template>
 
@@ -125,6 +134,7 @@ import LotteryTabs from './components/Lottery-Tabs.vue'
 import LotteryTabPane from './components/Lottery-Tab-Pane.vue'
 import Poster from './components/Poster.vue'
 import SilkBag from './components/Silk-Bag.vue'
+import LotterySuccess from './components/Lottery-Success.vue'
 import { SectionToChinese } from '../../../../assets/js/util'
 import { shuffle } from '../../../../assets/js/loadsh'
 import moment from 'moment'
@@ -162,7 +172,8 @@ export default {
         LotteryTabs,
         LotteryTabPane,
         SilkBag,
-        Poster
+        Poster,
+        LotterySuccess
     },
     data () {
         return {
@@ -192,7 +203,13 @@ export default {
             currentY: -1,
             prizeType: '1',
             // 是否正在抽奖
-            drawing: false
+            drawing: false,
+            // 抽奖成功弹框
+            showLotterySuccess: true,
+            // 手否抽奖成功
+            isAward: false,
+            // 抽中的奖品
+            lotterAward: false
         }
     },
     props: {
@@ -327,11 +344,12 @@ export default {
             try {
                 this.drawing = true
                 const { result } = await lottery(this.id)
+                this.isAward = Boolean(result.isAward)
                 // 找到中奖的坐标
                 if (result.isAward) {
-                    const { x, y } = this.turntableAwards.find(item => item.id === result.id)
-                    this.prizeX = x
-                    this.prizeY = y
+                    this.lotterAward = this.turntableAwards.find(item => item.id === result.id)
+                    this.prizeX = this.lotterAward.x
+                    this.prizeY = this.lotterAward.y
                 } else {
                     const { x, y } = this.turntableAwards.find(item => item.awardType === -1)
                     this.prizeX = x
@@ -381,6 +399,9 @@ export default {
                         } else {
                             t = 0
                             this.drawing = false
+                            if (this.isAward) {
+                                this.showLotterySuccess = true
+                            }
                             // 获取奖品记录
                             await this.getRecords()
                         }

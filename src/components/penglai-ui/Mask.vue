@@ -2,7 +2,13 @@
     <transition name="fade">
         <div class="pl-mask" v-if="show">
             <slot />
-            <pl-svg name="icon-close3" fill="#fff" width="30" @click="close" />
+            <pl-svg
+                v-if="showClose"
+                name="icon-close3"
+                fill="#fff"
+                width="30"
+                @click="close"
+            />
         </div>
     </transition>
 </template>
@@ -11,7 +17,11 @@
 export default {
     name: 'PlMask',
     props: {
-        show: Boolean
+        show: Boolean,
+        showClose: {
+            type: Boolean,
+            default: true
+        }
     },
     watch: {
         show (val) {
