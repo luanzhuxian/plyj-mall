@@ -2,6 +2,7 @@
     <div
         :class="$style.lottery"
         :style="theme"
+        v-if="mobile"
     >
         <div :class="$style.countDown">
             <span v-if="status === 2">距活动结束</span>
@@ -135,6 +136,7 @@ import {
     lottery
 } from '../../../../apis/longmen-festival/lottery'
 import Countdown from '../../../../assets/js/Countdown'
+import { mapGetters } from 'vuex'
 
 let countDownInstance = null
 const AWARD_ICON = [
@@ -199,9 +201,24 @@ export default {
             default: ''
         }
     },
+    computed: {
+        ...mapGetters(['mobile'])
+    },
     async activated () {
-        this.theme = this.theme1
-        await this.getDetail()
+        if (!this.mobile) {
+            this.$confirm('为了您的账户安全，请先绑定手机')
+                .then(() => {
+                    const { name, params, query } = this.$route
+                    sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({ name, query, params }))
+                    this.$router.push({ name: 'BindMobile' })
+                })
+                .catch(() => {
+                    this.$router.replace({ name: 'Home' })
+                })
+        } else {
+            this.theme = this.theme1
+            await this.getDetail()
+        }
     },
     methods: {
         // 活动详情
