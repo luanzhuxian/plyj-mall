@@ -22,8 +22,8 @@
 <script>
 import Navbar from './components/common/Navbar.vue'
 import QuickNavbar from './components/common/Quick-Navbar.vue'
-import NewUserHomePop from './views/marketing-activity/newcomers/components/New-User-Home-Pop.vue'
-import NewUserHomeBtn from './views/marketing-activity/newcomers/components/New-User-Home-Btn.vue'
+import NewUserHomePop from './views/marketing-activity/playing-methods/newcomers/components/New-User-Home-Pop.vue'
+import NewUserHomeBtn from './views/marketing-activity/playing-methods/newcomers/components/New-User-Home-Btn.vue'
 import { mapMutations, mapActions } from 'vuex'
 import {
     SET_THEME,

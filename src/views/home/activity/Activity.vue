@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -58,20 +59,6 @@ export default {
                     icon: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/pocket.png',
                     width: '70',
                     path: 'NewYearActivity'
-                },
-                report: {
-                    main: '防疫情报站',
-                    sub: '众志成城抗击疫情',
-                    icon: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/document.png',
-                    width: '64',
-                    path: 'BattlefieldReport'
-                },
-                sign: {
-                    main: '抗疫签到',
-                    sub: '共携手抗战疫',
-                    icon: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/medicine.png',
-                    width: '64',
-                    path: 'EpidemicSignIn'
                 },
                 distribution: {
                     main: '全民来分销',
@@ -115,12 +102,6 @@ export default {
         show () {
             return this.list.length
         }
-        // isReportShow () {
-        //     return !!this.campaignReport && this.campaignReport.isReportShow && this.campaignReport.id
-        // },
-        // isBookShow () {
-        //     return !!this.campaignBook && this.campaignBook.isBookShow && this.campaignBook.activityId
-        // }
     },
     methods: {
         jump ({ value }) {
@@ -135,8 +116,8 @@ export default {
                     if (!nwEvent || !nwEvent.id) return this.$warning('活动已结束')
                     if (!nwEvent.permissionStatus) return this.$warning('您无法参与活动')
 
-                    startTime = new Date(nwEvent.activityStartTime).valueOf()
-                    endTime = new Date(nwEvent.activityEndTime).valueOf()
+                    startTime = moment(nwEvent.activityStartTime).valueOf()
+                    endTime = moment(nwEvent.activityEndTime).valueOf()
                     if (startTime > Date.now()) return this.$warning('活动未开始')
                     if (endTime < Date.now()) return this.$warning('活动已结束')
 
@@ -147,7 +128,7 @@ export default {
                     const { dragonGateCharity } = this
                     if (!dragonGateCharity || !dragonGateCharity.id) return this.$warning('活动已结束')
 
-                    endTime = new Date(dragonGateCharity.endTime).valueOf()
+                    endTime = moment(dragonGateCharity.endTime).valueOf()
                     if (endTime < Date.now()) return this.$warning('活动已结束')
 
                     id = dragonGateCharity.id
@@ -157,8 +138,8 @@ export default {
                     const { dragonGateSign } = this
                     if (!dragonGateSign || !dragonGateSign.id) return this.$warning('活动已结束')
 
-                    startTime = new Date(dragonGateSign.activityStartTime).valueOf()
-                    endTime = new Date(dragonGateSign.activityEndTime).valueOf()
+                    startTime = moment(dragonGateSign.activityStartTime).valueOf()
+                    endTime = moment(dragonGateSign.activityEndTime).valueOf()
                     if (startTime > Date.now()) return this.$warning('活动未开始')
                     if (endTime < Date.now()) return this.$warning('活动已结束')
 
@@ -169,23 +150,13 @@ export default {
                     const { dragonGatePlay } = this
                     if (!dragonGatePlay || !dragonGatePlay.id) return this.$warning('活动已结束')
 
-                    startTime = new Date(dragonGatePlay.startTime).valueOf()
-                    endTime = new Date(dragonGatePlay.endTime).valueOf()
+                    startTime = moment(dragonGatePlay.startTime).valueOf()
+                    endTime = moment(dragonGatePlay.endTime).valueOf()
                     if (startTime > Date.now()) return this.$warning('活动未开始')
                     if (endTime < Date.now()) return this.$warning('活动已结束')
 
                     id = this.dragonGatePlay.id
                     break
-
-                    // case 'report':
-                    //     if (!this.isReportShow) return this.$warning('活动已结束')
-                    //     id = this.campaignReport.id
-                    //     break
-
-                    // case 'sign':
-                    //     if (!this.isBookShow) return this.$warning('活动已结束')
-                    //     id = this.campaignBook.activityId
-                    //     break
 
                 default:
                     break

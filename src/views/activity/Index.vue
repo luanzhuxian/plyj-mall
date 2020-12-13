@@ -3,7 +3,7 @@
         <!-- 双十二 2019 -->
         <div :class="$style.d12" v-if="~[5, 6, 7].indexOf(type)">
             <div :class="$style.background">
-                <search placeholder="搜索商品" />
+                <Search placeholder="搜索商品" />
                 <div :class="$style.container" v-if="allLoaded">
                     <router-link
                         :class="{
@@ -14,56 +14,63 @@
                         tag="div"
                         :to="{ name: topBtnType === 1 ? 'MyCoupon' : '' }"
                     />
-                    <template-fengqiang
+                    <TemplateFengqiang
                         v-if="type === 5"
                         :data="modules"
                         :type="type"
                     />
-                    <template-baofa
+                    <TemplateBaofa
                         v-if="type === 6"
                         :data="modules"
                         :type="type"
                     />
-                    <template-fanchang
+                    <TemplateFanchang
                         v-if="type === 7"
                         :data="modules"
                         :type="type"
                     />
                 </div>
             </div>
-            <invite-newcomers-home-entry />
+            <InviteNewcomersHomeEntry />
         </div>
         <!-- 新春 -->
-        <template-xinchun
+        <TemplateSpring2020
             v-if="type === 8"
             :data="modules"
             :type="type"
         />
         <!-- 龙门节 -->
-        <template-dragon-gate
+        <TemplateDragonGate
             v-if="type === 10"
             :data="modules"
             :type="type"
         />
         <!-- 双十二 2020 -->
-        <template-double-12
+        <TemplateDouble122020
             v-if="type === 11"
             :data="modules"
             :type="type"
         />
-        <pl-svg :class="$style.loading" name="icon-loading" fill="#FFF" width="90" v-if="!allLoaded" />
+        <!-- 新春 2021 -->
+        <TemplateSpring2021
+            v-if="type === 12"
+            :data="modules"
+            :type="type"
+        />
+        <PlSvg :class="$style.loading" name="icon-loading" fill="#FFF" width="90" v-if="!allLoaded" />
     </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import Search from './components/Search.vue'
-import TemplateFengqiang from './templates/Template-Fengqiang.vue'
-import TemplateBaofa from './templates/Template-Baofa.vue'
-import TemplateFanchang from './templates/Template-Fanchang.vue'
-import TemplateXinchun from './templates/Template-Xinchun.vue'
+import Search from '../../components/activity/Search.vue'
+import TemplateFengqiang from './templates/template-double-12-2019/Template-Fengqiang.vue'
+import TemplateBaofa from './templates/template-double-12-2019/Template-Baofa.vue'
+import TemplateFanchang from './templates/template-double-12-2019/Template-Fanchang.vue'
+import TemplateSpring2020 from './templates/Template-Spring-2020.vue'
 import TemplateDragonGate from './templates/Template-Dragon-Gate.vue'
-import TemplateDouble12 from './templates/Template-Double-12.vue'
+import TemplateDouble122020 from './templates/Template-Double-12-2020.vue'
+import TemplateSpring2021 from './templates/Template-Spring-2021-Green.vue'
 import InviteNewcomersHomeEntry from '../marketing-activity/double-12/invitenewcomers/InviteNewcomersHomeEntry.vue'
 import { GET_ACTIVITY_DATA } from '../../store/mutation-type'
 
@@ -74,9 +81,10 @@ export default {
         TemplateFengqiang,
         TemplateBaofa,
         TemplateFanchang,
-        TemplateXinchun,
+        TemplateSpring2020,
         TemplateDragonGate,
-        TemplateDouble12,
+        TemplateDouble122020,
+        TemplateSpring2021,
         InviteNewcomersHomeEntry
     },
     provide () {
@@ -99,21 +107,25 @@ export default {
         allLoaded () {
             let result = false
 
-            // 双十二
+            // 双十二2019
             if ([5, 6, 7].includes(this.activityId)) {
                 result = (this.liveInfo !== null && !!this.liveInfo) &&
                 this.couponToReceive !== null
             }
 
-            // 新春
+            // 新春2020
             if (this.activityId === 8) {
                 result = (this.liveInfo !== null && !!this.liveInfo) &&
                 this.couponToReceive !== null
             }
 
-            // 龙门节
+            // 龙门节、双十二2020
             if (this.activityId === 10 || this.activityId === 11) {
                 result = (this.liveInfo !== null && !!this.liveInfo)
+            }
+            // 新春2021
+            if (this.activityId === 12) {
+                result = true
             }
             return result
         }
@@ -127,14 +139,14 @@ export default {
             immediate: true
         }
     },
-    async activated () {
+    activated () {
         if (this.activityId) {
-            await this.getMainCenter()
+            this.getMainCenter()
         }
     },
     methods: {
         ...mapActions({ getMainCenter: GET_ACTIVITY_DATA }),
-        async getTemplate () {
+        getTemplate () {
             try {
                 const { activityId, activityData } = this
                 const { type, moduleModels } = activityData
@@ -156,21 +168,21 @@ export default {
                 }
 
                 if (type === 5) {
-                    this.modules.MIAO_SHA = moduleModels[0]
-                    this.modules.PIN_TUAN = moduleModels[1]
-                    this.modules.MAI_SONG = moduleModels[2]
-                    this.modules.COUPON = moduleModels[3]
-                    this.modules.YU_GOU = moduleModels[4]
-                    this.modules.FENG_QIANG = moduleModels[5]
-                    this.modules.RECOMMEND = moduleModels[6]
+                    this.modules.Miaosha = moduleModels[0]
+                    this.modules.Pintuan = moduleModels[1]
+                    this.modules.Maisong = moduleModels[2]
+                    this.modules.Coupon = moduleModels[3]
+                    this.modules.Yugou = moduleModels[4]
+                    this.modules.Fengqiang = moduleModels[5]
+                    this.modules.Recommend = moduleModels[6]
                 }
                 if (type === 6) {
-                    this.modules.COUPON = moduleModels[0]
-                    this.modules.MAI_SONG = moduleModels[1]
-                    this.modules.MIAO_SHA = moduleModels[2]
-                    this.modules.PIN_TUAN = moduleModels[3]
-                    this.modules.FENG_QIANG = moduleModels[4]
-                    this.modules.MIAO_SHA.values.forEach((item, index) => {
+                    this.modules.Coupon = moduleModels[0]
+                    this.modules.Maisong = moduleModels[1]
+                    this.modules.Miaosha = moduleModels[2]
+                    this.modules.Pintuan = moduleModels[3]
+                    this.modules.Fengqiang = moduleModels[4]
+                    this.modules.Miaosha.values.forEach((item, index) => {
                         if (!item.goodsInfo || !Array.isArray(item.goodsInfo)) {
                             item.goodsInfo = []
                         }
@@ -178,38 +190,48 @@ export default {
                     })
                 }
                 if (type === 7) {
-                    this.modules.MAI_SONG = moduleModels[0]
-                    this.modules.MIAO_SHA = moduleModels[1]
-                    this.modules.PIN_TUAN = moduleModels[2]
-                    this.modules.FENG_QIANG = moduleModels[3]
-                    this.modules.RECOMMEND = moduleModels[4]
+                    this.modules.Maisong = moduleModels[0]
+                    this.modules.Miaosha = moduleModels[1]
+                    this.modules.Pintuan = moduleModels[2]
+                    this.modules.Fengqiang = moduleModels[3]
+                    this.modules.Recommend = moduleModels[4]
                 }
                 if (type === 8) {
-                    this.modules.PIN_XUAN = moduleModels[0]
-                    this.modules.COUPON = moduleModels[1]
-                    this.modules.CHUN_YUN = moduleModels[2]
-                    this.modules.PIN_TUAN = moduleModels[3]
-                    this.modules.YU_GOU = moduleModels[4]
-                    this.modules.FENG_QIANG = moduleModels[5]
+                    this.modules.Propagate = moduleModels[0]
+                    this.modules.Coupon = moduleModels[1]
+                    this.modules.Chunyun = moduleModels[2]
+                    this.modules.Pintuan = moduleModels[3]
+                    this.modules.Yugou = moduleModels[4]
+                    this.modules.Fengqiang = moduleModels[5]
                 }
                 if (type === 10) {
-                    this.modules.COUPON = moduleModels[0]
-                    this.modules.CHARITY = moduleModels[1]
-                    this.modules.ACTIVITY = moduleModels[2]
-                    this.modules.MIAO_SHA = moduleModels[3]
-                    this.modules.DISTRIBUTION = moduleModels[4]
-                    this.modules.PIN_TUAN = moduleModels[5]
-                    this.modules.YU_GOU = moduleModels[6]
-                    this.modules.PACKAGE = moduleModels[7]
-                    this.modules.RECOMMEND = moduleModels[8]
+                    this.modules.Coupon = moduleModels[0]
+                    this.modules.Charity = moduleModels[1]
+                    this.modules.Activity = moduleModels[2]
+                    this.modules.Miaosha = moduleModels[3]
+                    this.modules.Distribution = moduleModels[4]
+                    this.modules.Pintuan = moduleModels[5]
+                    this.modules.Yugou = moduleModels[6]
+                    this.modules.Package = moduleModels[7]
+                    this.modules.Recommend = moduleModels[8]
                 }
                 if (type === 11) {
-                    this.modules.COUPON = findModuleById(9)
-                    this.modules.MIAO_SHA = findModuleById(10)
-                    this.modules.PIN_TUAN = findModuleById(8)
-                    this.modules.YU_GOU = findModuleById(11)
-                    this.modules.PACKAGE = findModuleById(16)
-                    this.modules.POPULAR = findModuleById(2)
+                    this.modules.Coupon = findModuleById(9)
+                    this.modules.Miaosha = findModuleById(10)
+                    this.modules.Pintuan = findModuleById(8)
+                    this.modules.Yugou = findModuleById(11)
+                    this.modules.Package = findModuleById(16)
+                    this.modules.Popular = findModuleById(2)
+                }
+                if (type === 12) {
+                    this.modules.Live = findModuleById(20)
+                    this.modules.RedPackage = findModuleById(24)
+                    this.modules.Coupon = findModuleById(9)
+                    this.modules.Miaosha = findModuleById(10)
+                    this.modules.Pintuan = findModuleById(8)
+                    this.modules.Yugou = findModuleById(11)
+                    this.modules.Package = findModuleById(16)
+                    this.modules.Popular = findModuleById(2)
                 }
                 this.type = type
             } catch (e) {

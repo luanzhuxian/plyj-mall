@@ -1,7 +1,7 @@
 <template>
     <div :class="$style.homeTemplateA">
         <div :class="$style.top">
-            <top-text :title="mallName + ' 欢迎您'" :tip="date" />
+            <TopText :title="mallName + ' 欢迎您'" :tip="date" />
         </div>
         <swiper
             v-if="data['BANNER'].values.length + 1"
@@ -43,7 +43,7 @@
             </div>
             <swiper :class="$style.swiper" :options="swiperOptionGift">
                 <swiper-slide v-for="(item, i) of data['MODULE_A'].values" :key="i">
-                    <category-item
+                    <CategoryItem
                         tag="div"
                         size="mini"
                         :img="item.goodsInfo.productMainImage"
@@ -79,18 +79,7 @@
             <swiper :options="swiperOptionProd">
                 <swiper-slide v-for="(item, i) of data['MODULE_C'].values" :key="i">
                     <div :class="$style.wrapper">
-                        <!-- <category-item
-              tag="div"
-              size="mini"
-              :img="item.productMainImage"
-              :is-active="item.agentProduct"
-              :product-id="item.id"
-              :product-name="item.productName"
-              :price="item.productSkuModels.length && item.productSkuModels[0].price"
-              :sale="item.salesVolume"
-              :labels="item.labelModels"
-            /> -->
-                        <category-item
+                        <CategoryItem
                             tag="div"
                             size="mini"
                             :img="item.goodsInfo.productMainImage"
@@ -122,7 +111,7 @@
             <swiper :options="swiperOptionProd">
                 <swiper-slide v-for="(item, i) of data['MODULE_E'].values" :key="i">
                     <div :class="$style.wrapper">
-                        <category-item
+                        <CategoryItem
                             tag="div"
                             size="mini"
                             :img="item.goodsInfo.productMainImage"
@@ -135,15 +124,15 @@
             </swiper>
         </div>
 
-        <you-like />
+        <YouLike />
     </div>
 </template>
 
 <script>
 import moment from 'moment'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
-import TopText from '../../components/common/Top-Text.vue'
 import CategoryItem from './components/Category-Item.vue'
+import TopText from '../../components/common/Top-Text.vue'
 import YouLike from './components/YouLike.vue'
 import { mapGetters, mapState } from 'vuex'
 
@@ -152,8 +141,8 @@ export default {
     components: {
         swiper,
         swiperSlide,
-        TopText,
         CategoryItem,
+        TopText,
         YouLike
     },
     data () {
@@ -197,7 +186,6 @@ export default {
     },
     methods: {
         getRouteLink ({ type, value }) {
-            // const name = type === 1 ? 'Classify' : 'Lesson'
             const id = (type === 1 && value === '全部商品') ? '' : value
             if (type === 1) {
                 return {
@@ -221,7 +209,36 @@ export default {
 }
 </script>
 
-<style module lang="scss">
+<style lang="scss">
+  .home-banner-pagination {
+    position: absolute;
+    bottom: 24px !important;
+    text-align: center;
+    z-index: 1;
+    .swiper-pagination-bullet {
+      width: 12px !important;
+      height: 12px !important;
+      background-color: rgba(255, 255, 255, .5) !important;
+      &.swiper-pagination-bullet-active {
+        background-color: #fff !important;
+      }
+    }
+  }
+  .good-gift-pagination {
+    margin-top: 32px;
+    text-align: center;
+    .swiper-pagination-bullet {
+      width: 8px !important;
+      height: 16px;
+      margin-right: 12px!important;
+      background-color: #000;
+      transform: rotate(45deg);
+      border-radius: 4px;
+    }
+  }
+</style>
+
+<style lang="scss" module>
   .home-template-a {
     .top {
       padding: 30px 40px;
@@ -292,34 +309,6 @@ export default {
     }
     .youLike {
       padding: 0 32px;
-    }
-  }
-</style>
-<style lang="scss">
-  .home-banner-pagination {
-    position: absolute;
-    bottom: 24px !important;
-    text-align: center;
-    z-index: 1;
-    .swiper-pagination-bullet {
-      width: 12px !important;
-      height: 12px !important;
-      background-color: rgba(255, 255, 255, .5) !important;
-      &.swiper-pagination-bullet-active {
-        background-color: #fff !important;
-      }
-    }
-  }
-  .good-gift-pagination {
-    margin-top: 32px;
-    text-align: center;
-    .swiper-pagination-bullet {
-      width: 8px !important;
-      height: 16px;
-      margin-right: 12px!important;
-      background-color: #000;
-      transform: rotate(45deg);
-      border-radius: 4px;
     }
   }
 </style>

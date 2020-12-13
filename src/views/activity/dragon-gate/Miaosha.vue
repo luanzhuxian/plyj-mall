@@ -1,5 +1,5 @@
 <template>
-    <panel :title="panelTitle" @click="$router.push({ name: 'SecondActivity' })">
+    <panel :title="panelTitle" @click="$router.push({ name: 'SecKillActivity' })">
         <ul :class="$style.list" v-if="data.values.length">
             <template v-for="(item, index) of data.values">
                 <router-link
@@ -15,7 +15,7 @@
                 >
                     <div :class="$style.imgWrapper">
                         <img :src="item.goodsInfo.productMainImage + '?x-oss-process=style/thum-middle'">
-                        <div :class="$style.countDownWrapper">
+                        <div :class="$style.countdownWrapper">
                             <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 0">距开始</span>
                             <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 1">距结束</span>
                             <span :class="$style.text" v-if="item.goodsInfo.activityInfo.status === 2">已结束</span>
@@ -83,7 +83,7 @@
 
 <script>
 import Panel from './Panel.vue'
-import Countdown from '../components/Countdown.vue'
+import Countdown from '../../../components/activity/Countdown.vue'
 import { getPrice, getDuration } from '../helper'
 
 export default {
@@ -143,7 +143,7 @@ export default {
             height: 100%;
             object-fit: cover;
         }
-        .count-down-wrapper {
+        .countdown-wrapper {
             display: flex;
             justify-content: space-around;
             align-items: center;

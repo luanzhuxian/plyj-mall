@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import StudyItem from '../../../live/live-library/components/Study-Item'
+import StudyItem from '../../../../components/my/course-lib/video-course/Study-Item'
 import LoadMore from '../../../../components/common/Load-More.vue'
 import { getMyImageText } from '../../../../apis/live-library'
 

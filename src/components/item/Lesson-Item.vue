@@ -52,7 +52,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import CountDown from '../product/Count-Down.vue'
+import CountDown from '../product-detail/Count-Down.vue'
 
 export default {
     name: 'LessonItem',
@@ -124,7 +124,7 @@ export default {
     methods: {
         async handleClick () {
             const { id, type } = this
-            this.$router.push({
+            await this.$router.push({
                 name: type === 'COURSE' ? 'Curriculum' : 'Product',
                 params: { productId: id }
             })

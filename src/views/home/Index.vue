@@ -1,29 +1,29 @@
 <template>
     <div :class="$style.home">
         <template v-if="allLoaded">
-            <template-b
+            <TemplateB
                 v-if="~[3, 4].indexOf(type)"
                 :type="type"
                 :skin-id="skinId"
                 :data="modules"
             />
-            <template-c
+            <TemplateC
                 v-if="type === -1"
                 :type="type"
                 :skin-id="skinId"
                 :data="modules"
             />
-            <template-d
+            <TemplateD
                 v-if="type === 9"
                 :type="type"
                 :skin-id="skinId"
                 :data="modules"
             />
-            <invite-newcomers-home-entry />
+            <InviteNewcomersHomeEntry />
             <!--瓜分奖学金-->
-            <split-burse />
+            <SplitBurse />
             <!--送课弹框-->
-            <send-live is-notice="0" />
+            <SendLive is-notice="0" />
         </template>
         <div :class="$style.skeleton" v-else>
             <div :class="$style.skeletonA" />
@@ -46,6 +46,7 @@ import InviteNewcomersHomeEntry from '../marketing-activity/double-12/invitenewc
 import SplitBurse from './../../components/common/Split-Burse.vue'
 import SendLive from './../../components/common/Send-Live.vue'
 import { getTemplate } from '../../apis/home'
+import { getRedPackageListAfterSort } from '../../apis/marketing-activity/red-package'
 
 export default {
     name: 'Home',
@@ -67,10 +68,7 @@ export default {
             loaded: false,
             type: 0,
             modules: {},
-            isReportShow: false,
-            isBookShow: false,
-            reportId: '',
-            bookId: ''
+            isRedPackageShow: false
         }
     },
     computed: {
@@ -81,11 +79,13 @@ export default {
                 this.mallQRCodeInfo !== null
         }
     },
-    watch: {
-    },
     async activated () {
         try {
-            await this.getTemplate()
+            const requests = [
+                this.getTemplate(),
+                this.getRedPackage()
+            ]
+            await Promise.all(requests.map(p => p.catch(e => console.error(e))))
         } catch (e) {
             throw e
         }
@@ -106,70 +106,81 @@ export default {
 
                 const modules = {}
                 const { type, moduleModels } = result
-                const findModule = function (id) {
+                const findModuleById = function (id) {
                     return this.find(module => module.moduleType === id)
                 }.bind(moduleModels)
 
                 if (type === 3) {
-                    modules.BANNER = findModule(1)
-                    modules.LIVE = findModule(20)
-                    modules.COURSE = findModule(21)
-                    modules.SERIES = findModule(22)
-                    modules.ImageText = findModule(23)
-                    modules.POPULAR = findModule(2)
-                    modules.APPOINTMENT = findModule(5)
-                    modules.PROPAGATE = findModule(6)
-                    modules.CLASS = findModule(3)
-                    modules.RECOMMEND = findModule(4)
+                    modules.Banner = findModuleById(1)
+                    modules.Live = findModuleById(20)
+                    modules.SingleCourse = findModuleById(21)
+                    modules.SeriesCourse = findModuleById(22)
+                    modules.ImageText = findModuleById(23)
+                    modules.Popular = findModuleById(2)
+                    modules.Appointment = findModuleById(5)
+                    modules.Propagate = findModuleById(6)
+                    modules.Class = findModuleById(3)
+                    modules.Recommend = findModuleById(4)
                 }
                 if (type === 4) {
-                    modules.BANNER = moduleModels[0]
-                    modules.ADV = moduleModels[1]
-                    modules.LIVE = findModule(20)
-                    modules.COURSE = findModule(21)
-                    modules.SERIES = findModule(22)
-                    modules.ImageText = findModule(23)
-                    modules.POPULAR = findModule(2)
-                    modules.APPOINTMENT = findModule(5)
-                    modules.PROPAGATE = findModule(6)
-                    modules.CLASS = findModule(3)
-                    modules.RECOMMEND = findModule(4)
+                    modules.Banner = moduleModels[0]
+                    modules.Adv = moduleModels[1]
+                    modules.Live = findModuleById(20)
+                    modules.SingleCourse = findModuleById(21)
+                    modules.SeriesCourse = findModuleById(22)
+                    modules.ImageText = findModuleById(23)
+                    modules.Popular = findModuleById(2)
+                    modules.Appointment = findModuleById(5)
+                    modules.Propagate = findModuleById(6)
+                    modules.Class = findModuleById(3)
+                    modules.Recommend = findModuleById(4)
                 }
                 if (type === -1) {
-                    modules.PROPAGATE = findModule(6)
-                    modules.LIVE = findModule(20)
-                    modules.COURSE = findModule(21)
-                    modules.SERIES = findModule(22)
-                    modules.ImageText = findModule(23)
-                    modules.APPOINTMENT = findModule(5)
-                    modules.POPULAR = findModule(2)
-                    modules.TEACHERS = findModule(12)
-                    modules.CLASS = findModule(3)
-                    modules.RECOMMEND = findModule(4)
+                    modules.Propagate = findModuleById(6)
+                    modules.Live = findModuleById(20)
+                    modules.SingleCourse = findModuleById(21)
+                    modules.SeriesCourse = findModuleById(22)
+                    modules.ImageText = findModuleById(23)
+                    modules.Appointment = findModuleById(5)
+                    modules.Popular = findModuleById(2)
+                    modules.Teachers = findModuleById(12)
+                    modules.Class = findModuleById(3)
+                    modules.Recommend = findModuleById(4)
                 }
                 if (type === 9) {
-                    modules.BANNER = findModule(1)
-                    modules.COUPON = findModule(9)
-                    modules.ACTIVITY = findModule(15)
-                    modules.LIVE = findModule(20)
-                    modules.COURSE = findModule(21)
-                    modules.SERIES = findModule(22)
-                    modules.ImageText = findModule(23)
-                    modules.APPOINTMENT = findModule(5)
-                    modules.MIAO_SHA = findModule(10)
-                    modules.PACKAGE = findModule(16)
-                    modules.PIN_TUAN = findModule(8)
-                    modules.YU_GOU = findModule(11)
-                    modules.PROPAGATE = findModule(6)
-                    modules.POPULAR = findModule(2)
-                    modules.CLASS = findModule(3)
-                    modules.RECOMMEND = findModule(4)
+                    modules.Banner = findModuleById(1)
+                    modules.Classify = findModuleById(25)
+                    modules.Coupon = findModuleById(9)
+                    modules.Activity = findModuleById(15)
+                    modules.Live = findModuleById(20)
+                    modules.SingleCourse = findModuleById(21)
+                    modules.SeriesCourse = findModuleById(22)
+                    modules.ImageText = findModuleById(23)
+                    modules.Appointment = findModuleById(5)
+                    modules.Miaosha = findModuleById(10)
+                    modules.Package = findModuleById(16)
+                    modules.Pintuan = findModuleById(8)
+                    modules.Yugou = findModuleById(11)
+                    modules.Propagate = findModuleById(6)
+                    modules.Popular = findModuleById(2)
+                    modules.Class = findModuleById(3)
+                    modules.Recommend = findModuleById(4)
                 }
                 this.type = type
                 this.modules = modules
                 this.loaded = true
             } catch (e) {
                 throw e
+            }
+        },
+        async getRedPackage () {
+            try {
+                const { result } = await getRedPackageListAfterSort()
+                // 过滤未开始/进行中、未隐藏且有库存的福利红包
+                const redPackageList = result.filter(item => ~[0, 1].indexOf(item.activityStatus) && item.showStatus && item.issueVolume)
+                this.isRedPackageShow = !!(redPackageList && redPackageList.length)
+            } catch (error) {
+                throw error
             }
         }
     },
@@ -179,6 +190,7 @@ export default {
     }
 }
 </script>
+
 <style lang="scss" module>
 .home {
     padding-bottom: 88px;

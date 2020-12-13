@@ -21,7 +21,7 @@
 <script>
 import { getLibraryList } from '../../../../apis/live-library'
 import LoadMore from '../../../../components/common/Load-More.vue'
-import LiveItem from '../../../live/live-library/components/Live-Item'
+import LiveItem from '../../../../components/my/course-lib/video-course/Live-Item'
 export default {
     name: 'CourseLibrary',
     components: {

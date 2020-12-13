@@ -41,7 +41,6 @@
                 text="快递公司："
                 :right-text="form.expressName || '请选择'"
                 right-text-weight="bold"
-                show-right-icon
                 @click="isPickerShow=true"
             />
             <pl-form-item>
@@ -219,7 +218,7 @@ import { mapGetters, mapMutations } from 'vuex'
 import filter from '../../../filter/index'
 import { resetForm } from '../../../assets/js/util'
 import { isExpressNumber } from '../../../assets/js/validate'
-import RefundDetailSkeleton from './components/Refund-Detail-Skeleton'
+import RefundDetailSkeleton from '../../../components/my/order/Refund-Detail-Skeleton'
 import TopText from '../../../components/common/Top-Text.vue'
 import ModuleTitle from '../../../components/common/Module-Title.vue'
 import OrderItem from '../../../components/item/Order-Item.vue'

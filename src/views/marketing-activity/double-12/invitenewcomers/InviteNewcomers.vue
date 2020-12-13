@@ -145,7 +145,7 @@ export default {
                 throw e
             }
         },
-        async share (shareUserId) {
+        share (shareUserId) {
             let willHide = ['menuItem:share:timeline']
 
             // 如果已经存在分享id，此时页面不允许分享

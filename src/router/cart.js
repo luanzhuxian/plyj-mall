@@ -2,7 +2,7 @@ export default [
     {
         path: '/order/shopping-cart',
         name: 'ShoppingCart',
-        component: () => import('../views/cart/Shopping-Cart.vue'),
+        component: () => import('../views/shopping-car/Shopping-Cart.vue'),
         props: true,
         meta: {
             title: '购物车'
@@ -11,7 +11,7 @@ export default [
     {
         path: '/order/submit/:brokerId?/:activeProduct?',
         name: 'SubmitOrder',
-        component: () => import('../views/cart/Submit-Order.vue'),
+        component: () => import('../views/submit-order/Submit-Order.vue'),
         props: true,
         meta: {
             title: '提交订单'
@@ -20,7 +20,7 @@ export default [
     {
         path: '/order/submit/success/:orderId/:orderCount?',
         name: 'PaySuccess',
-        component: () => import('../views/cart/Pay-Success.vue'),
+        component: () => import('../views/submit-order/Pay-Success.vue'),
         props: true,
         meta: {
             title: '支付成功'

@@ -115,8 +115,6 @@ export default {
             return this.$route.query.count
         }
     },
-    async activated () {
-    },
     deactivated () {
         resetForm(this.form)
         delete this.form.id

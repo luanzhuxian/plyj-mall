@@ -48,7 +48,7 @@
 import Countdown from '../../../assets/js/Countdown'
 import moment from 'moment'
 import LoadMore from '../../../components/common/Load-More.vue'
-import WaitPayListItem from './components/Wait-Pay-List-Item'
+import WaitPayListItem from '../../../components/my/order/Wait-Pay-List-Item'
 import { getAwaitTailPayInfo, getOrderList } from '../../../apis/order-manager'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
 export default {

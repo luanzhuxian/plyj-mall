@@ -39,4 +39,4 @@ export const lottery = activityId => axios.post(`/apis/v1/luckdraw/${ activityId
  * 设置首次访问，每天只访问一次
  * @returns {*}
  */
-export const setFirstVisit = async () => axios.post('/apis/v1/luckdraw/visit')
+export const setFirstVisit = () => axios.post('/apis/v1/luckdraw/visit')

@@ -85,9 +85,9 @@
 import { getServerTime } from '../../apis/base-api'
 import { getCourse } from '../../apis/online-classroom.js'
 import LoadMore from '../../components/common/Load-More.vue'
-import CountDown from '../../components/product/Courses-Count-Down.vue'
+import CountDown from '../../components/product-detail/Courses-Count-Down.vue'
 import moment from 'moment'
-import CategorySelector from './components/Category-Selector.vue'
+import CategorySelector from '../../components/online-classroom/Category-Selector.vue'
 
 export default {
     name: 'SeriesOfCourses',
@@ -140,7 +140,7 @@ export default {
         }
     },
     methods: {
-        async classifyChanged (item) {
+        classifyChanged (item) {
             try {
                 this.form.current = 1
                 this.form.categoryId = item.id
@@ -290,12 +290,6 @@ export default {
             .btns {
                 margin-top: 20px;
                 text-align: right;
-
-                button {
-                    width: 150px;
-                    line-height: 58px;
-                    font-size: 30px;
-                }
 
                 .not-start {
                     background-color: rgba(254, 119, 0, 0.3);

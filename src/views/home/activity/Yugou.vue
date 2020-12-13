@@ -1,13 +1,13 @@
 <template>
     <div :class="$style.yugou">
-        <router-link :class="$style.yugouTitle" tag="div" :to="{ name: 'BookActivity' }">
+        <router-link :class="$style.yugouTitle" tag="div" :to="{ name: 'PurchaseInAdvance' }">
             <div :class="$style.yugouTitleBtn">
                 查看更多
             </div>
         </router-link>
         <ul :class="$style.list" v-if="data.values.length">
             <template v-for="(item, i) of data.values">
-                <product-item
+                <YugouItem
                     v-if="item.goodsInfo && item.goodsInfo.activityInfo"
                     :data="item"
                     :key="i"
@@ -18,12 +18,12 @@
 </template>
 
 <script>
-import ProductItem from '../../marketing-activity/components/Book-Product-Item.vue'
+import YugouItem from './items/Yugou-Item.vue'
 
 export default {
     name: 'Yugou',
     components: {
-        ProductItem
+        YugouItem
     },
     props: {
         data: {

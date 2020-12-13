@@ -22,7 +22,7 @@
                 >
                     <div :class="$style.imgWrapper">
                         <img v-imgError :src="item.combinationDetailList[0].imageUrl">
-                        <div :class="$style.countDownWrapper">
+                        <div :class="$style.countdownWrapper">
                             <span :class="$style.text" v-if="item.combinationDetailList[0].status === 0">距开始</span>
                             <span :class="$style.text" v-if="item.combinationDetailList[0].status === 1">距结束</span>
                             <span :class="$style.text" v-if="item.combinationDetailList[0].status === 2">已结束</span>
@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import Countdown from '../../activity/components/Countdown.vue'
+import Countdown from '../../../components/activity/Countdown.vue'
 import { getDuration } from '../../activity/helper'
 
 export default {
@@ -207,7 +207,7 @@ export default {
                 height: 100%;
                 object-fit: cover;
             }
-            .count-down-wrapper {
+            .countdown-wrapper {
                 display: flex;
                 justify-content: space-around;
                 align-items: center;

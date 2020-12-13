@@ -36,7 +36,7 @@
                                     <div :class="$style.right">
                                         <span v-if="(item.isPay !== 0) && item.actuallyPaidAmount" :class="$style.price" v-text="item.actuallyPaidAmount" />
                                         <span :class="$style.free" v-else>免费</span>
-                                        <pl-button type="primary" size="middle">去看直播</pl-button>
+                                        <pl-button type="primary">去看直播</pl-button>
                                     </div>
                                 </div>
                             </li>
@@ -66,10 +66,7 @@
                                     <div :class="$style.right">
                                         <span :class="$style.price" v-if="(item.isPay !== 0) && item.actuallyPaidAmount" v-text="item.actuallyPaidAmount" />
                                         <span :class="$style.free" v-else>免费</span>
-                                        <pl-button
-                                            type="primary"
-                                            size="middle"
-                                        >
+                                        <pl-button type="primary">
                                             去看直播
                                         </pl-button>
                                     </div>
@@ -101,7 +98,6 @@
                                         <span :class="$style.free" v-else>免费</span>
                                         <pl-button
                                             type="warning"
-                                            size="middle"
                                             v-if="item.videoLibId !== '0'"
                                         >
                                             看回放
@@ -202,7 +198,7 @@ export default {
         },
 
         // 手动刷新前恢复参数到最初状态
-        async beforeRefresh () {
+        beforeRefresh () {
             this.init()
             return true
         },

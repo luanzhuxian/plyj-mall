@@ -417,3 +417,16 @@ export function SectionToChinese (n) {
     }
     return chnStr
 }
+
+/**
+ * 自动导入文件
+ * @param context webpackContext
+ */
+export const importFiles = context => {
+    const files = []
+    for (const key of context.keys()) {
+        const file = context(key).default || context(key)
+        files.push(...file)
+    }
+    return files
+}

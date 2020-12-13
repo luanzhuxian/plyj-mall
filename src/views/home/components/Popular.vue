@@ -55,7 +55,7 @@
 
 <script>
 import Tags from './Tags.vue'
-import CountDown from '../../../components/product/Count-Down.vue'
+import CountDown from '../../../components/product-detail/Count-Down.vue'
 
 export default {
     name: 'Popular',

@@ -1,13 +1,13 @@
 <template>
     <div :class="$style.miaosha">
-        <router-link :class="$style.miaoshaTitle" tag="div" :to="{ name: 'SecondActivity' }">
+        <router-link :class="$style.miaoshaTitle" tag="div" :to="{ name: 'SecKillActivity' }">
             <div :class="$style.miaoshaTitleBtn">
                 查看更多
             </div>
         </router-link>
         <ul :class="$style.list" v-if="data.values.length">
             <template v-for="(item, i) of data.values">
-                <product-item
+                <MiaoshaItem
                     v-if="item.goodsInfo && item.goodsInfo.activityInfo"
                     :data="item"
                     :key="i"
@@ -18,11 +18,11 @@
 </template>
 
 <script>
-import ProductItem from '../../marketing-activity/components/Second-Product-Item.vue'
+import MiaoshaItem from './items/Miaosha-Item.vue'
 export default {
     name: 'Miaosha',
     components: {
-        ProductItem
+        MiaoshaItem
     },
     props: {
         data: {

@@ -13,7 +13,7 @@
                         query: { currentProductStatus: 4 }
                     }"
                 >
-                    <div :class="$style.countDownWrapper">
+                    <div :class="$style.countdownWrapper">
                         <span v-if="item.goodsInfo.activityInfo.status === 0">距开始：</span>
                         <span v-if="item.goodsInfo.activityInfo.status === 1">距结束：</span>
                         <span v-if="item.goodsInfo.activityInfo.status === 2">已结束</span>
@@ -47,7 +47,7 @@
 
 <script>
 import Panel from './Panel.vue'
-import Countdown from '../components/Countdown.vue'
+import Countdown from '../../../components/activity/Countdown.vue'
 import { getDuration, getTotalPrice } from '../helper'
 
 export default {
@@ -91,7 +91,7 @@ export default {
     &:nth-of-type(1) {
         margin: 0;
     }
-    .count-down-wrapper {
+    .countdown-wrapper {
         position: absolute;
         top: -20px;
         left: 18px;

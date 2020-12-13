@@ -77,9 +77,6 @@ export default {
             }
         }
     },
-    data () {
-        return {}
-    },
     computed: {
         liveModel () {
             const { data } = this

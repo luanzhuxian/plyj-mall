@@ -57,6 +57,9 @@
             <div v-if="activityId === 11" :class="$style.iconDouble12">
                 <img src="https://mallcdn.youpenglai.com/static/admall/mall-management/double-12-2020/logo-orange.png">
             </div>
+            <div v-if="activityId === 12" :class="$style.iconSpring2021">
+                <img src="https://mallcdn.youpenglai.com/static/admall/mall-management/spring-2020/logo.png">
+            </div>
         </router-link>
 
         <!-- 购物车 -->
@@ -147,7 +150,7 @@ export default {
     },
     watch: {
         $route: {
-            async handler (to) {
+            handler (to) {
                 clearTimeout(this.timer)
                 if (this.showNavbar.includes(to.name)) {
                     if (this.userId) {
@@ -169,7 +172,7 @@ export default {
 </script>
 
 <style module lang="scss">
-@import '../../views/home/skin/navbar.scss';
+@import '../../views/home/skin/style/navbar.scss';
 
 .navbar {
     position: fixed;
@@ -250,6 +253,21 @@ export default {
         display: block;
         width: 153px !important;
         height: 118px !important;
+        object-fit: cover;
+    }
+}
+.icon-spring-2021 {
+    position: relative;
+    width: 120px !important;
+    height: 100% !important;
+    overflow: visible;
+    > img {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        display: block;
+        width: 120px !important;
+        height: 120px !important;
         object-fit: cover;
     }
 }

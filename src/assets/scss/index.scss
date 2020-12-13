@@ -26,6 +26,9 @@
 .mt-18 {
   margin-top: 18px;
 }
+.mt-12 {
+  margin-top: 12px;
+}
 
 .mb-28 {
   margin-bottom: 28px !important;
@@ -42,6 +45,9 @@
 }
 .mr-10 {
   margin-right: 10px;
+}
+.mr-24 {
+  margin-right: 24px;
 }
 .mr-30 {
   margin-right: 30px;
@@ -123,6 +129,12 @@
 }
 .primary-color {
   color: $--primary-color;
+}
+.warn-color {
+    color: $--warning-color;
+}
+.warn-color-active {
+    color: $--warning-color-active;
 }
 
 .rmb {

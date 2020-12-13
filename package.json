@@ -1,6 +1,6 @@
 {
   "name": "plyj-mall",
-  "version": "2.12.9",
+  "version": "2.13.0",
   "private": true,
   "scripts": {
     "start": "vue-cli-service serve --model local --s",
@@ -48,7 +48,6 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "eslint --ext .js,.vue src",
       "commit-msg": "commitlint --env HUSKY_GIT_PARAMS"
     }
   }

@@ -1,6 +1,5 @@
-const selectedAddress = JSON.parse(localStorage.getItem('selectedAddress'))
+const selectedAddress = JSON.parse(sessionStorage.getItem('selectedAddress'))
 const SHARE_ID = sessionStorage.getItem('SHARE_ID')
-
 export default {
     theme: 'base-theme',
     cartCount: 0,
@@ -75,6 +74,11 @@ export default {
         MEMBERSHIP: '普通会员',
         SUPER_ADMIN_EMPLOYEE: '朋来雅集商户中心员工账号',
         VISITOR: '游客'
+    },
+    couponTypeMap: {
+        1: '满减券',
+        2: '品类券',
+        3: '福利红包'
     },
     // 主会场信息
     activityData: {},

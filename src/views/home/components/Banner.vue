@@ -6,7 +6,7 @@
             :options="swiperOptionBanner"
         >
             <swiperSlide v-for="(item, i) of data.values" :key="i">
-                <count-down
+                <Countdown
                     v-if="item.shoppingStatus === 1"
                     :data="item"
                     :fields="{ start: 'serverTime', end: 'shoppingTime' }"
@@ -19,16 +19,17 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { mapGetters } from 'vuex'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
-import CountDown from '../../../components/product/Count-Down.vue'
+import Countdown from '../../../components/product-detail/Count-Down.vue'
 
 export default {
     name: 'Banner',
     components: {
         swiper,
         swiperSlide,
-        CountDown
+        Countdown
     },
     props: {
         data: {
@@ -41,17 +42,17 @@ export default {
     data () {
         return {
             swiperOptionBanner: {
-                autoplay: this.data.values.length > 1
-                    ? {
-                        disableOnInteraction: false
-                    }
-                    : false,
                 spaceBetween: 40,
                 pagination: {
                     el: '.swiper-pagination',
                     clickable: true
                 },
-                loop: true
+                loop: true,
+                autoplay: this.data.values.length > 1
+                    ? {
+                        disableOnInteraction: false
+                    }
+                    : false
             }
         }
     },
@@ -84,24 +85,16 @@ export default {
                 },
                 43: {
                     name: '预购',
-                    path: 'BookActivity'
+                    path: 'PurchaseInAdvance'
                 },
                 44: {
                     name: '秒杀',
-                    path: 'SecondActivity'
+                    path: 'SecKillActivity'
                 },
                 45: {
                     name: '组合聚惠学',
                     path: 'CoursePackage'
                 },
-                // 46: {
-                //     name: '防疫情报站',
-                //     path: 'BattlefieldReport'
-                // },
-                // 47: {
-                //     name: '疫情签到',
-                //     path: 'EpidemicSignIn'
-                // },
                 48: {
                     name: '公益棕行动',
                     path: 'LongmenAction'
@@ -140,7 +133,7 @@ export default {
                 const { dragonGateCharity } = this
                 if (!dragonGateCharity || !dragonGateCharity.id) return false
 
-                const endTime = new Date(dragonGateCharity.endTime).valueOf()
+                const endTime = moment(dragonGateCharity.endTime).valueOf()
                 if (endTime < Date.now()) return false
 
                 return this.$router.push({ name: 'LongmenAction', params: { id: dragonGateCharity.id } })
@@ -150,8 +143,8 @@ export default {
                 const { dragonGateSign } = this
                 if (!dragonGateSign || !dragonGateSign.id) return false
 
-                const startTime = new Date(dragonGateSign.activityStartTime).valueOf()
-                const endTime = new Date(dragonGateSign.activityEndTime).valueOf()
+                const startTime = moment(dragonGateSign.activityStartTime).valueOf()
+                const endTime = moment(dragonGateSign.activityEndTime).valueOf()
                 if (startTime > Date.now() || endTime < Date.now()) return false
 
                 return this.$router.push({ name: 'LongmenSignIn', params: { id: this.dragonGateSign.id } })
@@ -161,8 +154,8 @@ export default {
                 const { dragonGatePlay } = this
                 if (!dragonGatePlay || !dragonGatePlay.id) return false
 
-                const startTime = new Date(dragonGatePlay.startTime).valueOf()
-                const endTime = new Date(dragonGatePlay.endTime).valueOf()
+                const startTime = moment(dragonGatePlay.startTime).valueOf()
+                const endTime = moment(dragonGatePlay.endTime).valueOf()
                 if (startTime > Date.now() || endTime < Date.now()) return false
 
                 return this.$router.push({ name: 'LongmenLottery', params: { id: this.dragonGatePlay.id } })

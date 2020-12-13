@@ -258,7 +258,7 @@ export default {
     deactivated () {
         this.clearForm()
     },
-    async beforeRouteEnter (to, from, next) {
+    beforeRouteEnter (to, from, next) {
         next(async vm => {
             if (!vm.mobile) {
                 try {

@@ -98,7 +98,7 @@ export default [
     {
         path: '/my/welfare/couponCenter',
         name: 'CouponCenter',
-        component: () => import('../views/my/welfare/Coupon-Center.vue'),
+        component: () => import('../views/my/coupon/Coupon-Center.vue'),
         meta: {
             title: '领券中心'
         }
@@ -107,7 +107,7 @@ export default [
         path: '/my/welfare/couponActivity/:couponId',
         name: 'CouponActivity',
         props: true,
-        component: () => import('../views/my/welfare/Coupon-Activity.vue'),
+        component: () => import('../views/my/coupon/Coupon-Activity.vue'),
         meta: {
             title: '满减活动'
         }
@@ -115,7 +115,7 @@ export default [
     {
         path: '/my/welfare/historyCoupon',
         name: 'HistoryCoupon',
-        component: () => import('../views/my/welfare/History-Coupon.vue'),
+        component: () => import('../views/my/coupon/History-Coupon.vue'),
         meta: {
             title: '优惠劵历史记录'
         }
@@ -184,7 +184,7 @@ export default [
     {
         path: '/my/welfare/coupon',
         name: 'MyCoupon',
-        component: () => import('../views/my/welfare/Coupon.vue'),
+        component: () => import('../views/my/coupon/Coupon.vue'),
         meta: {
             title: '我的卡券'
         }
@@ -192,7 +192,7 @@ export default [
     {
         path: '/my/welfare/present',
         name: 'MyPresent',
-        component: () => import('../views/my/welfare/Present.vue'),
+        component: () => import('../views/my/coupon/Present.vue'),
         meta: {
             title: '我的礼品'
         }
@@ -200,7 +200,7 @@ export default [
     {
         path: '/my/welfare/burse',
         name: 'MyBurse',
-        component: () => import('../views/my/welfare/Burse.vue'),
+        component: () => import('../views/my/coupon/Burse.vue'),
         meta: {
             title: '我的奖学金'
         }
@@ -208,7 +208,7 @@ export default [
     {
         path: '/my/welfare/burseRecord',
         name: 'MyBurseRecord',
-        component: () => import('../views/my/welfare/Burse-Record.vue'),
+        component: () => import('../views/my/coupon/Burse-Record.vue'),
         meta: {
             title: '我的奖学金使用记录'
         }
@@ -216,7 +216,7 @@ export default [
     {
         path: '/my/welfare/burseDetail/:id',
         name: 'MyBurseDetail',
-        component: () => import('../views/my/welfare/Burse-Detail.vue'),
+        component: () => import('../views/my/coupon/Burse-Detail.vue'),
         meta: {
             title: '我的奖学金详情'
         }
@@ -225,7 +225,7 @@ export default [
         path: '/my/welfare/redemption/:status',
         name: 'MyRedemption',
         props: true,
-        component: () => import('../views/my/welfare/redemption/Index.vue'),
+        component: () => import('../views/my/redemption/Index.vue'),
         meta: {
             title: '我的兑换码'
         }
@@ -234,7 +234,7 @@ export default [
         path: '/my/welfare/redemption-activative/:code',
         name: 'RedemptionActivative',
         props: true,
-        component: () => import('../views/my/welfare/redemption/Activative.vue'),
+        component: () => import('../views/my/redemption/Activative.vue'),
         meta: {
             // 激活兑换码 使用code激活
             title: '确认激活'
@@ -244,7 +244,7 @@ export default [
         path: '/my/welfare/redemption-center/:codeId',
         name: 'RedemptionCenter',
         props: true,
-        component: () => import('../views/my/welfare/redemption/Center.vue'),
+        component: () => import('../views/my/redemption/Center.vue'),
         meta: {
             // 兑换中心
             title: '我的兑换码'
@@ -254,7 +254,7 @@ export default [
         path: '/my/welfare/redeemed/:codeId',
         name: 'RedeemedProductList',
         props: true,
-        component: () => import('../views/my/welfare/redemption/Redeemed.vue'),
+        component: () => import('../views/my/redemption/Redeemed.vue'),
         meta: {
             // 已兑换
             title: '我的兑换码'

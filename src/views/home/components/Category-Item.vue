@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import Price from '../../../components/product/Price.vue'
+import Price from '../../../components/product-detail/Price.vue'
 
 export default {
     name: 'CategoryItem',
@@ -106,7 +106,7 @@ export default {
         }
     },
     methods: {
-        async jump () {
+        jump () {
             const { productId } = this
             if (this.replace) {
                 this.$router.replace({ name: 'Product', params: { productId } })

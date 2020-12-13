@@ -29,10 +29,9 @@
                         tag="div"
                         v-for="(item, i) of orderList"
                         :key="item.orderId"
-                        :to="{ name: 'OrderDetail', params: { orderId: item.orderId } }"
+                        :to="{ name: item.orderType === 'RED_ENVELOPE' ? 'RedPacketOrderDetail' : 'OrderDetail', params: { orderId: item.orderId } }"
                     >
                         <OrderListItem
-                            :detail="item"
                             :index="i"
                             v-bind="item"
                             :is-payloading="payloading && currentPayId === item.orderId"
@@ -69,7 +68,7 @@ import { mapGetters, mapMutations } from 'vuex'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
 import moment from 'moment'
 import Countdown from '../../../assets/js/Countdown'
-import OrderListItem from './components/Order-List-Item'
+import OrderListItem from '../../../components/my/order/Order-List-Item'
 
 export default {
     name: 'OrderList',
@@ -136,7 +135,7 @@ export default {
         this.$refresh = this.$refs.loadMore.refresh
     },
     activated () {
-        this.status = this.$route.params.status
+        this.status = this.$route.params.status || 'ALL_ORDER'
         this.form.orderStatus = this.status === 'ALL_ORDER' ? '' : this.status
         // 从 订单详情/物流 来的，需原地刷新页面
         if (this.orderList.length && this.$router.currentRoute.meta.noRefresh) {

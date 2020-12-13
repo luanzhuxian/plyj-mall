@@ -1,5 +1,5 @@
 <template>
-    <div :class="$style.classify">
+    <div :class="[$style.classify, $style[skinClassNameMap[skinId]]]">
         <div :class="$style.search">
             <router-link
                 tag="div"
@@ -113,14 +113,15 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import GoodsItem from '../../components/item/Goods-Item.vue'
 import SubClassify from '../../components/item/Sub-Classify.vue'
 import LoadMore from '../../components/common/Load-More.vue'
 import { getCategoryTree, getProduct, getCourseCategoryTree } from '../../apis/classify'
 import { getActivityProduct } from '../../apis/broker'
 import { getCourse, getImageTextList } from '../../apis/online-classroom'
-import { mapGetters } from 'vuex'
 import share from '../../assets/js/wechat/wechat-share'
+import { skinClassNameMap } from '..//home/skin/map'
 
 export default {
     name: 'Classify',
@@ -162,11 +163,12 @@ export default {
             isEmpty: false,
             agentShow: false,
             $refresh: null,
-            requestMethods: getProduct
+            requestMethods: getProduct,
+            skinClassNameMap
         }
     },
     computed: {
-        ...mapGetters(['agentUser', 'appId', 'logoUrl', 'mallName', 'mallDesc']),
+        ...mapGetters(['agentUser', 'appId', 'logoUrl', 'mallName', 'mallDesc', 'skinId']),
         currentClassifyData () {
             return this.classifyList.find(item => item.id === this.optionId)
         }
@@ -333,7 +335,7 @@ export default {
                 const arr = item.productSkuModels.filter(item => item.status === 1)
                 const priceList = arr.map(item => {
                     if (item.status === 1) {
-                        return Number(item.price)
+                        return Number(item.price) || 0
                     }
                     return 0
                 })
@@ -381,6 +383,8 @@ export default {
 </script>
 
 <style module lang="scss">
+@import '../home/skin/style/classify.scss';
+
 .classify {
   position: relative;
   padding-bottom: 88px;

@@ -49,7 +49,7 @@
         <div :class="[$style.panel, $style.express]"
              v-if="detail.orderType === orderTypeKeyMap.PHYSICAL_GOODS && [orderStatuskeyMap.WAIT_SHIP, orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status) && !isClosedByCancle"
         >
-            <pl-svg name="icon-express" :class="$style.icon" />
+            <pl-svg :vertical-align="-24" name="icon-express" :class="$style.icon" />
             <span :class="$style.content">
                 {{ detail.status === orderStatuskeyMap.WAIT_SHIP ? '待发货' : `${shippingInfoModel.logisticsCompany}  ${shippingInfoModel.logisticsNo}` }}
             </span>
@@ -183,6 +183,11 @@
                     <span>优惠券</span>
                     <span>-¥{{ goodsModel.couponeAmount | formatAmount }}</span>
                 </p>
+                <!--福利红包-->
+                <p v-if="detail.welfareRedEnvelope">
+                    <span>福利红包</span>
+                    <span>-¥{{ detail.welfareRedEnvelope | formatAmount }}</span>
+                </p>
                 <!--奖学金-->
                 <p v-if="detail.scholarship">
                     <span>奖学金（红包）</span>
@@ -238,16 +243,12 @@
 
         <!-- 实体订单-用户信息 -->
         <div :class="[$style.panel, $style.customBlockField]" v-if="detail.orderType === orderTypeKeyMap.PHYSICAL_GOODS && studentInfo.length">
-            <pl-fields
-                size="middle"
-                text="用户信息"
-                icon="icon-user-7bd73"
-                title-color="#F2B036"
-                :icon-width="40"
-                :icon-gap="12"
-                left-text-weight="bold"
-            >
-                <div :class="$style.detail">
+            <pl-fields size="middle">
+                <div>
+                    <pl-svg class="mr-10" name="icon-user-7bd73" width="40" :vertical-align="-8" />
+                    <span>用户信息</span>
+                </div>
+                <div :class="$style.detail" slot="collapse">
                     <div :class="$style.item" v-for="(item, i) of studentInfo[0]" :key="i">
                         <span>{{ item.fieldName }}：</span>
                         <span v-if="item.fieldValue">{{ item.fieldValue }}</span>
@@ -260,17 +261,16 @@
         <!-- 虚拟订单-学员信息 -->
         <template v-if="needCodeOrderTypeList.includes(detail.orderType) && studentInfo.length">
             <div :class="[$style.panel, $style.customBlockField]" v-for="(studentItem, i) of studentInfo" :key="i">
-                <pl-fields
-                    size="middle"
-                    :text="`学员信息${i + 1}`"
-                    :right-text="!isRefundsFinalStage && ([orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status) || (detail.paymentMethod === 1 && orderStatuskeyMap.WAIT_PAY_TAIL_MONEY === detail.status)) && i < redeemCodeModels.length && redeemCodeModels[i].code ? `核销码：${localSeparator(redeemCodeModels[i].code,' ', 4)}`: ''"
-                    icon="icon-name-card"
-                    title-color="#F2B036"
-                    :icon-width="40"
-                    :icon-gap="12"
-                    left-text-weight="bold"
-                >
-                    <div :class="$style.detail">
+                <pl-fields size="middle">
+                    <div>
+                        <pl-svg class="mr-10" name="icon-name-card" width="40" />
+                        <span v-text="`学员信息${i + 1}`" />
+                    </div>
+                    <span
+                        slot="right-content"
+                        v-text="!isRefundsFinalStage && ([orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status) || (detail.paymentMethod === 1 && orderStatuskeyMap.WAIT_PAY_TAIL_MONEY === detail.status)) && i < redeemCodeModels.length && redeemCodeModels[i].code ? `核销码：${localSeparator(redeemCodeModels[i].code,' ', 4)}`: ''"
+                    />
+                    <div :class="$style.detail" slot="collapse">
                         <div :class="$style.item" v-for="(item, j) of studentItem" :key="j">
                             <span>{{ item.fieldName }}：</span>
                             <span v-if="item.fieldValue">{{ item.fieldValue }}</span>
@@ -283,15 +283,12 @@
 
         <!-- 联系人信息 -->
         <div :class="[$style.panel, $style.contact]" v-if="detail.orderType !== orderTypeKeyMap.PHYSICAL_GOODS && receiverModel.name && receiverModel.mobile">
-            <pl-fields
-                size="middle"
-                text="联系人信息"
-                icon="icon-contact"
-                :icon-width="40"
-                :icon-gap="12"
-                left-text-weight="bold"
-            >
-                <div :class="$style.contactDetail">
+            <pl-fields size="middle">
+                <div>
+                    <pl-svg class="mr-10" name="icon-contact" width="40" />
+                    <span>联系人信息</span>
+                </div>
+                <div :class="$style.contactDetail" slot="collapse">
                     <span class="fz-28" v-text="receiverModel.name" />
                     <span class="fz-28">
                         {{ receiverModel.mobile | formatAccount }}
@@ -480,8 +477,8 @@ import OrderItem from '../../../components/item/Order-Item.vue'
 import ModuleTitle from '../../../components/common/Module-Title.vue'
 import ExpressItem from '../../../components/item/Express-Item.vue'
 import AddressItem from '../../../components/item/Address-Item.vue'
-import OrderDetailSkeleton from './components/Order-detail-Skeleton'
-import OrderCodeItem from './components/Order-Code-Item'
+import OrderDetailSkeleton from '../../../components/my/order/Order-detail-Skeleton'
+import OrderCodeItem from '../../../components/my/order/Order-Code-Item'
 import SharePoster from '../../../components/common/Share-Poster'
 import Contact from '../../../components/common/Contact.vue'
 import {
@@ -683,7 +680,7 @@ export default {
             throw e
         }
     },
-    async deactivated () {
+    deactivated () {
         this.poster = ''
         this.orderStatusTip = ''
         this.collapseQrCode = true
@@ -798,7 +795,7 @@ export default {
         // 生成核销码二维码
         generateQrcode () {
             generateQrcode({ size: 300, text: this.orderId, padding: 34 })
-                .then(async base64 => {
+                .then(base64 => {
                     this.qrImg = base64
                 })
                 .catch(() => {
@@ -1173,7 +1170,7 @@ export default {
 
   /** 联系人 **/
   .contact {
-    padding-left: 24px;
+    padding: 0 24px;
     .contact-detail {
       padding: 24px 0;
       > span:nth-of-type(1) {
@@ -1184,9 +1181,9 @@ export default {
   }
   /** 用户信息 **/
   .custom-block-field {
-    padding-left: 24px;
+    padding: 0 24px;
     .detail {
-      padding: 14px 24px 24px 0;
+      padding: 14px 0;
       .item {
         display: flex;
         justify-content: space-between;

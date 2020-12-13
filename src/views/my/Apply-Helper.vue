@@ -352,7 +352,7 @@ export default {
                     vm.$router.replace({ name: 'BindMobile' })
                 })
             } else if (vm.roleCode !== 'MEMBERSHIP') {
-                vm.$alert('仅会员可请Helper')
+                vm.$alert('仅会员可申请Helper')
                     .finally(() => {
                         // 返回上一页或我的页面
                         if (from.name) {

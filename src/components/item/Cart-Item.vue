@@ -94,7 +94,7 @@ import { updateCartProductCount } from '../../apis/shopping-cart'
 import { getCurrentLimit } from '../../apis/product'
 import Count from '../common/Count.vue'
 import { mapGetters } from 'vuex'
-import CountDown from '../../components/product/Count-Down.vue'
+import CountDown from '../product-detail/Count-Down.vue'
 export default {
     name: 'CartItem',
     components: {
@@ -178,7 +178,7 @@ export default {
         }
     },
     methods: {
-        async goDetail () {
+        goDetail () {
             const productId = this.data.cartProductId
             this.$router.push({
                 name: 'Product',

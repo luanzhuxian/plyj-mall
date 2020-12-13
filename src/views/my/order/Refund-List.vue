@@ -59,7 +59,7 @@
 import { mapGetters, mapMutations } from 'vuex'
 import filter from '../../../filter/index'
 import LoadMore from '../../../components/common/Load-More.vue'
-import RefundListItem from './components/Refund-List-Item'
+import RefundListItem from '../../../components/my/order/Refund-List-Item'
 import {
     getRefundOrderList,
     cancelRefundApplication,

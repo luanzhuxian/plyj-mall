@@ -46,10 +46,7 @@
                 active-class="active"
                 :to="{name: 'OnlineClassroom'}"
             >
-                <pl-svg
-                    name="icon-icon-onlineClass-552fe"
-                    height="75"
-                />
+                <img style="height: 10vw;" src="https://mallcdn.youpenglai.com/static/mall/2.13.0/icon-onlineClass.png" alt="">
             </router-link>
             <router-link
                 tag="li"

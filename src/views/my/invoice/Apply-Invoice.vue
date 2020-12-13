@@ -331,7 +331,7 @@ export default {
     },
     async activated () {
       try {
-        this.init()
+        await this.init()
       } catch (e) {
         throw e
       }

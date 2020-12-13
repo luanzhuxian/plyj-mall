@@ -478,12 +478,12 @@ export default {
                 this.unWinningShow = true
             }
         },
-        async drawPoster (index) {
+        drawPoster (index) {
             this.posterShow = true
             const canImg = new Image()
             canImg.crossOrigin = ''
             canImg.src = `https://mallcdn.youpenglai.com/static/mall/2.0.0/road-learning/jianxue${ index || this.checkInDetail.totalCheckInNum }.jpg?time=${ Date.now() }`
-            canImg.onload = async () => {
+            canImg.onload = () => {
                 const canvas = document.createElement('canvas')
                 canvas.width = canImg.width
                 canvas.height = canImg.height
@@ -494,12 +494,12 @@ export default {
                 this.post = post
             }
         },
-        async drawSharePoster () {
+        drawSharePoster () {
             this.sharePosterShow = true
             const canImg = new Image()
             canImg.crossOrigin = ''
             canImg.src = `https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/2.0.0/invitenewcomers/1610999569_9928678801_%E8%A7%81%E5%AD%A6%E4%B9%8B%E6%97%85%E5%88%86%E4%BA%AB%E6%B5%B7%E6%8A%A5-2.jpg?time=${ Date.now() }`
-            canImg.onload = async () => {
+            canImg.onload = () => {
                 const canvas = document.createElement('canvas')
                 canvas.width = canImg.width
                 canvas.height = canImg.height
