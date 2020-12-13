@@ -15,7 +15,7 @@
                         <p>使用后发生退款，不予退回</p>
                     </div>
                     <div :class="$style.count">
-                        <p class="gray-1">￥{{ goodsModel.sellingPrice }}</p>
+                        <p class="gray-1">￥{{ Number(goodsModel.sellingPrice) / 100 }}</p>
                         <p>x{{ goodsModel.count }}</p>
                     </div>
                 </div>
