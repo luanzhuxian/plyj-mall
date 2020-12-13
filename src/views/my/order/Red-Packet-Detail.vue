@@ -79,7 +79,8 @@
             <pl-button type="default" round plain @click="isPopupShow = true">联系我们</pl-button>
             <pl-button type="warning" round @click="deleteOrder">删除订单</pl-button>
         </div>
-
+        <!-- 联系我们底部弹窗 -->
+        <Contact :show.sync="isPopupShow" />
     </div>
 </template>
 
@@ -87,11 +88,13 @@
 import { getOrderDetail, deleteOrder } from '../../../apis/order-manager'
 import { mapGetters } from 'vuex'
 import ModuleTitle from '../../../components/common/Module-Title.vue'
+import Contact from '../../../components/common/Contact.vue'
 
 export default {
     name: 'RedPacketOrderDetail',
     components: {
-        ModuleTitle
+        ModuleTitle,
+        Contact
     },
     data () {
         return {
