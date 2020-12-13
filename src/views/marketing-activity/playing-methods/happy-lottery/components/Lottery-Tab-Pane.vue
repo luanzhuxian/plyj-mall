@@ -16,6 +16,9 @@ export default {
             type: [String, Number],
             default: ''
         }
+    },
+    updated () {
+        console.log(this)
     }
 }
 </script>
