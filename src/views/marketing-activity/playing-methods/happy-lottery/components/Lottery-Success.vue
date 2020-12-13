@@ -12,8 +12,12 @@
                         <img :class="$style.giftImage" v-if="awardType !== 1" src="https://mallcdn.youpenglai.com/static/mall/lottery/third-prize.png" alt="奖品图片">
                         <img :class="$style.giftImage" v-else :src="giftImage" alt="奖品图片">
                     </div>
-                    <div class="mt-16" :class="$style.giftName" v-text="giftName" />
-                    <div class="text-center mt-16 fz-28" :class="$style.date">有效期{{ date }}</div>
+                    <div class="mt-16" :class="$style.giftName">
+                        <span>{{ giftName }}</span>
+                        <span>{{ price }}元</span>
+                    </div>
+                    <div v-if="awardType === 2" class="text-center mt-16 fz-28" :class="$style.date">有效期：领取当日起{{ days }}天以内</div>
+                    <div v-else class="text-center mt-16 fz-28" :class="$style.date">有效期 {{ date }}</div>
                     <div class="text-center mt-16 fz-20 gray-3" :class="$style.tip">奖品已自动存入您的我的优惠券/礼品/奖学金中</div>
                 </div>
                 <div :class="$style.got">
@@ -52,6 +56,16 @@ export default {
         date: {
             type: String,
             default: ''
+        },
+        // 奖学金金额
+        price: {
+            type: Number,
+            default: 0
+        },
+        // 奖学金的使用期限
+        days: {
+            type: Number,
+            default: 0
         }
     },
     methods: {

@@ -125,6 +125,8 @@
             :gift-image="lotterAward.giftImage"
             :gift-name="lotterAward.awardName"
             :date="lotterAward.giftUseEndTime"
+            :price="lotterAward.scholarshipPrice"
+            :days="lotterAward.scholarshipEffectiveTime"
         />
     </div>
 </template>
@@ -205,7 +207,7 @@ export default {
             // 是否正在抽奖
             drawing: false,
             // 抽奖成功弹框
-            showLotterySuccess: true,
+            showLotterySuccess: false,
             // 手否抽奖成功
             isAward: false,
             // 抽中的奖品
