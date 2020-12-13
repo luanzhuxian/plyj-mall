@@ -10,7 +10,7 @@
         </router-link>
         <router-link
             tag="h1"
-            to="/happy-lottery/123123"
+            to="/happy-lottery/1337645128306774018"
             style="font-size: 60px;"
             v-if="$route.name !== 'HappyLottery'"
         >

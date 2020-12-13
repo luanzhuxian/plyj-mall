@@ -2,6 +2,7 @@
     <div
         :class="$style.lottery"
         :style="theme"
+        v-if="mobile"
     >
         <div :class="$style.countDown">
             <span v-if="status === 2">距活动结束</span>
@@ -50,7 +51,7 @@
             </div>
         </div>
 
-        <button @click="drawLottery" :class="$style.startBtn" />
+        <button :disabled="drawing" @click="drawLottery" :class="$style.startBtn" />
 
         <h2 :class="$style.title">活动奖品</h2>
         <ul :class="$style.prizeList">
@@ -73,18 +74,17 @@
             <LotteryTabs v-model="prizeType">
                 <LotteryTabPane label="我的奖品" value="1">
                     <ul :class="[$style.records]" v-if="awardRecords.length">
-                        <li :class="$style.myPrize">
-                            <img src="https://mallcdn.youpenglai.com/static/mall/lottery/prize-bg.png" alt="奖品图片">
+                        <li
+                            :class="$style.myPrize"
+                            v-for="(item, i) of awardRecords"
+                            :key="i"
+                        >
+                            <img v-if="item.awardType === 2" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/scholarship.png" alt="">
+                            <img v-else-if="item.awardType === 3 || item.awardType === 4" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/coupon.png" alt="">
+                            <img v-else :src="item.giftImg" alt="">
                             <div>
-                                <p :class="$style.name">这是一个奖品的名称</p>
-                                <p :class="$style.date">2020.0203 15:39:20</p>
-                            </div>
-                        </li>
-                        <li :class="$style.myPrize">
-                            <img src="https://mallcdn.youpenglai.com/static/mall/lottery/prize-bg.png" alt="奖品图片">
-                            <div>
-                                <p :class="$style.name">这是一个奖品的名称</p>
-                                <p :class="$style.date">2020.0203 15:39:20</p>
+                                <p :class="$style.name" v-text="item.awardName" />
+                                <p :class="$style.date" v-text="item.awardTime" />
                             </div>
                         </li>
                     </ul>
@@ -92,24 +92,22 @@
                 </LotteryTabPane>
                 <LotteryTabPane label="获奖记录" value="2">
                     <ul :class="[$style.records]" v-if="lotteryRecords.length">
-                        <li :class="$style.record">
-                            <img src="https://mallcdn.youpenglai.com/static/mall/lottery/prize-bg.png" alt="奖品图片">
+                        <li
+                            :class="$style.record"
+                            v-for="(item, i) of lotteryRecords"
+                            :key="i"
+                        >
+                            <img v-if="item.awardType === 2" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/scholarship.png" alt="">
+                            <img v-else-if="item.awardType === 3 || item.awardType === 4" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/coupon.png" alt="">
+                            <img v-else :src="item.giftImg" alt="">
                             <div>
                                 <div class="flex space-between">
-                                    <span :class="$style.username">法外狂徒张三</span>
-                                    <span :class="$style.date">2020.0203 15:39:20</span>
+                                    <span :class="$style.username" v-text="item.userName" />
+                                    <p :class="$style.date" v-text="item.awardTime" />
                                 </div>
-                                <div :class="$style.prizeName">获得三等奖5元优惠券</div>
-                            </div>
-                        </li>
-                        <li :class="$style.record">
-                            <img src="https://mallcdn.youpenglai.com/static/mall/lottery/prize-bg.png" alt="奖品图片">
-                            <div>
-                                <div class="flex space-between">
-                                    <span :class="$style.username">法外狂徒张三</span>
-                                    <span :class="$style.date">2020.0203 15:39:20</span>
+                                <div :class="$style.prizeName">
+                                    获得{{ item.awardLevel | sectionToChinese }}等奖{{ item.awardName }}
                                 </div>
-                                <div :class="$style.prizeName">获得三等奖5元优惠券</div>
                             </div>
                         </li>
                     </ul>
@@ -117,8 +115,19 @@
                 </LotteryTabPane>
             </LotteryTabs>
         </div>
+
         <SilkBag :detail="detail" />
         <Poster />
+        <LotterySuccess
+            :show.sync="showLotterySuccess"
+            :grade="lotterAward.grade"
+            :award-type="lotterAward.awardType"
+            :gift-image="lotterAward.giftImage"
+            :gift-name="lotterAward.awardName"
+            :date="lotterAward.giftUseEndTime"
+            :price="lotterAward.scholarshipPrice"
+            :days="lotterAward.scholarshipEffectiveTime"
+        />
     </div>
 </template>
 
@@ -127,6 +136,7 @@ import LotteryTabs from './components/Lottery-Tabs.vue'
 import LotteryTabPane from './components/Lottery-Tab-Pane.vue'
 import Poster from './components/Poster.vue'
 import SilkBag from './components/Silk-Bag.vue'
+import LotterySuccess from './components/Lottery-Success.vue'
 import { SectionToChinese } from '../../../../assets/js/util'
 import { shuffle } from '../../../../assets/js/loadsh'
 import moment from 'moment'
@@ -138,9 +148,8 @@ import {
     lottery
 } from '../../../../apis/longmen-festival/lottery'
 import Countdown from '../../../../assets/js/Countdown'
+import { mapGetters } from 'vuex'
 
-// 是否正在抽奖
-let drawing = false
 let countDownInstance = null
 const AWARD_ICON = [
     'https://mallcdn.youpenglai.com/static/mall/lottery/first-prize.png',
@@ -155,7 +164,7 @@ const C = 500
 // 初始位置（初始的速度）
 const B = velocity
 // 转盘的总转动次数
-let D = 40
+const D = 35
 // 当前转动第几次了
 let t = 0
 
@@ -165,7 +174,8 @@ export default {
         LotteryTabs,
         LotteryTabPane,
         SilkBag,
-        Poster
+        Poster,
+        LotterySuccess
     },
     data () {
         return {
@@ -191,9 +201,17 @@ export default {
             lotteryRecords: [],
             // 我的奖品
             awardRecords: [],
-            currentX: 0,
-            currentY: 0,
-            prizeType: '1'
+            currentX: -1,
+            currentY: -1,
+            prizeType: '1',
+            // 是否正在抽奖
+            drawing: false,
+            // 抽奖成功弹框
+            showLotterySuccess: false,
+            // 手否抽奖成功
+            isAward: false,
+            // 抽中的奖品
+            lotterAward: false
         }
     },
     props: {
@@ -202,9 +220,24 @@ export default {
             default: ''
         }
     },
+    computed: {
+        ...mapGetters(['mobile'])
+    },
     async activated () {
-        this.theme = this.theme1
-        await this.getDetail()
+        if (!this.mobile) {
+            this.$confirm('为了您的账户安全，请先绑定手机')
+                .then(() => {
+                    const { name, params, query } = this.$route
+                    sessionStorage.setItem('BIND_MOBILE_FROM', JSON.stringify({ name, query, params }))
+                    this.$router.push({ name: 'BindMobile' })
+                })
+                .catch(() => {
+                    this.$router.replace({ name: 'Home' })
+                })
+        } else {
+            this.theme = this.theme1
+            await this.getDetail()
+        }
     },
     methods: {
         // 活动详情
@@ -219,7 +252,7 @@ export default {
                 await this.getRecords()
                 await this.countDown()
             } catch (e) {
-                // this.$router.replace({ name: 'Home' })
+                this.$router.replace({ name: 'Home' })
                 throw e
             }
         },
@@ -244,7 +277,7 @@ export default {
             }
             // 打乱奖品数据
             turntableAwards = shuffle(turntableAwards)
-
+            // 为奖品模块设置坐标
             for (let y = 0; y < 3; y++) {
                 for (let x = 0; x < 3; x++) {
                     if (x === 1 && y === 1) {
@@ -306,28 +339,32 @@ export default {
             }
         },
         // 开始抽奖
-        // 1337640967882883074
         async drawLottery () {
-            if (drawing) return
+            if (this.drawing) return
             if (this.status === 1) return this.$warning('活动未开始')
             if (this.status === 3 || this.status === 4) return this.$warning('活动已结束')
             try {
-                drawing = true
+                this.drawing = true
                 const { result } = await lottery(this.id)
+                this.isAward = Boolean(result.isAward)
+                // 找到中奖的坐标
                 if (result.isAward) {
-                    const index = this.turntableAwards.findIndex(item => item.id === result.id)
-                    console.log(result)
-                    D += index
-                    this.run()
+                    this.lotterAward = this.turntableAwards.find(item => item.id === result.id)
+                    this.prizeX = this.lotterAward.x
+                    this.prizeY = this.lotterAward.y
+                } else {
+                    const { x, y } = this.turntableAwards.find(item => item.awardType === -1)
+                    this.prizeX = x
+                    this.prizeY = y
                 }
+                this.run()
             } catch (e) {
+                this.drawing = false
                 throw e
-            } finally {
-                drawing = false
             }
         },
         // 旋转函数
-        rotate () {
+        async rotate () {
             // 获取转盘的宽度
             const dialWidth = 3
             const dialHeight = 3
@@ -336,7 +373,7 @@ export default {
             // 转标的坐标
             const X = (dialWidth / 2 - Math.cos(angle) * R).toPrecision(2)
             const Y = (dialHeight / 2 - Math.sin(angle) * R).toPrecision(2)
-            this.setActivity(X, Y)
+            await this.setActivity(X, Y)
             angle += Math.PI / 4
             if (angle >= Math.PI * 2 + Math.PI / 4) {
                 angle = Math.PI / 4
@@ -350,7 +387,7 @@ export default {
          * @param x {String | Number}
          * @param y {String | Number}
          */
-        setActivity (x, y) {
+        async setActivity (x, y) {
             x = Number(x)
             y = Number(y)
             for (let x1 = 0; x1 < 3; x1++) {
@@ -358,6 +395,18 @@ export default {
                     if (x >= x1 && x < x1 + 1 && y >= y1 && y < y1 + 1) {
                         this.currentX = x1
                         this.currentY = y1
+                        // 旋转的圈数够了，接下来定位到中奖的奖品
+                        if ((t > D && (x1 !== this.prizeX || y1 !== this.prizeY)) || t <= D) {
+                            this.run()
+                        } else {
+                            t = 0
+                            this.drawing = false
+                            if (this.isAward) {
+                                this.showLotterySuccess = true
+                            }
+                            // 获取奖品记录
+                            await this.getRecords()
+                        }
                     }
                 }
             }
@@ -365,14 +414,9 @@ export default {
         // 转起来，此函数觉得转的速度和转的方式
         run () {
             setTimeout(() => {
-                this.rotate()
                 velocity = C * t / D + B
                 t++
-                if (t <= D) {
-                    this.run()
-                } else {
-                    t = 0
-                }
+                this.rotate()
             }, velocity)
         }
     }
@@ -607,7 +651,7 @@ export default {
             }
             .username {
                 font-size: 28px;
-                width: 240px;
+                width: 230px;
                 @include elps();
             }
             .date {

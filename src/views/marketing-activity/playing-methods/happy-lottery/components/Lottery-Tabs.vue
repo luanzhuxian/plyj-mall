@@ -1,10 +1,13 @@
 <script lang="jsx">
+import Navbar from './Lottery-Navs.vue'
 export default {
     name: 'LotteryTabs',
+    components: {
+        Navbar
+    },
     data () {
         return {
             headers: [],
-            panes: [],
             activityColor: '#E63303',
             noniusWidth: '0px',
             noniusLeft: '0px',
@@ -22,6 +25,22 @@ export default {
         event: 'change'
     },
     render (h) {
+        const panes = this.$slots.default.map((item, i) => {
+            const { value } = item.componentOptions.propsData
+            return (
+                <div
+                    key={i}
+                    class="lottery-tabs__pane"
+                    style={
+                        {
+                            display: value === this.currentValue ? 'block' : 'none'
+                        }
+                    }
+                >
+                    {item}
+                </div>
+            )
+        })
         return (
             <div
                 class="lottery-tabs"
@@ -33,11 +52,9 @@ export default {
                     }
                 }
             >
-                <div class="lottery-tabs__nav">
-                    { this.headers }
-                </div>
+                { this.headers }
                 <div class="lottery-tabs__content">
-                    {this.panes}
+                    {panes}
                 </div>
             </div>
         )
@@ -45,7 +62,6 @@ export default {
     mounted () {
         this.currentValue = this.value
         this.headersUpdated()
-        this.paneUpdated()
         if (this.value !== undefined) {
             this.$nextTick(() => {
                 this.moveNonius(this.value, document.getElementById(`pane-${ this.value }`))
@@ -53,25 +69,6 @@ export default {
         }
     },
     methods: {
-        paneUpdated () {
-            const panes = this.$slots.default.map((item, i) => {
-                const { value } = item.componentOptions.propsData
-                return (
-                    <div
-                        key={i}
-                        class="lottery-tabs__pane"
-                        style={
-                            {
-                                display: value === this.currentValue ? 'block' : 'none'
-                            }
-                        }
-                    >
-                        {item}
-                    </div>
-                )
-            })
-            this.panes = panes
-        },
         headersUpdated () {
             const headers = this.$slots.default.map((item, i) => {
                 const { value, label } = item.componentOptions.propsData
@@ -90,15 +87,18 @@ export default {
                 )
             })
             headers.push(<div class="lottery-tabs__nonius"/>)
-            this.headers = <div class="lottery-tabs__headers">
-                { headers }
-            </div>
+            this.headers = (
+                <Navbar>
+                    <div class="lottery-tabs__headers" >
+                        { headers }
+                    </div>
+                </Navbar>
+            )
         },
         paneClick (val, e) {
             this.currentValue = val
             this.moveNonius(val, e.currentTarget)
             this.headersUpdated()
-            this.paneUpdated()
             this.$emit('paneClick', val)
         },
         moveNonius (val, el) {

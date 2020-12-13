@@ -4,7 +4,12 @@
             <div class="spring-2021-red-package-panel-title" />
         </template>
         <template slot="default">
-            <swiper :class="$style.redPackageList" :options="swiperOption" v-if="data.values.length">
+            <swiper
+                v-if="data.values.length"
+                ref="swiper"
+                :class="$style.redPackageList"
+                :options="swiperOption"
+            >
                 <template v-for="(item, i) of data.values">
                     <swiper-slide v-if="item.goodsInfo" :key="i">
                         <router-link
@@ -89,6 +94,21 @@ export default {
                     }
                     : false
             }
+        }
+    },
+    computed: {
+        swiper () {
+            return this.$refs.swiper.swiper
+        }
+    },
+    activated () {
+        if (this.swiper && this.swiper.autoplay.paused) {
+            this.swiper.autoplay.run()
+        }
+    },
+    deactivated () {
+        if (this.swiper) {
+            this.swiper.autoplay.pause()
         }
     },
     methods: {

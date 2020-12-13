@@ -1,5 +1,7 @@
 import moment from 'moment'
 import 'moment/locale/zh-cn.js'
+import { SectionToChinese } from '../assets/js/util'
+
 export default {
     dateFormat (val, format) {
         return moment(val).format(format)
@@ -35,12 +37,19 @@ export default {
     },
 
     /**
-   * 将后台的金额 分 转化为 元
-   * @val 金额
-   * @returns {*}
-   */
+       * 将后台的金额 分 转化为 元
+       * @val 金额
+       * @returns {*}
+       */
     formatAmount (val) {
         if (isNaN(Number(val))) return 0
         return Number((Number(val) / 100).toFixed(2))
+    },
+
+    sectionToChinese (val) {
+        if (typeof val === 'number') {
+            return SectionToChinese(val)
+        }
+        return ''
     }
 }
