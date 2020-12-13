@@ -50,7 +50,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 16px;
-    padding: 28px 0;
+    padding: 28px 0 28px 28px;
     background-color: #fff;
     border-radius: $--radius1;
     box-sizing: border-box;
