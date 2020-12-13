@@ -73,7 +73,9 @@ export default {
                     delay: 1000,
                     disableOnInteraction: false,
                     stopOnLast: false
-                }
+                },
+                observer: true,
+                observeParents: true
             }
         }
     },
@@ -88,6 +90,16 @@ export default {
     mounted () {
         this.swiperActiveIndex = this.swiper.activeIndex
         this.updateListStyle(this.swiperActiveIndex)
+    },
+    activated () {
+        if (this.swiper && this.swiper.autoplay.paused) {
+            this.swiper.autoplay.run()
+        }
+    },
+    deactivated () {
+        if (this.swiper) {
+            this.swiper.autoplay.pause()
+        }
     },
     methods: {
         // getSwiperActiveIndexes () {

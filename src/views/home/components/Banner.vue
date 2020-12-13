@@ -1,7 +1,8 @@
 <template>
     <div :class="$style.banner">
         <swiper
-            v-if="data.values.length + 1"
+            v-if="data.values.length"
+            ref="swiper"
             :class="$style.container"
             :options="swiperOptionBanner"
         >
@@ -57,7 +58,20 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['dragonGateCharity', 'dragonGateSign', 'dragonGatePlay'])
+        ...mapGetters(['dragonGateCharity', 'dragonGateSign', 'dragonGatePlay']),
+        swiper () {
+            return this.$refs.swiper.swiper
+        }
+    },
+    activated () {
+        if (this.swiper && this.swiper.autoplay.paused) {
+            this.swiper.autoplay.run()
+        }
+    },
+    deactivated () {
+        if (this.swiper) {
+            this.swiper.autoplay.pause()
+        }
     },
     methods: {
         // 根据装修时添加的信息做相应的跳转
