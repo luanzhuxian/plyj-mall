@@ -26,7 +26,7 @@ export const getLotteryRecords = activityId => axios.get(`/apis/v1/luckdraw/my_a
  * @param activityId
  * @returns {*}
  */
-export const getAwardRecords = (activityId, current = 1) => axios.get(`/apis/v1/luckdraw/award/${ activityId }`, { params: { size: 20, current } })
+export const getAwardRecords = (activityId, current = 1) => axios.get(`/apis/v1/luckdraw/award/${ activityId }`, { params: { size: 10e5, current } })
 
 /**
  * 抽奖

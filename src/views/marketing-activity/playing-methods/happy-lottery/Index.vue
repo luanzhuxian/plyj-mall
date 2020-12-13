@@ -358,7 +358,6 @@ export default {
                     if (x >= x1 && x < x1 + 1 && y >= y1 && y < y1 + 1) {
                         this.currentX = x1
                         this.currentY = y1
-                        console.log(t, D, x1, y1)
                         // 旋转的圈数够了，接下来定位到中奖的奖品
                         if ((t > D && (x1 !== this.prizeX || y1 !== this.prizeY)) || t <= D) {
                             this.run()
