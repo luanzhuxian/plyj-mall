@@ -134,10 +134,6 @@ export default {
         z-index: 10;
 
         :global {
-            .pl-tab {
-                justify-content: center;
-            }
-
             .pl-tab__pane.active:after {
                 left: 50%;
                 transform: translateX(-50%);

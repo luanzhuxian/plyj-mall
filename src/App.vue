@@ -1,14 +1,5 @@
 <template>
     <div id="app">
-
-        <router-link
-            tag="h1"
-            to="/happy-lottery/1337645128306774018"
-            style="font-size: 60px;"
-            v-if="$route.name !== 'HappyLottery'"
-        >
-            抽奖乐翻天
-        </router-link>
         <keep-alive :exclude="exclude">
             <router-view />
         </keep-alive>
