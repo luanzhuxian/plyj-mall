@@ -13,7 +13,7 @@
             <span>海报</span>
         </button>
         <pl-mask :show.sync="show">
-            <img style="height: 70vh;" v-if="poster" :src="poster" alt="">
+            <img style="height: 70vh;" v-if="!loading" :src="poster" alt="">
             <pl-svg v-else :class="$style.loading" name="icon-loading" fill="#fff" height="45" />
         </pl-mask>
     </div>
@@ -27,7 +27,8 @@ export default {
     data () {
         return {
             poster: '',
-            show: false
+            show: false,
+            loading: false
         }
     },
     props: {
@@ -63,10 +64,12 @@ export default {
     },
     methods: {
         async showPoster () {
+            this.show = true
+            this.loading = true
             if (!this.poster) {
                 await this.createPoster()
             }
-            this.show = true
+            this.loading = false
         },
         async createPoster () {
             const { cvs, ctx } = createCanvas(this.w, this.h)
