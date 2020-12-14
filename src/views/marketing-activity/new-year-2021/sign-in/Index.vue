@@ -78,14 +78,8 @@
         <Records
             action-name="打卡"
             active-name="智力题"
-        >
-            <template v-slot:shaidan="{total}">
-                已有<strong>{{ total }}人</strong>获得小聪明的奖励
-            </template>
-            <template v-slot:my-gift="{total}">
-                已有<strong>{{ total }}人</strong>获得小聪明的奖励
-            </template>
-        </Records>
+            record-text="小聪明的奖励"
+        />
         <!-- 活动规则 -->
         <ActivityRule :active-detail="activeDetail" />
         <!-- 分享海报 -->

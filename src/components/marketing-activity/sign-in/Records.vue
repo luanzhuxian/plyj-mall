@@ -1,11 +1,10 @@
 <template>
     <div :class="$style.signInRecords">
-        <Tab activity-color="#FE461F">
+        <Tab activity-color="#FE461F" v-model="tab">
             <TabPane label="好礼晒单" value="1">
                 <div>
                     <div :class="$style.statistics">
-                        <slot name="shaidan" :total="sunPresentListTotal" />
-                        <!--已有<strong>{{ sunPresentListTotal }}人</strong>获得端午礼品-->
+                        已有<strong>{{ sunPresentListTotal }}个</strong>获得{{ recordText }}
                     </div>
                     <div>
                         <SunPresentItem
@@ -26,8 +25,7 @@
             <TabPane label="我的奖品" value="2">
                 <div>
                     <div :class="$style.statistics">
-                        <!--我获得<strong>{{ myPresentList.length }}个</strong>端午礼品-->
-                        <slot name="my-gift" :total="myPresentList.length" />
+                        已有<strong>{{ myPresentList.length }}个</strong>获得{{ recordText }}
                     </div>
                     <div>
                         <MyPresentItem
@@ -69,10 +67,16 @@ export default {
         actionName: {
             type: String,
             default: ''
+        },
+        // 列表顶部的文字
+        recordText: {
+            type: String,
+            default: ''
         }
     },
     data () {
         return {
+            tab: '1',
             sunPresentListTotal: 112,
             myPresentList: []
         }
