@@ -9,38 +9,76 @@
     >
         <!-- 展示海报按钮 -->
         <button :class="$style.showPoster" @click="showPoster">
-            <pl-svg name="icon-poster-512b1" fill="#fff" height="25" vertical-align="-4" />
+            <pl-svg name="icon-poster-512b1" fill="#fff" height="25" :vertical-align="-4" />
             <span>海报</span>
         </button>
         <pl-mask :show="show" @close="closeHandler">
-            <pl-svg :class="$style.loading" name="icon-loading" fill="#fff" height="45" vertical-align="-4" />
+            <img style="height: 70vh;" v-if="poster" :src="poster" alt="">
+            <pl-svg v-else :class="$style.loading" name="icon-loading" fill="#fff" height="45" />
         </pl-mask>
     </div>
 </template>
 
 <script>
+/* eslint-disable */
+import { loadImage, createCanvas, generateQrcode } from '../../../assets/js/util'
 export default {
     name: 'SignInPoster',
+    data () {
+        return {
+            poster: ''
+        }
+    },
     props: {
         show: Boolean,
+        // 按钮边框颜色
         borderColor: {
             type: String,
             default: '#FFE3C8'
         },
-        // 背景色1
+        // 按钮背景色1
         bgc1: {
             type: String,
             default: '#FF981A'
         },
-        // 背景色1
+        // 按钮背景色1
         bgc2: {
             type: String,
             default: '#EE4620'
+        },
+        // 海报背景图片，建议尺寸 1500 * 2668, 格式为jpg
+        bgi: {
+            type: String,
+            default: ''
+        },
+        // 海报的宽高
+        w: {
+            type: Number,
+            default: 1500
+        },
+        h: {
+            type: Number,
+            default: 2668
         }
     },
     methods: {
-        showPoster () {
+        async showPoster () {
+            if (!this.poster) {
+                await this.createPoster()
+            }
             this.$emit('update:show', true)
+        },
+        async createPoster () {
+            const { cvs, ctx } = createCanvas(this.w, this.h)
+            const bg = await loadImage(this.bgi)
+            ctx.drawImage(bg, 0, 0, this.w, this.h)
+            const qrcode = await generateQrcode({
+                size: 300,
+                text: location.href,
+                type: 'canvas'
+            })
+            ctx.drawImage(qrcode, 522, 1780, 480, 480)
+            this.poster = cvs.toDataURL('image/jpeg', 0.8)
         },
         closeHandler () {
             this.$emit('update:show', false)

@@ -34,7 +34,13 @@
                     </div>
                 </div>
                 <!-- 展示海报按钮 -->
-                <Poster :show.sync="isShowSharePoster" />
+                <Poster
+                    :show.sync="isShowSharePoster"
+                    border-color="#FFE3C8"
+                    bgc1="#FF981A"
+                    bgc2="#EE4620"
+                    bgi="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/poster-bg.jpg"
+                />
                 <!-- 展示活动规则按钮 -->
                 <ActivityRule :show.sync="isShowRule" />
             </div>

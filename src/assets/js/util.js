@@ -374,6 +374,25 @@ export function loadImage (src) {
     })
 }
 
+/**
+ * 创建canvas
+ * @param w {number}
+ * @param h {number}
+ * @return {cvs, ctx}:{ HTMLCanvasElement, CanvasRenderingContext2D }
+ */
+export const createCanvas = (w = 0, h = 0) => {
+    const cvs = document.createElement('canvas')
+    const ctx = cvs.getContext('2d')
+    if (w && h) {
+        cvs.width = w
+        cvs.height = h
+    }
+    return {
+        cvs,
+        ctx
+    }
+}
+
 export const promise = {
     timeout (ms) {
         return new Promise(resolve => {
