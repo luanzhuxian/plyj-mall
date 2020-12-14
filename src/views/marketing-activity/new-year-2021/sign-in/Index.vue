@@ -33,17 +33,17 @@
                         </swiper>
                     </div>
                 </div>
-                <!-- 展示海报按钮 -->
-                <Poster
-                    :show.sync="isShowSharePoster"
-                    border-color="#FFE3C8"
-                    bgc1="#FF981A"
-                    bgc2="#EE4620"
-                    bgi="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/poster-bg.jpg"
-                />
-                <!-- 展示活动规则按钮 -->
-                <ActivityRule :show.sync="isShowRule" />
             </div>
+
+            <CountDown
+                tip-colour="#620003"
+                count-colour="#FE461F"
+                time-bottom-colour="#FE461F"
+                time-colour="#FFE3C8"
+                :count="999"
+                :duration="60 * 60 * 1000"
+                :status="1"
+            />
 
             <div class="bottom">
                 <!-- 活动倒计时 -->
@@ -249,6 +249,17 @@
             v-if="currentSignIn.isLastIcon && presentStage === 2"
             :show.sync="isShowPresentPopup"
         />
+
+        <!-- 展示海报按钮 -->
+        <Poster
+            :show.sync="isShowSharePoster"
+            border-color="#FFE3C8"
+            bgc1="#FF981A"
+            bgc2="#EE4620"
+            bgi="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/poster-bg.jpg"
+        />
+        <!-- 展示活动规则按钮 -->
+        <ActivityRule :show.sync="isShowRule" />
     </div>
 </template>
 
@@ -267,7 +278,6 @@ import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { generateQrcode, drawRoundRect, cutArcImage, createText } from '../../../../assets/js/util'
 import Countdown from '../../../../assets/js/Countdown'
 import share from '../../../../assets/js/wechat/wechat-share'
-import { getServerTime } from '../../../../apis/base-api'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
 import WinningGeneralPrize from './components/Winning-General-Prize'
@@ -276,24 +286,24 @@ import NoticingGrandPrize from './components/Noticing-Grand-Prize'
 import WinningGrandPrize from './components/Winning-Grand-Prize'
 import MissingGrandPrize from './components/Missing-Grand-Prize'
 // import ActivityRule from './components/Activity-Rule'
-import ActivityRule from '../../../../components/marketing-activity/sign-in/Activity-Rule.vue'
 import SigninIcon from './components/Signin-Icon'
 import PresentIcon from './components/Present-Icon'
 import SunPresentItem from './components/Sun-Present-Item'
 import MyPresentItem from './components/My-Present-Item'
 
 import Poster from '../../../../components/marketing-activity/sign-in/Poster.vue'
+import ActivityRule from '../../../../components/marketing-activity/sign-in/Activity-Rule.vue'
+import CountDownComponent from '../../../../components/marketing-activity/sign-in/Count-Down.vue'
 
 const activity_member = { 0: '所有注册用户', 1: 'Helper用户', 2: '普通会员', 3: '商家指定用户' }
 const default_avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
 const flaunt_Award_Name = '粽粽大礼'
-const countdownInstanceList = []
+// const countdownInstanceList = []
 export default {
     name: 'NewYearActivity',
     components: {
         swiper,
         swiperSlide,
-        ActivityRule,
         SunPresentItem,
         MyPresentItem,
         WinningGeneralPrize,
@@ -304,7 +314,9 @@ export default {
         SigninIcon,
         PresentIcon,
 
-        Poster
+        ActivityRule,
+        Poster,
+        CountDown: CountDownComponent
     },
     data () {
         return {
@@ -434,11 +446,11 @@ export default {
     },
     deactivated () {
         // 停止所有定时器
-        for (const item of countdownInstanceList) {
-            if ('stop' in item) {
-                item.stop()
-            }
-        }
+        // for (const item of countdownInstanceList) {
+        //     if ('stop' in item) {
+        //         item.stop()
+        //     }
+        // }
     },
     methods: {
 
@@ -475,11 +487,11 @@ export default {
         async init () {
             try {
                 // 停止所有定时器
-                for (const item of countdownInstanceList) {
-                    if ('stop' in item) {
-                        item.stop()
-                    }
-                }
+                // for (const item of countdownInstanceList) {
+                //     if ('stop' in item) {
+                //         item.stop()
+                //     }
+                // }
                 await this.getObtainedSunPresentList()
                 await this.getPresentList()
                 await this.getSignInIconList()
@@ -643,14 +655,14 @@ export default {
 
                 // 启动倒计时
                 {
-                    const { result: serverTime } = await getServerTime()
+                    const { result: serverTime } = await Countdown.getServerTime()
                     const now = serverTime
                     const start = moment(this.activeDetail.activityStartTime).valueOf()
                     const end = moment(this.activeDetail.activityEndTime).valueOf()
                     this.activityIsStart = now > start
                     this.activityIsOver = now > end
-                    const duration = this.activityIsOver ? 0 : this.activityIsStart ? end - now : start - now
-                    if (duration) this.countdown(duration)
+                    // const duration = this.activityIsOver ? 0 : this.activityIsStart ? end - now : start - now
+                    // if (duration) this.countdown(duration)
                 }
             } catch (e) {
                 throw e
@@ -896,38 +908,38 @@ export default {
         },
 
         // 倒计时
-        countdown (datetime) {
-            if (datetime < 0) return
-            const countdownInstance = new Countdown(datetime, data => {
-                if (!data) {
-                    // 倒计时结束，刷新数据
-                    this.init()
-
-                    // 清除时间残留
-                    this.time.d = ''
-                    return
-                }
-                const d = String(data.days)
-                const h = String(data.hours)
-                const m = String(data.minutes)
-                const s = String(data.seconds)
-
-                // 活动进行中，跨天更新当前签到信息
-                if (!this.activityIsOver && this.activityIsStart && this.time.d !== '' && Number(this.time.d) !== Number(d)) {
-                    this.previousPresentIsReceive = (this.currentSignIn.hasAward && this.currentSignIn.awardType !== '') || !this.currentSignIn.hasAward
-                    let currentIndex = this.signInIconList.findIndex(item => item.index > this.currentSignIn.index)
-                    currentIndex = currentIndex < 0 ? this.currentSignIn.index : currentIndex
-                    this.currentSignIn = this.currentSignIn.hasSignin ? this.signInIconList[currentIndex] : this.currentSignIn
-                    this.activeDetail.currentReceivePresentNote = this.currentSignIn.index
-                }
-                this.time.d = d.padStart(2, '0')
-                this.time.h = h.padStart(2, '0')
-                this.time.m = m.padStart(2, '0')
-                this.time.s = s.padStart(2, '0')
-            })
-            countdownInstance.start()
-            countdownInstanceList.push(countdownInstance)
-        }
+        // countdown (datetime) {
+        //     if (datetime < 0) return
+        //     const countdownInstance = new Countdown(datetime, data => {
+        //         if (!data) {
+        //             // 倒计时结束，刷新数据
+        //             this.init()
+        //
+        //             // 清除时间残留
+        //             this.time.d = ''
+        //             return
+        //         }
+        //         const d = String(data.days)
+        //         const h = String(data.hours)
+        //         const m = String(data.minutes)
+        //         const s = String(data.seconds)
+        //
+        //         // 活动进行中，跨天更新当前签到信息
+        //         if (!this.activityIsOver && this.activityIsStart && this.time.d !== '' && Number(this.time.d) !== Number(d)) {
+        //             this.previousPresentIsReceive = (this.currentSignIn.hasAward && this.currentSignIn.awardType !== '') || !this.currentSignIn.hasAward
+        //             let currentIndex = this.signInIconList.findIndex(item => item.index > this.currentSignIn.index)
+        //             currentIndex = currentIndex < 0 ? this.currentSignIn.index : currentIndex
+        //             this.currentSignIn = this.currentSignIn.hasSignin ? this.signInIconList[currentIndex] : this.currentSignIn
+        //             this.activeDetail.currentReceivePresentNote = this.currentSignIn.index
+        //         }
+        //         this.time.d = d.padStart(2, '0')
+        //         this.time.h = h.padStart(2, '0')
+        //         this.time.m = m.padStart(2, '0')
+        //         this.time.s = s.padStart(2, '0')
+        //     })
+        //     countdownInstance.start()
+        //     countdownInstanceList.push(countdownInstance)
+        // }
     }
 }
 </script>
