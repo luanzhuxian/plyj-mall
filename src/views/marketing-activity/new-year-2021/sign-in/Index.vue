@@ -202,7 +202,7 @@ export default {
         }
       }
       .sign-in-list{
-        padding: 30px 45px;
+        padding: 34px 45px;
         display: flex;
         justify-content: space-between;
         flex-wrap: wrap;

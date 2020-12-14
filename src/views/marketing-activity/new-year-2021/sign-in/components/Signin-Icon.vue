@@ -2,12 +2,10 @@
     <div class="icon-item"
          @click="clickHandler"
     >
-        <div class="icon">
-            <img v-if="hasSignin"
-                 src="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/checked.png">
-            <img v-else class="not-sign"
-                 src="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/un_checked.png">
-            <span v-if="!hasSignin">{{ materialDesc }}</span>
+        <div class="icon"
+             :class="{'disabled': !hasSignin}"
+             :style="{backgroundImage: 'url(' + (hasSignin ? 'https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/checked.png' : 'https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/un_checked.png') + ')' }">
+            {{ materialDesc }}
         </div>
         <p :class="{'not-sign': !hasSignin}">{{ iconName }}</p>
     </div>
@@ -47,27 +45,25 @@ export default {
 
 <style scoped lang="scss">
   .icon-item {
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 95px;
+    margin-bottom: 30px;
   }
 
   .icon {
-    position: relative;
-    text-align: center;
-
-    img {
-      width: 96px;
-      height: 112px;
-      object-fit: contain;
-    }
-
-    span {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      margin-top: -3px;
-      font-size: 36px;
-      color: #FFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    color: #FFE3C8;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width: 82px;
+    height: 68px;
+    &.disabled{
+      color: #fff;
     }
   }
 
