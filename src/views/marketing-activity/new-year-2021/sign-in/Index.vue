@@ -35,11 +35,13 @@
                 </div>
             </div>
 
+            <!-- 活动倒计时 -->
             <CountDown
                 tip-colour="#620003"
                 count-colour="#FE461F"
                 time-bottom-colour="#FE461F"
                 time-colour="#FFE3C8"
+                active-name="答题打卡"
                 :count="999"
                 :duration="60 * 60 * 1000"
                 :status="1"
@@ -47,7 +49,7 @@
 
             <div class="bottom">
                 <!-- 活动倒计时 -->
-                <div class="count-down">
+                <!--<div class="count-down">
                     <img src="https://mallcdn.youpenglai.com/static/admall/2.9.0/obtain-gift-head.png" alt="">
                     <div class="desc">
                         <h3>
@@ -58,7 +60,7 @@
                         </div>
                         <div v-else>活动已结束</div>
                     </div>
-                </div>
+                </div>-->
                 <!-- 参与活动 -->
                 <div class="join-activity">
                     <div class="control-top">
@@ -1096,55 +1098,6 @@ export default {
         position: relative;
         margin: 60px 15px 0;
         overflow: hidden;
-
-        .count-down {
-          position: absolute;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 100%;
-          line-height: 140px;
-
-          > img {
-            position: absolute;
-            width: 100%;
-          }
-
-          .desc {
-            position: relative;
-            margin-top: 100px;
-            margin-left: 48px;
-            text-align: center;
-            line-height: 40px;
-
-            > h3 {
-              font-size: 28px;
-              color: $fontColor1;
-
-              span {
-                color: $fontColor2;
-              }
-            }
-
-            > div {
-              margin-top: 10px;
-              font-size: 26px;
-              color: $fontColor2;
-
-              span {
-                min-width: 32px;
-                height: 36px;
-                margin: 0 2px;
-                padding: 0 2px;
-                border-radius:4px;
-                text-align: center;
-                display: inline-block;
-                background-color: $fontColor1;
-                color: $mainColor4;
-              }
-            }
-          }
-        }
-
         .join-activity {
           margin: 175px 13px 0;
           min-height: 500px;

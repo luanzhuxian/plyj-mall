@@ -12,7 +12,7 @@
             :class="$style.tip"
             v-if="status !== 0"
         >
-            已有<strong :class="$style.count">{{ count }}人</strong>参与答题打卡
+            已有<strong :class="$style.count">{{ count }}人</strong>参与{{ activeName }}
         </div>
 
         <div :class="$style.timeBar">
@@ -38,6 +38,11 @@ let countdownInstance = null
 export default {
     name: 'SignInCountDown',
     props: {
+        // 活动名称
+        activeName: {
+            type: String,
+            default: ''
+        },
         tipColour: {
             type: String,
             default: ''
