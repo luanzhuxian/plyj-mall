@@ -19,8 +19,17 @@ export default {
             poster: ''
         }
     },
+    props: {
+        id: {
+            type: String,
+            default: ''
+        }
+    },
     computed: {
         ...mapGetters(['avatar', 'userName'])
+    },
+    deactivated () {
+        this.poster = ''
     },
     methods: {
         async create () {
