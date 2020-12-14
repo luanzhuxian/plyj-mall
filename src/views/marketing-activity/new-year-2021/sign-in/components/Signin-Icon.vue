@@ -4,9 +4,9 @@
     >
         <div class="icon">
             <img v-if="hasSignin"
-                 src="https://mallcdn.youpenglai.com/static/admall/2.9.0/did-siginin-icon.jpg">
+                 src="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/checked.png">
             <img v-else class="not-sign"
-                 src="https://mallcdn.youpenglai.com/static/admall/2.9.0/no-signin-icon.jpg">
+                 src="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/un_checked.png">
             <span v-if="!hasSignin">{{ materialDesc }}</span>
         </div>
         <p :class="{'not-sign': !hasSignin}">{{ iconName }}</p>
@@ -55,7 +55,7 @@ export default {
     text-align: center;
 
     img {
-      width: 95px;
+      width: 96px;
       height: 112px;
       object-fit: contain;
     }
@@ -75,10 +75,10 @@ export default {
     line-height: 40px;
     text-align: center;
     font-size: 20px;
-    color: #FFA659;
+    color: #F60000;
 
     &.not-sign {
-      color: #2E9472;
+      color: #373737;
     }
   }
 </style>
