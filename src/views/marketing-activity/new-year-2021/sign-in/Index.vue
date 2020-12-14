@@ -1,17 +1,5 @@
 <template>
     <div class="sign-in">
-        <!-- 活动规则 -->
-        <ActivityRule
-            :show.sync="isShowRule"
-            flaunt-award-name="打卡聪明年"
-            :active-detail="activeDetail"
-        />
-
-        <!-- 分享海报 -->
-        <SharePoster
-            :show.sync="isShowSharePoster"
-            :poster="sharePoster"
-        />
         <!-- 礼品展示开始 -->
         <div class="present" v-if="presentList.length === 1">
             <img v-if="presentList[0].show" src="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/gift.png" alt="">
@@ -33,7 +21,17 @@
         </swiper>
         <!-- 礼品展示结束 -->
         <!-- 倒计时 -->
-        <div class="count-down" />
+        <div class="count-down">
+            <CountDown
+                active-name="答题打卡"
+                :status="1"
+                :duration="9000000"
+                tip-colour="#620003"
+                :count="122"
+                count-colour="#FE461F"
+                time-bottom-colour="#FE461F"
+                time-colour="#FFE3C8" />
+        </div>
         <!--  -->
         <div class="box-wrap">
             <div class="box-inner">
@@ -43,26 +41,31 @@
                 <div class="list" />
             </div>
         </div>
+        <!-- 活动规则 -->
+        <ActivityRule :active-detail="activeDetail" />
+        <!-- 分享海报 -->
+        <SharePoster bgi="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/poster-bg.jpg" />
     </div>
 </template>
 
 <script>
-import ActivityRule from './components/Activity-Rule'
-import SharePoster from '../../../../components/common/Share-Poster'
+import ActivityRule from '../../../../components/marketing-activity/sign-in/Activity-Rule'
+import SharePoster from '../../../../components/marketing-activity/sign-in/Poster'
+import CountDown from '../../../../components/marketing-activity/sign-in/Count-Down'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 export default {
     components: {
         swiper,
         swiperSlide,
         ActivityRule,
-        SharePoster
+        SharePoster,
+        CountDown
     },
     data () {
         return {
             isShowRule: false,
             isShowSharePoster: false,
             activeDetail: {},
-            sharePoster: '',
             presentList: [{
                 show: true
             }]
@@ -94,6 +97,9 @@ export default {
     background: url("https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/count_down_bg.png") no-repeat;
     background-size: 100% 100%;
     height: 159px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .box-wrap{
     background: #FE461F;

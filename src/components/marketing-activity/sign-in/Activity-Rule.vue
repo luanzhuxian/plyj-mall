@@ -11,8 +11,7 @@
         </button>
         <pl-popup
             title="活动细则"
-            :show="show"
-            @close="close"
+            :show.sync="show"
         >
             <div class="rule-content">
                 <h3>1.活动时间</h3>
@@ -38,6 +37,11 @@
 <script>
 export default {
     name: 'SignRule',
+    data () {
+        return {
+            show: false
+        }
+    },
     props: {
         borderColor: {
             type: String,
@@ -53,7 +57,6 @@ export default {
             type: String,
             default: '#EE4620'
         },
-        show: Boolean,
         poster: {
             type: String,
             default: ''
@@ -72,11 +75,7 @@ export default {
     },
     methods: {
         showRules () {
-            this.$emit('update:show', true)
-        },
-        close () {
-            this.$emit('update:show', false)
-            this.$emit('close', false)
+            this.show = true
         }
     }
 }

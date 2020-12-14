@@ -153,6 +153,7 @@ export default {
                     right: -15px;
                     transform: translateY(-50%);
                     line-height: 35px;
+                    color: var(--time-bottom-colour);
                 }
                 &.day {
                     margin-right: 36px;

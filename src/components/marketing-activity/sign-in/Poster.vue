@@ -12,7 +12,7 @@
             <pl-svg name="icon-poster-512b1" fill="#fff" height="25" :vertical-align="-4" />
             <span>海报</span>
         </button>
-        <pl-mask :show="show" @close="closeHandler">
+        <pl-mask :show.sync="show">
             <img style="height: 70vh;" v-if="poster" :src="poster" alt="">
             <pl-svg v-else :class="$style.loading" name="icon-loading" fill="#fff" height="45" />
         </pl-mask>
@@ -26,11 +26,11 @@ export default {
     name: 'SignInPoster',
     data () {
         return {
-            poster: ''
+            poster: '',
+            show: false
         }
     },
     props: {
-        show: Boolean,
         // 按钮边框颜色
         borderColor: {
             type: String,
@@ -66,7 +66,7 @@ export default {
             if (!this.poster) {
                 await this.createPoster()
             }
-            this.$emit('update:show', true)
+            this.show = true
         },
         async createPoster () {
             const { cvs, ctx } = createCanvas(this.w, this.h)
@@ -79,10 +79,6 @@ export default {
             })
             ctx.drawImage(qrcode, 522, 1780, 480, 480)
             this.poster = cvs.toDataURL('image/jpeg', 0.8)
-        },
-        closeHandler () {
-            this.$emit('update:show', false)
-            this.$emit('close', false)
         }
     }
 }
