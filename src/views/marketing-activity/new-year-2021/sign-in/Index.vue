@@ -44,7 +44,14 @@
         <Records
             action-name="打卡"
             active-name="智力题"
-        />
+        >
+            <template v-slot:shaidan="{total}">
+                已有<strong>{{ total }}人</strong>获得小聪明的奖励
+            </template>
+            <template v-slot:my-gift="{total}">
+                已有<strong>{{ total }}人</strong>获得小聪明的奖励
+            </template>
+        </Records>
         <!-- 活动规则 -->
         <ActivityRule :active-detail="activeDetail" />
         <!-- 分享海报 -->
@@ -86,7 +93,6 @@ export default {
 .sign-in{
   background: #C40E1A url("https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/sign_in_bg.png") no-repeat;
   background-size: 100% 553px;
-  height: 100vh;
   padding: 175px 0 30px;
   .present{
     height: 197px;

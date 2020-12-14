@@ -4,7 +4,8 @@
             <TabPane label="好礼晒单" value="1">
                 <div>
                     <div :class="$style.statistics">
-                        已有<strong>{{ sunPresentListTotal }}人</strong>获得端午礼品
+                        <slot name="shaidan" :total="sunPresentListTotal" />
+                        <!--已有<strong>{{ sunPresentListTotal }}人</strong>获得端午礼品-->
                     </div>
                     <div>
                         <SunPresentItem
@@ -25,16 +26,17 @@
             <TabPane label="我的奖品" value="2">
                 <div>
                     <div :class="$style.statistics">
-                        我获得<strong>{{ myPresentList.length }}个</strong>端午礼品
+                        <!--我获得<strong>{{ myPresentList.length }}个</strong>端午礼品-->
+                        <slot name="my-gift" :total="myPresentList.length" />
                     </div>
                     <div>
                         <MyPresentItem
                             v-for="index of 5"
                             :key="index"
-                            :award-type="1"
+                            :award-type="2"
+                            date="2020-20-02~2024-20-02"
                             award-img="item.awardImg"
                             award-name="item.awardName"
-                            is-grand-prsent="item.isGrandPrsent"
                             flaunt-award-name="FLAUNT_AWARD_NAME"
                         />
                     </div>

@@ -5,18 +5,16 @@
             <!-- 礼品 -->
             <img v-if="awardType === 1" :src="awardImg">
             <!-- 奖学金 -->
-            <img v-else-if="awardType === 2"
-                 src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/996b630f-df02-44ae-83fb-77b3231c8a0c.png">
+            <img v-else-if="awardType === 2" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/996b630f-df02-44ae-83fb-77b3231c8a0c.png">
             <!-- 全场满减券/品类券 -->
-            <img v-else-if="awardType === 3 || awardType === 4"
-                 src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/8d19c35d-00e9-4943-9458-d4b35a22bc72.png">
-            <i :class="{'grand-prize': isGrandPrsent}">{{ flauntAwardName }}</i>
+            <img v-else-if="awardType === 3 || awardType === 4" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/8d19c35d-00e9-4943-9458-d4b35a22bc72.png">
         </span>
         <!-- 礼品描述 -->
-        <h3>
+        <div class="info">
             <p>奖品 【{{ awardTypeDesc[awardType] }}】 </p>
             <p class="orange">{{ awardName }}</p>
-        </h3>
+            <p class="date">有效期 {{ date }}</p>
+        </div>
     </div>
 </template>
 
@@ -39,10 +37,12 @@ export default {
             type: String,
             default: ''
         },
-        // 是否为大奖
-        isGrandPrsent: Boolean,
         // 大奖名称
         flauntAwardName: {
+            type: String,
+            default: ''
+        },
+        date: {
             type: String,
             default: ''
         }
@@ -107,17 +107,25 @@ export default {
       }
     }
 
-    h3 {
+    .info {
       text-align: left;
       font-size: 26px;
       font-weight: 400;
       line-height: 40px;
       color: #333;
-      margin-left: 70px;
+      margin-left: 54px;
+        > p {
+            max-width: 380px;
+            @include elps();
+        }
 
       .orange {
         color: #fa4d2f;
       }
+        .date {
+            font-size: 24px;
+            color: #999;
+        }
     }
   }
 </style>
