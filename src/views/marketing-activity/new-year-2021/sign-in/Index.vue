@@ -34,14 +34,9 @@
                     </div>
                 </div>
                 <!-- 展示海报按钮 -->
-                <button class="show-poster" @click="showPoster">
-                    <pl-svg name="icon-poster-512b1" fill="#fff" height="25" />
-                    <span>海报</span>
-                </button>
+                <Poster :show.sync="isShowSharePoster" />
                 <!-- 展示活动规则按钮 -->
-                <button class="show-rule" @click="isShowRule = true">
-                    活动规则
-                </button>
+                <ActivityRule :show.sync="isShowRule" />
             </div>
 
             <div class="bottom">
@@ -200,26 +195,6 @@
             </div>
         </div>
 
-        <!-- 活动规则 -->
-        <ActivityRule
-            :show.sync="isShowRule"
-            :flaunt-award-name="FLAUNT_AWARD_NAME"
-            :active-detail="activeDetail"
-        />
-
-        <!-- 显示分享海报 -->
-        <SharePoster
-            :show.sync="isShowSharePoster"
-            :poster="sharePoster"
-        />
-
-        <!-- 显示粽粽签到海报 -->
-        <SharePoster
-            :show.sync="isShowNewYearPoster"
-            :poster="newYearPoster"
-            @close="hiddenNewYearCardPoster"
-        />
-
         <!-- 中阶梯奖品弹框 -->
         <WinningGeneralPrize
             v-if="!currentSignIn.isLastIcon && presentStage === 1"
@@ -272,6 +247,7 @@
 </template>
 
 <script>
+/* eslint-disable */
 import {
     getObtainedSunPresentList,
     getPresentList,
@@ -288,17 +264,19 @@ import share from '../../../../assets/js/wechat/wechat-share'
 import { getServerTime } from '../../../../apis/base-api'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
-import SharePoster from '../../../../components/common/Share-Poster'
 import WinningGeneralPrize from './components/Winning-General-Prize'
 import MissingGeneralPrize from './components/Missing-General-Prize'
 import NoticingGrandPrize from './components/Noticing-Grand-Prize'
 import WinningGrandPrize from './components/Winning-Grand-Prize'
 import MissingGrandPrize from './components/Missing-Grand-Prize'
-import ActivityRule from './components/Activity-Rule'
+// import ActivityRule from './components/Activity-Rule'
+import ActivityRule from '../../../../components/marketing-activity/sign-in/Activity-Rule.vue'
 import SigninIcon from './components/Signin-Icon'
 import PresentIcon from './components/Present-Icon'
 import SunPresentItem from './components/Sun-Present-Item'
 import MyPresentItem from './components/My-Present-Item'
+
+import Poster from '../../../../components/marketing-activity/sign-in/Poster.vue'
 
 const activity_member = { 0: '所有注册用户', 1: 'Helper用户', 2: '普通会员', 3: '商家指定用户' }
 const default_avatar = 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/default-avatar.png'
@@ -312,14 +290,15 @@ export default {
         ActivityRule,
         SunPresentItem,
         MyPresentItem,
-        SharePoster,
         WinningGeneralPrize,
         MissingGeneralPrize,
         NoticingGrandPrize,
         WinningGrandPrize,
         MissingGrandPrize,
         SigninIcon,
-        PresentIcon
+        PresentIcon,
+
+        Poster
     },
     data () {
         return {
@@ -347,7 +326,7 @@ export default {
             // 是否显示所有我的奖品
             showMyPresentListMore: false,
             // 是否显示粽粽有礼海报
-            isShowNewYearPoster: false,
+            // isShowNewYearPoster: false,
             // 海报是否在加载中
             isLoading: false,
             // 是否正在获取粽粽签到
@@ -749,137 +728,110 @@ export default {
             }
         },
 
-        // 生成活动分享海报
-        async showPoster () {
-            try {
-                if (this.isLoading) return
-                if (this.sharePoster) {
-                    this.isShowSharePoster = true
-                    return
-                }
-                this.isLoading = true
-                const bgImgUrl = 'https://mallcdn.youpenglai.com/static/admall/2.9.0/longmen-signin-poster.png'
-                const bgImg = await this.loadImage(bgImgUrl)
-                const canvas = document.createElement('canvas')
-                canvas.width = bgImg.width
-                canvas.height = bgImg.height
-                const ctx = canvas.getContext('2d')
-                ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height)
-                ctx.drawImage(this.qrcode, canvas.width / 2 - 118, canvas.height / 2 + 175, 240, 240)
-                const sharePoster = canvas.toDataURL('image/jpeg', 0.7)
-                this.sharePoster = sharePoster
-                this.isShowSharePoster = true
-            } catch (e) {
-                throw e
-            } finally {
-                this.isLoading = false
-            }
-        },
-
         // 生成粽粽有礼海报
-        async drawNewYearCardPoster (item) {
-            const imgUrl = item.posterUrl
-            const desc = item.name
-
-            const isSignIN = item.hasSignin
-            if (!isSignIN) {
-                if (!this.activityIsStart) return this.$warning('活动未开始')
-                if (this.activityIsOver) return this.$warning('活动已结束')
-                if (!this.currentSignIn.hasSignin) return this.$warning('今日可签到参与1个端午活动，请点击获取')
-                return this.$warning('今日已签到参与1个端午活动，请明日再来~')
-            }
-            if (this.isLoading) return
-            try {
-                this.isLoading = true
-                this.isShowNewYearPoster = false
-                const bgImg = await this.loadImage(imgUrl)
-                const canvas = document.createElement('canvas')
-                canvas.width = bgImg.width
-                canvas.height = bgImg.height
-                const ctx = canvas.getContext('2d')
-
-                // 绘制背景
-                ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height)
-
-                // 绘制机构logo
-                if (this.activeDetail.isShowLog) {
-                    const logoBg = await this.loadImage('https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/abcfae1b-54ff-41d1-b973-0b483847cc05.svg')
-                    let logo = await this.loadImage(this.activeDetail.logImgUrl)
-                    logo = await cutArcImage(logo)
-                    ctx.drawImage(logoBg, 0, 0, 120, 107)
-                    ctx.drawImage(logo, 10, 8, 66, 66)
-                }
-
-                // 绘制头像
-                let avatar = this.avatar || default_avatar
-                avatar = await this.loadImage(avatar)
-                avatar = await cutArcImage(avatar)
-                drawRoundRect({
-                    ctx,
-                    x: 24,
-                    y: 840,
-                    width: 100,
-                    height: 100,
-                    radius: 50,
-                    fillStyle: '#038C1A'
-                })
-                ctx.drawImage(avatar, 25, 841, 98, 98)
-
-                // 绘制粽粽有礼描述
-                ctx.font = '20px bold'
-                ctx.fillStyle = '#000'
-                ctx.textBaseline = 'hanging'
-                createText({
-                    ctx,
-                    x: 134,
-                    y: 860,
-                    text: desc,
-                    lineHeight: 34,
-                    width: 138
-                })
-                createText({
-                    ctx,
-                    x: 134,
-                    y: 890,
-                    text: '粽粽有礼',
-                    lineHeight: 34,
-                    width: 138
-                })
-                // 绘制二维码
-                drawRoundRect({
-                    ctx,
-                    x: 250,
-                    y: 840,
-                    width: 100,
-                    height: 100,
-                    radius: 10,
-                    fillStyle: '#038C1A'
-                })
-                ctx.drawImage(this.qrcode, 252, 842, 96, 96)
-
-                // 绘制二维码旁的文字
-                ctx.font = '20px bold'
-                ctx.fillStyle = '#000'
-                ctx.textBaseline = 'hanging'
-                createText({
-                    ctx,
-                    x: 360,
-                    y: 852,
-                    text: '长按识别保存图片分享给好友，一起参与活动',
-                    lineHeight: 24,
-                    width: 136,
-                    lineNumber: 3
-                })
-
-                const sharePoster = canvas.toDataURL('image/jpeg', 0.7)
-                this.newYearPoster = sharePoster
-                this.isShowNewYearPoster = true
-            } catch (e) {
-                throw e
-            } finally {
-                this.isLoading = false
-            }
-        },
+        // async drawNewYearCardPoster (item) {
+        //     const imgUrl = item.posterUrl
+        //     const desc = item.name
+        //
+        //     const isSignIN = item.hasSignin
+        //     if (!isSignIN) {
+        //         if (!this.activityIsStart) return this.$warning('活动未开始')
+        //         if (this.activityIsOver) return this.$warning('活动已结束')
+        //         if (!this.currentSignIn.hasSignin) return this.$warning('今日可签到参与1个端午活动，请点击获取')
+        //         return this.$warning('今日已签到参与1个端午活动，请明日再来~')
+        //     }
+        //     if (this.isLoading) return
+        //     try {
+        //         this.isLoading = true
+        //         this.isShowNewYearPoster = false
+        //         const bgImg = await this.loadImage(imgUrl)
+        //         const canvas = document.createElement('canvas')
+        //         canvas.width = bgImg.width
+        //         canvas.height = bgImg.height
+        //         const ctx = canvas.getContext('2d')
+        //
+        //         // 绘制背景
+        //         ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height)
+        //
+        //         // 绘制机构logo
+        //         if (this.activeDetail.isShowLog) {
+        //             const logoBg = await this.loadImage('https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/abcfae1b-54ff-41d1-b973-0b483847cc05.svg')
+        //             let logo = await this.loadImage(this.activeDetail.logImgUrl)
+        //             logo = await cutArcImage(logo)
+        //             ctx.drawImage(logoBg, 0, 0, 120, 107)
+        //             ctx.drawImage(logo, 10, 8, 66, 66)
+        //         }
+        //
+        //         // 绘制头像
+        //         let avatar = this.avatar || default_avatar
+        //         avatar = await this.loadImage(avatar)
+        //         avatar = await cutArcImage(avatar)
+        //         drawRoundRect({
+        //             ctx,
+        //             x: 24,
+        //             y: 840,
+        //             width: 100,
+        //             height: 100,
+        //             radius: 50,
+        //             fillStyle: '#038C1A'
+        //         })
+        //         ctx.drawImage(avatar, 25, 841, 98, 98)
+        //
+        //         // 绘制粽粽有礼描述
+        //         ctx.font = '20px bold'
+        //         ctx.fillStyle = '#000'
+        //         ctx.textBaseline = 'hanging'
+        //         createText({
+        //             ctx,
+        //             x: 134,
+        //             y: 860,
+        //             text: desc,
+        //             lineHeight: 34,
+        //             width: 138
+        //         })
+        //         createText({
+        //             ctx,
+        //             x: 134,
+        //             y: 890,
+        //             text: '粽粽有礼',
+        //             lineHeight: 34,
+        //             width: 138
+        //         })
+        //         // 绘制二维码
+        //         drawRoundRect({
+        //             ctx,
+        //             x: 250,
+        //             y: 840,
+        //             width: 100,
+        //             height: 100,
+        //             radius: 10,
+        //             fillStyle: '#038C1A'
+        //         })
+        //         ctx.drawImage(this.qrcode, 252, 842, 96, 96)
+        //
+        //         // 绘制二维码旁的文字
+        //         ctx.font = '20px bold'
+        //         ctx.fillStyle = '#000'
+        //         ctx.textBaseline = 'hanging'
+        //         createText({
+        //             ctx,
+        //             x: 360,
+        //             y: 852,
+        //             text: '长按识别保存图片分享给好友，一起参与活动',
+        //             lineHeight: 24,
+        //             width: 136,
+        //             lineNumber: 3
+        //         })
+        //
+        //         const sharePoster = canvas.toDataURL('image/jpeg', 0.7)
+        //         this.newYearPoster = sharePoster
+        //         this.isShowNewYearPoster = true
+        //     } catch (e) {
+        //         throw e
+        //     } finally {
+        //         this.isLoading = false
+        //     }
+        // },
         presentWarning (item) {
         // 只有礼品支持此提示
             if (!item.isPresent) return
@@ -922,15 +874,15 @@ export default {
         },
 
         // 隐藏粽粽有礼海报
-        hiddenNewYearCardPoster () {
-            this.isShowNewYearPoster = false
-
-            // 最后一个节点已签到，但未领取粽粽有礼大奖, 弹框提示领取最终奖品
-            if (this.currentSignIn.isLastIcon && this.currentSignIn.hasSignin && !this.isGrandPrsentSignIn) {
-                this.isShowPresentPopup = true
-                this.presentStage = 0
-            }
-        },
+        // hiddenNewYearCardPoster () {
+        //     this.isShowNewYearPoster = false
+        //
+        //     // 最后一个节点已签到，但未领取粽粽有礼大奖, 弹框提示领取最终奖品
+        //     if (this.currentSignIn.isLastIcon && this.currentSignIn.hasSignin && !this.isGrandPrsentSignIn) {
+        //         this.isShowPresentPopup = true
+        //         this.presentStage = 0
+        //     }
+        // },
 
         // 返回
         backMainActivityCenter () {
@@ -1119,55 +1071,6 @@ export default {
               }
             }
           }
-        }
-
-        .show-poster {
-          position: absolute;
-          right: 0;
-          top: 306px;
-          z-index: 1;
-          width: 100px;
-          height: 48px;
-          border: 1px solid $mainColor2;
-          border-right: none;
-          border-radius: 24px 0 0 24px;
-          line-height: 48px;
-          background: linear-gradient(90deg, $mainColor3 0%, $mainColor1 100%);
-          letter-spacing: 2px;
-
-          > svg {
-            position: absolute;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            vertical-align: middle;
-          }
-
-          > span {
-            display: inline-block;
-            margin-left: 32px;
-            font-size: 20px;
-            color: $fontColor1;
-          }
-        }
-
-        .show-rule {
-          position: absolute;
-          right: 0;
-          top: 366px;
-          width: 120px;
-          height: 48px;
-          border: 1px solid $mainColor2;
-          border-right: none;
-          border-radius: 24px 0 0 24px;
-          line-height: 48px;
-          background: linear-gradient(90deg, $mainColor3 0%, $mainColor1 100%);
-          z-index: 1;
-          font-size: 20px;
-          color: $fontColor1;
-          text-align: right;
-          padding-right: 8px;
-          letter-spacing: 2px;
         }
       }
 
