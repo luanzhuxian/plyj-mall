@@ -105,18 +105,17 @@ export default {
       position: fixed;
       right: 0;
       top: 366px;
-      width: 120px;
       height: 48px;
+      padding: 0 15px;
       border: 1px solid var(--bc);
       border-right: none;
       border-radius: 24px 0 0 24px;
       line-height: 48px;
       background: linear-gradient(90deg, var(--bgc1),var(--bgc2));
       z-index: 1;
-      font-size: 20px;
+      font-size: 24px;
       color: #fff;
       text-align: right;
-      padding-right: 8px;
       letter-spacing: 2px;
   }
 </style>
