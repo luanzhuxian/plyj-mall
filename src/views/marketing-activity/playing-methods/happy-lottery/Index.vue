@@ -132,8 +132,8 @@
 </template>
 
 <script>
-import LotteryTabs from './components/Lottery-Tabs.vue'
-import LotteryTabPane from './components/Lottery-Tab-Pane.vue'
+import LotteryTabs from '../../../../components/marketing-activity/tab/Lottery-Tabs.vue'
+import LotteryTabPane from '../../../../components/marketing-activity/tab/Lottery-Tab-Pane.vue'
 import Poster from './components/Poster.vue'
 import SilkBag from './components/Silk-Bag.vue'
 import LotterySuccess from './components/Lottery-Success.vue'

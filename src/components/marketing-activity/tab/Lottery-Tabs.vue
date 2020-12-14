@@ -1,5 +1,5 @@
 <script lang="jsx">
-import Navbar from './Lottery-Navs.vue'
+import Navbar from '../../../views/marketing-activity/playing-methods/happy-lottery/components/Lottery-Navs.vue'
 export default {
     name: 'LotteryTabs',
     components: {
@@ -8,7 +8,6 @@ export default {
     data () {
         return {
             headers: [],
-            activityColor: '#E63303',
             noniusWidth: '0px',
             noniusLeft: '0px',
             currentValue: ''
@@ -18,6 +17,10 @@ export default {
         value: {
             type: [Number, String],
             default: ''
+        },
+        activityColor: {
+            type: String,
+            default: '#E63303'
         }
     },
     model: {

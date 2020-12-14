@@ -41,6 +41,10 @@
                 <div class="list" />
             </div>
         </div>
+        <Records
+            action-name="打卡"
+            active-name="智力题"
+        />
         <!-- 活动规则 -->
         <ActivityRule :active-detail="activeDetail" />
         <!-- 分享海报 -->
@@ -49,9 +53,10 @@
 </template>
 
 <script>
-import ActivityRule from '../../../../components/marketing-activity/sign-in/Activity-Rule'
-import SharePoster from '../../../../components/marketing-activity/sign-in/Poster'
-import CountDown from '../../../../components/marketing-activity/sign-in/Count-Down'
+import ActivityRule from '../../../../components/marketing-activity/sign-in/Activity-Rule.vue'
+import SharePoster from '../../../../components/marketing-activity/sign-in/Poster.vue'
+import CountDown from '../../../../components/marketing-activity/sign-in/Count-Down.vue'
+import Records from '../../../../components/marketing-activity/sign-in/Records.vue'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 export default {
     components: {
@@ -59,7 +64,8 @@ export default {
         swiperSlide,
         ActivityRule,
         SharePoster,
-        CountDown
+        CountDown,
+        Records
     },
     data () {
         return {
