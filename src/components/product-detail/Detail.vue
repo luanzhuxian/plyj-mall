@@ -68,7 +68,7 @@ export default {
 </script>
 <style module lang="scss">
     .detail-info {
-        padding: 30px 40px;
+        /*padding: 30px 40px;*/
         background-color: #fff;
 
         h3 {
@@ -85,11 +85,13 @@ export default {
         justify-content: flex-start;
         color: #999 !important;
         font-size: 16px !important;
+        overflow-x: hidden;
 
         img {
             display: inline-block;
-            width: 670px !important;
+            width: 100vw;
             height: auto !important;
+            transform: translateX(-15px);
         }
     }
 </style>

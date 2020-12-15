@@ -117,7 +117,7 @@
         </div>
 
         <SilkBag :detail="detail" />
-        <Poster />
+        <Poster :id="id" />
         <LotterySuccess
             :show.sync="showLotterySuccess"
             :grade="lotterAward.grade"
