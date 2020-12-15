@@ -82,6 +82,7 @@ export default {
     },
     methods: {
         clickHandler () {
+            if (!this.detail.hasSignin) return
             this.$emit('clickHandler', this.detail)
         }
     }

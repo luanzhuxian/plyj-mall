@@ -23,7 +23,7 @@
 /* eslint-disable */
 import { loadImage, createCanvas, generateQrcode } from '../../../assets/js/util'
 export default {
-    name: 'SignInPoster',
+    name: 'SharePoster',
     data () {
         return {
             poster: '',

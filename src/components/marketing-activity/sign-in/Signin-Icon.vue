@@ -1,19 +1,33 @@
 <template>
-    <div class="icon-item"
-         @click="clickHandler"
-    >
-        <div class="icon"
-             :class="{'disabled': !hasSignin}"
-             :style="{backgroundImage: 'url(' + (hasSignin ? 'https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/checked.png' : 'https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/un_checked.png') + ')' }">
-            {{ materialDesc }}
+    <div>
+        <div class="icon-item"
+             @click="clickHandler"
+        >
+            <div class="icon"
+                 :class="{'disabled': !hasSignin}"
+                 :style="{backgroundImage: 'url(' + (hasSignin ? 'https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/checked.png' : 'https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/un_checked.png') + ')' }">
+                {{ materialDesc }}
+            </div>
+            <p :class="{'not-sign': !hasSignin}">{{ iconName }}</p>
         </div>
-        <p :class="{'not-sign': !hasSignin}">{{ iconName }}</p>
+        <pl-mask :show.sync="show">
+            <img style="height: 70vh;" v-if="!loading" :src="bgi" alt="">
+            <pl-svg v-else class="loading" name="icon-loading" fill="#fff" height="45" />
+        </pl-mask>
     </div>
 </template>
 
 <script>
+import { loadImage, createCanvas, generateQrcode } from '../../../assets/js/util'
 export default {
     name: 'SigninIcon',
+    data () {
+        return {
+            poster: '',
+            show: false,
+            loading: false
+        }
+    },
     props: {
         // 签到节点详情
         detail: {
@@ -33,11 +47,43 @@ export default {
         iconName: {
             type: String,
             default: ''
+        },
+        // 海报背景图片，建议尺寸 1500 * 2269, 格式为jpg
+        bgi: {
+            type: String,
+            default: ''
+        },
+        // 海报的宽高
+        w: {
+            type: Number,
+            default: 1500
+        },
+        h: {
+            type: Number,
+            default: 2668
         }
     },
     methods: {
-        clickHandler () {
-            this.$emit('clickHandler', this.detail)
+        async clickHandler () {
+            if (!this.detail.hasSignin) return
+            this.show = true
+            this.loading = true
+            if (!this.poster) {
+                await this.createPoster()
+            }
+            this.loading = false
+        },
+        async createPoster () {
+            const { cvs, ctx } = createCanvas(this.w, this.h)
+            const bg = await loadImage(this.bgi)
+            ctx.drawImage(bg, 0, 0, this.w, 2269)
+            const qrcode = await generateQrcode({
+                size: 300,
+                text: location.href,
+                type: 'canvas'
+            })
+            ctx.drawImage(qrcode, 522, 2300, 480, 480)
+            this.poster = cvs.toDataURL('image/jpeg', 0.8)
         }
     }
 }
@@ -75,6 +121,11 @@ export default {
 
     &.not-sign {
       color: #373737;
+    }
+  }
+  .loading {
+    &:global {
+      animation: rotate 2s linear infinite;
     }
   }
 </style>

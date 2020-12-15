@@ -5,13 +5,9 @@
             <img v-if="presentList[0].show" src="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/gift.png" alt="">
         </div>
         <swiper :options="swiperOption" v-if="presentList.length > 1" class="swiper">
-            <swiper-slide v-for="(item,index) in presentList" :key="index" class="swiper-no-swiping">
+            <swiper-slide v-for="(item,index) in presentList" :key="index">
                 <div class="swiper-box">
                     <div class="img">
-                        <!--有礼品图片时的背景-->
-                        <img v-if="item.show" class="gift-bg" src="https://mallcdn.youpenglai.com/static/admall/2.9.0/empty-gift.png" alt="">
-                        <!--无礼品图片时的背景-->
-                        <img v-else class="gift-bg" src="https://mallcdn.youpenglai.com/static/admall/2.9.0/small-gift-style.png" alt="">
                         <!--礼品图片-->
                         <img v-if="item.show" :src="item.awardImg" class="gift">
                         <span>{{ item.awardName }}</span>
@@ -60,7 +56,7 @@
                             :has-signin="item.hasSignin"
                             :material-desc="item.materialDesc"
                             :icon-name="item.name"
-                            @clickHandler="drawNewYearCardPoster"
+                            :bgi="item.poster"
                         />
                         <PresentIcon
                             v-else
@@ -69,7 +65,6 @@
                             :is-grand-prsent="item.isGrandPrsent"
                             :award-type="item.awardType"
                             :award-img="item.awardImg"
-                            @clickHandler="presentWarning"
                         />
                     </div>
                 </div>
@@ -108,27 +103,59 @@ export default {
     },
     data () {
         return {
+            id: '',
             isShowRule: false,
             isShowSharePoster: false,
             activeDetail: {
                 signinNumber: 122,
                 status: 1
             },
+            swiperOption: {
+                direction: 'horizontal',
+                effect: 'coverflow',
+                speed: 1000,
+                loop: true,
+                slidesPerView: 3,
+                spaceBetween: 24,
+                autoplay: {
+                    // 1秒切换一次
+                    delay: 1000,
+                    disableOnInteraction: false,
+                    stopOnLast: false
+                },
+                observer: true,
+                observeParents: true
+            },
             presentList: [{
-                show: true
+                show: true,
+                awardImg: 'https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/gift.png',
+                awardName: ''
+            }, {
+                show: true,
+                awardImg: 'https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/gift.png',
+                awardName: ''
+            }, {
+                show: true,
+                awardImg: 'https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/gift.png',
+                awardName: ''
             }],
-            signInIconList: [{ materialDesc: '买', name: '买食材' }, {}, {}, {}, {}, {}]
+            signInIconList: []
         }
     },
+    created () {
+        this.id = this.$route.params.id
+        this.getSignInIconList()
+    },
     methods: {
+        getSignInIconList () {
+            this.signInIconList = [{ isPresent: false, hasSignin: true, materialDesc: '买', name: '买食材', poster: 'https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/%E6%B5%B7%E6%8A%A51.jpg' }, {}, {}, {}, {}, {}]
+        },
         signIn () {
             console.log('打卡答题')
         },
         lottery () {
             console.log('抽奖')
-        },
-        drawNewYearCardPoster () {},
-        presentWarning () {}
+        }
     }
 }
 </script>
@@ -146,7 +173,12 @@ export default {
     }
   }
   .swiper {
-    height: 197px;
+    width: 80vw;
+    .swiper-box {
+      width: 201px;
+      height: 253px;
+      overflow: hidden;
+    }
   }
   .count-down{
     margin-top: 17px;
@@ -160,7 +192,7 @@ export default {
   .box-wrap{
     background: #FE461F;
     border-radius: 20px;
-    margin: -20px 18px 0;
+    margin: -20px 18px 56px;
     padding: 22px 28px 58px;
     .box-inner{
       background: #fff;
