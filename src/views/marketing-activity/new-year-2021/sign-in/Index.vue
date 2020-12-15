@@ -91,8 +91,8 @@
 import ActivityRule from '../../../../components/marketing-activity/sign-in/Activity-Rule'
 import SharePoster from '../../../../components/marketing-activity/sign-in/Poster'
 import CountDown from '../../../../components/marketing-activity/sign-in/Count-Down'
-import SigninIcon from './components/Signin-Icon'
-import PresentIcon from './components/Present-Icon'
+import SigninIcon from '../../../../components/marketing-activity/sign-in/Signin-Icon'
+import PresentIcon from '../../../../components/marketing-activity/sign-in/Present-Icon'
 import Records from '../../../../components/marketing-activity/sign-in/Records'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 export default {
