@@ -296,6 +296,7 @@ export default {
                 const skuCode1 = this.currentSkuAttrs[0].id
                 const skuCode2 = this.currentSkuAttrs[1] ? this.currentSkuAttrs[1].id : ''
                 const sku = this.skuList.find(item => item.skuCode1 === skuCode1 && item.skuCode2 === skuCode2)
+                this.count = sku.minBuyNum
                 return {
                     ...sku,
                     count: sku.minBuyNum,
