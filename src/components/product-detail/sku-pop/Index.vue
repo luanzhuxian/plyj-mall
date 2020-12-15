@@ -371,7 +371,8 @@ export default {
                 for (const skuAttr of skuAttr.productAttributeValues) {
                     // 设置默认选中
                     this.$set(skuAttr, 'checked', false)
-                    this.$set(skuAttr, 'disabled', false)
+                    const disabled = !this.skuList.some(item => item.skuCode1 === skuAttr.id || item.skuCode2 === skuAttr.id)
+                    this.$set(skuAttr, 'disabled', disabled)
                 }
             }
             const attrs = [...this.skuAttrList]
