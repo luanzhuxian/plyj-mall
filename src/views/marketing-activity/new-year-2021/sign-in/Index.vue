@@ -39,6 +39,7 @@
                             <div class="tips">还差6次打卡答题可参与智慧礼抽奖</div>
                         </div>
                         <button class="btn" :class="{'disabled': false}" :disabled="false" @click="signIn">打卡答题</button>
+                        <button v-if="false" class="btn" :class="{'disabled': false}" :disabled="false" @click="receive">领取奖品</button>
                     </div>
                     <div class="info" v-if="activeDetail.status === 1 && activeDetail.isLottery">
                         <div>
@@ -79,6 +80,12 @@
         <ActivityRule :active-detail="activeDetail" />
         <!-- 分享海报 -->
         <SharePoster bgi="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/poster-bg.jpg" />
+        <!-- 提示弹框 -->
+        <InfoModal
+            :show.sync="isShowInfoModal"
+            title="恭喜您打卡6个智力题"
+            sub-title="获得礼品"
+        />
     </div>
 </template>
 
@@ -89,6 +96,7 @@ import CountDown from '../../../../components/marketing-activity/sign-in/Count-D
 import SigninIcon from '../../../../components/marketing-activity/sign-in/Signin-Icon'
 import PresentIcon from '../../../../components/marketing-activity/sign-in/Present-Icon'
 import Records from '../../../../components/marketing-activity/sign-in/Records'
+import InfoModal from '../../../../components/marketing-activity/sign-in/Info-Modal'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 export default {
     components: {
@@ -99,7 +107,8 @@ export default {
         CountDown,
         SigninIcon,
         PresentIcon,
-        Records
+        Records,
+        InfoModal
     },
     data () {
         return {
@@ -139,7 +148,8 @@ export default {
                 awardImg: 'https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/gift.png',
                 awardName: ''
             }],
-            signInIconList: []
+            signInIconList: [],
+            isShowInfoModal: false
         }
     },
     created () {
@@ -151,7 +161,10 @@ export default {
             this.signInIconList = [{ isPresent: false, hasSignin: true, materialDesc: '买', name: '买食材', poster: 'https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/%E6%B5%B7%E6%8A%A51.jpg' }, {}, {}, {}, {}, {}]
         },
         signIn () {
-            console.log('打卡答题')
+            this.isShowInfoModal = true
+        },
+        receive () {
+            console.log('领取奖品')
         },
         lottery () {
             console.log('抽奖')
