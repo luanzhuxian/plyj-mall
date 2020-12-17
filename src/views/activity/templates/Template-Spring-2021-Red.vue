@@ -13,7 +13,7 @@
                     </Panel>
                 </section>
                 <!-- 抽奖 -->
-                <section :class="[$style.happyLottery, $style.module]" v-if="currentLottery && currentLottery.id">
+                <section :class="[$style.happyLottery, $style.module]" v-if="currentLottery && currentLottery.id && ~[1, 2].indexOf(currentLottery.status)">
                     <HappyLottery :data="currentLottery" />
                 </section>
                 <!-- 福利红包 -->
