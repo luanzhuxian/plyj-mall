@@ -4,20 +4,20 @@
             <transition name="fade">
                 <!-- 错过阶梯奖品弹框 -->
                 <div class="present-box">
-                    <div class="top">
+                    <div class="top" :style="{backgroundImage: 'url('+ topBg +')', color: textColor}">
                         很遗憾 您与奖品擦肩而过
                         <p>感谢您的参与</p>
                     </div>
                     <div class="detail">
                         <div class="no-present">
-                            <img src="https://mallcdn.youpenglai.com/static/admall/2.9.0/sad-zongzi.png">
+                            <img :src="sadImg">
                         </div>
                     </div>
                     <div class="info">
-                        <p>您再参与{{ needSignInCount }}个端午活动即可参与抽奖</p>
+                        <p>您再参与{{ needSignInCount }}次打卡活动即可参与抽奖</p>
                     </div>
                     <div class="footer">
-                        <button @click="close">朕知道了</button>
+                        <button @click="close" :style="{ color: btnTextColor}">朕知道了</button>
                     </div>
                 </div>
             </transition>
@@ -37,6 +37,23 @@ export default {
         needSignInCount: {
             type: [Number, String],
             default: 0
+        },
+        // 头部背景图
+        topBg: {
+            type: String,
+            default: ''
+        },
+        textColor: {
+            type: String,
+            default: ''
+        },
+        btnTextColor: {
+            type: String,
+            default: ''
+        },
+        sadImg: {
+            type: String,
+            default: ''
         }
     },
     methods: {

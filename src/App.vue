@@ -2,7 +2,7 @@
     <div id="app">
         <router-link
             tag="h1"
-            to="/new-year-2021/sign-in/1339101179968499714"
+            to="/new-year-2021/sign-in/1339443015350235138"
             style="font-size: 60px;"
             v-if="$route.name !== 'NewYearSignIn'"
         >

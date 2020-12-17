@@ -1,11 +1,9 @@
 <template>
     <div>
-        <div class="icon-item"
-             @click="clickHandler"
-        >
+        <div @click="clickHandler">
             <div class="icon"
                  :class="{'disabled': !hasSignin}"
-                 :style="{backgroundImage: 'url(' + (hasSignin ? 'https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/checked.png' : 'https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/un_checked.png') + ')' }">
+                 :style="{backgroundImage: 'url(' + (hasSignin ? iconImgChecked : iconImg) + ')' }">
                 {{ materialDesc }}
             </div>
             <p :class="{'not-sign': !hasSignin}">{{ iconName }}</p>
@@ -43,6 +41,16 @@ export default {
         iconName: {
             type: String,
             default: ''
+        },
+        // 图标图片
+        iconImg: {
+            type: String,
+            default: ''
+        },
+        // 图标高亮图片
+        iconImgChecked: {
+            type: String,
+            default: ''
         }
     },
     methods: {
@@ -55,14 +63,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .icon-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 95px;
-    margin-bottom: 30px;
-  }
-
   .icon {
     display: flex;
     align-items: center;

@@ -1,7 +1,7 @@
 <template>
-    <div class="prensent-icon-item" @click="clickHandler">
+    <div @click="clickHandler">
         <!-- 未抽奖前普通奖品展示-->
-        <div v-if="!hasSignin && !isGrandPrsent">
+        <div v-if="!hasSignin && !isGrandPrsent" style="margin-top: 10px">
             <img class="icon-bg" src="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/present.png" alt="">
             <p class="not-sign">礼品</p>
         </div>
@@ -78,13 +78,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .prensent-icon-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 95px;
-    margin-bottom: 30px;
-  }
   .icon-bg {
     width: 60px;
     height: 60px;
@@ -92,8 +85,10 @@ export default {
   }
 
   .smart-bg{
-    width: 82px;
-    height: 66px;
+    width: 113px;
+    height: 72px;
+    object-fit: contain;
+    margin-bottom: -8px;
   }
 
   p {
@@ -101,7 +96,6 @@ export default {
     font-size: 20px;
     line-height: 40px;
     text-align: center;
-    margin-left: -10px;
     &.not-sign {
       color: #373737;
     }

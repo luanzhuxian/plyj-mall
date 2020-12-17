@@ -3,8 +3,8 @@
         <div class="bg-gray">
             <transition name="fade">
                 <div class="present-box">
-                    <div class="top">
-                        恭喜您签到参与{{ signedInNumber }}个端午活动
+                    <div class="top" :style="{backgroundImage: 'url('+ topBg +')', color: textColor}">
+                        恭喜您签到参与{{ signedInNumber }}次打卡签到
                         <p class="has-underline">获得{{ awardTypeDesc[awardType] }}</p>
                     </div>
                     <div class="detail">
@@ -52,7 +52,7 @@
                         <p>您可在“{{ awardPackage[awardType] }}”中查看</p>
                     </div>
                     <div class="footer">
-                        <button class="accept" @click="close">开心收下</button>
+                        <button class="accept" :style="{background: bgColor, color: textColor}" @click="close">开心收下</button>
                     </div>
                 </div>
             </transition>
@@ -112,6 +112,19 @@ export default {
         couponName: {
             type: String,
             default: ''
+        },
+        // 头部背景图
+        topBg: {
+            type: String,
+            default: ''
+        },
+        bgColor: {
+            type: String,
+            default: '#FF9F4B'
+        },
+        textColor: {
+            type: String,
+            default: '#ffdcb3'
         }
     },
     data () {
@@ -165,10 +178,9 @@ export default {
     padding-top: 60px;
     height: 170px;
     text-align: center;
-    background: url('https://mallcdn.youpenglai.com/static/admall/2.9.0/gift-head.png') center top no-repeat;
+    background-repeat: no-repeat;
     background-size: cover;
     font-size: 40px;
-    color: #ffdcb3;
 
     p {
       position: relative;
@@ -333,10 +345,9 @@ export default {
     .accept {
       width: 326px;
       height: 52px;
-      background: #FF9F4B;
       border-radius: 50px;
       line-height: 52px;
-      color: #FFF;
+      box-shadow: 0px 3px 6px rgba(240, 28, 21, 0.6);
     }
   }
 

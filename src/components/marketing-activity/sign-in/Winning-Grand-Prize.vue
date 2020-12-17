@@ -3,7 +3,7 @@
         <div class="bg-gray">
             <transition name="fade">
                 <div class="grand-present-box">
-                    <img src="https://mallcdn.youpenglai.com/static/admall/2.9.0/obtain-gift-head.png">
+                    <img :src="bgImg">
                     <div class="top">恭喜你获得{{ flauntAwardName }}</div>
                     <div class="bottom">
                         <div class="detail">
@@ -12,7 +12,7 @@
                             <p>有效期：{{ startTime | dateFormat('YYYY.MM.DD') }}-{{ endTime | dateFormat('YYYY.MM.DD') }}</p>
                         </div>
                         <div class="footer">
-                            <button @click="close">开心收下</button>
+                            <button @click="close" :style="{background: bgColor, color: textColor}">开心收下</button>
                         </div>
                     </div>
                 </div>
@@ -53,6 +53,18 @@ export default {
         endTime: {
             type: String,
             default: ''
+        },
+        bgImg: {
+            type: String,
+            default: ''
+        },
+        bgColor: {
+            type: String,
+            default: '#FF9F4B'
+        },
+        textColor: {
+            type: String,
+            default: '#ffdcb3'
         }
     },
     methods: {
@@ -84,36 +96,36 @@ export default {
 
     > img {
       width: 96vw;
-      height: 28vw;
       object-fit: cover;
       position: absolute;
+      z-index: -1;
       left: 50%;
       transform: translateX(-50%);
-      top: -13vw;
-      margin-left: -10px;
+      top: -250px;
     }
   }
 
   .top {
-    position: relative;
-    margin: 0 auto;
-    padding-top: 10px;
-    padding-left: 10px;
-    line-height: 70px;
+    margin: 0 60px -15px;
+    line-height: 69px;
     text-align: center;
-    font-size: 45px;
-    color: #FFDCB3;
+    font-size: 30px;
+    color: #F01516;
+    background: #fff;
+    border-radius: 20px;
   }
 
   .bottom {
     border-radius: 42px;
     padding: 10px 10px 20px 10px;
     width: 460px;
+    background: #fff;
+    box-shadow: 0px 3px 5px rgba(255, 0, 0, 0.6);
     .detail {
       text-align: center;
       border-radius: 30px;
       padding: 60px 0;
-      background: #3E9F7F url('https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/83e5925d-2d8a-4dd8-b009-755f3b2823d1.png') bottom no-repeat;
+      background: #F01516 url('https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/83e5925d-2d8a-4dd8-b009-755f3b2823d1.png') bottom no-repeat;
       background-size: contain;
       color: #fff;
       > img {
@@ -145,11 +157,10 @@ export default {
       button {
         width: 326px;
         height: 52px;
-        background: #FF9F4B;
         border-radius: 50px;
         font-size: 30px;
         line-height: 52px;
-        color: #FFF;
+        box-shadow: 0px 3px 6px rgba(240, 28, 21, 0.6);
       }
     }
   }

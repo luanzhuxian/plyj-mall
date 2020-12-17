@@ -3,18 +3,18 @@
         <div class="bg-gray">
             <transition name="fade">
                 <div class="present-box">
-                    <div class="top">
+                    <div class="top" :style="{backgroundImage: 'url('+ topBg +')', color: textColor}">
                         很遗憾 您与奖品擦肩而过
                         <p>新年喜临门 感谢您的参与</p>
                     </div>
                     <div class="detail">
                         <div class="no-present">
-                            <img src="https://mallcdn.youpenglai.com/static/admall/2.9.0/sad-zongzi.png">
+                            <img :src="sadImg">
                         </div>
                     </div>
                     <div class="footer">
                         <div class="btns">
-                            <button class="iKnow" @click="close">朕知道了</button>
+                            <button class="iKnow" :style="{color: btnTextColor}" @click="close">朕知道了</button>
                             <button @click="backMainActivityCenter">返回首页</button>
                         </div>
                     </div>
@@ -31,6 +31,23 @@ export default {
         show: {
             type: Boolean,
             default: false
+        },
+        // 头部背景图
+        topBg: {
+            type: String,
+            default: ''
+        },
+        sadImg: {
+            type: String,
+            default: ''
+        },
+        textColor: {
+            type: String,
+            default: ''
+        },
+        btnTextColor: {
+            type: String,
+            default: ''
         }
     },
     methods: {

@@ -5,15 +5,14 @@
                 <!-- 中年味大奖前提示 -->
                 <div class="grand-present-tip-box">
                     <div class="top">
-                        <p>恭喜你已签到参与所有端午活动</p>
+                        <p>恭喜你已完成打卡智力题</p>
                         <p>请抽取{{ flauntAwardName }}</p>
                     </div>
-                    <div class="detail">
-                        <img src="https://mallcdn.youpenglai.com/static/admall/2.9.0/large-gift.png">
-                        <span>{{ flauntAwardName }}</span>
+                    <div class="detail" :style="{backgroundImage: 'url('+ bgImg +')'}">
+                        <img :src="awardImg">
                     </div>
                     <div class="footer">
-                        <button @click="close">立即抽奖</button>
+                        <button @click="close" :style="{background: bgColor, color: textColor}">立即抽奖</button>
                     </div>
                 </div>
             </transition>
@@ -33,6 +32,22 @@ export default {
         flauntAwardName: {
             type: String,
             default: '大奖'
+        },
+        bgImg: {
+            type: String,
+            default: ''
+        },
+        awardImg: {
+            type: String,
+            default: ''
+        },
+        bgColor: {
+            type: String,
+            default: '#FF9F4B'
+        },
+        textColor: {
+            type: String,
+            default: '#ffdcb3'
         }
     },
     methods: {
@@ -73,18 +88,16 @@ export default {
   }
 
   .detail {
-    position: relative;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width: 496px;
+    height: 496px;
+    margin: 0 auto;
+    text-align: center;
     img {
-      width: 400px;
-      margin: 30px auto;
-    }
-    span {
-      position: absolute;
-      bottom: 48px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 40px;
-      color: #fff;
+      width: 462px;
+      height: 354px;
+      margin-left: 52px;
     }
   }
 
