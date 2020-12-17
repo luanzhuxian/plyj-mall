@@ -58,9 +58,7 @@ export default {
     nwEvent: state => state.nwEvent,
     dragonGateCharity: state => state.dragonGateCharity,
     dragonGateSign: state => state.dragonGateSign,
-    dragonGatePlay: state => state.dragonGatePlay,
-    // campaignReport: state => state.campaignReport,
-    // campaignBook: state => state.campaignBook,
+    currentLottery: state => state.currentLottery,
     mallQRCodeInfo: state => state.mallQRCodeInfo,
     // 服务器时间
     // 服务器时间

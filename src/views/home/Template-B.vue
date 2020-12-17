@@ -5,7 +5,7 @@
             <Banner :class="$style.banner" :data="Banner" />
             <!-- 福利红包 -->
             <div :class="$style.redPackage" v-if="parent.isRedPackageShow">
-                <img src="https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/rp-banner.png" alt="" @click="$router.push({ name: 'RedPackage' })">
+                <img src="https://mallcdn.youpenglai.com/static/mall/2.13.0/rp-banner.png" alt="" @click="$router.push({ name: 'RedPackage' })">
             </div>
             <Adv :class="$style.adv" v-if="type === 4 && Adv.showStatue === 1" :data="Adv" />
             <Live :class="$style.live" :data="Live" v-if="isLiveShow" />
