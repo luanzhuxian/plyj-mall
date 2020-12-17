@@ -137,6 +137,7 @@ import SilkBag from './components/Silk-Bag.vue'
 import LotterySuccess from './components/Lottery-Success.vue'
 import { SectionToChinese } from '../../../../assets/js/util'
 import { shuffle } from '../../../../assets/js/loadsh'
+import share from '../../../../assets/js/wechat/wechat-share'
 import moment from 'moment'
 import {
     getAwardRecords,
@@ -219,7 +220,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['mobile'])
+        ...mapGetters(['mobile', 'appId', 'userName'])
     },
     async activated () {
         if (!this.mobile) {
@@ -236,6 +237,13 @@ export default {
             this.theme = this.theme1
             await this.getDetail()
         }
+
+        share({
+            appId: this.appId,
+            title: `${ this.title }邀请你参加活动`,
+            desc: '惊喜享不停，抽奖乐翻天',
+            imgUrl: 'https://mallcdn.youpenglai.com/static/mall/lottery/share-icon.png'
+        })
     },
     methods: {
         // 活动详情
