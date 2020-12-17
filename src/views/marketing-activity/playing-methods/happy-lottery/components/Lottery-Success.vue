@@ -14,7 +14,7 @@
                     </div>
                     <div class="mt-16" :class="$style.giftName">
                         <span>{{ giftName }}</span>
-                        <span>{{ price }}元</span>
+                        <span v-if="price">{{ price }}元</span>
                     </div>
                     <div v-if="awardType === 2" class="text-center mt-16 fz-28" :class="$style.date">有效期：领取当日起{{ days }}天以内</div>
                     <div v-else class="text-center mt-16 fz-28" :class="$style.date">有效期 {{ date }}</div>
