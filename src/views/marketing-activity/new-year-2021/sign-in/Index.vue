@@ -44,7 +44,7 @@
                             <button class="btn"
                                     :class="{disabled: currentSignIn.hasSignin || activityEarlyIsOver }"
                                     :disabled="currentSignIn.hasSignin || activityEarlyIsOver"
-                                    @click="signIn">打卡答题</button>
+                                    @click="getMyNewYearCard">打卡答题</button>
                         </template>
                         <template v-if="(currentSignIn.hasSignin && currentSignIn.hasAward) || !previousPresentIsReceive">
                             <div>
@@ -230,11 +230,11 @@ export default {
             showSunPresentListMore: false,
             // 是否显示所有我的奖品
             showMyPresentListMore: false,
-            // 是否显示粽粽有礼海报
+            // 是否显示签到海报
             isShowNewYearPoster: false,
             // 海报是否在加载中
             isLoading: false,
-            // 是否正在获取粽粽签到
+            // 是否正在获取签到
             isGetMyNewYearCard: false,
             // 是否正在领取奖品
             isReceivePresent: false,
@@ -255,7 +255,7 @@ export default {
             qrcode: '',
             // 分享海报
             sharePoster: '',
-            // 粽粽有礼海报
+            // 签到海报
             newYearPoster: '',
             // 倒计时
             time: { d: '', h: '', m: '', s: '' },
@@ -388,7 +388,7 @@ export default {
                 throw e
             }
         },
-        // 获取粽粽签到列表
+        // 获取签到列表
         async getSignInIconList () {
             try {
                 const { result } = await getSignInIconList(this.id)
@@ -444,21 +444,19 @@ export default {
                 const currentIndex = notes.findIndex(item => item.index === currentSigninNote)
 
                 this.currentSignIn = notes[currentIndex]
-                this.currentSignIn.isLastIcon = currentIndex !== notes.length - 1
+                this.currentSignIn.isLastIcon = currentIndex === notes.length - 1
 
                 // 上一个节点无礼品 或者 有礼品且awardType !== ''表示礼品已经被领取
                 this.previousPresentIsReceive = currentIndex ? (notes[currentIndex - 1].hasAward && notes[currentIndex - 1].awardType !== '') || !notes[currentIndex - 1].hasAward : true
 
-                // 大奖是否被领取，是-最后一粽粽，且awardType !== ''
+                // 大奖是否被领取，是-最后一签到，且awardType !== ''
                 this.isGrandPrsentSignIn = this.currentSignIn.isLastIcon ? this.currentSignIn.awardType !== '' : false
 
-                // 最后一个节点已签到，但未领取粽粽大奖, 弹框提示领取最终奖品
+                // 最后一个节点已签到，但未领取智慧礼, 弹框提示领取最终奖品
                 if (this.currentSignIn.isLastIcon && this.currentSignIn.hasSignin && !this.isGrandPrsentSignIn) {
                     this.isShowPresentPopup = true
                     this.presentStage = 0
                 }
-
-                this.presentStage = 0
 
                 const nextPresentIndex = notes.findIndex((item, index) => item.hasAward && index > currentIndex)
 
@@ -474,13 +472,13 @@ export default {
                     currentSignin,
                     // 下一个要签到的节点
                     nextSigninNote,
-                    // 积攒粽粽有礼的人数
+                    // 积攒签到的人数
                     signinNumber,
-                    // 集齐粽粽有礼的人数
+                    // 集齐签到的人数
                     completeNumber,
                     // 已经签到的个数
                     signedInNumber: this.currentSignIn.hasSignin ? currentIndex + 1 : currentIndex,
-                    // 还差多少个粽粽签到即可抽粽粽大奖
+                    // 还差多少个签到即可抽大奖
                     differenceNumber: this.currentSignIn.hasSignin ? notes.length - currentIndex - 1 : notes.length - currentIndex,
                     // 还差多少个签到即可参与抽奖
                     nextPresentIndex,
@@ -516,7 +514,7 @@ export default {
             }
         },
 
-        // 获得粽粽签到
+        // 获得签到
         async getMyNewYearCard () {
             try {
                 if (this.isGetMyNewYearCard) return

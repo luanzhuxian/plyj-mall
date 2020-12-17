@@ -29,13 +29,13 @@
                     </div>
                     <div>
                         <MyPresentItem
-                            v-for="index of 5"
+                            v-for="(item, index) of myPresentList"
                             :key="index"
                             :award-type="2"
                             date="2020-20-02~2024-20-02"
-                            award-img="item.awardImg"
-                            award-name="item.awardName"
-                            flaunt-award-name="FLAUNT_AWARD_NAME"
+                            :award-img="item.awardImg"
+                            :award-name="item.awardName"
+                            :flaunt-award-name="FLAUNT_AWARD_NAME"
                         />
                     </div>
                 </div>
@@ -49,6 +49,7 @@ import Tab from '../tab/Lottery-Tabs.vue'
 import TabPane from '../tab/Lottery-Tab-Pane.vue'
 import SunPresentItem from './item/Sun-Present-Item.vue'
 import MyPresentItem from './item/My-Present-Item.vue'
+import { getObtainedSunPresentList } from '../../../apis/new-year'
 export default {
     name: 'SignInRecords',
     components: {
@@ -77,8 +78,23 @@ export default {
     data () {
         return {
             tab: '1',
-            sunPresentListTotal: 112,
+            sunPresentListTotal: 0,
             myPresentList: []
+        }
+    },
+    created () {
+
+    },
+    methods: {
+    // 获取好友晒单奖品列表
+        async getObtainedSunPresentList () {
+            try {
+                const { result } = await getObtainedSunPresentList(this.id, 1, 50)
+                this.sunPresentListTotal = result.receiveUserNumber
+                this.myPresentList = result.flauntAwardsModels
+            } catch (e) {
+                throw e
+            }
         }
     }
 }
