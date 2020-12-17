@@ -20,8 +20,8 @@
         <div class="count-down">
             <CountDown
                 active-name="答题打卡"
-                :status="activeDetail.status"
-                :duration="9000000"
+                :status="activeDetail.activityStatus"
+                :duration="activityDuration"
                 tip-colour="#620003"
                 :count="activeDetail.signinNumber"
                 count-colour="#FE461F"
@@ -32,18 +32,18 @@
         <div class="box-wrap">
             <div class="box-inner">
                 <div class="head">
-                    <button class="btn disabled" v-if="activeDetail.status === 0">活动未开始</button>
-                    <div class="info" v-if="activeDetail.status === 1">
+                    <button class="btn disabled" v-if="activeDetail.activityStatus === 0">活动未开始</button>
+                    <div class="info" v-if="activeDetail.activityStatus === 1">
                         <div>
-                            <div class="text">今日可签到打卡1次</div>
-                            <div class="tips">还差6次打卡答题可参与智慧礼抽奖</div>
+                            <div class="text">今日可签到打卡{{ activeDetail.currentSignin ? 0 : 1 }}次</div>
+                            <div class="tips">还差{{ differenceNumber }}次打卡答题可参与智慧礼抽奖</div>
                         </div>
-                        <button class="btn" :class="{'disabled': false}" :disabled="false" @click="signIn">打卡答题</button>
                         <button v-if="false" class="btn" :class="{'disabled': false}" :disabled="false" @click="receive">领取奖品</button>
+                        <button v-else class="btn" :class="{'disabled': activeDetail.currentSignin}" :disabled="activeDetail.currentSignin" @click="signIn">打卡答题</button>
                     </div>
-                    <div class="info" v-if="activeDetail.status === 1 && activeDetail.isLottery">
+                    <div class="info" v-if="activeDetail.activityStatus === 1 && activeDetail.isLottery">
                         <div>
-                            <div class="text">12人已完成打卡答题</div>
+                            <div class="text">{{ activeDetail.completeNumber }}人已完成打卡答题</div>
                             <div class="tips">可参与抽奖获得智慧礼</div>
                         </div>
                         <button class="btn" :class="{'disabled': false}" :disabled="false" @click="lottery">立即抽奖</button>
@@ -53,19 +53,18 @@
                     <div class="sign-in-item" v-for="(item, index) in signInIconList" :key="index">
                         <SigninIcon
                             v-if="!item.isPresent"
-                            :detail="item"
                             :has-signin="item.hasSignin"
                             :material-desc="item.materialDesc"
                             :icon-name="item.name"
-                            :bgi="item.poster"
+                            :detail="item"
                         />
                         <PresentIcon
                             v-else
-                            :detail="item"
                             :has-signin="item.hasSignin"
                             :is-grand-prsent="item.isGrandPrsent"
                             :award-type="item.awardType"
                             :award-img="item.awardImg"
+                            :detail="item"
                         />
                     </div>
                 </div>
@@ -86,6 +85,7 @@
             title="恭喜您打卡6个智力题"
             sub-title="获得礼品"
         />
+        <SigninPoster :show.sync="signPosterShow" :bgi="signPosterBgi" />
     </div>
 </template>
 
@@ -97,7 +97,10 @@ import SigninIcon from '../../../../components/marketing-activity/sign-in/Signin
 import PresentIcon from '../../../../components/marketing-activity/sign-in/Present-Icon'
 import Records from '../../../../components/marketing-activity/sign-in/Records'
 import InfoModal from '../../../../components/marketing-activity/sign-in/Info-Modal'
+import SigninPoster from '../../../../components/marketing-activity/sign-in/Signin-Poster'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
+import { getSignInIconList, getPresentList, checkInCurrentNewYearIcon } from '../../../../apis/new-year'
+import moment from 'moment'
 export default {
     components: {
         swiper,
@@ -108,17 +111,15 @@ export default {
         SigninIcon,
         PresentIcon,
         Records,
-        InfoModal
+        InfoModal,
+        SigninPoster
     },
     data () {
         return {
             id: '',
             isShowRule: false,
             isShowSharePoster: false,
-            activeDetail: {
-                signinNumber: 122,
-                status: 1
-            },
+            activeDetail: {},
             swiperOption: {
                 direction: 'horizontal',
                 effect: 'coverflow',
@@ -135,33 +136,77 @@ export default {
                 observer: true,
                 observeParents: true
             },
-            presentList: [{
-                show: true,
-                awardImg: 'https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/gift.png',
-                awardName: ''
-            }, {
-                show: true,
-                awardImg: 'https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/gift.png',
-                awardName: ''
-            }, {
-                show: true,
-                awardImg: 'https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/gift.png',
-                awardName: ''
-            }],
+            presentList: [],
             signInIconList: [],
-            isShowInfoModal: false
+            isShowInfoModal: false,
+            signPosterShow: false,
+            activityDuration: 0,
+            totalSignIn: 0,
+            differenceNumber: 0,
+            signPosterBgi: ''
         }
     },
     created () {
         this.id = this.$route.params.id
+        this.getPresentList()
         this.getSignInIconList()
     },
     methods: {
-        getSignInIconList () {
-            this.signInIconList = [{ isPresent: false, hasSignin: true, materialDesc: '买', name: '买食材', poster: 'https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/%E6%B5%B7%E6%8A%A51.jpg' }, {}, {}, {}, {}, {}]
+        // 获取大奖列表
+        async getPresentList () {
+            try {
+                const { result } = await getPresentList(this.id)
+                this.presentList = result
+                if (result.length === 2) {
+                    this.presentList.push(this.presentList[0])
+                    this.presentList.push(this.presentList[1])
+                }
+            } catch (e) {
+                throw e
+            }
         },
-        signIn () {
-            this.isShowInfoModal = true
+        // 获取签到列表
+        async getSignInIconList () {
+            try {
+                const { result } = await getSignInIconList(this.id)
+                // 活动状态 0 未开始 1 进行中  2 结束  3 已删除
+                const { activityStartLongTime, activityEndLongTime, activityStatus, notes, nextSigninNote } = result
+                this.activeDetail = result
+                this.totalSignIn = notes.length
+                this.differenceNumber = this.totalSignIn - nextSigninNote + 1
+                this.activityDuration = Number(activityStatus) === 0 ? (activityStartLongTime - moment().valueOf()) : (activityEndLongTime - moment().valueOf())
+                const presentList = []
+                for (const i in notes) {
+                    const item = notes[i]
+                    if (item.hasAward) {
+                        presentList.push({
+                            index: item.index,
+                            isPresent: true,
+                            hasSignin: item.awardType !== '',
+                            hasAward: item.hasAward,
+                            awardImg: item.awardImg,
+                            awardType: item.awardType,
+                            isGrandPrsent: item.index === notes.length
+                        })
+                    }
+                }
+                this.signInIconList = notes
+                for (const i in presentList) {
+                    const item = presentList[i]
+                    this.signInIconList.splice(item.index, 0, item)
+                }
+            } catch (e) {
+                throw e
+            }
+        },
+        async signIn () {
+            await checkInCurrentNewYearIcon(this.id, this.activeDetail.nextSigninNote)
+            const currentIndex = this.activeDetail.nextSigninNote - 1
+            this.signPosterBgi = this.signInIconList[currentIndex].posterUrl
+            this.signPosterShow = true
+            this.signInIconList[currentIndex].hasSignin = true
+            this.activeDetail.currentSignin = true
+            this.differenceNumber--
         },
         receive () {
             console.log('领取奖品')
@@ -242,7 +287,7 @@ export default {
           font-size: 26px;
           color: #FFE3C8;
           &.disabled{
-            opacity: .5;
+            background: rgba(252, 69, 33, .5);
           }
         }
       }
