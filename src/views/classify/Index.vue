@@ -215,7 +215,7 @@ export default {
                 this.currentClassify = classify
                 this.requestMethods = getCourse
             } else if (classify.categoryType === 3) {
-                // 点击知识课程
+                // 点击图文资料
                 this.currentClassify = classify
                 this.requestMethods = getImageTextList
             } else {
@@ -228,8 +228,7 @@ export default {
                 this.currentClassify = classify
                 this.requestMethods = getActivityProduct
                 this.form = JSON.parse(JSON.stringify(this.helperFormTemplate))
-                this.$router.push({ name: 'Classify', params: { optionId: '1' } })
-                this.$refresh()
+                this.$router.replace({ name: 'Classify', params: { optionId: '1' } })
                 return
             }
             if (classify) {
@@ -240,7 +239,7 @@ export default {
                 this.form = JSON.parse(JSON.stringify(this.classifyFormTemplate))
                 this.form.categoryId = classify.id
                 this.form.subCategoryId = ''
-                this.$router.push({ name: 'Classify', params: { optionId: classify.id || null } })
+                this.$router.replace({ name: 'Classify', params: { optionId: classify.id || null } })
                 this.$refresh()
 
                 // 将子分类刷到不选中的装态
