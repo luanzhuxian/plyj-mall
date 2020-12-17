@@ -123,8 +123,8 @@
             :gift-image="lotterAward.giftImage"
             :gift-name="lotterAward.awardName"
             :date="lotterAward.giftUseEndTime"
-            :price="lotterAward.scholarshipPrice"
-            :days="lotterAward.scholarshipEffectiveTime"
+            :price="lotterAward.scholarshipPrice || 0"
+            :days="lotterAward.scholarshipEffectiveTime || 0"
         />
     </div>
 </template>
