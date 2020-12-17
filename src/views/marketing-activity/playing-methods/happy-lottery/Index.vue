@@ -237,13 +237,6 @@ export default {
             this.theme = this.theme1
             await this.getDetail()
         }
-
-        share({
-            appId: this.appId,
-            title: `${ this.title }邀请你参加活动`,
-            desc: '惊喜享不停，抽奖乐翻天',
-            imgUrl: 'https://mallcdn.youpenglai.com/static/mall/lottery/share-icon.png'
-        })
     },
     methods: {
         // 活动详情
@@ -253,6 +246,12 @@ export default {
                 this.awardList = result.gifts
                 this.detail = result
                 this.status = Number(result.status)
+                share({
+                    appId: this.appId,
+                    title: `${ this.title }邀请你参加活动`,
+                    desc: this.detail.name,
+                    imgUrl: 'https://mallcdn.youpenglai.com/static/mall/lottery/share-icon.png'
+                })
                 await this.$nextTick()
                 this.setAwards()
                 await this.getRecords()
