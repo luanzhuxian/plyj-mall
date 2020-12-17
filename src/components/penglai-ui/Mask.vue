@@ -6,7 +6,7 @@
                 v-if="showClose"
                 name="icon-close3"
                 fill="#fff"
-                width="30"
+                width="60"
                 @click="close"
             />
         </div>
