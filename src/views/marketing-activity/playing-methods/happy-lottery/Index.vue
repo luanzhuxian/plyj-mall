@@ -97,9 +97,7 @@
                             v-for="(item, i) of lotteryRecords"
                             :key="i"
                         >
-                            <img v-if="item.awardType === 2" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/scholarship.png" alt="">
-                            <img v-else-if="item.awardType === 3 || item.awardType === 4" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/coupon.png" alt="">
-                            <img v-else :src="item.giftImg" alt="">
+                            <img :src="item.userImg" alt="">
                             <div>
                                 <div class="flex space-between">
                                     <span :class="$style.username" v-text="item.userName" />
