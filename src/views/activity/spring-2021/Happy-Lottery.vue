@@ -1,7 +1,7 @@
 <template>
     <div :class="$style.happyLottery">
         <router-link :class="$style.bg" tag="div" :to="{ name: 'HappyLottery', params: { id: data.id } }">
-            <div :class="$style.count">
+            <div :class="$style.count" v-if="data.status === 2 && data.participantsNum > 10">
                 {{ `${data.participantsNum}人参与` }}
             </div>
             <div :class="$style.countdownWrapper">
