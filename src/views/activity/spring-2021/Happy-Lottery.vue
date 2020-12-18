@@ -7,7 +7,6 @@
             <div :class="$style.countdownWrapper">
                 <span :class="$style.text" v-if="data.status === 1">距离活动开始</span>
                 <span :class="$style.text" v-else-if="data.status === 2">距离活动结束</span>
-                <span :class="$style.text" v-else>活动已结束</span>
                 <Countdown
                     v-if="~[1, 2].indexOf(data.status)"
                     :duration="getDuration(data)"
@@ -31,7 +30,7 @@ export default {
     props: {
         data: {
             type: Object,
-            default: () => ({ status: 0 })
+            default: () => ({})
         }
     },
     methods: {

@@ -14,8 +14,12 @@
                 </section>
                 <!-- 抽奖 -->
                 <section :class="[$style.happyLottery, $style.module]" v-if="currentLottery && currentLottery.id && ~[1, 2].indexOf(currentLottery.status)">
-                    <HappyLottery :data="currentLottery" v-if="currentLottery && currentLottery.id" />
+                    <HappyLottery :data="currentLottery" />
                 </section>
+                <!-- 签到 -->
+                <!-- <section :class="[$style.newyearSign, $style.module]" v-if="currentSign && currentSign.id && ~[0, 1].indexOf(currentSign.status)">
+                    <NewyearSign :data="currentSign" />
+                </section> -->
                 <!-- 福利红包 -->
                 <section :class="[$style.redPackage, $style.module]" v-if="RedPackage.values.length">
                     <RedPackage :data="RedPackage" />
@@ -66,6 +70,7 @@ import Package from '../spring-2021/Package.vue'
 import Popular from '../spring-2021/Popular.vue'
 import Coupon from '../double-12-2020/Coupon.vue'
 import HappyLottery from '../spring-2021/Happy-Lottery.vue'
+// import NewyearSign from '../spring-2021/Newyear-Sign.vue'
 import Panel from '../double-12-2020/Panel.vue'
 import BackToTop from '../../../components/activity/BackToTop.vue'
 
@@ -82,6 +87,7 @@ export default {
         Package,
         Popular,
         HappyLottery,
+        // NewyearSign,
         Panel,
         BackToTop
     },
@@ -98,7 +104,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['currentLottery']),
+        ...mapGetters(['currentLottery', 'currentSign']),
         Live () {
             return this.data.Live || { values: [] }
         },
@@ -259,8 +265,9 @@ export default {
 .yugou {
     margin-bottom: 60px;
 }
-.happy-lottery {
-    margin-bottom: 60px;
+.happy-lottery,
+.newyear-sign {
+    margin-bottom: 40px;
 }
 
 .live,

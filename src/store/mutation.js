@@ -116,17 +116,11 @@ export default {
         state.dragonGateCharity = payload
     },
     [type.SET_CURRENT_SIGN] (state, payload = {}) {
-        state.currentSign = !!payload || {}
+        state.currentSign = payload || {}
     },
     [type.SET_CURRENT_LOTTERY] (state, payload = {}) {
-        state.currentLottery = !!payload || {}
+        state.currentLottery = payload || {}
     },
-    // [type.SET_CAMPAIGN_REPORT] (state, payload) {
-    //     state.campaignReport = payload
-    // },
-    // [type.SET_CAMPAIGN_BOOK] (state, payload) {
-    //     state.campaignBook = payload
-    // },
     [type.SET_MALL_QRCODE_INFO] (state, payload = {}) {
         if (!payload) payload = {}
 

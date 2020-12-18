@@ -176,7 +176,7 @@ export default {
                     { result: nianwei },
                     { result: charity },
                     { result: sign },
-                    { result: play }
+                    { result: lottery }
                 ] = await Promise.all(list.map(p => p.catch(e => {
                     console.error(e)
                     return { result: {} }
@@ -185,7 +185,7 @@ export default {
                 this.setNwEvent(nianwei)
                 this.setDragonGateCharity(charity)
                 this.setCurrentSign(sign)
-                this.setCurrentLottery(play)
+                this.setCurrentLottery(lottery)
             } catch (error) {
                 throw error
             }
