@@ -9,7 +9,8 @@
                 <div :class="$style.content">
                     <div :class="$style.grade" v-text="grade" />
                     <div style="text-align: center;">
-                        <img :class="$style.giftImage" v-if="awardType !== 1" src="https://mallcdn.youpenglai.com/static/mall/lottery/third-prize.png" alt="奖品图片">
+                        <img :class="$style.giftImage" v-if="awardType === 2" src="https://mallcdn.youpenglai.com/static/mall/lottery/schoolship.jpg" alt="">
+                        <img :class="$style.giftImage" v-else-if="awardType === 3 || awardType === 4" src="https://mallcdn.youpenglai.com/static/mall/lottery/coupon.jpg" alt="">
                         <img :class="$style.giftImage" v-else :src="giftImage" alt="奖品图片">
                     </div>
                     <div class="mt-16" :class="$style.giftName">
@@ -22,7 +23,7 @@
                         <span>奖品已自动存入</span>
                         <i v-if="awardType === 1">我的礼品</i>
                         <i v-else-if="awardType === 2">我的奖学金中</i>
-                        <i v-else-if="awardType === 3">我的卡券</i>
+                        <i v-else-if="awardType === 3 || awardType === 4">我的卡券</i>
                     </div>
                 </div>
                 <div :class="$style.got">
