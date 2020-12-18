@@ -40,7 +40,7 @@
                 src="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/reduction.png">
             <p>已获得</p>
         </div>
-        <info-model :show.sync="showInfoModal" :answer="15" />
+        <info-model :show.sync="showInfoModal" :answer="totalSignin" />
     </div>
 </template>
 
@@ -79,6 +79,10 @@ export default {
         isLastIcon: {
             type: Boolean,
             default: false
+        },
+        totalSignin: {
+            type: Number,
+            default: 0
         }
     },
     methods: {

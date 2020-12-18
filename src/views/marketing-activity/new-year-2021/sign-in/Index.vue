@@ -84,6 +84,7 @@
                             :award-type="item.awardType"
                             :award-img="item.awardImg"
                             @clickHandler="presentWarning"
+                            :total-signin="totalSigin"
                         />
                         <div v-if="(index !== signInIconList.length -1) && ((index + 1) % 5 !== 0)" class="underline" />
                     </div>
@@ -287,6 +288,7 @@ export default {
             FLAUNT_AWARD_NAME: '打卡聪明年',
             showSignInPoster: false,
             signInPosterBgi: '',
+            totalSigin: 0,
             popUpPic: 'https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/popup_top.png',
             sadImg: 'https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/sad.png'
         }
@@ -412,7 +414,7 @@ export default {
                     logImgUrl,
                     activityStatus
                 } = result
-
+                this.totalSigin = notes.length
                 // 活动状态 0 未开始 1 进行中  2 结束  3 已删除
                 this.activityEarlyIsOver = [2, 3].indexOf(activityStatus) !== -1
                 // 获取节点是否有奖品 + 获取已领取的奖品
