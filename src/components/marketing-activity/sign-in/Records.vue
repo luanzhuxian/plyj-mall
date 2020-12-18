@@ -6,54 +6,64 @@
                     <div :class="$style.statistics">
                         已有<strong>{{ sunPresentListTotal }}个</strong>获得{{ recordText }}
                     </div>
-                    <template v-for="(item, index) in sunPresentList">
-                        <SunPresentItem
-                            v-if="index < 3 || showSunPresentListMore" :key="index"
-                            :user-img="item.userImg"
-                            :user-name="item.userName"
-                            :award-type="item.awardType"
-                            :flaunt-award="item.flauntAward"
-                            :signin-num="item.signinNum"
-                            :award-name="item.awardName"
-                            :active-name="activeName"
-                            :action-name="actionName"
-                            flaunt-award-name="FLAUNT_AWARD_NAME"
-                        />
-                    </template>
-                    <div
-                        v-if="sunPresentList.length > 3 && !showSunPresentListMore"
-                        class="more"
-                        @click="showSunPresentListMore = true"
-                    >
-                        查看更多
+                    <div class="no-sun-present" v-if="sunPresentList.length === 0">
+                        <img
+                            src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/53a110f2-9d45-4f60-95d8-99bf75e4b1c3.png">
                     </div>
-                </div>
+                    <template v-else>
+                        <template v-for="(item, index) in sunPresentList">
+                            <SunPresentItem
+                                v-if="index < 3 || showSunPresentListMore" :key="index"
+                                :user-img="item.userImg"
+                                :user-name="item.userName"
+                                :award-type="item.awardType"
+                                :flaunt-award="item.flauntAward"
+                                :signin-num="item.signinNum"
+                                :award-name="item.awardName"
+                                :active-name="activeName"
+                                :action-name="actionName"
+                                flaunt-award-name="FLAUNT_AWARD_NAME"
+                            />
+                        </template>
+                        <div
+                            v-if="sunPresentList.length > 3 && !showSunPresentListMore"
+                            class="more"
+                            @click="showSunPresentListMore = true"
+                        >
+                            查看更多
+                        </div>
+                    </template></div>
             </TabPane>
             <TabPane label="我的奖品" value="2">
                 <div>
                     <div :class="$style.statistics">
                         已有<strong>{{ myPresentList.length }}个</strong>获得{{ recordText }}
                     </div>
-                    <template v-for="(item, index) in myPresentList">
-                        <MyPresentItem
-                            v-if="index < 3 || showMyPresentListMore"
-                            :key="index"
-                            :award-type="item.awardType"
-                            :award-img="item.awardImg"
-                            :award-name="item.awardName"
-                            date="2020-20-02~2024-20-02"
-                            :is-grand-prsent="item.isGrandPrsent"
-                            :flaunt-award-name="FLAUNT_AWARD_NAME"
-                        />
-                    </template>
-                    <div
-                        v-if="myPresentList.length > 3 && !showMyPresentListMore"
-                        class="more"
-                        @click="showMyPresentListMore = true"
-                    >
-                        查看更多
+                    <div class="no-sun-present" v-if="myPresentList.length === 0">
+                        <img
+                            src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/53a110f2-9d45-4f60-95d8-99bf75e4b1c3.png">
                     </div>
-                </div>
+                    <template v-else>
+                        <template v-for="(item, index) in myPresentList">
+                            <MyPresentItem
+                                v-if="index < 3 || showMyPresentListMore"
+                                :key="index"
+                                :award-type="item.awardType"
+                                :award-img="item.awardImg"
+                                :award-name="item.awardName"
+                                date="2020-20-02~2024-20-02"
+                                :is-grand-prsent="item.isGrandPrsent"
+                                :flaunt-award-name="FLAUNT_AWARD_NAME"
+                            />
+                        </template>
+                        <div
+                            v-if="myPresentList.length > 3 && !showMyPresentListMore"
+                            class="more"
+                            @click="showMyPresentListMore = true"
+                        >
+                            查看更多
+                        </div>
+                    </template></div>
             </TabPane>
         </Tab>
     </div>
@@ -135,6 +145,7 @@ export default {
         border-radius: 20px;
         overflow: hidden;
         box-sizing: border-box;
+        text-align: center;
     }
     .statistics {
         margin: 40px auto 26px;
@@ -149,5 +160,19 @@ export default {
         > strong {
             color: #FE461F;
         }
+    }
+    .no-sun-present {
+      margin-top: 40px;
+      text-align: center;
+
+      > img {
+        width: 200px;
+      }
+    }
+
+    .more {
+      font-size: 26px;
+      line-height: 35px;
+      color: #333;
     }
 </style>
