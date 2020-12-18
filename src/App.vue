@@ -33,7 +33,7 @@ import {
     SET_COUPON_INFO,
     SET_NW_EVENT,
     SET_DRAGON_GATE_CHARITY,
-    SET_DRAGON_GATE_SIGN,
+    SET_CURRENT_SIGN,
     SET_CURRENT_LOTTERY,
     SET_MALL_QRCODE_INFO
 } from './store/mutation-type'
@@ -42,7 +42,7 @@ import {
     getMyCouponInfo,
     getNianweiInfo,
     getDragonGateCharityInfo,
-    getDragonGateSignInfo,
+    getCurrentSign,
     getCurrentLottery,
     getMallQRCodeInfo
 } from './apis/home'
@@ -108,7 +108,7 @@ export default {
             setCouponInfo: SET_COUPON_INFO,
             setNwEvent: SET_NW_EVENT,
             setDragonGateCharity: SET_DRAGON_GATE_CHARITY,
-            setDragonGateSign: SET_DRAGON_GATE_SIGN,
+            setCurrentSign: SET_CURRENT_SIGN,
             setCurrentLottery: SET_CURRENT_LOTTERY,
             setMallQRCodeInfo: SET_MALL_QRCODE_INFO
         }),
@@ -165,8 +165,8 @@ export default {
                     getNianweiInfo(),
                     // 龙门节公益棕
                     getDragonGateCharityInfo(),
-                    // 龙门节粽粽有礼
-                    getDragonGateSignInfo(),
+                    // 当前签到
+                    getCurrentSign(),
                     // 当前抽奖
                     getCurrentLottery()
                 ]
@@ -184,7 +184,7 @@ export default {
                 this.setLiveInfo(live)
                 this.setNwEvent(nianwei)
                 this.setDragonGateCharity(charity)
-                this.setDragonGateSign(sign)
+                this.setCurrentSign(sign)
                 this.setCurrentLottery(play)
             } catch (error) {
                 throw error

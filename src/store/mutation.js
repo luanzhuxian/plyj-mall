@@ -115,11 +115,11 @@ export default {
     [type.SET_DRAGON_GATE_CHARITY] (state, payload = {}) {
         state.dragonGateCharity = payload
     },
-    [type.SET_DRAGON_GATE_SIGN] (state, payload = {}) {
-        state.dragonGateSign = payload
+    [type.SET_CURRENT_SIGN] (state, payload = {}) {
+        state.currentSign = !!payload || {}
     },
     [type.SET_CURRENT_LOTTERY] (state, payload = {}) {
-        state.currentLottery = payload
+        state.currentLottery = !!payload || {}
     },
     // [type.SET_CAMPAIGN_REPORT] (state, payload) {
     //     state.campaignReport = payload

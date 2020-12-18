@@ -93,7 +93,7 @@ export default {
     // 龙门节公益
     dragonGateCharity: null,
     // 龙门节签到
-    dragonGateSign: null,
+    currentSign: null,
     // 当前抽奖
     currentLottery: null,
     // 疫情战报

@@ -99,7 +99,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['activityData', 'activityId', 'liveInfo', 'couponToReceive', 'currentLottery']),
+        ...mapGetters(['activityData', 'activityId', 'liveInfo', 'couponToReceive', 'currentLottery', 'currentSign']),
         topBtnType () {
             if (this.couponToReceive === null) return false
             return this.couponToReceive ? 1 : 2
@@ -125,7 +125,7 @@ export default {
             }
             // 新春2021
             if (this.activityId === 12) {
-                result = true
+                result = this.currentLottery && this.currentSign
             }
             return result
         }
