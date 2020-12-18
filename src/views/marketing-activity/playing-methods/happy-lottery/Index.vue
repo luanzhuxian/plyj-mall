@@ -60,8 +60,8 @@
                 v-for="(prize, i) of awardList"
                 :key="i"
             >
-                <img v-if="Number(prize.awardType) === 2" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/scholarship.png" alt="奖品图片">
-                <img v-else-if="Number(prize.awardType) === 3 || Number(prize.awardType) === 4" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/coupon.png" alt="奖品图片">
+                <img v-if="Number(prize.awardType) === 2" src="https://mallcdn.youpenglai.com/static/mall/lottery/schoolship.jpg" alt="奖品图片">
+                <img v-else-if="Number(prize.awardType) === 3 || Number(prize.awardType) === 4" src="https://mallcdn.youpenglai.com/static/mall/lottery/coupon.jpg" alt="奖品图片">
                 <img v-else :src="prize.giftImage" alt="奖品图片">
                 <div>
                     <strong :class="[$style.grade, $style.first]" v-text="prize.grade" />
@@ -79,8 +79,8 @@
                             v-for="(item, i) of awardRecords"
                             :key="i"
                         >
-                            <img v-if="item.awardType === 2" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/scholarship.png" alt="">
-                            <img v-else-if="item.awardType === 3 || item.awardType === 4" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/coupon.png" alt="">
+                            <img v-if="item.awardType === 2" src="https://mallcdn.youpenglai.com/static/mall/lottery/schoolship.jpg" alt="">
+                            <img v-else-if="item.awardType === 3 || item.awardType === 4" src="https://mallcdn.youpenglai.com/static/mall/lottery/coupon.jpg" alt="">
                             <img v-else :src="item.giftImg" alt="">
                             <div>
                                 <p :class="$style.name" v-text="item.awardName" />
@@ -269,7 +269,7 @@ export default {
                 award.grade = i < 3 ? `${ SectionToChinese(i + 1) }等奖` : '好礼'
                 turntableAwards.push({
                     ...award,
-                    icon: AWARD_ICON[i]
+                    icon: i >= 3 ? 'https://mallcdn.youpenglai.com/static/mall/lottery/good-gift.png' : AWARD_ICON[i]
                 })
             }
             for (let i = this.awardList.length; i < 8; i++) {
