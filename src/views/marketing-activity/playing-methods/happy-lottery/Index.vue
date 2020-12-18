@@ -248,7 +248,7 @@ export default {
                 this.status = Number(result.status)
                 share({
                     appId: this.appId,
-                    title: `${ this.title }邀请你参加活动`,
+                    title: `${ this.userName }邀请你参加活动`,
                     desc: this.detail.name,
                     imgUrl: 'https://mallcdn.youpenglai.com/static/mall/lottery/share-icon.png'
                 })
