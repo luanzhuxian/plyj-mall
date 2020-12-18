@@ -108,7 +108,7 @@
                                     <p :class="$style.date" v-text="item.awardTime" />
                                 </div>
                                 <div :class="$style.prizeName">
-                                    获得{{ item.awardLevel | sectionToChinese }}等奖 {{ item.awardName }}{{ item.awardType === 2 ? item.scholarshipPrice + '元' : '' }}
+                                    获得<i v-if="item.awardLevel > 3">好礼</i><i v-else>{{ item.awardLevel | sectionToChinese }}等奖</i> {{ item.awardName }}{{ item.awardType === 2 ? item.scholarshipPrice + '元' : '' }}
                                 </div>
                             </div>
                         </li>
