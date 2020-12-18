@@ -52,6 +52,7 @@
                                 <div class="tips">可参与抽奖获得智慧礼</div>
                             </div>
                             <button
+                                class="btn"
                                 :disabled="currentSignIn.awardType !== ''"
                                 :class="{disabled: currentSignIn.awardType !== '' }"
                                 @click="receivePresent"
@@ -79,8 +80,10 @@
                             :detail="item"
                             :has-signin="item.hasSignin"
                             :is-grand-prsent="item.isGrandPrsent"
+                            :is-last-icon="currentSignIn.isLastIcon"
                             :award-type="item.awardType"
                             :award-img="item.awardImg"
+                            @clickHandler="presentWarning"
                         />
                         <div v-if="(index !== signInIconList.length -1) && ((index + 1) % 5 !== 0)" class="underline" />
                     </div>
@@ -212,6 +215,7 @@ export default {
             isShare: false,
             // 活动时间倒计时
             activityDuration: 0,
+            activityEarlyIsOver: false,
             // 当前活动是否开始
             activityIsStart: false,
             // 活动是否已结束
@@ -408,6 +412,8 @@ export default {
                     activityStatus
                 } = result
 
+                // 活动状态 0 未开始 1 进行中  2 结束  3 已删除
+                this.activityEarlyIsOver = [2, 3].indexOf(activityStatus) !== -1
                 // 获取节点是否有奖品 + 获取已领取的奖品
                 this.myPresentList.length = 0
                 const presentList = []
@@ -590,6 +596,16 @@ export default {
             } catch (e) {
                 throw e
             }
+        },
+        presentWarning (item) {
+        // 只有礼品支持此提示
+            if (!item.isPresent) return
+            // 已领取的奖品不提示
+            if (item.hasSignin) return
+            if (!this.activityIsStart) return this.$warning('活动未开始')
+            if (this.activityIsOver) return this.$warning('活动已结束')
+            if (item.isGrandPrsent) return this.$warning(`签到参与所有${ item.presentIndex + 1 }个端午活动，有机会抽取粽粽大礼~`)
+            return this.$warning(`签到参与${ item.presentIndex + 1 }个端午活动，即可领取粽粽礼品~`)
         }
     }
 }
