@@ -94,6 +94,7 @@
             action-name="打卡"
             active-name="智力题"
             record-text="小聪明的奖励"
+            :my-present-list="myPresentList"
         />
         <!-- 活动规则 -->
         <ActivityRule :active-detail="activeDetail" />

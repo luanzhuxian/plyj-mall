@@ -6,19 +6,26 @@
                     <div :class="$style.statistics">
                         已有<strong>{{ sunPresentListTotal }}个</strong>获得{{ recordText }}
                     </div>
-                    <div>
+                    <template v-for="(item, index) in sunPresentList">
                         <SunPresentItem
-                            v-for="item of 5"
-                            :key="item"
-                            user-img="item.userImg"
-                            user-name="张三"
-                            :award-type="1"
-                            :signin-num="3"
+                            v-if="index < 3 || showSunPresentListMore" :key="index"
+                            :user-img="item.userImg"
+                            :user-name="item.userName"
+                            :award-type="item.awardType"
+                            :flaunt-award="item.flauntAward"
+                            :signin-num="item.signinNum"
+                            :award-name="item.awardName"
                             :active-name="activeName"
                             :action-name="actionName"
-                            award-name="item.awardName"
                             flaunt-award-name="FLAUNT_AWARD_NAME"
                         />
+                    </template>
+                    <div
+                        v-if="sunPresentList.length > 3 && !showSunPresentListMore"
+                        class="more"
+                        @click="showSunPresentListMore = true"
+                    >
+                        查看更多
                     </div>
                 </div>
             </TabPane>
@@ -27,16 +34,24 @@
                     <div :class="$style.statistics">
                         已有<strong>{{ myPresentList.length }}个</strong>获得{{ recordText }}
                     </div>
-                    <div>
+                    <template v-for="(item, index) in myPresentList">
                         <MyPresentItem
-                            v-for="(item, index) of myPresentList"
+                            v-if="index < 3 || showMyPresentListMore"
                             :key="index"
-                            :award-type="2"
-                            date="2020-20-02~2024-20-02"
+                            :award-type="item.awardType"
                             :award-img="item.awardImg"
                             :award-name="item.awardName"
+                            date="2020-20-02~2024-20-02"
+                            :is-grand-prsent="item.isGrandPrsent"
                             :flaunt-award-name="FLAUNT_AWARD_NAME"
                         />
+                    </template>
+                    <div
+                        v-if="myPresentList.length > 3 && !showMyPresentListMore"
+                        class="more"
+                        @click="showMyPresentListMore = true"
+                    >
+                        查看更多
                     </div>
                 </div>
             </TabPane>
@@ -73,13 +88,24 @@ export default {
         recordText: {
             type: String,
             default: ''
+        },
+        myPresentList: {
+            type: Array,
+            default () {
+                return []
+            }
         }
     },
     data () {
         return {
             tab: '1',
             sunPresentListTotal: 0,
-            myPresentList: []
+            sunPresentList: [],
+            // 是否显示所有好友晒单列表
+            showSunPresentListMore: false,
+            // 是否显示所有我的奖品
+            showMyPresentListMore: false,
+            FLAUNT_AWARD_NAME: '打卡聪明年'
         }
     },
     created () {
@@ -91,7 +117,7 @@ export default {
             try {
                 const { result } = await getObtainedSunPresentList(this.id, 1, 50)
                 this.sunPresentListTotal = result.receiveUserNumber
-                this.myPresentList = result.flauntAwardsModels
+                this.sunPresentList = result.flauntAwardsModels
             } catch (e) {
                 throw e
             }
