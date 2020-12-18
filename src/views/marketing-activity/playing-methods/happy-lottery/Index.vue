@@ -34,7 +34,7 @@
             </div>
             <div :class="[$style.dialItem, $style.count]">
                 <span>我的次数</span>
-                <span>x{{ count }}</span>
+                <span>{{ count > 9999 ? '1w+' : `x${ count }` }}</span>
             </div>
             <div
                 v-for="(item, i) of turntableAwards.slice(4)"
