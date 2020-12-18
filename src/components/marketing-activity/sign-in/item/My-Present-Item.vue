@@ -13,7 +13,7 @@
         <div class="info">
             <p>奖品 【{{ awardTypeDesc[awardType] }}】 </p>
             <p class="orange">{{ awardName }}</p>
-            <p class="date">有效期 {{ date }}</p>
+            <!-- <p class="date">有效期 {{ date }}</p> -->
         </div>
     </div>
 </template>
