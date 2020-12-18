@@ -50,7 +50,7 @@ import {
     SET_NW_EVENT,
     SET_DRAGON_GATE_CHARITY,
     SET_DRAGON_GATE_SIGN,
-    SET_DRAGON_GATE_PLAY,
+    SET_CURRENT_LOTTERY,
     SET_MALL_QRCODE_INFO
 } from './store/mutation-type'
 import {
@@ -59,7 +59,7 @@ import {
     getNianweiInfo,
     getDragonGateCharityInfo,
     getDragonGateSignInfo,
-    getDragonGatePlayInfo,
+    getCurrentLottery,
     getMallQRCodeInfo
 } from './apis/home'
 import { setFirstVisit } from './apis/longmen-festival/lottery'
@@ -125,7 +125,7 @@ export default {
             setNwEvent: SET_NW_EVENT,
             setDragonGateCharity: SET_DRAGON_GATE_CHARITY,
             setDragonGateSign: SET_DRAGON_GATE_SIGN,
-            setDragonGatePlay: SET_DRAGON_GATE_PLAY,
+            setCurrentLottery: SET_CURRENT_LOTTERY,
             setMallQRCodeInfo: SET_MALL_QRCODE_INFO
         }),
         ...mapActions({
@@ -183,8 +183,8 @@ export default {
                     getDragonGateCharityInfo(),
                     // 龙门节粽粽有礼
                     getDragonGateSignInfo(),
-                    // 龙门节抽奖
-                    getDragonGatePlayInfo()
+                    // 当前抽奖
+                    getCurrentLottery()
                 ]
 
                 const [
@@ -201,7 +201,7 @@ export default {
                 this.setNwEvent(nianwei)
                 this.setDragonGateCharity(charity)
                 this.setDragonGateSign(sign)
-                this.setDragonGatePlay(play)
+                this.setCurrentLottery(play)
             } catch (error) {
                 throw error
             }

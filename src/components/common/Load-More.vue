@@ -176,10 +176,6 @@ export default {
         },
         empty (val) {
             this.$emit('listState', val)
-        },
-        // 更换请求方法的时候
-        requestMethods () {
-            this.refresh()
         }
     },
     activated () {

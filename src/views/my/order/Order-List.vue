@@ -77,11 +77,7 @@ export default {
         OrderListItem
     },
     computed: {
-        ...mapGetters(['skuSourceKeyMap', 'orderTypeMap', 'orderTypeKeyMap', 'orderStatuskeyMap', 'orderOperatedList', 'orderActionMap']),
-        requestMethods () {
-            // 订单列表 待评价接口 与 其他状态接口不同
-            return this.$route.params.status === 'FINISHED' ? getWaitCommentOrderList : getOrderList
-        }
+        ...mapGetters(['skuSourceKeyMap', 'orderTypeMap', 'orderTypeKeyMap', 'orderStatuskeyMap', 'orderOperatedList', 'orderActionMap'])
     },
     data () {
         return {
@@ -147,9 +143,12 @@ export default {
     },
     methods: {
         ...mapMutations(['clearOrderOperatedList']),
+        requestMethods: getOrderList,
         onTabChange (item) {
+            this.form.orderStatus = item.id === 'ALL_ORDER' ? '' : item.id
+            // 订单列表 待评价接口 与 其他状态接口不同
+            this.requestMethods = this.form.orderStatus === 'FINISHED' ? getWaitCommentOrderList : getOrderList
             this.$nextTick(() => {
-                this.form.orderStatus = item.id === 'ALL_ORDER' ? '' : item.id
                 this.$router.replace({ name: 'Orders', params: { status: item.id } })
                 this.$refresh()
             })
@@ -256,7 +255,7 @@ export default {
             const countdownInstance = new Countdown(duration, data => {
                 if (!data) {
                     // 倒计时结束，刷新数据
-                    this.$refs.loadMore.refresh()
+                    this.$refresh()
                     return
                 }
                 const d = String(data.days)

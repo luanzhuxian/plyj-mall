@@ -81,15 +81,17 @@ export default {
     },
     computed: {
         swiper () {
-            return this.$refs.swiper.swiper
+            return this.$refs.swiper && this.$refs.swiper.swiper
         },
         swiperSlides () {
             return Array.from(this.swiper.slides)
         }
     },
     mounted () {
-        this.swiperActiveIndex = this.swiper.activeIndex
-        this.updateListStyle(this.swiperActiveIndex)
+        if (this.swiper) {
+            this.swiperActiveIndex = this.swiper.activeIndex
+            this.updateListStyle(this.swiperActiveIndex)
+        }
     },
     activated () {
         if (this.swiper && this.swiper.autoplay.paused) {

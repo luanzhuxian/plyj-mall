@@ -12,9 +12,13 @@
                         <Live :data="Live" />
                     </Panel>
                 </section>
+                <!-- 抽奖 -->
+                <section :class="[$style.happyLottery, $style.module]" v-if="currentLottery && currentLottery.id && ~[1, 2].indexOf(currentLottery.status)">
+                    <HappyLottery :data="currentLottery" />
+                </section>
                 <!-- 福利红包 -->
-                <section :class="[$style.redPackage, $style.module]" class="spring-2021-red-red-package">
-                    <RedPackage :data="RedPackage" v-if="RedPackage.values.length" />
+                <section :class="[$style.redPackage, $style.module]" class="spring-2021-red-red-package" v-if="RedPackage.values.length">
+                    <RedPackage :data="RedPackage" />
                 </section>
                 <!-- 优惠券 -->
                 <section :class="[$style.coupon, $style.module]" class="spring-2021-red-coupon" v-if="Coupon.values.length">
@@ -52,6 +56,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Live from '../spring-2021/Live.vue'
 import RedPackage from '../spring-2021/Red-Package.vue'
 import Miaosha from '../spring-2021/Miaosha.vue'
@@ -60,6 +65,7 @@ import Yugou from '../spring-2021/Yugou.vue'
 import Package from '../spring-2021/Package.vue'
 import Popular from '../spring-2021/Popular.vue'
 import Coupon from '../double-12-2020/Coupon.vue'
+import HappyLottery from '../spring-2021/Happy-Lottery.vue'
 import Panel from '../double-12-2020/Panel.vue'
 import BackToTop from '../../../components/activity/BackToTop.vue'
 
@@ -75,6 +81,7 @@ export default {
         Yugou,
         Package,
         Popular,
+        HappyLottery,
         Panel,
         BackToTop
     },
@@ -91,6 +98,7 @@ export default {
         }
     },
     computed: {
+        ...mapGetters(['currentLottery']),
         Live () {
             return this.data.Live || { values: [] }
         },
@@ -301,6 +309,9 @@ export default {
     margin-bottom: 20px;
 }
 .yugou {
+    margin-bottom: 60px;
+}
+.happy-lottery {
     margin-bottom: 60px;
 }
 

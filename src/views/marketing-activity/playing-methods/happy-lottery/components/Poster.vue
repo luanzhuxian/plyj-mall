@@ -47,6 +47,11 @@ export default {
             const ctx = cvs.getContext('2d')
             ctx.drawImage(bg, 0, 0, 1200, 1910)
             ctx.drawImage(cutArcImage(avatar), 450, 740, 300, 300)
+            ctx.beginPath()
+            ctx.lineWidth = 4
+            ctx.arc(600, 890, 152, 0, 2 * Math.PI)
+            ctx.strokeStyle = '#fff'
+            ctx.stroke()
 
             // 用户姓名
             ctx.font = '44px Microsoft YaHei'

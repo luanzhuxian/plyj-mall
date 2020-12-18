@@ -58,7 +58,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['dragonGateCharity', 'dragonGateSign', 'dragonGatePlay']),
+        ...mapGetters(['dragonGateCharity', 'dragonGateSign', 'currentLottery']),
         swiper () {
             return this.$refs.swiper.swiper
         }
@@ -165,14 +165,14 @@ export default {
             }
             // 龙门抽大奖
             if (type === 410) {
-                const { dragonGatePlay } = this
-                if (!dragonGatePlay || !dragonGatePlay.id) return false
+                const { currentLottery } = this
+                if (!currentLottery || !currentLottery.id) return false
 
-                const startTime = moment(dragonGatePlay.startTime).valueOf()
-                const endTime = moment(dragonGatePlay.endTime).valueOf()
+                const startTime = moment(currentLottery.startTime).valueOf()
+                const endTime = moment(currentLottery.endTime).valueOf()
                 if (startTime > Date.now() || endTime < Date.now()) return false
 
-                return this.$router.push({ name: 'LongmenLottery', params: { id: this.dragonGatePlay.id } })
+                return this.$router.push({ name: 'LongmenLottery', params: { id: this.currentLottery.id } })
             }
             // 自定义
             if (type === 7 && value && typeof value === 'string') {

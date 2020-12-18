@@ -97,9 +97,7 @@
                             v-for="(item, i) of lotteryRecords"
                             :key="i"
                         >
-                            <img v-if="item.awardType === 2" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/scholarship.png" alt="">
-                            <img v-else-if="item.awardType === 3 || item.awardType === 4" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/coupon.png" alt="">
-                            <img v-else :src="item.giftImg" alt="">
+                            <img :src="item.userImg" alt="">
                             <div>
                                 <div class="flex space-between">
                                     <span :class="$style.username" v-text="item.userName" />
@@ -125,8 +123,8 @@
             :gift-image="lotterAward.giftImage"
             :gift-name="lotterAward.awardName"
             :date="lotterAward.giftUseEndTime"
-            :price="lotterAward.scholarshipPrice"
-            :days="lotterAward.scholarshipEffectiveTime"
+            :price="lotterAward.scholarshipPrice || 0"
+            :days="lotterAward.scholarshipEffectiveTime || 0"
         />
     </div>
 </template>
@@ -139,6 +137,7 @@ import SilkBag from './components/Silk-Bag.vue'
 import LotterySuccess from './components/Lottery-Success.vue'
 import { SectionToChinese } from '../../../../assets/js/util'
 import { shuffle } from '../../../../assets/js/loadsh'
+import share from '../../../../assets/js/wechat/wechat-share'
 import moment from 'moment'
 import {
     getAwardRecords,
@@ -221,7 +220,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['mobile'])
+        ...mapGetters(['mobile', 'appId', 'userName'])
     },
     async activated () {
         if (!this.mobile) {
@@ -247,6 +246,12 @@ export default {
                 this.awardList = result.gifts
                 this.detail = result
                 this.status = Number(result.status)
+                share({
+                    appId: this.appId,
+                    title: `${ this.title }邀请你参加活动`,
+                    desc: this.detail.name,
+                    imgUrl: 'https://mallcdn.youpenglai.com/static/mall/lottery/share-icon.png'
+                })
                 await this.$nextTick()
                 this.setAwards()
                 await this.getRecords()

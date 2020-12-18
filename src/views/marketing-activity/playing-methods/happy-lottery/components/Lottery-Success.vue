@@ -14,11 +14,16 @@
                     </div>
                     <div class="mt-16" :class="$style.giftName">
                         <span>{{ giftName }}</span>
-                        <span>{{ price }}元</span>
+                        <span v-if="price">{{ price }}元</span>
                     </div>
                     <div v-if="awardType === 2" class="text-center mt-16 fz-28" :class="$style.date">有效期：领取当日起{{ days }}天以内</div>
                     <div v-else class="text-center mt-16 fz-28" :class="$style.date">有效期 {{ date }}</div>
-                    <div class="text-center mt-16 fz-20 gray-3" :class="$style.tip">奖品已自动存入您的我的优惠券/礼品/奖学金中</div>
+                    <div class="text-center mt-16 fz-20 gray-3" :class="$style.tip">
+                        <span>奖品已自动存入</span>
+                        <i v-if="awardType === 1">我的礼品</i>
+                        <i v-else-if="awardType === 2">我的奖学金中</i>
+                        <i v-else-if="awardType === 3">我的卡券</i>
+                    </div>
                 </div>
                 <div :class="$style.got">
                     <button :class="$style.ohYeah" @click="closeHandler">开心收下</button>

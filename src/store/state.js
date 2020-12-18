@@ -94,8 +94,8 @@ export default {
     dragonGateCharity: null,
     // 龙门节签到
     dragonGateSign: null,
-    // 龙门节抽奖
-    dragonGatePlay: null,
+    // 当前抽奖
+    currentLottery: null,
     // 疫情战报
     // campaignReport: null,
     // 疫情签到
