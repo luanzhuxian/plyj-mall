@@ -125,7 +125,7 @@ export default {
             }
             // 新春2021
             if (this.activityId === 12) {
-                result = this.currentLottery && this.currentLottery.id
+                result = true
             }
             return result
         }
