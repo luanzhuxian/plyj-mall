@@ -1,6 +1,6 @@
 import JsSHE from '../../../../static/lib/crypto'
 import { getJSApi } from '../../../apis/base-api'
-// import { isIOS } from '../util'
+import { isIOS } from '../util'
 /* eslint-disable */
 // import qs from 'qs'
 const WX = window.wx
@@ -17,6 +17,9 @@ export default async function share ({ appId, title, desc, imgUrl, link = locati
     WX.error(res => {
         console.warn('分享配置失败')
         console.error(res)
+        if (isIOS()) {
+            // location.assign(link)
+        }
     })
 
 }
@@ -121,7 +124,7 @@ function getConfig (jsapi, appId, link) {
     const sign = `jsapi_ticket=${ jsapi }&noncestr=${ nonceStr }&timestamp=${ timestamp }&url=${ link }`
     const signature = new JsSHE(sign, 'TEXT').getHash('SHA-1', 'HEX')
     return {
-        debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
         appId, // 必填，公众号的唯一标识
         timestamp, // 必填，生成签名的时间戳
         nonceStr, // 必填，生成签名的随机串

@@ -148,6 +148,10 @@ export function isObj (x) {
     return x !== null && (type === 'object' || type === 'function')
 }
 
+/**
+ * 判读是否为IOS
+ * @return {boolean}
+ */
 export function isIOS () {
     return !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)
 }
