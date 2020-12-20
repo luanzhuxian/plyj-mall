@@ -102,7 +102,7 @@
         <!-- 分享海报 -->
         <SharePoster bgi="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/poster-bg.jpg" />
         <!-- 签到海报 -->
-        <SigninPoster :show.sync="showSignInPoster" :bgi="signInPosterBgi" />
+        <SigninPoster :show.sync="showSignInPoster" :current-sign-in="currentSignIn" />
         <!-- 中阶梯奖品弹框 -->
         <WinningGeneralPrize
             v-if="!currentSignIn.isLastIcon && presentStage === 1"
@@ -549,7 +549,6 @@ export default {
                 this.isGetMyNewYearCard = false
 
                 // 显示海报
-                this.signInPosterBgi = this.currentSignIn.posterUrl
                 this.showSignInPoster = true
             } catch (e) {
                 throw e

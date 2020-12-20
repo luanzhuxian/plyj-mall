@@ -8,7 +8,7 @@
             </div>
             <p :class="{'not-sign': !hasSignin}">{{ iconName }}</p>
         </div>
-        <SigninPoster :show.sync="signPosterShow" :bgi="detail.posterUrl" />
+        <SigninPoster :show.sync="signPosterShow" :current-sign-in="detail" />
     </div>
 </template>
 
