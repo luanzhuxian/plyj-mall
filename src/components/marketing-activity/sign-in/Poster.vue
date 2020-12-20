@@ -21,7 +21,7 @@
 
 <script>
 /* eslint-disable */
-import { loadImage, createCanvas, generateQrcode } from '../../../assets/js/util'
+import { loadImage, createCanvas, generateQrcode, cutArcImage } from '../../../assets/js/util'
 export default {
     name: 'SharePoster',
     data () {
@@ -52,6 +52,14 @@ export default {
             type: String,
             default: ''
         },
+        isShowLog: {
+            type: Number,
+            default: 0
+        },
+        logImgUrl: {
+            type: String,
+            default: ''
+        },
         // 海报的宽高
         w: {
             type: Number,
@@ -75,6 +83,12 @@ export default {
             const { cvs, ctx } = createCanvas(this.w, this.h)
             const bg = await loadImage(this.bgi)
             ctx.drawImage(bg, 0, 0, this.w, this.h)
+            // 绘制企业logo
+            if (this.isShowLog) {
+              let logo = await loadImage(this.logImgUrl)
+              logo = await cutArcImage(logo)
+              ctx.drawImage(logo, 30, 30, 160, 160)
+            }
             const qrcode = await generateQrcode({
                 size: 300,
                 text: location.href,

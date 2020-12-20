@@ -100,7 +100,8 @@
         <!-- 活动规则 -->
         <ActivityRule :active-detail="activeDetail" />
         <!-- 分享海报 -->
-        <SharePoster bgi="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/poster-bg.jpg" />
+        <SharePoster bgi="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/poster-bg.jpg"
+                     :is-show-log="activeDetail.isShowLog" :log-img-url="activeDetail.logImgUrl" />
         <!-- 签到海报 -->
         <SigninPoster :show.sync="showSignInPoster" :current-sign-in="currentSignIn" />
         <!-- 中阶梯奖品弹框 -->
