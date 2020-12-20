@@ -116,6 +116,7 @@ function setWechatShare (title, desc, imgUrl, link, willHide = []) {
 function getConfig (jsapi, appId) {
     const nonceStr = randomString()
     const timestamp = Number.parseInt(Date.now() / 1000)
+    console.log('href: ', location.href)
     const sign = `jsapi_ticket=${ jsapi }&noncestr=${ nonceStr }&timestamp=${ timestamp }&url=${ location.href }`
     const signature = new JsSHE(sign, 'TEXT').getHash('SHA-1', 'HEX')
     return {
