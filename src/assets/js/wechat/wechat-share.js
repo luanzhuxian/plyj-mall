@@ -8,7 +8,7 @@ const WX = window.wx
 export default async function share ({ appId, title, desc, imgUrl, link = location.href, willHide }) {
     const { result: jsApi } = await getJSApi(appId) // 每次分享时，获取js-api
     willHide = !title ? ['menuItem:share:appMessage', 'menuItem:share:timeline'] : willHide
-    const config = getConfig(jsApi, appId)
+    const config = getConfig(jsApi, appId, link)
     WX.config(config)
     WX.ready(() => {
         setWechatShare(title, desc, imgUrl, link, willHide)
@@ -111,13 +111,14 @@ function setWechatShare (title, desc, imgUrl, link, willHide = []) {
  * 生成微信分享配置对象
  * @param jsapi {string}
  * @param appId {string}
+ * @param link {string}
  * @return {{debug: boolean, jsApiList: string[], signature: *, appId: *, nonceStr: *, timestamp: number}}
  */
-function getConfig (jsapi, appId) {
+function getConfig (jsapi, appId, link) {
     const nonceStr = randomString()
     const timestamp = Number.parseInt(Date.now() / 1000)
-    console.log('href: ', location.href)
-    const sign = `jsapi_ticket=${ jsapi }&noncestr=${ nonceStr }&timestamp=${ timestamp }&url=${ location.href }`
+    console.log('href: ', link)
+    const sign = `jsapi_ticket=${ jsapi }&noncestr=${ nonceStr }&timestamp=${ timestamp }&url=${ link }`
     const signature = new JsSHE(sign, 'TEXT').getHash('SHA-1', 'HEX')
     return {
         debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
