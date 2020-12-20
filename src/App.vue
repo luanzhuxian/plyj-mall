@@ -24,7 +24,7 @@ import Navbar from './components/common/Navbar.vue'
 import QuickNavbar from './components/common/Quick-Navbar.vue'
 import NewUserHomePop from './views/marketing-activity/playing-methods/newcomers/components/New-User-Home-Pop.vue'
 import NewUserHomeBtn from './views/marketing-activity/playing-methods/newcomers/components/New-User-Home-Btn.vue'
-import { mapMutations, mapActions } from 'vuex'
+import { mapMutations, mapActions, mapGetters } from 'vuex'
 import {
     SET_THEME,
     GET_ACTIVITY_DATA,
@@ -49,7 +49,44 @@ import {
 import { setFirstVisit } from './apis/longmen-festival/lottery'
 // 新人有礼
 import { isNewUser, getGoingInfo } from './apis/newcomers'
+import { share } from './assets/js/wechat/wechat-share'
 
+// 需要自定义分享的路由
+const customShare = [
+    'Product',
+    'Curriculum',
+    'LiveRoom',
+    'InviteNewcomers',
+    'Newcomers',
+    'Classify',
+    'CoursePackage',
+    'SpringPloughing',
+    'HappyLottery'
+]
+// 采取默认分享的路由，不需要自己配置分享信息，会拉取当前商城的一些信息
+const shareRoutes = [
+    'Home',
+    'My',
+    'Appointment',
+    'DoubleTwelveDay',
+    'Activity',
+    'BattlefieldReport',
+    'EpidemicSignIn',
+    'LongmenLottery',
+    'LongmenAction',
+    'LongmenSignIn',
+    'RedPackage',
+    'RedPackageDetail'
+]
+const configShare = to => {
+    if (!customShare.includes(to.name) && !shareRoutes.includes(to.name)) {
+        // 禁止分享
+        window.wx.hideOptionMenu()
+        return false
+    }
+    window.wx.showOptionMenu()
+    return true
+}
 export default {
     components: {
         Navbar,
@@ -100,6 +137,24 @@ export default {
         } catch (e) {
             throw e
         }
+    },
+    watch: {
+        $route (to) {
+            const notHide = configShare(to)
+            console.log(this.appId, to.name, notHide)
+            if (notHide && shareRoutes.includes(to.name)) {
+                console.warn('默认分享')
+                share({
+                    appId: this.appId,
+                    title: `${ this.mallName }${ to.meta && to.meta.title ? `-${ to.meta.title }` : '' }`,
+                    desc: this.mallDesc,
+                    imgUrl: this.logoUrl
+                })
+            }
+        }
+    },
+    computed: {
+        ...mapGetters(['appId', 'logoUrl', 'mallDesc', 'mallName'])
     },
     methods: {
         ...mapMutations({

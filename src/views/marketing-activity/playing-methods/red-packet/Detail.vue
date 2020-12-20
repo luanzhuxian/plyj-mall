@@ -189,7 +189,7 @@ import {
     fenToYuan,
     isToday
 } from './utils'
-import share from '../../../../assets/js/wechat/wechat-share'
+import { share } from '../../../../assets/js/wechat/wechat-share'
 import { SET_SHARE_ID } from '../../../../store/mutation-type'
 
 export default {

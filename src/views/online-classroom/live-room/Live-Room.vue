@@ -262,7 +262,7 @@
 import { mapGetters } from 'vuex'
 import CouponItem from '../../../components/my/coupon/Coupon-Item.vue'
 import PaidPlayer from '../../../components/common/Paid-Player.vue'
-import share from '../../../assets/js/wechat/wechat-share'
+import { share } from '../../../assets/js/wechat/wechat-share'
 // 直播口令输入
 import LivePassword from '../../../components/online-classroom/live-room/Live-Password'
 import LiveMask from '../../../components/online-classroom/live-room/Live-Mask'

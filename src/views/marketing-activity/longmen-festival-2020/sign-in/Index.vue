@@ -284,7 +284,7 @@ import {
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { generateQrcode, drawRoundRect, cutArcImage, createText } from '../../../../assets/js/util'
 import Countdown from '../../../../assets/js/Countdown'
-import share from '../../../../assets/js/wechat/wechat-share'
+import { share } from '../../../../assets/js/wechat/wechat-share'
 import { getServerTime } from '../../../../apis/base-api'
 import { mapGetters } from 'vuex'
 import moment from 'moment'

@@ -141,7 +141,7 @@ import SilkBag from './components/Silk-Bag.vue'
 import LotterySuccess from './components/Lottery-Success.vue'
 import { SectionToChinese } from '../../../../assets/js/util'
 import { shuffle } from '../../../../assets/js/loadsh'
-import share from '../../../../assets/js/wechat/wechat-share'
+import { share } from '../../../../assets/js/wechat/wechat-share'
 import moment from 'moment'
 import {
     getAwardRecords,

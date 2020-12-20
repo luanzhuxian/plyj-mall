@@ -120,7 +120,7 @@ import LoadMore from '../../components/common/Load-More.vue'
 import { getCategoryTree, getProduct, getCourseCategoryTree } from '../../apis/classify'
 import { getActivityProduct } from '../../apis/broker'
 import { getCourse, getImageTextList } from '../../apis/online-classroom'
-import share from '../../assets/js/wechat/wechat-share'
+import { share } from '../../assets/js/wechat/wechat-share'
 import { skinClassNameMap } from '..//home/skin/map'
 
 export default {
