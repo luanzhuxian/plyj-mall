@@ -190,7 +190,7 @@ import MissingGeneralPrize from '../../../../components/marketing-activity/sign-
 import NoticingGrandPrize from '../../../../components/marketing-activity/sign-in/Noticing-Grand-Prize'
 import WinningGrandPrize from '../../../../components/marketing-activity/sign-in/Winning-Grand-Prize'
 import MissingGrandPrize from '../../../../components/marketing-activity/sign-in/Missing-Grand-Prize'
-import share from '../../../../assets/js/wechat/wechat-share'
+import { share } from '../../../../assets/js/wechat/wechat-share'
 import { getServerTime } from '../../../../apis/base-api'
 import { getSignInIconList, getPresentList, checkInCurrentNewYearIcon, statisticsViews, checkIsParticipateableActivity, receivePresent } from '../../../../apis/new-year'
 const activity_member = { 0: '所有注册用户', 1: 'Helper用户', 2: '普通会员', 3: '商家指定用户' }
