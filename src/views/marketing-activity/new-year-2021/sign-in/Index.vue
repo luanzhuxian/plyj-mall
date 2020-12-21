@@ -80,6 +80,8 @@
                             :has-signin="item.hasSignin"
                             :material-desc="item.materialDesc"
                             :icon-name="item.name"
+                            :is-show-log="activeDetail.isShowLog"
+                            :log-img-url="activeDetail.logImgUrl"
                             icon-img="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/un_checked.png"
                             icon-img-checked="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/checked.png"
                         />
@@ -113,7 +115,8 @@
         <SharePoster bgi="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/poster-bg.jpg"
                      :is-show-log="activeDetail.isShowLog" :log-img-url="activeDetail.logImgUrl" />
         <!-- 签到海报 -->
-        <SigninPoster :show.sync="showSignInPoster" :current-sign-in="currentSignIn" />
+        <SigninPoster :show.sync="showSignInPoster" :poster-url="currentSignIn.posterUrl"
+                      :is-show-log="activeDetail.isShowLog" :log-img-url="activeDetail.logImgUrl" />
         <!-- 中阶梯奖品弹框 -->
         <WinningGeneralPrize
             v-if="!currentSignIn.isLastIcon && presentStage === 1"
@@ -630,6 +633,7 @@ export default {
   background-size: 100% 553px;
   padding: 175px 0 30px;
   .present {
+    margin: 0 auto;
     width: 80vw;
     height: 251px;
     display: flex;

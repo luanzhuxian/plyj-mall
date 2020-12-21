@@ -22,11 +22,17 @@ export default {
             default: false
         },
         // 海报背景图片，建议尺寸 1500 * 2269, 格式为jpg
-        currentSignIn: {
-            type: Object,
-            default () {
-                return {}
-            }
+        posterUrl: {
+            type: String,
+            default: ''
+        },
+        isShowLog: {
+            type: Number,
+            default: 0
+        },
+        logImgUrl: {
+            type: String,
+            default: ''
         },
         // 海报的宽高
         w: {
@@ -63,12 +69,12 @@ export default {
             ctx.fillRect(0, 0, this.w, this.h)
 
             // 绘制海报图片
-            const bg = await loadImage(this.currentSignIn.posterUrl)
+            const bg = await loadImage(this.posterUrl)
             ctx.drawImage(bg, 0, 0, this.w, 2269)
 
             // 绘制企业logo
-            if (this.currentSignIn.isShowLog) {
-                let logo = await loadImage(this.currentSignIn.logImgUrl)
+            if (this.isShowLog) {
+                let logo = await loadImage(this.logImgUrl)
                 logo = await cutArcImage(logo)
                 ctx.drawImage(logo, 30, 30, 160, 160)
             }

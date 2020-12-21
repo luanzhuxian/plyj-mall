@@ -8,7 +8,8 @@
             </div>
             <p :class="{'not-sign': !hasSignin}">{{ iconName }}</p>
         </div>
-        <SigninPoster :show.sync="signPosterShow" :current-sign-in="detail" />
+        <SigninPoster :show.sync="signPosterShow" :poster-url="detail.posterUrl"
+                      :is-show-log="isShowLog" :log-img-url="logImgUrl" />
     </div>
 </template>
 
@@ -49,6 +50,14 @@ export default {
         },
         // 图标高亮图片
         iconImgChecked: {
+            type: String,
+            default: ''
+        },
+        isShowLog: {
+            type: Number,
+            default: 0
+        },
+        logImgUrl: {
             type: String,
             default: ''
         }
