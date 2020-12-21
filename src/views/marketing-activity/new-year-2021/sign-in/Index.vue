@@ -90,7 +90,6 @@
                             :detail="item"
                             :has-signin="item.hasSignin"
                             :is-grand-prsent="item.isGrandPrsent"
-                            :is-last-icon="currentSignIn.isLastIcon"
                             :award-type="item.awardType"
                             :award-img="item.awardImg"
                             @clickHandler="presentWarning"
