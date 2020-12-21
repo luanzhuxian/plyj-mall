@@ -34,7 +34,7 @@
             </div>
             <div :class="[$style.dialItem, $style.count]">
                 <span>我的次数</span>
-                <span>x{{ count }}</span>
+                <span>{{ count > 9999 ? '1w+' : `x${ count }` }}</span>
             </div>
             <div
                 v-for="(item, i) of turntableAwards.slice(4)"
@@ -60,12 +60,14 @@
                 v-for="(prize, i) of awardList"
                 :key="i"
             >
-                <img v-if="Number(prize.awardType) === 2" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/scholarship.png" alt="奖品图片">
-                <img v-else-if="Number(prize.awardType) === 3 || Number(prize.awardType) === 4" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/coupon.png" alt="奖品图片">
+                <img v-if="Number(prize.awardType) === 2" src="https://mallcdn.youpenglai.com/static/mall/lottery/schoolship.jpg" alt="奖品图片">
+                <img v-else-if="Number(prize.awardType) === 3 || Number(prize.awardType) === 4" src="https://mallcdn.youpenglai.com/static/mall/lottery/coupon.jpg" alt="奖品图片">
                 <img v-else :src="prize.giftImage" alt="奖品图片">
                 <div>
                     <strong :class="[$style.grade, $style.first]" v-text="prize.grade" />
-                    <span :class="$style.name" v-text="prize.awardName" />
+                    <span :class="$style.name">
+                        {{ prize.awardName }}{{ prize.awardType === 2 ? prize.scholarshipPrice + '元' : '' }}
+                    </span>
                 </div>
             </li>
         </ul>
@@ -79,11 +81,13 @@
                             v-for="(item, i) of awardRecords"
                             :key="i"
                         >
-                            <img v-if="item.awardType === 2" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/scholarship.png" alt="">
-                            <img v-else-if="item.awardType === 3 || item.awardType === 4" src="https://mallcdn.youpenglai.com/static/mall/2.9.0/coupon.png" alt="">
+                            <img v-if="item.awardType === 2" src="https://mallcdn.youpenglai.com/static/mall/lottery/schoolship.jpg" alt="">
+                            <img v-else-if="item.awardType === 3 || item.awardType === 4" src="https://mallcdn.youpenglai.com/static/mall/lottery/coupon.jpg" alt="">
                             <img v-else :src="item.giftImg" alt="">
                             <div>
-                                <p :class="$style.name" v-text="item.awardName" />
+                                <p :class="$style.name">
+                                    {{ item.awardName }}{{ item.awardType === 2 ? item.scholarshipPrice + '元' : '' }}
+                                </p>
                                 <p :class="$style.date" v-text="item.awardTime" />
                             </div>
                         </li>
@@ -104,7 +108,7 @@
                                     <p :class="$style.date" v-text="item.awardTime" />
                                 </div>
                                 <div :class="$style.prizeName">
-                                    获得{{ item.awardLevel | sectionToChinese }}等奖{{ item.awardName }}
+                                    获得<i v-if="item.awardLevel > 3">好礼</i><i v-else>{{ item.awardLevel | sectionToChinese }}等奖</i> {{ item.awardName }}{{ item.awardType === 2 ? item.scholarshipPrice + '元' : '' }}
                                 </div>
                             </div>
                         </li>
@@ -115,7 +119,7 @@
         </div>
 
         <SilkBag :detail="detail" />
-        <Poster :id="id" />
+        <Poster :id="id" :logo="detail.logImageUrl" />
         <LotterySuccess
             :show.sync="showLotterySuccess"
             :grade="lotterAward.grade"
@@ -137,7 +141,7 @@ import SilkBag from './components/Silk-Bag.vue'
 import LotterySuccess from './components/Lottery-Success.vue'
 import { SectionToChinese } from '../../../../assets/js/util'
 import { shuffle } from '../../../../assets/js/loadsh'
-import share from '../../../../assets/js/wechat/wechat-share'
+import { share } from '../../../../assets/js/wechat/wechat-share'
 import moment from 'moment'
 import {
     getAwardRecords,
@@ -248,7 +252,7 @@ export default {
                 this.status = Number(result.status)
                 share({
                     appId: this.appId,
-                    title: `${ this.title }邀请你参加活动`,
+                    title: `${ this.userName }邀请你参加活动`,
                     desc: this.detail.name,
                     imgUrl: 'https://mallcdn.youpenglai.com/static/mall/lottery/share-icon.png'
                 })
@@ -269,7 +273,7 @@ export default {
                 award.grade = i < 3 ? `${ SectionToChinese(i + 1) }等奖` : '好礼'
                 turntableAwards.push({
                     ...award,
-                    icon: AWARD_ICON[i]
+                    icon: i >= 3 ? 'https://mallcdn.youpenglai.com/static/mall/lottery/good-gift-2.png' : AWARD_ICON[i]
                 })
             }
             for (let i = this.awardList.length; i < 8; i++) {

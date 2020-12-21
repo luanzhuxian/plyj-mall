@@ -57,7 +57,7 @@ export default {
     couponToReceive: state => state.couponToReceive,
     nwEvent: state => state.nwEvent,
     dragonGateCharity: state => state.dragonGateCharity,
-    dragonGateSign: state => state.dragonGateSign,
+    currentSign: state => state.currentSign,
     currentLottery: state => state.currentLottery,
     mallQRCodeInfo: state => state.mallQRCodeInfo,
     // 服务器时间

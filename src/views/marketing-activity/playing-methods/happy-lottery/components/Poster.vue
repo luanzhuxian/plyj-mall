@@ -23,6 +23,10 @@ export default {
         id: {
             type: String,
             default: ''
+        },
+        logo: {
+            type: String,
+            default: ''
         }
     },
     computed: {
@@ -37,9 +41,10 @@ export default {
             if (this.poster) {
                 return
             }
-            const [bg, avatar] = await Promise.all([
+            const [bg, avatar, logo] = await Promise.all([
                 loadImage('https://mallcdn.youpenglai.com/static/mall/lottery/poster-bg-1.png'),
-                loadImage(this.avatar)
+                loadImage(this.avatar),
+                this.logo ? loadImage(this.logo) : Promise.resolve(null)
             ])
             const cvs = document.createElement('canvas')
             cvs.width = 1200
@@ -52,6 +57,9 @@ export default {
             ctx.arc(600, 890, 152, 0, 2 * Math.PI)
             ctx.strokeStyle = '#fff'
             ctx.stroke()
+            if (logo) {
+                ctx.drawImage(cutArcImage(logo), 40, 50, 120, 120)
+            }
 
             // 用户姓名
             ctx.font = '44px Microsoft YaHei'

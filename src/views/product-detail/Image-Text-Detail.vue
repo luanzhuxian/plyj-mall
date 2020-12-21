@@ -174,7 +174,7 @@ import CountDown from '../../components/product-detail/Courses-Count-Down.vue'
 import ImageTextList from '../../components/product-detail/Image-Text-List.vue'
 import PdfPreviewer from '../../components/product-detail/Pdf-Previewer.vue'
 import Skeleton from '../../components/product-detail/Skeleton.vue'
-import share from '../../assets/js/wechat/wechat-share'
+import { share } from '../../assets/js/wechat/wechat-share'
 import { getImageTextDetail, markImageTextStudy } from '../../apis/product'
 import {
     isIOS

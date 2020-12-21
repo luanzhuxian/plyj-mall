@@ -58,7 +58,7 @@ import moment from 'moment'
 import Board from './components/Board'
 import AcquisitionGifts from './components/Acquisition-Gifts.vue'
 import youLike from '../../../home/components/YouLike.vue'
-import share from '../../../../assets/js/wechat/wechat-share'
+import { share } from '../../../../assets/js/wechat/wechat-share'
 import { mapGetters } from 'vuex'
 import {
     getActiveDetail,

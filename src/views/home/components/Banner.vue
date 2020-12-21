@@ -58,7 +58,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['dragonGateCharity', 'dragonGateSign', 'currentLottery']),
+        ...mapGetters(['dragonGateCharity', 'currentSign', 'currentLottery']),
         swiper () {
             return this.$refs.swiper.swiper
         }
@@ -154,14 +154,14 @@ export default {
             }
             // 粽粽有礼
             if (type === 49) {
-                const { dragonGateSign } = this
-                if (!dragonGateSign || !dragonGateSign.id) return false
+                const { currentSign } = this
+                if (!currentSign || !currentSign.id) return false
 
-                const startTime = moment(dragonGateSign.activityStartTime).valueOf()
-                const endTime = moment(dragonGateSign.activityEndTime).valueOf()
+                const startTime = moment(currentSign.activityStartTime).valueOf()
+                const endTime = moment(currentSign.activityEndTime).valueOf()
                 if (startTime > Date.now() || endTime < Date.now()) return false
 
-                return this.$router.push({ name: 'LongmenSignIn', params: { id: this.dragonGateSign.id } })
+                return this.$router.push({ name: 'LongmenSignIn', params: { id: this.currentSign.id } })
             }
             // 龙门抽大奖
             if (type === 410) {

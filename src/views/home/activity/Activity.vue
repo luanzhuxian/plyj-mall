@@ -94,12 +94,19 @@ export default {
                     icon: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/happy-lottery.png',
                     width: '96',
                     path: 'HappyLottery'
+                // },
+                // 'newyear-sign': {
+                //     main: '打卡聪明年',
+                //     sub: '开启智慧大脑',
+                //     icon: 'https://mallcdn.youpenglai.com/static/mall/icons/2.9.0/newyear-sign.png',
+                //     width: '72',
+                //     path: 'NewYearSignIn'
                 }
             }
         }
     },
     computed: {
-        ...mapGetters(['nwEvent', 'dragonGateCharity', 'dragonGateSign', 'currentLottery']),
+        ...mapGetters(['nwEvent', 'dragonGateCharity', 'currentSign', 'currentLottery']),
         isOdd () {
             return !!(this.list.length % 2)
         },
@@ -112,7 +119,7 @@ export default {
     },
     methods: {
         jump ({ value }) {
-            const { map, nwEvent, currentLottery } = this
+            const { map, nwEvent, currentLottery, currentSign } = this
             let id
             let startTime
             let endTime
@@ -142,15 +149,14 @@ export default {
                     break
 
                 case 'dragon-gate-sign':
-                    const { dragonGateSign } = this
-                    if (!dragonGateSign || !dragonGateSign.id) return this.$warning('活动已结束')
+                    if (!currentSign || !currentSign.id) return this.$warning('活动已结束')
 
-                    startTime = moment(dragonGateSign.activityStartTime).valueOf()
-                    endTime = moment(dragonGateSign.activityEndTime).valueOf()
+                    startTime = moment(currentSign.activityStartTime).valueOf()
+                    endTime = moment(currentSign.activityEndTime).valueOf()
                     if (startTime > Date.now()) return this.$warning('活动未开始')
                     if (endTime < Date.now()) return this.$warning('活动已结束')
 
-                    id = this.dragonGateSign.id
+                    id = this.currentSign.id
                     break
 
                 case 'dragon-gate-play':
@@ -173,6 +179,17 @@ export default {
                     if (endTime < Date.now()) return this.$warning('活动已结束')
 
                     id = this.currentLottery.id
+                    break
+
+                case 'newyear-sign':
+                    if (!currentSign || !currentSign.id) return this.$warning('活动已结束')
+
+                    startTime = moment(currentSign.activityStartTime).valueOf()
+                    endTime = moment(currentSign.activityEndTime).valueOf()
+                    if (startTime > Date.now()) return this.$warning('活动未开始')
+                    if (endTime < Date.now()) return this.$warning('活动已结束')
+
+                    id = this.currentSign.id
                     break
 
                 default:
