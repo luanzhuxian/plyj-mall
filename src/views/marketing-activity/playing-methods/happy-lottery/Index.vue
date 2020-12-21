@@ -119,7 +119,7 @@
         </div>
 
         <SilkBag :detail="detail" />
-        <Poster :id="id" />
+        <Poster :id="id" :logo="detail.logImageUrl" />
         <LotterySuccess
             :show.sync="showLotterySuccess"
             :grade="lotterAward.grade"
