@@ -22,7 +22,8 @@ export const skinClassNameMap = {
     20: 'skinParty',
     21: 'skinGoodCourse',
     22: 'skinWelcomeNew',
-    23: 'skinXmas2020',
+    23: 'skinCampusSupply',
+    24: 'skinXmas2020',
     has (id) {
         return Reflect.has(this, id)
     }
@@ -52,7 +53,8 @@ export const skinTitleMap = {
     20: 'TitleParty',
     21: 'TitleGoodCourse',
     22: 'TitleWelcomeNew',
-    23: 'TitleXmas2020',
+    23: 'TitleCampusSupply',
+    24: 'TitleXmas2020',
     get (id) {
         return Reflect.has(this, id) ? this[id] : this[0]
     }
@@ -280,6 +282,16 @@ export const skinNavMap = {
         myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/welcome-new/my.png'
     },
     23: {
+        home: 'https://mallcdn.youpenglai.com/static/admall/skin/campus-supply/home.png',
+        homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/campus-supply/home.png',
+        classify: 'https://mallcdn.youpenglai.com/static/admall/skin/campus-supply/classify.png',
+        classifyActive: 'https://mallcdn.youpenglai.com/static/admall/skin/campus-supply/classify.png',
+        shoppingCart: 'https://mallcdn.youpenglai.com/static/admall/skin/campus-supply/cart.png',
+        shoppingCartActive: 'https://mallcdn.youpenglai.com/static/admall/skin/campus-supply/cart.png',
+        my: 'https://mallcdn.youpenglai.com/static/admall/skin/campus-supply/my.png',
+        myActive: 'https://mallcdn.youpenglai.com/static/admall/skin/campus-supply/my.png'
+    },
+    24: {
         home: 'https://mallcdn.youpenglai.com/static/admall/skin/xmas-2020/home.png',
         homeActive: 'https://mallcdn.youpenglai.com/static/admall/skin/xmas-2020/home.png',
         classify: 'https://mallcdn.youpenglai.com/static/admall/skin/xmas-2020/classify.png',
