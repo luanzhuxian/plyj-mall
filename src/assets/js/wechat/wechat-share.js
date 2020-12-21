@@ -1,7 +1,24 @@
+/* eslint-disable */
 import JsSHE from '../../../../static/lib/crypto'
 import { getJSApi } from '../../../apis/base-api'
-// import { isIOS } from '../util'
-/* eslint-disable */
+import { isIOS } from '../util'
+
+/**
+ *  当IOS用户第一次进入页面的时候，把当前页面URL存储起来
+ *  之后所有的微信签名都用这个URL去计算
+ *  页面刷新的时候要使用replace方法重置这个缓存的链接
+ *  安卓还按照正常逻辑计算签名，即每个页面都用当前URL获取一次签名
+ */
+if (isIOS()) {
+    if (sessionStorage.getItem('IOS_FIRST_ENTRY_PAGE')) {
+        sessionStorage.removeItem('IOS_FIRST_ENTRY_PAGE')
+        location.replace(location.href)
+    } else {
+        sessionStorage.setItem('IOS_FIRST_ENTRY_PAGE', location.href)
+    }
+}
+
+
 // import qs from 'qs'
 const WX = window.wx
 const baseHideMenuItems = [
@@ -44,6 +61,7 @@ async function getConfig (appId, link) {
     const { result: jsapi } = await getJSApi(appId) // 每次分享时，获取js-api
     const nonceStr = randomString()
     const timestamp = Number.parseInt(Date.now() / 1000)
+    link = isIOS() ? sessionStorage.getItem('IOS_FIRST_ENTRY_PAGE') : link
     console.log('href-1: ', link)
     const sign = `jsapi_ticket=${ jsapi }&noncestr=${ nonceStr }&timestamp=${ timestamp }&url=${ link }`
     const signature = new JsSHE(sign, 'TEXT').getHash('SHA-1', 'HEX')
