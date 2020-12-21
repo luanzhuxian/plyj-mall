@@ -4,7 +4,7 @@
             <TabPane label="好礼晒单" value="1">
                 <div>
                     <div :class="$style.statistics">
-                        已有<strong>{{ sunPresentListTotal }}个</strong>获得{{ recordText }}
+                        已有<strong>{{ sunPresentListTotal }}人</strong>获得{{ recordText }}
                     </div>
                     <div class="no-sun-present" v-if="sunPresentList.length === 0">
                         <img
@@ -27,7 +27,7 @@
                         </template>
                         <div
                             v-if="sunPresentList.length > 3 && !showSunPresentListMore"
-                            class="more"
+                            :class="$style.more"
                             @click="showSunPresentListMore = true"
                         >
                             查看更多
@@ -37,7 +37,7 @@
             <TabPane label="我的奖品" value="2">
                 <div>
                     <div :class="$style.statistics">
-                        已有<strong>{{ myPresentList.length }}个</strong>获得{{ recordText }}
+                        我获得了<strong>{{ myPresentList.length }}个</strong>{{ recordText }}
                     </div>
                     <div class="no-sun-present" v-if="myPresentList.length === 0">
                         <img
@@ -58,7 +58,7 @@
                         </template>
                         <div
                             v-if="myPresentList.length > 3 && !showMyPresentListMore"
-                            class="more"
+                            :class="$style.more"
                             @click="showMyPresentListMore = true"
                         >
                             查看更多
@@ -84,6 +84,10 @@ export default {
         MyPresentItem
     },
     props: {
+        id: {
+            type: String,
+            default: ''
+        },
         // 活动名称（名词，如：端午活动，智力题）
         activeName: {
             type: String,
@@ -119,7 +123,7 @@ export default {
         }
     },
     created () {
-
+        this.getObtainedSunPresentList(this.id)
     },
     methods: {
     // 获取好友晒单奖品列表
@@ -174,5 +178,6 @@ export default {
       font-size: 26px;
       line-height: 35px;
       color: #333;
+      margin-top: 30px;
     }
 </style>

@@ -6,7 +6,7 @@
                 <div class="grand-present-tip-box">
                     <div class="top">
                         <p>恭喜你已完成打卡智力题</p>
-                        <p>请抽取{{ flauntAwardName }}</p>
+                        <p>请抽取出您的智慧礼</p>
                     </div>
                     <div class="detail" :style="{backgroundImage: 'url('+ bgImg +')'}">
                         <img :src="awardImg">

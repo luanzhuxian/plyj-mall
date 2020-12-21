@@ -10,7 +10,7 @@
             <img class="smart-bg"
                  src="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/smart_gift.png">
             <p :class="{'not-sign': !hasSignin}">智慧礼</p>
-            <p class="last-question" v-if="isLastIcon" @click="showInfoModal = true">终题答案</p>
+            <p class="last-question" v-if="isLastIcon && hasSignin" @click="showInfoModal = true">终题答案</p>
         </div>
         <!-- 已抽奖,但是未抽中-->
         <div v-if="hasSignin && (awardType === 0)">

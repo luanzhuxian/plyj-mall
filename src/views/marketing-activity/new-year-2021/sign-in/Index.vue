@@ -96,6 +96,8 @@
             active-name="智力题"
             record-text="小聪明的奖励"
             :my-present-list="myPresentList"
+            v-if="id"
+            :id="id"
         />
         <!-- 活动规则 -->
         <ActivityRule :active-detail="activeDetail" />
