@@ -2,16 +2,24 @@
     <div class="sign-in">
         <!-- 礼品展示开始 -->
         <div class="present" v-if="presentList.length === 1">
-            <img v-if="presentList[0].show" src="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/gift.png" alt="">
+            <div :class="presentList[0].awardType === 2 ? 'gift-bg' : 'award-bg'">
+                <div :class="presentList[0].awardType === 2 ? 'gift' : 'award'">
+                    <!--礼品图片-->
+                    <img class="img" v-if="presentList[0].show" :src="presentList[0].awardImg">
+                    <img class="img" v-else src="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/gift.png">
+                </div>
+                <div class="name">{{ presentList[0].show ? presentList[0].awardName : '智慧礼' }}</div>
+            </div>
         </div>
-        <swiper :options="swiperOption" v-if="presentList.length > 1" class="swiper">
+        <swiper class="present" :options="swiperOption" v-if="presentList.length > 1">
             <swiper-slide v-for="(item,index) in presentList" :key="index">
-                <div class="swiper-box">
-                    <div class="img">
+                <div :class="item.awardType === 2 ? 'gift-bg' : 'award-bg'">
+                    <div :class="item.awardType === 2 ? 'gift' : 'award'">
                         <!--礼品图片-->
-                        <img v-if="item.show" :src="item.awardImg" class="gift">
-                        <span>{{ item.awardName }}</span>
+                        <img class="img" v-if="item.show" :src="item.awardImg">
+                        <img class="img" v-if="item.awardType === 2 && !item.show" src="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/gift.png">
                     </div>
+                    <div class="name">{{ item.show ? item.awardName : '智慧礼' }}</div>
                 </div>
             </swiper-slide>
         </swiper>
@@ -100,7 +108,7 @@
             :id="id"
         />
         <!-- 活动规则 -->
-        <ActivityRule :active-detail="activeDetail" />
+        <ActivityRule :active-detail="activeDetail" flaunt-award-name="智慧礼" />
         <!-- 分享海报 -->
         <SharePoster bgi="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/poster-bg.jpg"
                      :is-show-log="activeDetail.isShowLog" :log-img-url="activeDetail.logImgUrl" />
@@ -621,19 +629,54 @@ export default {
   background: #C40E1A url("https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/sign_in_bg.png") no-repeat;
   background-size: 100% 553px;
   padding: 175px 0 30px;
-  .present{
-    height: 197px;
-    text-align: center;
-    img{
-      height: 197px;
-    }
-  }
-  .swiper {
+  .present {
     width: 80vw;
-    .swiper-box {
-      width: 201px;
-      height: 253px;
+    height: 251px;
+    display: flex;
+    justify-content: center;
+    .swiper-box{
+      width: 197px;
+      height: 251px;
       overflow: hidden;
+    }
+    .gift-bg{
+      width: 197px;
+      height: 251px;
+      text-align: center;
+      background: url("https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/gift_bg.png") no-repeat;
+      background-size: 100% 100%;
+      .gift{
+        height: 178px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+    .award-bg{
+      width: 197px;
+      height: 251px;
+      background: #EE4620;
+      text-align: center;
+      border-radius: 20px;
+      .award{
+        height: 178px;
+        background: #FF981A;
+        border-radius: 20px 20px 0 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+    }
+    .img{
+      width: 135px;
+      height: 140px;
+    }
+    .name{
+      width: 200px;
+      @include elps();
+      font-size: 28px;
+      color: #fff;
     }
   }
   .count-down{

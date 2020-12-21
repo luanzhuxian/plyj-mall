@@ -8,11 +8,13 @@
                 <i>{{ flauntAwardName }}</i>
             </span>-->
             <!-- 奖学金 -->
-            <img v-if="awardType === 2" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/996b630f-df02-44ae-83fb-77b3231c8a0c.png">
-            <!-- 优惠券 -->
-            <img v-else-if="awardType === 3 || awardType === 4" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/8d19c35d-00e9-4943-9458-d4b35a22bc72.png">
-            <!--普通奖品-->
-            <img v-else class="small" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/f53995cc-7c11-40ca-902c-4f34cda1d075.png">
+            <div class="grand-present">
+                <img v-if="awardType === 2" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/996b630f-df02-44ae-83fb-77b3231c8a0c.png">
+                <!-- 优惠券 -->
+                <img v-else-if="awardType === 3 || awardType === 4" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/8d19c35d-00e9-4943-9458-d4b35a22bc72.png">
+                <!--普通奖品-->
+                <img v-else class="small" src="https://mallcdn.youpenglai.com/static/mall/2.0.0/new-year-activity/f53995cc-7c11-40ca-902c-4f34cda1d075.png">
+            </div>
         </template>
         <!-- 头像-->
         <img class="avatar" :src="userImg" :onerror="DEFAULT_AVATAR">
@@ -100,11 +102,7 @@ export default {
     .grand-present {
       position: relative;
       display: inline-block;
-
-      img {
-        width: 200px;
-        object-fit: contain;
-      }
+      width: 80px;
 
       i {
         padding: 0 8px;
