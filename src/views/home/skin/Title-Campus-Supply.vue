@@ -45,14 +45,14 @@ export default {
     background: url(https://mallcdn.youpenglai.com/static/admall/skin/campus-supply/title-2.jpg) no-repeat center;
     background-size: 100%;
     > div {
-        top: 12px;
+        top: 4px;
     }
 }
 .title-campus-supply-3 {
     background: url(https://mallcdn.youpenglai.com/static/admall/skin/campus-supply/title-3.jpg) no-repeat center;
     background-size: 100%;
     > div {
-        top: 8px;
+        top: 4px;
     }
 }
 </style>
