@@ -510,6 +510,26 @@
     }
 }
 
+// 校园好物
+.skin-campus-supply {
+    @extend .skin-common;
+    background: #4884df !important;
+    .container {
+        $background-image: 'https://mallcdn.youpenglai.com/static/admall/skin/campus-supply/bg-home.jpg';
+        @include container(130px, $background-image);
+        .search {
+            @include search();
+        }
+        .footer {
+            @include footer(150px, #fff);
+            padding-top: 10px;
+        }
+        .skin-title {
+            margin: 32px -24px;
+        }
+    }
+}
+
 // 圣诞
 .skin-xmas-2020 {
     @extend .skin-common;
@@ -525,7 +545,7 @@
             padding-top: 10px;
         }
         .skin-title {
-            margin: 20px -24px 20px;
+            margin: 20px -24px;
         }
     }
 }

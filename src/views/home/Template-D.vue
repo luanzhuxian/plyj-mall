@@ -278,7 +278,7 @@ export default {
     },
     mounted () {
         if (this.skinId === 23) {
-            this.setSkinTitleClassName()
+            this.setTitleCampusSupplyClassName()
         }
     }
 }
