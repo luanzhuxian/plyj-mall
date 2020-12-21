@@ -1,16 +1,15 @@
 <template>
-    <div @click="clickHandler">
+    <div @click="clickHandler" style="position: relative">
         <!-- 未抽奖前普通奖品展示-->
         <div v-if="!hasSignin && !isGrandPrsent" style="margin-top: 10px">
             <img class="icon-bg" src="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/present.png" alt="">
             <p class="not-sign">礼品</p>
         </div>
         <!-- 未抽奖前智慧礼品展示-->
-        <div v-if="!hasSignin && isGrandPrsent" style="position: relative">
+        <div v-if="!hasSignin && isGrandPrsent">
             <img class="smart-bg"
                  src="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/smart_gift.png">
             <p :class="{'not-sign': !hasSignin}">智慧礼</p>
-            <p class="last-question" v-if="isLastIcon && hasSignin" @click="showInfoModal = true">终题答案</p>
         </div>
         <!-- 已抽奖,但是未抽中-->
         <div v-if="hasSignin && (awardType === 0)">
@@ -40,6 +39,7 @@
                 src="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/reduction.png">
             <p>已获得</p>
         </div>
+        <p class="last-question" v-if="isLastIcon && hasSignin" @click="showInfoModal = true">终题答案</p>
         <info-model :show.sync="showInfoModal" :answer="totalSignin" />
     </div>
 </template>
@@ -131,10 +131,15 @@ export default {
   }
   .last-question {
     position: absolute;
-    bottom: -40px;
+    left: -20px;
+    bottom: -20px;
+    width: 100px;
+    text-align: center;
+    height: 24px;
+    line-height: 24px;
     background: #FE461F;
-    padding: 0 10px;
     border-radius: 30px;
     color: #fff;
+    font-size: 18px;
   }
 </style>

@@ -4,10 +4,10 @@
             <div :class="$style.head">
                 <div :class="$style.title">打卡第{{ answer }}天答案揭晓</div>
             </div>
-            <div :class="$style.main">
-                <img v-if="[8, 13, 16, 17, 20].includes(answer)" :src="answerList[answer - 7]">
-                <span>{{ answerList[answer - 7] }}</span>
+            <div :class="$style.mainImg" v-if="[8, 13, 16, 17, 20].includes(answer)">
+                <img :src="answerList[answer - 7]">
             </div>
+            <div :class="$style.main" v-else>{{ answerList[answer - 7] }}</div>
             <div :class="$style.text">提示：本答案是打卡最后一天智慧题的答案哦~</div>
         </div>
     </pl-mask>
@@ -27,7 +27,6 @@ export default {
                 'https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/thirteen.png',
                 'E和D同时最先注满水',
                 '除了132之外，其余的数字个位、十位和百位之和都是9，因此答案是132',
-                '百位之和都是9，因此答案是132',
                 'https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/sixteen.png',
                 'https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/seventeen.png',
                 '朋友照片拍倒了，正过来看是07735',
@@ -78,6 +77,10 @@ export default {
       margin: 60px 50px;
       font-size: 24px;
       line-height: 40px;
+    }
+    .main-img{
+      margin: 60px 50px;
+      text-align: center;
     }
     .text{
       text-align: center;
