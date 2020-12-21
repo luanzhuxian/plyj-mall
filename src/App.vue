@@ -24,7 +24,7 @@ import Navbar from './components/common/Navbar.vue'
 import QuickNavbar from './components/common/Quick-Navbar.vue'
 import NewUserHomePop from './views/marketing-activity/playing-methods/newcomers/components/New-User-Home-Pop.vue'
 import NewUserHomeBtn from './views/marketing-activity/playing-methods/newcomers/components/New-User-Home-Btn.vue'
-import { mapMutations, mapActions } from 'vuex'
+import { mapMutations, mapActions, mapGetters } from 'vuex'
 import {
     SET_THEME,
     GET_ACTIVITY_DATA,
@@ -33,8 +33,8 @@ import {
     SET_COUPON_INFO,
     SET_NW_EVENT,
     SET_DRAGON_GATE_CHARITY,
-    SET_DRAGON_GATE_SIGN,
-    SET_DRAGON_GATE_PLAY,
+    SET_CURRENT_SIGN,
+    SET_CURRENT_LOTTERY,
     SET_MALL_QRCODE_INFO
 } from './store/mutation-type'
 import {
@@ -42,14 +42,51 @@ import {
     getMyCouponInfo,
     getNianweiInfo,
     getDragonGateCharityInfo,
-    getDragonGateSignInfo,
-    getDragonGatePlayInfo,
+    getCurrentSign,
+    getCurrentLottery,
     getMallQRCodeInfo
 } from './apis/home'
 import { setFirstVisit } from './apis/longmen-festival/lottery'
 // 新人有礼
 import { isNewUser, getGoingInfo } from './apis/newcomers'
+import { share } from './assets/js/wechat/wechat-share'
 
+// 需要自定义分享的路由
+const customShare = [
+    'Product',
+    'Curriculum',
+    'LiveRoom',
+    'InviteNewcomers',
+    'Newcomers',
+    'Classify',
+    'CoursePackage',
+    'SpringPloughing',
+    'HappyLottery'
+]
+// 采取默认分享的路由，不需要自己配置分享信息，会拉取当前商城的一些信息
+const shareRoutes = [
+    'Home',
+    'My',
+    'Appointment',
+    'DoubleTwelveDay',
+    'Activity',
+    'BattlefieldReport',
+    'EpidemicSignIn',
+    'LongmenLottery',
+    'LongmenAction',
+    'LongmenSignIn',
+    'RedPackage',
+    'RedPackageDetail'
+]
+const configShare = to => {
+    if (!customShare.includes(to.name) && !shareRoutes.includes(to.name)) {
+        // 禁止分享
+        window.wx.hideOptionMenu()
+        return false
+    }
+    window.wx.showOptionMenu()
+    return true
+}
 export default {
     components: {
         Navbar,
@@ -101,6 +138,26 @@ export default {
             throw e
         }
     },
+    watch: {
+        $route (to) {
+            const notHide = configShare(to)
+            const isDefaultShare = shareRoutes.includes(to.name)
+            const isCustomShare = customShare.includes(to.name)
+            console.warn('%s: %s', to.name, isDefaultShare ? '默认分享' : isCustomShare ? '自定义分享' : '禁止分享')
+            // 默认分享统一在此处理
+            if (notHide && isDefaultShare) {
+                share({
+                    appId: this.appId,
+                    title: `${ this.mallName }${ to.meta && to.meta.title ? `-${ to.meta.title }` : '' }`,
+                    desc: this.mallDesc,
+                    imgUrl: this.logoUrl
+                })
+            }
+        }
+    },
+    computed: {
+        ...mapGetters(['appId', 'logoUrl', 'mallDesc', 'mallName'])
+    },
     methods: {
         ...mapMutations({
             setTheme: SET_THEME,
@@ -108,8 +165,8 @@ export default {
             setCouponInfo: SET_COUPON_INFO,
             setNwEvent: SET_NW_EVENT,
             setDragonGateCharity: SET_DRAGON_GATE_CHARITY,
-            setDragonGateSign: SET_DRAGON_GATE_SIGN,
-            setDragonGatePlay: SET_DRAGON_GATE_PLAY,
+            setCurrentSign: SET_CURRENT_SIGN,
+            setCurrentLottery: SET_CURRENT_LOTTERY,
             setMallQRCodeInfo: SET_MALL_QRCODE_INFO
         }),
         ...mapActions({
@@ -165,10 +222,10 @@ export default {
                     getNianweiInfo(),
                     // 龙门节公益棕
                     getDragonGateCharityInfo(),
-                    // 龙门节粽粽有礼
-                    getDragonGateSignInfo(),
-                    // 龙门节抽奖
-                    getDragonGatePlayInfo()
+                    // 当前签到
+                    getCurrentSign(),
+                    // 当前抽奖
+                    getCurrentLottery()
                 ]
 
                 const [
@@ -176,7 +233,7 @@ export default {
                     { result: nianwei },
                     { result: charity },
                     { result: sign },
-                    { result: play }
+                    { result: lottery }
                 ] = await Promise.all(list.map(p => p.catch(e => {
                     console.error(e)
                     return { result: {} }
@@ -184,8 +241,8 @@ export default {
                 this.setLiveInfo(live)
                 this.setNwEvent(nianwei)
                 this.setDragonGateCharity(charity)
-                this.setDragonGateSign(sign)
-                this.setDragonGatePlay(play)
+                this.setCurrentSign(sign)
+                this.setCurrentLottery(lottery)
             } catch (error) {
                 throw error
             }

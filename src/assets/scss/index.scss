@@ -26,6 +26,9 @@
 .mt-18 {
   margin-top: 18px;
 }
+.mt-16 {
+    margin-top: 16px;
+}
 .mt-12 {
   margin-top: 12px;
 }
@@ -62,10 +65,14 @@
   background-color: #fff;
 }
 
-/* 字体大小 */
 .bold {
   font-weight: bold;
 }
+.text-center {
+    text-align: center;
+}
+
+/* 字体大小 */
 .fz-20 {
   font-size: 20px;
 }
@@ -176,4 +183,13 @@
 @keyframes rotate {
   0% { transform: rotate(0) }
   100% { transform: rotate(360deg) }
+}
+
+
+/*********************** flex ****************************/
+.flex {
+    display: flex;
+    &.space-between {
+        justify-content: space-between;
+    }
 }

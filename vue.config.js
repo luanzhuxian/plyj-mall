@@ -78,7 +78,7 @@ module.exports = {
                 camelCase: 'only'
             },
             sass: {
-                data: `@import "@/assets/scss/config.scss";`,
+                data: `@import "@/assets/scss/config.scss";@import "@/assets/scss/mixin.scss";`,
                 options: {
                     implementation: require('sass')
                 }
@@ -90,7 +90,7 @@ module.exports = {
                         unitPrecision: 6,
                         minPixelValue: 1,
                         viewportUnit: 'vw',
-                        mediaQuery: false,
+                        mediaQuery: true,
                         selectorBlackList: ['html', 'body'],
                         exclude: /node_modules/
                     })

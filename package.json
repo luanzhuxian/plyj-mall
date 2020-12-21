@@ -1,6 +1,6 @@
 {
   "name": "plyj-mall",
-  "version": "2.13.2",
+  "version": "2.14.0",
   "private": true,
   "scripts": {
     "start": "vue-cli-service serve --model local --s",
@@ -33,6 +33,8 @@
     "@commitlint/cli": "~7.6.1",
     "@commitlint/config-conventional": "~7.6.0",
     "@sentry/cli": "~1.52.4",
+    "@vue/babel-helper-vue-jsx-merge-props": "^1.2.1",
+    "@vue/babel-preset-jsx": "^1.2.4",
     "@vue/cli-plugin-babel": "3.12.1",
     "@vue/cli-plugin-eslint": "3.12.1",
     "@vue/cli-service": "3.12.1",

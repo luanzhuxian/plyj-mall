@@ -31,11 +31,11 @@ export const getSkinStatus = params => axios.get('/apis/v1/mall/template/getSkin
 // 当前龙门节公益棕活动
 export const getDragonGateCharityInfo = () => axios.get('/apis/v1/commonweal/findActivity/starting')
 
-// 当前龙门节签到活动
-export const getDragonGateSignInfo = () => axios.get('/apis/v1/signinActivity/customer/findActivity/signiNing')
+// 当前签到活动
+export const getCurrentSign = () => axios.get('/apis/v1/signinActivity/customer/findActivity/signiNing')
 
-// 当前龙门节抽奖活动
-export const getDragonGatePlayInfo = () => axios.get('/apis/v1/luckdraw/findLuckDraw/activityIng')
+// 当前抽奖活动
+export const getCurrentLottery = () => axios.get('/apis/v1/luckdraw/findLuckDraw/activityIng')
 
 // 查询是否展示公众号二维码增粉
 export const getMallQRCodeInfo = () => axios.get('/apis/v1/wechatQRCode/currentMallQR')

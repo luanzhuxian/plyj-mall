@@ -263,11 +263,12 @@
             <div :class="[$style.panel, $style.customBlockField]" v-for="(studentItem, i) of studentInfo" :key="i">
                 <pl-fields size="middle">
                     <div>
-                        <pl-svg class="mr-10" name="icon-name-card" width="40" />
+                        <pl-svg class="mr-10" name="icon-name-card" width="40" :vertical-align="-10" />
                         <span v-text="`学员信息${i + 1}`" />
                     </div>
                     <span
                         slot="right-content"
+                        class="fz-28"
                         v-text="!isRefundsFinalStage && ([orderStatuskeyMap.WAIT_RECEIVE, orderStatuskeyMap.FINISHED].includes(detail.status) || (detail.paymentMethod === 1 && orderStatuskeyMap.WAIT_PAY_TAIL_MONEY === detail.status)) && i < redeemCodeModels.length && redeemCodeModels[i].code ? `核销码：${localSeparator(redeemCodeModels[i].code,' ', 4)}`: ''"
                     />
                     <div :class="$style.detail" slot="collapse">
@@ -285,7 +286,7 @@
         <div :class="[$style.panel, $style.contact]" v-if="detail.orderType !== orderTypeKeyMap.PHYSICAL_GOODS && receiverModel.name && receiverModel.mobile">
             <pl-fields size="middle">
                 <div>
-                    <pl-svg class="mr-10" name="icon-contact" width="40" />
+                    <pl-svg class="mr-10" name="icon-contact" width="40" :vertical-align="-10" />
                     <span>联系人信息</span>
                 </div>
                 <div :class="$style.contactDetail" slot="collapse">

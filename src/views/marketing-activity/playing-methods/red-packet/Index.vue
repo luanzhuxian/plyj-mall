@@ -58,7 +58,7 @@ import Coupon from './components/Coupon.vue'
 import Poster from './components/Poster.vue'
 import { getRedPackageListAfterSort, getRedPackageBarrage } from '../../../../apis/marketing-activity/red-package'
 import { getBulletTemplate, isToday, fenToYuan } from './utils'
-import share from '../../../../assets/js/wechat/wechat-share'
+import { share } from '../../../../assets/js/wechat/wechat-share'
 import { SET_SHARE_ID } from '../../../../store/mutation-type'
 
 const productModel = {

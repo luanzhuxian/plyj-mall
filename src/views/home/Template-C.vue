@@ -5,7 +5,7 @@
             <Propagate :class="$style.propagate" :data="Propagate" />
             <!-- 福利红包 -->
             <div :class="$style.redPackage" v-if="parent.isRedPackageShow">
-                <img src="https://mallcdn.youpenglai.com/static/mall/2.13.0/red-package/rp-banner.png" alt="" @click="$router.push({ name: 'RedPackage' })">
+                <img src="https://mallcdn.youpenglai.com/static/mall/2.13.0/rp-banner.png" alt="" @click="$router.push({ name: 'RedPackage' })">
             </div>
             <Live :class="$style.live" :data="Live" v-if="isLiveShow" />
             <SingleCourse :class="$style.singleCourse" :data="SingleCourse" v-if="isSingleCourseShow" />

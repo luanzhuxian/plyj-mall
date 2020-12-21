@@ -6,7 +6,7 @@
                 tag="li"
                 :to="{
                     name: 'LongmenSignIn',
-                    params: { id: dragonGateSign.id }
+                    params: { id: currentSign.id }
                 }"
             >
                 <div :class="$style.imgWrapper">
@@ -20,7 +20,7 @@
                 tag="li"
                 :to="{
                     name: 'LongmenLottery',
-                    params: { id: dragonGatePlay.id }
+                    params: { id: currentLottery.id }
                 }"
             >
                 <div :class="$style.imgWrapper">
@@ -60,7 +60,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['dragonGateSign', 'dragonGatePlay']),
+        ...mapGetters(['currentSign', 'currentLottery']),
         isSignShow () {
             if (!this.data.values.length) {
                 return false

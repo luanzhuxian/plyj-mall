@@ -87,7 +87,6 @@ export default {
     &.pl-tab__small {
       font-size: 26px;
       > div {
-        padding: 0;
         height: 80px;
         line-height: 80px;
       }
@@ -95,7 +94,6 @@ export default {
     &.pl-tab__middle {
       font-size: 30px;
       > div {
-        padding: 0 30px;
         height: 90px;
         line-height: 90px;
       }
@@ -103,14 +101,14 @@ export default {
     &.pl-tab__large {
       font-size: 32px;
       > div {
-        padding: 0 30px;
         height: 100px;
         line-height: 100px;
       }
     }
     &__pane {
       position: relative;
-      &:after {
+        padding: 0 10px;
+        &:after {
         position: absolute;
         left: 0;
         bottom: 0;

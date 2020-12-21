@@ -60,5 +60,14 @@ export default [
         meta: {
             title: '新人有礼'
         }
+    },
+    {
+        path: '/happy-lottery/:id',
+        name: 'HappyLottery',
+        props: true,
+        component: () => import('../../views/marketing-activity/playing-methods/happy-lottery/Index.vue'),
+        meta: {
+            title: '抽奖乐翻天'
+        }
     }
 ]

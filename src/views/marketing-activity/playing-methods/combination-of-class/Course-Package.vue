@@ -167,7 +167,7 @@ import {
     loadImage
 } from '../../../../assets/js/util'
 import Countdown from '../../../../assets/js/Countdown'
-import share from '../../../../assets/js/wechat/wechat-share'
+import { share } from '../../../../assets/js/wechat/wechat-share'
 import { SET_SHARE_ID } from '../../../../store/mutation-type'
 
 const PRODUCT_HEIGHT = 220
