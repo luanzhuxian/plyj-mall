@@ -45,7 +45,7 @@ export default {
     background: url(https://mallcdn.youpenglai.com/static/admall/skin/campus-supply/title-2.jpg) no-repeat center;
     background-size: 100%;
     > div {
-        top: 4px;
+        top: 2px;
     }
 }
 .title-campus-supply-3 {
