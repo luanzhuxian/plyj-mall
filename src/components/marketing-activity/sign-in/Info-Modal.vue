@@ -74,13 +74,16 @@ export default {
       }
     }
     .main{
-      margin: 60px 50px;
+      margin: 60px 35px;
       font-size: 24px;
       line-height: 40px;
     }
     .main-img{
-      margin: 60px 50px;
+      margin: 60px 20px;
       text-align: center;
+      img{
+        max-width: 480px;
+      }
     }
     .text{
       text-align: center;
