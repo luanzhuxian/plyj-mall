@@ -22,6 +22,7 @@
 .skin-party,
 .skin-good-course,
 .skin-welcome-new,
+.skin-campus-supply,
 .skin-xmas-2020 {
     .route {
         padding: 0 0 4px;
@@ -176,6 +177,13 @@
     }
 }
 .skin-xmas-2020 {
+    .route {
+        &.active > .tab-name {
+            color: #E5800E;
+        }
+    }
+}
+.skin-campus-supply {
     .route {
         &.active > .tab-name {
             color: #E5800E;

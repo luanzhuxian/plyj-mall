@@ -24,7 +24,7 @@
                 <div :class="$style.countdownWrapper">
                     <span :class="$style.text" v-if="status === 0">距活动开始：</span>
                     <span :class="$style.text" v-if="status === 1">距活动结束：</span>
-                    <span :class="$style.text" v-if="status === 3">活动已结束</span>
+                    <span :class="$style.text" v-if="status === 2 || status === 3">活动已结束</span>
                     <Countdown
                         v-if="isCountdownShow"
                         :duration="getDuration(status, redPackage.receiveStartTime, redPackage.receiveEndTime)"
