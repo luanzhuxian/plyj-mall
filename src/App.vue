@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <router-link
+        <!-- <router-link
             tag="h1"
             to="/new-year-2021/sign-in/1339750621159698434"
             style="font-size: 60px;"
@@ -15,7 +15,7 @@
             v-if="$route.name !== 'HappyLottery'"
         >
             抽奖乐翻天
-        </router-link>
+        </router-link> -->
         <keep-alive :exclude="exclude">
             <router-view />
         </keep-alive>
