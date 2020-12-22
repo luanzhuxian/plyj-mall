@@ -163,7 +163,7 @@
         <WinningGrandPrize
             v-if="currentSignIn.isLastIcon && presentStage === 1"
             :show.sync="isShowPresentPopup"
-            :flaunt-award-name="FLAUNT_AWARD_NAME"
+            flaunt-award-name="智慧礼"
             :award-img="currentPresentDetail.awardImg"
             :award-name="currentPresentDetail.awardName"
             :start-time="currentPresentDetail.formatStartTime"

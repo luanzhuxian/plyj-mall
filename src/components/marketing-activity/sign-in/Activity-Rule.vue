@@ -105,7 +105,7 @@ export default {
       right: 0;
       top: 366px;
       height: 48px;
-      padding: 0 15px;
+      width: 136px;
       border: 1px solid var(--bc);
       border-right: none;
       border-radius: 24px 0 0 24px;
@@ -114,7 +114,7 @@ export default {
       z-index: 1;
       font-size: 24px;
       color: #fff;
-      text-align: right;
+      text-align: center;
       letter-spacing: 2px;
   }
 </style>

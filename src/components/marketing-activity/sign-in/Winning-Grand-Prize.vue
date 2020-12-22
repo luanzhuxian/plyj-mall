@@ -32,7 +32,7 @@ export default {
         // 大奖名称
         flauntAwardName: {
             type: String,
-            default: '大奖'
+            default: '智慧礼'
         },
         // 奖品图片
         awardImg: {
