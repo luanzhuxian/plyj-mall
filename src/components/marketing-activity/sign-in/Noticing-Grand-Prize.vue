@@ -3,7 +3,7 @@
         <div class="bg-gray">
             <transition name="fade">
                 <!-- 中年味大奖前提示 -->
-                <div class="grand-present-tip-box">
+                <div class="grand-present-tip-box" @click="close">
                     <div class="top">
                         <p>恭喜你已完成打卡智力题</p>
                         <p>请抽取出您的智慧礼</p>
@@ -12,7 +12,7 @@
                         <img :src="awardImg">
                     </div>
                     <div class="footer">
-                        <button @click="close" :style="{background: bgColor, color: textColor}">立即抽奖</button>
+                        <button :style="{background: bgColor, color: textColor}">立即抽奖</button>
                     </div>
                 </div>
             </transition>

@@ -2,8 +2,8 @@
     <div class="sign-in">
         <!-- 礼品展示开始 -->
         <div class="present" v-if="presentList.length === 1">
-            <div :class="presentList[0].awardType === 2 ? 'gift-bg' : 'award-bg'">
-                <div :class="presentList[0].awardType === 2 ? 'gift' : 'award'">
+            <div :class="!presentList[0].show ? 'gift-bg' : 'award-bg'">
+                <div :class="!presentList[0].show ? 'gift' : 'award'">
                     <!--礼品图片-->
                     <img class="img" v-if="presentList[0].show" :src="presentList[0].awardImg">
                     <img class="img" v-else src="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/gift.png">
@@ -13,13 +13,13 @@
         </div>
         <swiper class="present" :options="swiperOption" v-if="presentList.length > 1">
             <swiper-slide v-for="(item,index) in presentList" :key="index">
-                <div :class="item.awardType === 2 ? 'gift-bg' : 'award-bg'">
-                    <div :class="item.awardType === 2 ? 'gift' : 'award'">
+                <div :class="!item.show ? 'gift-bg' : 'award-bg'">
+                    <div :class="!item.show ? 'gift' : 'award'">
                         <!--礼品图片-->
                         <img class="img" v-if="item.show" :src="item.awardImg">
-                        <img class="img" v-if="item.awardType === 2 && !item.show" src="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/gift.png">
+                        <img class="img" v-else src="https://mallcdn.youpenglai.com/static/mall/2.15.0/signIn/gift.png">
                     </div>
-                    <div class="name">{{ item.show ? item.awardName : '智慧礼' }}</div>
+                    <div class="name">{{ item.show ? item.awardName :'智慧礼' }}</div>
                 </div>
             </swiper-slide>
         </swiper>
