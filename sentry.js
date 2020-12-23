@@ -26,7 +26,7 @@ console.log(`清除 ${ VERSION } 版本 SourceMap 文件`)
 console.log(`sentry-cli releases -o ${ ORG } -p ${ project } files ${ VERSION } delete --all`)
 console.log(cp.execSync(`sentry-cli releases -o ${ ORG } -p ${ project } files ${ VERSION } delete --all`, { encoding: 'utf8' }))
 
-console.log(`上传sourceMap文件`)
+console.log('上传sourceMap文件')
 console.log(`sentry-cli releases -o ${ ORG } -p ${ project } files ${ VERSION } upload-sourcemaps ./${ dir }/${ assetsDir } --url-prefix ~/${ assetsDir }`)
 console.log(cp.execSync(`sentry-cli releases -o ${ ORG } -p ${ project } files ${ VERSION } upload-sourcemaps ./${ dir }/${ assetsDir } --url-prefix ~/${ assetsDir }`, { encoding: 'utf8' }))
 
@@ -34,7 +34,7 @@ console.log(`发布版本：${ VERSION }`)
 console.log(`sentry-cli releases -o ${ ORG } -p ${ project } finalize ${ VERSION }`)
 console.log(cp.execSync(`sentry-cli releases -o ${ ORG } -p ${ project } finalize ${ VERSION }`, { encoding: 'utf8' }))
 
-console.log(`删除本地sourceMap文件`)
+console.log('删除本地sourceMap文件')
 const files = fs.readdirSync(`./${ dir }/${ assetsDir }`)
 for (const f of files) {
     if (f.indexOf('js.map') > -1) {

@@ -1,12 +1,13 @@
 {
-  "name": "plyj-mall",
+  "name": "mall",
   "version": "2.15.0",
   "private": true,
   "scripts": {
     "start": "vue-cli-service serve --model local --s",
-    "build": "vue-cli-service build --model production && npm run sentry",
+    "build": "vue-cli-service build --model production && npm run sentry && npm run zlib",
     "build:dev": "vue-cli-service build --model development",
     "sentry": "node ./sentry.js --model production",
+    "zlib": "node ./zlib.js",
     "lint": "vue-cli-service lint",
     "test:e2e": "vue-cli-service test:e2e",
     "test:unit": "vue-cli-service test:unit"
@@ -39,6 +40,7 @@
     "@vue/cli-plugin-eslint": "3.12.1",
     "@vue/cli-service": "3.12.1",
     "@vue/eslint-config-standard": "~4.0.0",
+    "archiver": "^5.1.0",
     "babel-eslint": "~10.0.3",
     "eslint": "~5.16.0",
     "eslint-plugin-vue": "~5.2.3",
