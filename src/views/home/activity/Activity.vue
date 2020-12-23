@@ -124,76 +124,42 @@ export default {
             let startTime
             let endTime
 
-            switch (value) {
-                case 'newyear':
+            if (value === 'newyear') {
+                if (!nwEvent || !nwEvent.id) return this.$warning('活动已结束')
+                if (!nwEvent.permissionStatus) return this.$warning('您无法参与活动')
 
-                    if (!nwEvent || !nwEvent.id) return this.$warning('活动已结束')
-                    if (!nwEvent.permissionStatus) return this.$warning('您无法参与活动')
+                startTime = moment(nwEvent.activityStartTime).valueOf()
+                endTime = moment(nwEvent.activityEndTime).valueOf()
+                if (startTime > Date.now()) return this.$warning('活动未开始')
+                if (endTime < Date.now()) return this.$warning('活动已结束')
 
-                    startTime = moment(nwEvent.activityStartTime).valueOf()
-                    endTime = moment(nwEvent.activityEndTime).valueOf()
-                    if (startTime > Date.now()) return this.$warning('活动未开始')
-                    if (endTime < Date.now()) return this.$warning('活动已结束')
+                id = nwEvent.id
+            } else if (value === 'dragon-gate-charity') {
+                const { dragonGateCharity } = this
+                if (!dragonGateCharity || !dragonGateCharity.id) return this.$warning('活动已结束')
 
-                    id = nwEvent.id
-                    break
+                endTime = moment(dragonGateCharity.endTime).valueOf()
+                if (endTime < Date.now()) return this.$warning('活动已结束')
 
-                case 'dragon-gate-charity':
-                    const { dragonGateCharity } = this
-                    if (!dragonGateCharity || !dragonGateCharity.id) return this.$warning('活动已结束')
+                id = dragonGateCharity.id
+            } else if (value === 'dragon-gate-sign' || value === 'newyear-sign') {
+                if (!currentSign || !currentSign.id) return this.$warning('活动已结束')
 
-                    endTime = moment(dragonGateCharity.endTime).valueOf()
-                    if (endTime < Date.now()) return this.$warning('活动已结束')
+                startTime = moment(currentSign.activityStartTime).valueOf()
+                endTime = moment(currentSign.activityEndTime).valueOf()
+                if (startTime > Date.now()) return this.$warning('活动未开始')
+                if (endTime < Date.now()) return this.$warning('活动已结束')
 
-                    id = dragonGateCharity.id
-                    break
+                id = this.currentSign.id
+            } else if (value === 'dragon-gate-play' || value === 'happy-lottery') {
+                if (!currentLottery || !currentLottery.id) return this.$warning('活动已结束')
 
-                case 'dragon-gate-sign':
-                    if (!currentSign || !currentSign.id) return this.$warning('活动已结束')
+                startTime = moment(currentLottery.startTime).valueOf()
+                endTime = moment(currentLottery.endTime).valueOf()
+                if (startTime > Date.now()) return this.$warning('活动未开始')
+                if (endTime < Date.now()) return this.$warning('活动已结束')
 
-                    startTime = moment(currentSign.activityStartTime).valueOf()
-                    endTime = moment(currentSign.activityEndTime).valueOf()
-                    if (startTime > Date.now()) return this.$warning('活动未开始')
-                    if (endTime < Date.now()) return this.$warning('活动已结束')
-
-                    id = this.currentSign.id
-                    break
-
-                case 'dragon-gate-play':
-                    if (!currentLottery || !currentLottery.id) return this.$warning('活动已结束')
-
-                    startTime = moment(currentLottery.startTime).valueOf()
-                    endTime = moment(currentLottery.endTime).valueOf()
-                    if (startTime > Date.now()) return this.$warning('活动未开始')
-                    if (endTime < Date.now()) return this.$warning('活动已结束')
-
-                    id = this.currentLottery.id
-                    break
-
-                case 'happy-lottery':
-                    if (!currentLottery || !currentLottery.id) return this.$warning('活动已结束')
-
-                    startTime = moment(currentLottery.startTime).valueOf()
-                    endTime = moment(currentLottery.endTime).valueOf()
-                    if (startTime > Date.now()) return this.$warning('活动未开始')
-                    if (endTime < Date.now()) return this.$warning('活动已结束')
-
-                    id = this.currentLottery.id
-                    break
-
-                case 'newyear-sign':
-                    if (!currentSign || !currentSign.id) return this.$warning('活动已结束')
-
-                    startTime = moment(currentSign.activityStartTime).valueOf()
-                    endTime = moment(currentSign.activityEndTime).valueOf()
-                    if (startTime > Date.now()) return this.$warning('活动未开始')
-                    if (endTime < Date.now()) return this.$warning('活动已结束')
-
-                    id = this.currentSign.id
-                    break
-
-                default:
-                    break
+                id = this.currentLottery.id
             }
 
             this.$router.push({
