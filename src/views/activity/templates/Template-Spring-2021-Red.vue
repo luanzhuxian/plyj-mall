@@ -17,9 +17,9 @@
                     <HappyLottery :data="currentLottery" />
                 </section>
                 <!-- 签到 -->
-                <!-- <section :class="[$style.newyearSign, $style.module]" v-if="currentSign && currentSign.id && ~[0, 1].indexOf(currentSign.status)">
+                <section :class="[$style.newyearSign, $style.module]" v-if="currentSign && currentSign.id && ~[0, 1].indexOf(currentSign.status)">
                     <NewyearSign :data="currentSign" />
-                </section> -->
+                </section>
                 <!-- 福利红包 -->
                 <section :class="[$style.redPackage, $style.module]" class="spring-2021-red-red-package" v-if="RedPackage.values.length">
                     <RedPackage :data="RedPackage" />
@@ -70,7 +70,7 @@ import Package from '../spring-2021/Package.vue'
 import Popular from '../spring-2021/Popular.vue'
 import Coupon from '../double-12-2020/Coupon.vue'
 import HappyLottery from '../spring-2021/Happy-Lottery.vue'
-// import NewyearSign from '../spring-2021/Newyear-Sign.vue'
+import NewyearSign from '../spring-2021/Newyear-Sign.vue'
 import Panel from '../double-12-2020/Panel.vue'
 import BackToTop from '../../../components/activity/BackToTop.vue'
 
@@ -87,7 +87,7 @@ export default {
         Package,
         Popular,
         HappyLottery,
-        // NewyearSign,
+        NewyearSign,
         Panel,
         BackToTop
     },
