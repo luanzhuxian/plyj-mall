@@ -132,9 +132,9 @@ export default {
         try {
             const img = await loadImage(url)
             const cvs = document.createElement('canvas')
-            cvs.width = img.naturalWidth
-            cvs.heigt = img.naturalHeight
             const ctx = cvs.getContext('2d')
+            cvs.width = img.naturalWidth
+            cvs.height = img.naturalHeight
             ctx.drawImage(img, 0, 0)
             cvs.toBlob(async blob => {
                 const res = await upload(blob)
