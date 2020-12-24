@@ -1,9 +1,13 @@
 const archiver = require('archiver')
 const fs = require('fs')
 const join = require('path').join
+const crypto = require('crypto')
+const md5 = crypto.createHash('md5')
+
 const version = require('./package.json').version
 const proName = require('./package.json').name
 const projectDir = `\\\\192.168.0.21\\public\\weimall\\${ proName }`
+
 const archive = archiver('zip', {
     zlib: { level: 9 }
 })
@@ -17,19 +21,29 @@ const upload = async (size, fileName) => {
         const readStream = fs.createReadStream(join(__dirname, fileName))
         let len = 0
         readStream.on('data', chunk => {
+            md5.update(chunk)
             len += chunk.length
             console.log(`${ (len / size * 100).toFixed(2) }%`)
         })
         output.on('close', () => {
             console.log(`上传完成，请复制路径给上线人员：${ dirPath }`)
+            // 生成md5
+            const md5Val = md5.digest('hex')
+            fs.writeFile(`${ dirPath }\\MD5.txt`, md5Val, err => {
+                if (err) {
+                    console.error(err)
+                    return
+                }
+                console.log('MD5:', md5Val)
+            })
         })
         output.on('error', err => {
             console.error(err)
-            console.log(`上传失败，SMB服务链接失败，请手动上传`)
+            console.log('上传失败，SMB服务链接失败，请手动上传')
         })
         readStream.pipe(output)
     } catch (e) {
-        console.error(e.message)
+        console.error('上传失败：', e.message)
     }
 }
 
