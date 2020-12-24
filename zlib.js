@@ -3,7 +3,7 @@ const fs = require('fs')
 const join = require('path').join
 const version = require('./package.json').version
 const proName = require('./package.json').name
-const projectDir = '\\\\192.168.0.21\\public\\weimall\\mall'
+const projectDir = `\\\\192.168.0.21\\public\\weimall\\${ proName }`
 const archive = archiver('zip', {
     zlib: { level: 9 }
 })
