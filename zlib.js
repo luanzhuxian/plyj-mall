@@ -33,7 +33,7 @@ const upload = async (size, fileName) => {
     }
 }
 
-const openDir = async path => {
+const openDir = async () => {
     console.log('-------------------- 正在压缩文件，压缩级别：9 --------------------')
     const D1 = Date.now()
     const name = `${ proName }_v${ version }.zip`
@@ -45,7 +45,7 @@ const openDir = async path => {
         upload(archive.pointer(), name)
     })
     archive.pipe(output)
-    await archive.directory(`${ path }/`, false)
+    await archive.directory(`${ proName }/`, false)
     archive.finalize()
 }
-openDir('mall')
+openDir()
