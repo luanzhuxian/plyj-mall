@@ -80,6 +80,7 @@ export default {
         }
     },
     async activated () {
+        console.log(this)
         try {
             const requests = [
                 this.getTemplate(),

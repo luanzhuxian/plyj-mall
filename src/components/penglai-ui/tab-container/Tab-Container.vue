@@ -45,17 +45,22 @@ export default {
     },
     data () {
         return {
-            start: { x: 0, y: 0 },
+            start: {
+                x: 0,
+                y: 0
+            },
             swiping: false,
-            pageWidth: 0,
-            currentTab: this.value,
             wrapper: null,
+            currentTab: this.value,
             currentIndex: null,
             offsetLeft: 0,
+            pageWidth: 0,
+            // 最小滑动距离，小于该距离不滑到下一页
             limitWidth: 0
         }
     },
     watch: {
+        // string
         value (val) {
             this.currentTab = val
         },
@@ -63,6 +68,7 @@ export default {
             this.$emit('input', val)
             if (!this.swipeable) return
 
+            // TODO: 非拖拽，点击 tab 切换，需要先回到上次的位置
             const lastIndex = this.$children.findIndex(child => child.id === oldVal)
             this.swipeLeaveTransition(lastIndex)
         }
@@ -75,14 +81,21 @@ export default {
         this.limitWidth = this.pageWidth / 4
     },
     methods: {
+        swipeMove (offset) {
+            this.wrapper.style.webkitTransform = `translate3d(${ offset }px, 0, 0)`
+            this.swiping = true
+        },
+
+        // 实现过渡滑动
         swipeLeaveTransition (lastIndex = 0) {
-            // 非拖拽
+            // 非拖拽，点击 tab 切换，currentIndex 是 null
             if (typeof this.currentIndex !== 'number') {
                 this.currentIndex = this.$children.findIndex(child => child.id === this.currentTab)
                 this.swipeMove(-lastIndex * this.pageWidth)
             }
 
             setTimeout(() => {
+                // 下个 tick 才滑动
                 this.wrapper.classList.add('swipe-transition')
                 this.swipeMove(-this.currentIndex * this.pageWidth)
 
@@ -95,14 +108,10 @@ export default {
             }, 0)
         },
 
-        swipeMove (offset) {
-            this.wrapper.style.webkitTransform = `translate3d(${ offset }px, 0, 0)`
-            this.swiping = true
-        },
-
         startDrag (evt) {
             if (!this.swipeable) return
 
+            // 记录当前第一根手指的标识符
             const e = evt.changedTouches ? evt.changedTouches[0] : evt
             this.dragging = true
             this.start.x = e.pageX
@@ -119,6 +128,7 @@ export default {
             const x = Math.abs(offsetLeft)
             const COEFFICIENT = 1.73
 
+            // 根据滑动的 x、y 距离，判断是否可以滑动
             const swiping = !(x < 10 || y > 200 || (x >= 10 && y >= x * COEFFICIENT))
             if (!swiping) return
             evt.preventDefault()
@@ -149,9 +159,9 @@ export default {
 
             this.dragging = false
             const direction = this.offsetLeft > 0 ? -1 : 1
-            const isChange = Math.abs(this.offsetLeft) > this.limitWidth
 
-            if (isChange) {
+            // 是都大于最小滑动距离，是否可以滑动到下一页
+            if (Math.abs(this.offsetLeft) > this.limitWidth) {
                 this.currentIndex += direction
                 const child = this.$children[this.currentIndex]
                 if (child) {
@@ -160,6 +170,7 @@ export default {
                 }
             }
 
+            // 滑动距离不够则滑回当前页
             this.swipeLeaveTransition()
         }
     }

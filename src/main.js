@@ -126,6 +126,7 @@ const init = async () => {
     try {
         const token = Cookie.get('token')
         await store.dispatch(GET_MALL_INFO)
+        // 微信公众号登录
         if (!token) {
             const SUCCESS = await store.dispatch(LOGIN)
             if (!SUCCESS) return

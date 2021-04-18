@@ -1,6 +1,6 @@
 <template>
     <div :class="$style.orderList">
-        <pl-tab
+        <PlTab
             size="small"
             :class="$style.tabBar"
             :tabs="tabs"
@@ -13,9 +13,9 @@
                 :key="i"
                 :slot="'tab-pane-' + i"
             />
-        </pl-tab>
+        </PlTab>
         <div :class="$style.list">
-            <load-more
+            <LoadMore
                 ref="loadMore"
                 :form="form"
                 :loading.sync="loading"
@@ -42,9 +42,9 @@
                         />
                     </router-link>
                 </template>
-            </load-more>
+            </LoadMore>
         </div>
-        <pl-picker
+        <PlPicker
             :show.sync="isPickerShow"
             :slots="pickerColumns"
             @confirm="(selected) => { resolve(selected[0]) }"

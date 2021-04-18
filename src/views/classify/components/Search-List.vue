@@ -1,6 +1,6 @@
 <template>
     <div :class="$style.searchList">
-        <pl-tab
+        <PlTab
             :class="$style.tabBar"
             size="small"
             :tabs="tabs"
@@ -13,14 +13,14 @@
                 :key="i"
                 :slot="'tab-pane-' + i"
             />
-        </pl-tab>
-        <tab-container
+        </PlTab>
+        <TabContainer
             v-model="type"
             swipeable
         >
-            <tab-container-item id="PRODUCT">
+            <TabContainerItem id="PRODUCT">
                 <div ref="productListContainer" :class="$style.list">
-                    <load-more
+                    <LoadMore
                         ref="productList"
                         :form="productForm"
                         :request-methods="searchProduct"
@@ -31,7 +31,7 @@
                         @more="refreshProductHandler"
                     >
                         <template v-slot="{ list }">
-                            <lesson-item
+                            <LessonItem
                                 :class="$style.listItem"
                                 v-for="(item, index) of productList"
                                 :key="index"
@@ -45,13 +45,13 @@
                                 :original-price="item.productSkuModels.length && item.productSkuModels[0].originalPrice"
                             />
                         </template>
-                    </load-more>
+                    </LoadMore>
                 </div>
-            </tab-container-item>
+            </TabContainerItem>
 
-            <tab-container-item id="COURSE">
+            <TabContainerItem id="COURSE">
                 <div ref="courseListContainer" :class="$style.list">
-                    <load-more
+                    <LoadMore
                         ref="courseList"
                         :form="courseForm"
                         :request-methods="searchCourse"
@@ -62,7 +62,7 @@
                         @more="refreshCourseHandler"
                     >
                         <template v-slot="{ list }">
-                            <lesson-item
+                            <LessonItem
                                 :class="$style.listItem"
                                 v-for="(item, index) of courseList"
                                 :key="index"
@@ -78,12 +78,12 @@
                                 <template>
                                     <div :class="$style.lecturer" v-if="item.lecturer" v-text="`主讲人：${item.lecturer}`" />
                                 </template>
-                            </lesson-item>
+                            </LessonItem>
                         </template>
-                    </load-more>
+                    </LoadMore>
                 </div>
-            </tab-container-item>
-        </tab-container>
+            </TabContainerItem>
+        </TabContainer>
     </div>
 </template>
 

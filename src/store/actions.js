@@ -85,6 +85,7 @@ export default {
         }
         const search = parseSearch()
         try {
+            // 路径上有没有授权code
             if (search.code) {
                 // 微信
                 const { result } = await getOpenId(appId, search.code)
@@ -114,6 +115,7 @@ export default {
                 commit(type.SET_TOKEN, loginInfo.result)
                 return loginInfo
             }
+            // 没有拿到openid，去授权
             const search = parseSearch()
             delete search.code
             const { appSecret, componentAppid, appId } = state.mallInfo

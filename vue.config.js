@@ -40,7 +40,11 @@ module.exports = {
     pages: {
         index: {
             entry: 'src/main.js',
-            template: MODEL === 'local' ? 'public-dev/local.html' : MODEL === 'development' ? 'public-dev/index-dev.html' : 'public/index.html',
+            template: MODEL === 'local'
+              ? 'public-dev/local.html'
+              : MODEL === 'development'
+                ? 'public-dev/index.html'
+                : 'public/index.html',
             filename: 'index.html'
         }
     },
@@ -63,8 +67,8 @@ module.exports = {
             '/apis': {
                 // target: 'https://yumall.youpenglai.com'
                 // target: 'https://mall.youpenglai.com'
-                target: `http://192.168.50.${ SERVER || 134 }`
-                // target: 'http://192.168.255.14'
+                // target: `http://192.168.50.${ SERVER || 134 }`
+                target: 'http://42.192.54.104'
             }
         },
         // 禁止检查域名

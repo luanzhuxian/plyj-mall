@@ -1,2 +1,2 @@
-import { MessageBox } from './message-box'
+import MessageBox from './message-box'
 export default MessageBox

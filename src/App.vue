@@ -84,8 +84,8 @@ const shareRoutes = [
     'Home',
     'My',
     'Appointment',
-    'DoubleTwelveDay',
     'Activity',
+    'DoubleTwelveDay',
     'BattlefieldReport',
     'EpidemicSignIn',
     'LongmenLottery',
@@ -156,12 +156,20 @@ export default {
     },
     watch: {
         $route (to) {
-            const notHide = configShare(to)
+            const showOptionMenu = configShare(to)
             const isDefaultShare = shareRoutes.includes(to.name)
             const isCustomShare = customShare.includes(to.name)
-            console.warn('%s: %s', to.name, isDefaultShare ? '默认分享' : isCustomShare ? '自定义分享' : '禁止分享')
+            console.warn(
+                '%s: %s',
+                to.name,
+                isDefaultShare
+                    ? '默认分享'
+                    : isCustomShare
+                        ? '自定义分享'
+                        : '禁止分享'
+            )
             // 默认分享统一在此处理
-            if (notHide && isDefaultShare) {
+            if (showOptionMenu && isDefaultShare) {
                 share({
                     appId: this.appId,
                     title: `${ this.mallName }${ to.meta && to.meta.title ? `-${ to.meta.title }` : '' }`,

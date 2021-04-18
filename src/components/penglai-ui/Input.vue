@@ -104,8 +104,8 @@ import { toArray, hasUnicode } from '../../assets/js/unicode-to-array'
 export default {
     name: 'PlInput',
     model: {
-        event: 'input',
-        prop: 'value'
+        prop: 'value',
+        event: 'input'
     },
     props: {
         placeholder: {

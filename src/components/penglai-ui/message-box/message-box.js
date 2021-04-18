@@ -1,35 +1,36 @@
 import Vue from 'vue'
-import MessageBpx from './Message-Box.vue'
+import MessageBox from './Message-Box.vue'
 /* eslint-disable */
-/*
-* 消息盒子弹框
-* 种类：
-* confirm - 确定框，带有取消和确定两个按钮 用法: vm.$confirm(config)
-* alert - 提示框，仅作为提示弹框 用法: vm.$alert(config)
-* propmt - 带有输入框的弹框 用法: vm.$propmt(config)
-* config - [Object, String] 如果传入string, string将作为message展示
-*
-* */
-const MessageBoxClass = Vue.extend(MessageBpx)
+/**
+ * 消息盒子弹框
+ * 种类：
+ * confirm - 确定框，带有取消和确定两个按钮 用法: vm.$confirm(config)
+ * alert - 提示框，仅作为提示弹框 用法: vm.$alert(config)
+ * propmt - 带有输入框的弹框 用法: vm.$propmt(config)
+ * config - [Object, String] 如果传入string, string将作为message展示
+ */
+const MessageBoxCtor = Vue.extend(MessageBox)
+
 const confirm = (config = {}) => new Promise((resolve, reject) => {
     if (typeof config === 'string') {
         config = { message: config }
     }
-    const Instance = new MessageBoxClass({
-        el: document.createElement('div')
+    const Instance = new MessageBoxCtor({
+        el: document.createElement('div') // 组件 dom 挂载点
     })
     document.body.appendChild(Instance.$el)
-    const { 
-        slot = null, 
-        cancelText = '取消', 
+
+    const {
+        slot = null,
+        cancelText = '取消',
         confirmText = '确定',
-        viceMessage = '', 
-        html = '', 
-        message = '', 
-        icon, 
-        closeOnClickMask = true, 
+        viceMessage = '',
+        html = '',
+        message = '',
+        icon,
+        closeOnClickMask = true,
         confirmStyle,
-        cancelStyle, 
+        cancelStyle,
         useDangersHtml = false,
         hasCancelButton = true,
         hasConfirmButton = true
@@ -60,16 +61,17 @@ const confirm = (config = {}) => new Promise((resolve, reject) => {
         })
     })
 })
+
 const alert = (config = {}) => new Promise((resolve, reject) => {
     if (typeof config === 'string') {
         config = { message: config }
     }
-    const Instance = new MessageBoxClass({
+    const Instance = new MessageBoxCtor({
         el: document.createElement('div')
     })
     document.body.appendChild(Instance.$el)
-    const { 
-        slot = null, 
+    const {
+        slot = null,
         cancelText = '取消',
         confirmText = '确定',
         viceMessage = '',
@@ -105,15 +107,16 @@ const alert = (config = {}) => new Promise((resolve, reject) => {
         })
     })
 })
+
 const propmt = (config = {}) => new Promise((resolve, reject) => {
     if (typeof config === 'string') {
         config = { message: config }
     }
-    const Instance = new MessageBoxClass({
+    const Instance = new MessageBoxCtor({
         el: document.createElement('div')
     })
     document.body.appendChild(Instance.$el)
-    const { 
+    const {
         slot = null,
         cancelText = '取消',
         confirmText = '确定',
@@ -165,7 +168,7 @@ const install = Vue => {
     Vue.prototype.$propmt = propmt
 }
 
-export const MessageBox = {
+export default {
     confirm,
     alert,
     propmt,
