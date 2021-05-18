@@ -111,6 +111,5 @@ module.exports = {
         }
     },
     productionSourceMap: MODEL === 'production',
-
     lintOnSave: true
 }

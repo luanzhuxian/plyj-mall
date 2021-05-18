@@ -3,14 +3,14 @@
 <head>
     <script>
         (function () {
-            var devicePixelRatio = window.devicePixelRatio;
-            var initialScale = 1 / devicePixelRatio;
-            var maximumScale = 1 / devicePixelRatio;
-            var minimumScale = 1 / devicePixelRatio;
-            var meta = document.createElement('meta');
-            meta.name = 'viewport';
-            meta.content = 'width=device-width,initial-scale=' + initialScale + ',maximum-scale=' + maximumScale + ',minimum-scale=' + minimumScale + ',user-scalable=no';
-            document.head.appendChild(meta);
+            var devicePixelRatio = window.devicePixelRatio
+            var initialScale = 1 / devicePixelRatio
+            var maximumScale = 1 / devicePixelRatio
+            var minimumScale = 1 / devicePixelRatio
+            var meta = document.createElement('meta')
+            meta.name = 'viewport'
+            meta.content = 'width=device-width,initial-scale=' + initialScale + ',maximum-scale=' + maximumScale + ',minimum-scale=' + minimumScale + ',user-scalable=no'
+            document.head.appendChild(meta)
         })()
     </script>
 
@@ -40,7 +40,9 @@
         // localStorage.setItem('openId_1306045398447693824', 'oerV00zmxcpnpMAKJ7QIviusTMjA'); // 预生产
     </script>
     <meta charset="utf-8">
+    <!-- 告诉IE8采用何种IE版本去渲染网页 -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 删除默认的苹果工具栏和菜单栏，需要显示工具栏和菜单栏时，不需要添加，默认值为no，即正常显示。 -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="x5-fullscreen" content="true"/>
