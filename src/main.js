@@ -15,6 +15,8 @@ import filters from './filter'
 import './assets/css/quill.css'
 import './assets/css/fonts.css'
 import PlSvg from './components/common/Pl-Svg.vue'
+import GetCode from './components/common/Get-Code.vue'
+import UploadImg from './components/common/Upload-Img.vue'
 import MallQRCodeModal from './components/common/qrcode-modal'
 import MessageBox from './components/penglai-ui/message-box'
 // import { errorlog } from './apis/base-api'
@@ -30,6 +32,8 @@ Vue.use(VueLazyload, {
 })
 Vue.use(VueClipboard)
 Vue.component('pl-svg', PlSvg)
+Vue.component('get-code', GetCode)
+Vue.component('get-code', UploadImg)
 
 for (const k of Object.keys(directive)) {
     Vue.directive(k, directive[k])

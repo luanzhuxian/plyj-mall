@@ -39,6 +39,7 @@
 </template>
 <script>
 import { upload, compress } from '../../assets/js/upload-image'
+
 export default {
     name: 'PlUploadImg',
     data () {
@@ -73,8 +74,7 @@ export default {
         },
         multiple: Boolean
     },
-    created () {
-    },
+    created () {},
     methods: {
         change (e) {
             const fileList = Array.from(e.target.files)
@@ -143,8 +143,7 @@ export default {
 </script>
 
 <style lang="scss">
-  .pl-upload-img {
-  }
+  .pl-upload-img {}
   .pl-img-list {
     display: inline-flex;
     flex-wrap: wrap;

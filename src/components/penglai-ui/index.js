@@ -1,24 +1,22 @@
 import './assets/scss/transition.scss'
 import Button from './Button.vue'
 import Input from './Input.vue'
-import GetCode from './Get-Code.vue'
 import Tab from './Tab.vue'
 import Form from './Form'
 import FormItem from './Form-Item'
 import List from './List.vue'
-import UploadImg from './Upload-Img.vue'
 import Fields from './Fields.vue'
 import Switch from './Switch.vue'
-import PlSvg from '../common/Pl-Svg.vue'
-import MessageBox from './message-box'
 import Selector from './Selector.vue'
 import Checkbox from './checkbox/Checkbox.vue'
 import CheckboxGroup from './checkbox/Checkbox-Group.vue'
 import RadioComponent from './radio/Radio.vue'
 import RadioGroupComponent from './radio/Radio-Group.vue'
 import Popup from './Popup.vue'
-import Picker from './picker/Picker.vue'
 import Mask from './Mask.vue'
+import MessageBox from './message-box'
+import Picker from './picker/Picker.vue'
+import PlSvg from '../common/Pl-Svg.vue'
 
 // import CanvasVideo from './Canvas-Video.vue'
 import { Timeline, TimelineItem } from './timeline'
@@ -27,15 +25,14 @@ import { Indicator } from './indicator'
 // import SvgIcon from 'vue-svgicon'
 export { Toast } from './toast'
 export { Loading } from './loading'
+
 const components = [
     Button,
     Input,
-    GetCode,
     Tab,
     Form,
     FormItem,
     List,
-    UploadImg,
     Fields,
     PlSvg,
     Switch,
