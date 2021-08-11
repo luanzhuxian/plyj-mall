@@ -7,7 +7,7 @@
 <script>
 import { ParentMixin } from '../../../mixins/relation'
 export default {
-    name: 'Collapse',
+    name: 'PlCollapse',
     mixins: [ParentMixin('Collapse')],
     props: {
         // 为true时，只能同时打开一个collepse-item

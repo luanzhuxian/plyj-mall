@@ -13,8 +13,9 @@
 <script>
 import { isPhone } from '../../assets/js/validate'
 import { sendCode } from '../../apis/base-api'
+
 export default {
-    name: 'GetCode',
+    name: 'PlGetCode',
     data () {
         return {
             fixedTime: 60,

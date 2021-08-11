@@ -27,7 +27,7 @@
                     placeholder="请输入验证码"
                 />
                 <template v-slot:suffix>
-                    <get-code
+                    <pl-get-code
                         :mobile="bindForm.mobile"
                         :smstype="smstype.PUBLIC_USER_INFO"
                         ref="getCode"

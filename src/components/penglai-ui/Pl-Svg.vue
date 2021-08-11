@@ -59,7 +59,6 @@ export default {
     },
     data () {
         return {
-
             // svg id的副本
             tempName: '',
             computedWidth: null,
@@ -107,8 +106,6 @@ export default {
                 this.tempName = val
             }
         }
-    },
-    mounted () {
     },
     methods: {
         clickHandler (e) {

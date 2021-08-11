@@ -193,7 +193,7 @@
             </div>
             <!-- 猜你喜欢 -->
             <you-like :class="$style.recommend" :is-my="true" />
-            <modal
+            <PlModal
                 ref="modal"
                 :show.sync="isModalShow"
                 title="Helper认证审核进度"
@@ -206,7 +206,7 @@
                     :steps="progress"
                     :active="0"
                 />
-            </modal>
+            </PlModal>
         </div>
 
         <!-- 骨架屏 -->
@@ -243,7 +243,6 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import youLike from './../home/components/YouLike.vue'
-import Modal from '../../components/penglai-ui/Modal.vue'
 import Progress from '../../components/common/Progress.vue'
 import { swiper, swiperSlide } from 'vue-awesome-swiper'
 import { orderPhysicalorderSummary, getHelperApplicationProgress } from '../../apis/order-manager'
@@ -264,7 +263,6 @@ export default {
     name: 'My',
     components: {
         youLike,
-        Modal,
         Progress,
         swiper,
         swiperSlide

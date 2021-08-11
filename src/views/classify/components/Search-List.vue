@@ -14,11 +14,11 @@
                 :slot="'tab-pane-' + i"
             />
         </PlTab>
-        <TabContainer
+        <PlTabContainer
             v-model="type"
             swipeable
         >
-            <TabContainerItem id="PRODUCT">
+            <PlTabContainerItem id="PRODUCT">
                 <div ref="productListContainer" :class="$style.list">
                     <LoadMore
                         ref="productList"
@@ -47,9 +47,9 @@
                         </template>
                     </LoadMore>
                 </div>
-            </TabContainerItem>
+            </PlTabContainerItem>
 
-            <TabContainerItem id="COURSE">
+            <PlTabContainerItem id="COURSE">
                 <div ref="courseListContainer" :class="$style.list">
                     <LoadMore
                         ref="courseList"
@@ -82,8 +82,8 @@
                         </template>
                     </LoadMore>
                 </div>
-            </TabContainerItem>
-        </TabContainer>
+            </PlTabContainerItem>
+        </PlTabContainer>
     </div>
 </template>
 
@@ -91,8 +91,6 @@
 import { mapGetters } from 'vuex'
 import LessonItem from '../../../components/item/Lesson-Item.vue'
 import LoadMore from '../../../components/common/Load-More.vue'
-import TabContainer from '../../../components/penglai-ui/tab-container/Tab-Container.vue'
-import TabContainerItem from '../../../components/penglai-ui/tab-container/Tab-Container-Item.vue'
 import { searchProduct } from '../../../apis/search'
 import { searchCourse } from '../../../apis/online-classroom'
 import { throttle } from '../../../assets/js/util'
@@ -101,9 +99,7 @@ export default {
     name: 'SearchList',
     components: {
         LessonItem,
-        LoadMore,
-        TabContainer,
-        TabContainerItem
+        LoadMore
     },
     props: {
         query: {

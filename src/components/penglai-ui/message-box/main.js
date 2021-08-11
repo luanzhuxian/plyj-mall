@@ -1,6 +1,7 @@
+/* eslint-disable prefer-promise-reject-errors */
 import Vue from 'vue'
 import MessageBox from './Message-Box.vue'
-/* eslint-disable */
+
 /**
  * 消息盒子弹框
  * 种类：
@@ -16,7 +17,7 @@ const confirm = (config = {}) => new Promise((resolve, reject) => {
         config = { message: config }
     }
     const Instance = new MessageBoxCtor({
-        el: document.createElement('div') // 组件 dom 挂载点
+        el: document.createElement('div')
     })
     document.body.appendChild(Instance.$el)
 
@@ -163,8 +164,8 @@ const propmt = (config = {}) => new Promise((resolve, reject) => {
 })
 
 const install = Vue => {
-    Vue.prototype.$alert = alert
     Vue.prototype.$confirm = confirm
+    Vue.prototype.$alert = alert
     Vue.prototype.$propmt = propmt
 }
 

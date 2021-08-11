@@ -72,7 +72,7 @@
                     @blur="agreeIsShow = true"
                 />
                 <template v-slot:suffix>
-                    <get-code
+                    <pl-get-code
                         :disabled="form.auditStatus === 'AWAIT' || !isMobileValid"
                         :smstype="smstype.AGENT_USER_INFO"
                         :mobile="form.mobile"

@@ -21,6 +21,7 @@
     "compressorjs": "~1.0.6",
     "moment": "~2.24.0",
     "pdfjs-dist": "^2.4.456",
+    "penglai-ui": "^1.0.3",
     "qs": "~6.9.1",
     "socket.io-client": "~2.3.0",
     "vue": "~2.6.10",

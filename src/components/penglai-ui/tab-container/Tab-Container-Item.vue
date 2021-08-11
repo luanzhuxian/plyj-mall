@@ -1,7 +1,7 @@
 <template>
     <div
         v-show="$parent.swiping || id === $parent.currentTab"
-        :class="$style.tabContainerItem"
+        class="pl-tab-container-item"
     >
         <slot />
     </div>
@@ -24,7 +24,7 @@
  * </tab-container>
  */
 export default {
-    name: 'TabContainerItem',
+    name: 'PlTabContainerItem',
     props: {
         id: {
             type: [String, Number],
@@ -34,8 +34,8 @@ export default {
 }
 </script>
 
-<style lang="scss" module>
-  .tab-container-item {
+<style lang="scss">
+  .pl-tab-container-item {
       flex-shrink: 0;
       width: 100%;
   }

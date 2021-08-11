@@ -4,17 +4,20 @@ import { router } from './router/index'
 import store from './store/index'
 import { USER_INFO, LOGIN, GET_MALL_INFO } from './store/mutation-type'
 import './assets/js/axios'
-import 'moment/locale/zh-cn'
 import './assets/scss/index.scss'
-import directive from './directive'
-import { beforeResolve, onError } from './assets/js/router-guard'
-import PenglaiUI from './components/penglai-ui'
-import VueLazyload from 'vue-lazyload'
-import VueClipboard from 'vue-clipboard2'
-import filters from './filter'
 import './assets/css/quill.css'
 import './assets/css/fonts.css'
-import PlSvg from './components/common/Pl-Svg.vue'
+import 'moment/locale/zh-cn'
+import directive from './directive'
+import filters from './filter'
+import { beforeResolve, onError } from './assets/js/router-guard'
+
+// import PenglaiUI from './components/penglai-ui'
+import PenglaiUI from 'penglai-ui'
+import '../node_modules/penglai-ui/dist/pl-ui.cjs.css'
+
+import VueLazyload from 'vue-lazyload'
+import VueClipboard from 'vue-clipboard2'
 import GetCode from './components/common/Get-Code.vue'
 import UploadImg from './components/common/Upload-Img.vue'
 import MallQRCodeModal from './components/common/qrcode-modal'
@@ -25,16 +28,6 @@ import * as Sentry from '@sentry/browser'
 import * as Integrations from '@sentry/integrations'
 import Cookie from './assets/js/storage-cookie'
 
-Vue.use(VueLazyload, {
-    error: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/img_error.png',
-    lazyComponent: true,
-    throttleWait: 150
-})
-Vue.use(VueClipboard)
-Vue.component('pl-svg', PlSvg)
-Vue.component('get-code', GetCode)
-Vue.component('get-code', UploadImg)
-
 for (const k of Object.keys(directive)) {
     Vue.directive(k, directive[k])
 }
@@ -42,9 +35,17 @@ for (const k of Object.keys(filters)) {
     Vue.filter(k, filters[k])
 }
 
-// UI组件库
+// 注册全局组件
+Vue.use(VueLazyload, {
+    error: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/img_error.png',
+    lazyComponent: true,
+    throttleWait: 150
+})
+Vue.use(VueClipboard)
 Vue.use(PenglaiUI)
 Vue.use(MallQRCodeModal)
+Vue.component(GetCode.name, GetCode)
+Vue.component(UploadImg.name, UploadImg)
 Vue.config.productionTip = false
 
 const render = () => {
@@ -151,4 +152,5 @@ const init = async () => {
         }
     }
 }
+
 init()

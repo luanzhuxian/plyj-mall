@@ -12,7 +12,7 @@
                     </div>
                 </div>
                 <div :class="$style.contentRightBottom">
-                    <Progress
+                    <PlProgress
                         :class="$style.progress"
                         :percentage="percentage"
                         :stroke-width="10"
@@ -22,7 +22,7 @@
                         <span slot="content" :class="$style.progressText">
                             累计公益金<b>{{ donation }}</b>元
                         </span>
-                    </Progress>
+                    </PlProgress>
                 </div>
             </div>
         </div>
@@ -32,13 +32,9 @@
 <script>
 import moment from 'moment'
 import Countdown from '../../../assets/js/Countdown'
-import Progress from '../../../components/penglai-ui/Progress.vue'
 
 export default {
     name: 'CountdownBar',
-    components: {
-        Progress
-    },
     props: {
         starttime: {
             type: [Number, String],

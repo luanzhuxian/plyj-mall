@@ -88,19 +88,19 @@
                 </div>
             </div>
             <div :class="$style.bottom">
-                <collapse v-model="collepseActiveNames" :accordion="!!refundProgress.length">
-                    <collapse-item name="1" title="退款进度">
-                        <pl-timeline>
-                            <pl-timeline-item
+                <PlCollapse v-model="collepseActiveNames" :accordion="!!refundProgress.length">
+                    <PlCollapseItem name="1" title="退款进度">
+                        <PlTimeline>
+                            <PlTimelineItem
                                 v-for="(item, i) of refundProgress"
                                 :key="i"
                                 :timestamp="item.operatorTime"
                             >
                                 <div :class="$style.refundProgressContent" v-text="item.message" />
-                            </pl-timeline-item>
-                        </pl-timeline>
-                    </collapse-item>
-                </collapse>
+                            </PlTimelineItem>
+                        </PlTimeline>
+                    </PlCollapseItem>
+                </PlCollapse>
             </div>
         </section>
 
@@ -222,8 +222,6 @@ import RefundDetailSkeleton from '../../../components/my/order/Refund-Detail-Ske
 import TopText from '../../../components/common/Top-Text.vue'
 import ModuleTitle from '../../../components/common/Module-Title.vue'
 import OrderItem from '../../../components/item/Order-Item.vue'
-import Collapse from '../../../components/penglai-ui/collapse/Collapse.vue'
-import CollapseItem from '../../../components/penglai-ui/collapse/Collapse-Item.vue'
 import Contact from '../../../components/common/Contact'
 import {
     getRefundOrderDetail,
@@ -252,8 +250,6 @@ export default {
         TopText,
         ModuleTitle,
         OrderItem,
-        Collapse,
-        CollapseItem,
         Contact
     },
     props: {

@@ -61,7 +61,7 @@
 import { ChildrenMixin } from '../../../mixins/relation'
 import { isDef } from '../../../assets/js/util'
 export default {
-    name: 'CollapseItem',
+    name: 'PlCollapseItem',
     mixins: [ChildrenMixin('Collapse')],
     props: {
         iconRight: {

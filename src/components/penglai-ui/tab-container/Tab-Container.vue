@@ -1,6 +1,6 @@
 <template>
     <div
-        :class="$style.tabContainer"
+        class="pl-tab-container"
         @touchstart="startDrag"
         @mousedown="startDrag"
         @touchmove="onDrag"
@@ -10,7 +10,7 @@
     >
         <div
             ref="wrapper"
-            :class="$style.tabContainerWrapper"
+            class="pl-tab-container-wrapper"
         >
             <slot />
         </div>
@@ -35,7 +35,7 @@ import { once } from './utils'
  * </tab-container>
  */
 export default {
-    name: 'TabContainer',
+    name: 'PlTabContainer',
     props: {
         value: {
             type: String,
@@ -177,21 +177,19 @@ export default {
 }
 </script>
 
-<style lang="scss" module>
-.tab-container {
-    position: relative;
-    overflow: hidden;
+<style lang="scss">
+  .pl-tab-container {
+      position: relative;
+      overflow: hidden;
 
-    &-wrapper {
-        display: flex;
-        width: 100%;
-    }
-}
-
+      &-wrapper {
+          display: flex;
+          width: 100%;
+      }
+  }
 </style>
 <style lang="scss" scoped>
-.swipe-transition {
-    transition: transform 150ms ease-in-out;
-}
-
+  .swipe-transition {
+      transition: transform 150ms ease-in-out;
+  }
 </style>
