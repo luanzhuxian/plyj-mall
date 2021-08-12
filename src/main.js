@@ -11,29 +11,20 @@ import 'moment/locale/zh-cn'
 import directive from './directive'
 import filters from './filter'
 import { beforeResolve, onError } from './assets/js/router-guard'
-
-// import PenglaiUI from './components/penglai-ui'
-import PenglaiUI from 'penglai-ui'
-import '../node_modules/penglai-ui/dist/pl-ui.cjs.css'
-
 import VueLazyload from 'vue-lazyload'
 import VueClipboard from 'vue-clipboard2'
 import GetCode from './components/common/Get-Code.vue'
 import UploadImg from './components/common/Upload-Img.vue'
 import MallQRCodeModal from './components/common/qrcode-modal'
 import MessageBox from './components/penglai-ui/message-box'
+// import PenglaiUI from './components/penglai-ui'
+import PenglaiUI from 'penglai-ui'
+import '../node_modules/penglai-ui/dist/pl-ui.cjs.css'
 // import { errorlog } from './apis/base-api'
 
 import * as Sentry from '@sentry/browser'
 import * as Integrations from '@sentry/integrations'
 import Cookie from './assets/js/storage-cookie'
-
-for (const k of Object.keys(directive)) {
-    Vue.directive(k, directive[k])
-}
-for (const k of Object.keys(filters)) {
-    Vue.filter(k, filters[k])
-}
 
 // 注册全局组件
 Vue.use(VueLazyload, {
@@ -46,6 +37,14 @@ Vue.use(PenglaiUI)
 Vue.use(MallQRCodeModal)
 Vue.component(GetCode.name, GetCode)
 Vue.component(UploadImg.name, UploadImg)
+
+for (const k of Object.keys(directive)) {
+    Vue.directive(k, directive[k])
+}
+for (const k of Object.keys(filters)) {
+    Vue.filter(k, filters[k])
+}
+
 Vue.config.productionTip = false
 
 const render = () => {
