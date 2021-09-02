@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "vue-cli-service serve --model local --s",
-    "build": "vue-cli-service build --model production && npm run sentry && npm run zlib",
+    "build": "vue-cli-service build --model production && npm run zlib",
     "build:dev": "vue-cli-service build --model development",
     "sentry": "node ./sentry.js --model production",
     "zlib": "node ./zlib.js",
