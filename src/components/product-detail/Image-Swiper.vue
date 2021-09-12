@@ -28,8 +28,6 @@
 
 export default {
     name: 'PlImagePreview',
-    components: {
-    },
     props: {
         items: {
             type: Array,

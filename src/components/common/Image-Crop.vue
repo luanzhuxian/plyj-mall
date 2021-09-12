@@ -190,7 +190,6 @@ export default {
             }
         }
     },
-    components: {},
     beforeDestroy () {
         document.removeEventListener('touchmove', this.preventDefault)
         // 退出销毁外置截取区域
