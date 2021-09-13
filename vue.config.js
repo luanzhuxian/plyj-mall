@@ -3,7 +3,7 @@ const MODEL = process.argv[process.argv.indexOf('--model') + 1]
 const { NODE_ENV } = process.env
 const VERSION = process.env.npm_package_version
 const SERVER = process.argv[process.argv.indexOf('--s') + 1]
-const assetsDir = MODEL === 'development' ? 'static' : `${ VERSION }/static`
+const assetsDir = MODEL === 'production' ? `test/${ VERSION }/static` : 'static'
 process.env.VUE_APP_VERSION = VERSION
 process.env.VUE_APP_MODEL = MODEL
 
@@ -36,6 +36,7 @@ const externals =
           'pdfjs-dist': 'pdfjsLib'
       }
       : {}
+
 module.exports = {
     pages: {
         index: {
@@ -44,7 +45,7 @@ module.exports = {
               ? 'public-dev/my.html'
               : MODEL === 'development'
                 ? 'public-dev/index.html'
-                : 'public/index.html',
+                : 'public/my.html',
             filename: 'index.html'
         }
     },
@@ -68,7 +69,7 @@ module.exports = {
                 // target: 'https://yumall.youpenglai.com'
                 // target: 'https://mall.youpenglai.com'
                 // target: `http://192.168.50.${ SERVER || 134 }`
-                target: 'http://42.192.54.104'
+                target: 'https://42.192.54.104:443'
             }
         },
         // 禁止检查域名
