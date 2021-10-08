@@ -1,10 +1,11 @@
 import * as type from './mutation-type'
 import Cookie from '../assets/js/storage-cookie'
 import { copyFields } from '../assets/js/util'
-import { setUser, setTags } from '@sentry/browser'
-const { VUE_APP_MODEL, NODE_ENV } = process.env
+// import { setUser, setTags } from '@sentry/browser'
+// const { VUE_APP_MODEL, NODE_ENV } = process.env
 // 本地cookie较服务器提前一小时过期
 const CalcCookieTime = expire => new Date(Date.now() + expire * 1000 - 3600000)
+
 export default {
     [type.SET_THEME] (state, theme) {
         state.theme = theme
@@ -26,24 +27,24 @@ export default {
 
         // 向sentry设置用户信息，以便在日志中展示
         // 只有生产环境
-        if (VUE_APP_MODEL === NODE_ENV) {
-            const { mallName, sequenceNbr: mallId, mallDomain, appId } = state.mallInfo
-            // 用户信息搜索只支持以下两个字段
-            setUser({
-                id: payload.userId,
-                username: payload.userName
-            })
-            // 添加标签，以便搜索
-            setTags({
-                mallDomain,
-                mallName,
-                mallId,
-                appId,
-                mobile: payload.mobile,
-                openId: payload.openId,
-                realName: payload.realName
-            })
-        }
+        // if (VUE_APP_MODEL === NODE_ENV) {
+        //     const { mallName, sequenceNbr: mallId, mallDomain, appId } = state.mallInfo
+        //     // 用户信息搜索只支持以下两个字段
+        //     setUser({
+        //         id: payload.userId,
+        //         username: payload.userName
+        //     })
+        //     // 添加标签，以便搜索
+        //     setTags({
+        //         mallDomain,
+        //         mallName,
+        //         mallId,
+        //         appId,
+        //         mobile: payload.mobile,
+        //         openId: payload.openId,
+        //         realName: payload.realName
+        //     })
+        // }
     },
     [type.SET_TOKEN] (state, payload) {
         Cookie.set('token', payload.token, {

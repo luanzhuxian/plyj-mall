@@ -7,7 +7,7 @@ import './assets/js/axios'
 import './assets/scss/index.scss'
 import './assets/css/quill.css'
 import './assets/css/fonts.css'
-import 'moment/locale/zh-cn'
+// import 'moment/locale/zh-cn'
 import directive from './directive'
 import filters from './filter'
 import { beforeResolve, onError } from './assets/js/router-guard'
@@ -20,8 +20,8 @@ import PenglaiUI, { MessageBox } from 'penglai-ui'
 import '../node_modules/penglai-ui/dist/pl-ui.cjs.css'
 // import { errorlog } from './apis/base-api'
 
-import * as Sentry from '@sentry/browser'
-import * as Integrations from '@sentry/integrations'
+// import * as Sentry from '@sentry/browser'
+// import * as Integrations from '@sentry/integrations'
 import Cookie from './assets/js/storage-cookie'
 
 import { getPerformanceTiming, observeLongTask } from './assets/performance'
@@ -77,48 +77,50 @@ const render = () => {
             console.error(err)
         }
     }
+
     const {
-        VUE_APP_VERSION,
-        NODE_ENV,
-        VUE_APP_MODEL
+        VUE_APP_VERSION
+        // NODE_ENV,
+        // VUE_APP_MODEL
     } = process.env
     console.log('version:', VUE_APP_VERSION)
+
     // 只有生产环境才启用日志
-    if (NODE_ENV === VUE_APP_MODEL) {
-        Sentry.init({
-            dsn: 'https://e6c426498fe9427d870136c32b797567@frontlog.youpenglai.com/2',
-            // 对应发布的版本号，这个版本号取自package.json中配置的版本号
-            release: VUE_APP_VERSION,
-            // 面包屑最大数量
-            maxBreadcrumbs: 30,
-            // VUE 集成
-            integrations: [
-                new Integrations.Vue({
-                    Vue,
-                    // 是否把错误打印到控制台
-                    logErrors: false,
-                    // Passing in attachProps is optional and is true if it is not provided. If you set it to false, Sentry will suppress sending all Vue components’ props for logging.
-                    attachProps: true
-                })
-            ],
-            beforeSend (event) {
-                if (!event) {
-                    return null
-                }
-                if ('message' in event && !event.message) {
-                    return null
-                }
-                if (event.exception.values.some(item => item.value.match('4002') || item.type === 'UnhandledRejection')) {
-                    return null
-                }
-                if (event.exception.values.some(item => item.type === 'ResponseError')) {
-                    event.fingerprint = ['response-error']
-                    event.level = 'warning'
-                }
-                return event
-            }
-        })
-    }
+    // if (NODE_ENV === VUE_APP_MODEL) {
+    //     Sentry.init({
+    //         dsn: 'https://e6c426498fe9427d870136c32b797567@frontlog.youpenglai.com/2',
+    //         // 对应发布的版本号，这个版本号取自package.json中配置的版本号
+    //         release: VUE_APP_VERSION,
+    //         // 面包屑最大数量
+    //         maxBreadcrumbs: 30,
+    //         // VUE 集成
+    //         integrations: [
+    //             new Integrations.Vue({
+    //                 Vue,
+    //                 // 是否把错误打印到控制台
+    //                 logErrors: false,
+    //                 // Passing in attachProps is optional and is true if it is not provided. If you set it to false, Sentry will suppress sending all Vue components’ props for logging.
+    //                 attachProps: true
+    //             })
+    //         ],
+    //         beforeSend (event) {
+    //             if (!event) {
+    //                 return null
+    //             }
+    //             if ('message' in event && !event.message) {
+    //                 return null
+    //             }
+    //             if (event.exception.values.some(item => item.value.match('4002') || item.type === 'UnhandledRejection')) {
+    //                 return null
+    //             }
+    //             if (event.exception.values.some(item => item.type === 'ResponseError')) {
+    //                 event.fingerprint = ['response-error']
+    //                 event.level = 'warning'
+    //             }
+    //             return event
+    //         }
+    //     })
+    // }
 }
 
 const init = async () => {
