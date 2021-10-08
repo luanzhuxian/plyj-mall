@@ -1,19 +1,19 @@
 <template>
     <div>
         <div :class="$style.walfareTip" v-if="hasPackages">
-            <pl-svg name="icon-alarm" fill="#fff" width="18" />
+            <PlSvg name="icon-alarm" fill="#fff" width="18" />
             <span>
                 您有一个新人有礼优惠大礼包，还未领取哦！
-                <pl-svg name="icon-right" fill="#fff" width="16" />
+                <PlSvg name="icon-right" fill="#fff" width="16" />
             </span>
         </div>
         <div :class="$style.coupons">
             <div :class="$style.tabMenu">
-                <tab :tabs="menuArray" :active-id.sync="activeMenuId" :color9="true" />
+                <PlTab :tabs="menuArray" :active-id.sync="activeMenuId" :color9="true" />
                 <button @click="isManagementState = !isManagementState">管理</button>
             </div>
             <div :class="$style.couponsView">
-                <load-more
+                <LoadMore
                     :request-methods="getMyCouponList"
                     :form="form"
                     @refresh="refreshHandler"
@@ -23,10 +23,10 @@
                 >
                     <template>
                         <div slot="icon">
-                            <pl-svg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/newCouponIcon.png" width="400" />
+                            <PlSvg type="img" name="https://mallcdn.youpenglai.com/static/mall/icons/olds/newCouponIcon.png" width="400" />
                         </div>
-                        <pl-checkbox-group v-model="selectCouponList">
-                            <pl-checkbox
+                        <PlCheckboxGroup v-model="selectCouponList">
+                            <PlCheckbox
                                 v-for="item of couponList"
                                 :key="item.id"
                                 :data="item"
@@ -46,10 +46,10 @@
                                     :use-end-time="item.useEndTime"
                                     :is-available-status="true"
                                 />
-                            </pl-checkbox>
-                        </pl-checkbox-group>
+                            </PlCheckbox>
+                        </PlCheckboxGroup>
                     </template>
-                </load-more>
+                </LoadMore>
             </div>
         </div>
         <div :class="$style.footer">
@@ -67,7 +67,6 @@
 </template>
 
 <script>
-import tab from '../../../components/penglai-ui/Tab'
 import CouponItem from '../../../components/my/coupon/Coupon-Item.vue'
 import LoadMore from '../../../components/common/Load-More.vue'
 import { getMyCouponList, deleteCouponList } from '../../../apis/my-coupon'
@@ -76,8 +75,7 @@ export default {
     name: 'MyCoupon',
     components: {
         CouponItem,
-        LoadMore,
-        tab
+        LoadMore
     },
     data () {
         return {

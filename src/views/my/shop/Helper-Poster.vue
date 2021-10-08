@@ -1,6 +1,6 @@
 <template>
     <div :class="$style.helperQrcode">
-        <tab :tabs="array" :active-id.sync="activeId" :color9="true" />
+        <PlTab :tabs="array" :active-id.sync="activeId" :color9="true" />
         <div v-show="activeId === 1" :class="$style.helperGuidelines">
             <div :class="$style.imgBox"><img v-imgError :src="post" alt=""></div>
             <div :class="$style.descriptionBox">
@@ -26,14 +26,10 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import tab from '../../../components/penglai-ui/Tab'
 import { generateQrcode } from '../../../assets/js/util'
 import { getHelperData } from '../../../apis/helper-manager'
 export default {
     name: 'HelperPoster',
-    components: {
-        tab
-    },
     data () {
         return {
             url: 'baidu.com',

@@ -117,12 +117,10 @@ import {
     getRedemptionList,
     deleteRedemptionByIds
 } from '../../../apis/my-redemption'
-import PlButton from '../../../components/penglai-ui/Button'
 
 export default {
     name: 'Redemption',
     components: {
-        PlButton,
         LoadMore,
         CodeItem
     },

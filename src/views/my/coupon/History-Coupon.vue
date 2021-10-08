@@ -2,7 +2,7 @@
     <div>
         <div :class="$style.historyCoupon">
             <div :class="$style.tabMenu">
-                <tab :tabs="menuArray" :active-id.sync="activeMenuId" :color9="true" />
+                <PlTab :tabs="menuArray" :active-id.sync="activeMenuId" :color9="true" />
                 <button @click="isManagementState = !isManagementState">管理</button>
             </div>
             <div v-show="activeMenuId === 1" :class="$style.couponsView">
@@ -96,7 +96,6 @@
 </template>
 
 <script>
-import tab from '../../../components/penglai-ui/Tab'
 import CouponItem from '../../../components/my/coupon/Coupon-Item.vue'
 import LoadMore from '../../../components/common/Load-More.vue'
 import { getMyCouponList, deleteCouponList } from '../../../apis/my-coupon'
@@ -104,7 +103,6 @@ import { getMyCouponList, deleteCouponList } from '../../../apis/my-coupon'
 export default {
     name: 'HistoryCoupon',
     components: {
-        tab,
         CouponItem,
         LoadMore
     },
