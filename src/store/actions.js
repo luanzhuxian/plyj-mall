@@ -10,19 +10,13 @@ import {
     userInfoSettings,
     getLiveOpenStatus
 } from '../apis/base-api'
-import {
-    getAddress
-} from '../apis/address'
-import {
-    getList
-} from '../apis/student'
-import {
-    getAduitNotice
-} from '../apis/broker-manager'
+import { getAddress } from '../apis/address'
+import { getList } from '../apis/student'
+import { getAduitNotice } from '../apis/broker-manager'
 import { getTemplate, getSkinStatus } from '../apis/home'
 import {
-    // DelayExec,
     loadImage
+    // DelayExec,
     // promise
 } from '../assets/js/util'
 import { upload } from '../assets/js/upload-image'

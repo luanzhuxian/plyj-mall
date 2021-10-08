@@ -17,7 +17,7 @@
                     v-text="roleName"
                 />
             </div>
-            <image-crop
+            <ImageCrop
                 style="width: 16vw;height: 16vw; border-radius: 50%; position: absolute;"
                 :proportion="{ w: 50, h: 50 }"
                 @submit="submitImg"
@@ -25,12 +25,12 @@
             />
         </div>
         <div :class="$style.set">
-            <pl-fields
+            <PlFields
                 text="手机号"
                 :right-text="mobile || '未绑定'"
                 :route="{ name: 'BindMobile' }"
             />
-            <pl-fields
+            <PlFields
                 text="微信号"
                 :right-text="userName"
             />
@@ -44,6 +44,7 @@ import { SET_AVATAR, SET_USERNAME } from '../../../store/mutation-type'
 import imageCrop from '../../../components/common/Image-Crop'
 import { upload } from '../../../assets/js/upload-image'
 import { userInfoSettings } from '../../../apis/base-api'
+
 export default {
     name: 'Setting',
     components: { imageCrop },

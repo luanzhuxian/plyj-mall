@@ -73,7 +73,6 @@ module.exports = {
         proxy: {
             // 测试37 开发34 王恩74 牛昌昌92 张涛126 任钊64 杜花171 river 148 wilson 146
             '/apis': {
-                // target: 'https://yumall.youpenglai.com'
                 // target: 'https://mall.youpenglai.com'
                 // target: `http://192.168.50.${ SERVER || 134 }`
                 target: 'https://42.192.54.104:443'
