@@ -1,6 +1,10 @@
 import moment from 'moment'
-import 'moment/locale/zh-cn.js'
+import 'moment/locale/zh-cn'
 import { SectionToChinese } from '../assets/js/util'
+
+// const moment = require('moment')
+// require('moment/locale/zh-cn')
+moment.locale('zh-cn')
 
 export default {
     dateFormat (val, format) {

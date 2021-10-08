@@ -1,5 +1,6 @@
 // 标记线上环境还是测试环境 development为开发或测试环境打包，production是生产环境打包
 
+const webpack = require('webpack')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 const MODEL = process.argv[process.argv.indexOf('--model') + 1]
@@ -27,7 +28,7 @@ const externals =
           vue: 'Vue',
           vuex: 'Vuex',
           'vue-router': 'VueRouter',
-          moment: 'moment',
+          // moment: 'moment',
           axios: 'axios',
           swiper: 'swiper',
           'vue-awesome-swiper': 'VueAwesomeSwiper',
@@ -39,10 +40,7 @@ const externals =
           'pdfjs-dist': 'pdfjsLib',
           'penglai-ui': 'PenglaiUI'
       }
-      : {
-        // vue: 'Vue',
-        // 'penglai-ui': 'PenglaiUI'
-      }
+      : {}
 
 module.exports = {
     pages: {
@@ -112,6 +110,11 @@ module.exports = {
     configureWebpack: {
         externals,
         plugins: [
+          new webpack.IgnorePlugin({
+            resourceRegExp: /^\.\/locale$/,
+            contextRegExp: /moment$/
+          }),
+          // new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
           new BundleAnalyzerPlugin()
         ]
     },
