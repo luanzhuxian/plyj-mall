@@ -159,6 +159,7 @@ const init = async () => {
     }
 }
 
+// 减少Home.vue异步chunk的体积：首页template组件打为异步的包，动态导入
 // const getHomeTemplate = async () => {
 //     const map = {
 //         3: 'Template-B',
@@ -169,11 +170,11 @@ const init = async () => {
 //     const { result } = await getTemplate({ type: 1 })
 //     const { type } = result
 //     const template = await import(`./views/home/${ map[type] }.vue`)
-//     Vue.component('HomeTemplate', template.default)
-//     // Vue.component('HomeTemplate', (resolve, reject) => {
+//     Vue.component('HomeTemplateComponent', template.default)
+//     // Vue.component('HomeTemplateComponent', (resolve, reject) => {
 //     //     resolve(template.default)
 //     // })
-//     // Vue.component('HomeTemplate', () => import(`./views/home/${ map[type] }.vue`))
+//     // Vue.component('HomeTemplateComponent', () => import(`./views/home/${ map[type] }.vue`))
 // }
 // getHomeTemplate()
 

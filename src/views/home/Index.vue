@@ -19,7 +19,7 @@
                 :skin-id="skinId"
                 :data="modules"
             />
-            <!-- <HomeTemplate
+            <!-- <HomeTemplateComponent
                 :type="type"
                 :skin-id="skinId"
                 :data="modules"
