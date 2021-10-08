@@ -23,6 +23,7 @@ import '../node_modules/penglai-ui/dist/pl-ui.cjs.css'
 // import * as Integrations from '@sentry/integrations'
 import Cookie from './assets/js/storage-cookie'
 
+// import { getTemplate } from './apis/home'
 import { getPerformanceTiming, observeLongTask } from './assets/performance'
 
 window.addEventListener('load', event => {
@@ -158,6 +159,23 @@ const init = async () => {
     }
 }
 
-MessageBox.alert('123')
+// const getHomeTemplate = async () => {
+//     const map = {
+//         3: 'Template-B',
+//         4: 'Template-B',
+//         '-1': 'Template-C',
+//         9: 'Template-D'
+//     }
+//     const { result } = await getTemplate({ type: 1 })
+//     const { type } = result
+//     const template = await import(`./views/home/${ map[type] }.vue`)
+//     Vue.component('HomeTemplate', template.default)
+//     // Vue.component('HomeTemplate', (resolve, reject) => {
+//     //     resolve(template.default)
+//     // })
+//     // Vue.component('HomeTemplate', () => import(`./views/home/${ map[type] }.vue`))
+// }
+// getHomeTemplate()
 
+MessageBox.alert('123')
 init()

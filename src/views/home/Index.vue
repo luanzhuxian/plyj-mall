@@ -19,6 +19,11 @@
                 :skin-id="skinId"
                 :data="modules"
             />
+            <!-- <HomeTemplate
+                :type="type"
+                :skin-id="skinId"
+                :data="modules"
+            /> -->
             <InviteNewcomersHomeEntry />
             <!--瓜分奖学金-->
             <SplitBurse />
@@ -39,9 +44,9 @@
 <script>
 import { mapGetters } from 'vuex'
 import 'swiper/dist/css/swiper.css'
-import TemplateB from './Template-B.vue'
-import TemplateC from './Template-C.vue'
-import TemplateD from './Template-D.vue'
+// import TemplateB from './Template-B.vue'
+// import TemplateC from './Template-C.vue'
+// import TemplateD from './Template-D.vue'
 import InviteNewcomersHomeEntry from '../marketing-activity/double-12/invitenewcomers/InviteNewcomersHomeEntry.vue'
 import SplitBurse from './../../components/common/Split-Burse.vue'
 import SendLive from './../../components/common/Send-Live.vue'
@@ -56,9 +61,9 @@ export default {
         }
     },
     components: {
-        TemplateB,
-        TemplateC,
-        TemplateD,
+        TemplateB: () => import('./Template-B.vue'),
+        TemplateC: () => import('./Template-C.vue'),
+        TemplateD: () => import('./Template-D.vue'),
         InviteNewcomersHomeEntry,
         SplitBurse,
         SendLive
