@@ -24,6 +24,13 @@ import * as Sentry from '@sentry/browser'
 import * as Integrations from '@sentry/integrations'
 import Cookie from './assets/js/storage-cookie'
 
+import { getPerformanceTiming, observeLongTask } from './assets/performance'
+
+window.addEventListener('load', event => {
+    getPerformanceTiming()
+})
+observeLongTask()
+
 // 注册全局组件
 Vue.use(VueLazyload, {
     error: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/img_error.png',
