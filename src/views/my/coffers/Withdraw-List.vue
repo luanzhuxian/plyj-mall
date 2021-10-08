@@ -40,10 +40,10 @@
                 </div>
             </transition>
         </div>
-        <LoadMore
+        <PlLoadMore
+            ref="loadMore"
             :request-methods="getWithdrawDepositOfUser"
             :form="form"
-            ref="loadMore"
             @refresh="refreshHandler"
             no-content-tip="暂无提现记录"
             icon="icon-no-content2"
@@ -83,19 +83,16 @@
                     </li>
                 </ul>
             </template>
-        </LoadMore>
+        </PlLoadMore>
     </div>
 </template>
 
 <script>
-import { getWithdrawDepositOfUser, getDepositCount } from '../../../apis/money'
-import LoadMore from '../../../components/common/Load-More.vue'
 import moment from 'moment'
+import { getWithdrawDepositOfUser, getDepositCount } from '../../../apis/money'
+
 export default {
     name: 'WithdrawList',
-    components: {
-        LoadMore
-    },
     data () {
         return {
             tabOpen: false,

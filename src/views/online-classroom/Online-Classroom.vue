@@ -9,7 +9,7 @@
             :category="category"
             @change="classifyChanged"
         />
-        <load-more
+        <PlLoadMore
             ref="loadMore"
             :form="form"
             :request-methods="requestMethods"
@@ -67,20 +67,19 @@
                     </li>
                 </ul>
             </template>
-        </load-more>
+        </PlLoadMore>
     </div>
 </template>
 <script>
+import moment from 'moment'
 import { getServerTime } from '../../apis/base-api'
 import { getCourse } from '../../apis/online-classroom.js'
-import LoadMore from '../../components/common/Load-More.vue'
 import CountDown from '../../components/product-detail/Courses-Count-Down.vue'
-import moment from 'moment'
 import CategorySelector from '../../components/online-classroom/Category-Selector.vue'
+
 export default {
     name: 'OnlineClassroom',
     components: {
-        LoadMore,
         CountDown,
         CategorySelector
     },

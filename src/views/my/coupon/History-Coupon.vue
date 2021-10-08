@@ -6,11 +6,11 @@
                 <button @click="isManagementState = !isManagementState">管理</button>
             </div>
             <div v-show="activeMenuId === 1" :class="$style.couponsView">
-                <load-more
+                <PlLoadMore
+                    ref="usedCouponorLoadMore"
                     :request-methods="getMyCouponList"
                     :form="usedCouponorForm"
                     @refresh="refreshHandler"
-                    ref="usedCouponorLoadMore"
                     no-content-tip="暂无优惠券"
                     no-icon
                 >
@@ -41,7 +41,7 @@
                             />
                         </div>
                     </template>
-                </load-more>
+                </PlLoadMore>
                 <button v-if="usedCouponList.length === 0" :class="$style.receiveMore">
                     <router-link :to="{ name: 'CouponCenter'}">
                         福利中心 领好券
@@ -49,11 +49,11 @@
                 </button>
             </div>
             <div v-show="activeMenuId === 2" :class="$style.couponsView">
-                <load-more
+                <PlLoadMore
+                    ref="overduedCouponLoadMore"
                     :request-methods="getMyCouponList"
                     :form="overduedCouponForm"
                     @refresh="refreshHandler"
-                    ref="overduedCouponLoadMore"
                     no-content-tip="暂无优惠券"
                     no-icon
                 >
@@ -83,7 +83,7 @@
                             />
                         </div>
                     </template>
-                </load-more>
+                </PlLoadMore>
             </div>
         </div>
         <div :class="[$style.footer, isManagementState ? $style.deleteFooter : '']">
@@ -97,14 +97,12 @@
 
 <script>
 import CouponItem from '../../../components/my/coupon/Coupon-Item.vue'
-import LoadMore from '../../../components/common/Load-More.vue'
 import { getMyCouponList, deleteCouponList } from '../../../apis/my-coupon'
 
 export default {
     name: 'HistoryCoupon',
     components: {
-        CouponItem,
-        LoadMore
+        CouponItem
     },
     mounted () {
         this.refreshList()

@@ -20,7 +20,7 @@
         </template>
         <!--兑换码列表-->
         <div :class="$style.list">
-            <LoadMore
+            <PlLoadMore
                 ref="loadMore"
                 no-icon
                 :form="form"
@@ -80,7 +80,7 @@
                         </div>
                     </template>
                 </template>
-            </LoadMore>
+            </PlLoadMore>
         </div>
         <!--底部按钮-->
         <div :class="$style.bottom">
@@ -110,7 +110,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import scan from '../../../assets/js/wechat/wechat-scan'
-import LoadMore from '../../../components/common/Load-More.vue'
 import CodeItem from '../../../components/my/redemption/Code-Item'
 import ReceiveCode from '../../../components/my/redemption/Receive-Code'
 import {
@@ -121,7 +120,6 @@ import {
 export default {
     name: 'Redemption',
     components: {
-        LoadMore,
         CodeItem
     },
     props: {

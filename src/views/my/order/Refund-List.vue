@@ -15,7 +15,7 @@
             />
         </pl-tab>
         <div :class="$style.list">
-            <load-more
+            <PlLoadMore
                 ref="loadMore"
                 :form="form"
                 :loading.sync="loading"
@@ -50,7 +50,7 @@
                         />
                     </router-link>
                 </template>
-            </load-more>
+            </PlLoadMore>
         </div>
     </div>
 </template>
@@ -58,7 +58,6 @@
 <script>
 import { mapGetters, mapMutations } from 'vuex'
 import filter from '../../../filter/index'
-import LoadMore from '../../../components/common/Load-More.vue'
 import RefundListItem from '../../../components/my/order/Refund-List-Item'
 import {
     getRefundOrderList,
@@ -77,7 +76,6 @@ const TAB_KEY = {
 export default {
     name: 'RefundList',
     components: {
-        LoadMore,
         RefundListItem
     },
     computed: {

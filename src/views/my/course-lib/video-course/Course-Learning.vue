@@ -1,6 +1,6 @@
 <template>
     <div :class="$style.courseLearning">
-        <load-more
+        <PlLoadMore
             ref="loadMore"
             :form="form"
             :request-methods="getCourseList"
@@ -15,7 +15,7 @@
                 :key="index"
                 :item="item"
             />
-        </load-more>
+        </PlLoadMore>
         <!--无数据情况-->
         <div v-if="loading" :class="$style.none">
             <div @click="goLearning" :class="$style.goLearning">去学习课程</div>
@@ -25,13 +25,11 @@
 
 <script>
 import StudyItem from '../../../../components/my/course-lib/video-course/Study-Item'
-import LoadMore from '../../../../components/common/Load-More.vue'
 import { getCourseList } from '../../../../apis/live-library'
 export default {
     name: 'CourseLearning',
     components: {
-        StudyItem,
-        LoadMore
+        StudyItem
     },
     data () {
         return {

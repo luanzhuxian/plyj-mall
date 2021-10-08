@@ -2,7 +2,7 @@
     <!--我的视频列表-->
     <div :class="$style.liveLibrary">
         <!--视频列表-->
-        <LoadMore
+        <PlLoadMore
             ref="loadMore"
             :form="form"
             :class="$style.live"
@@ -14,18 +14,16 @@
             icon="icon-course-7ffcc"
         >
             <liveItem v-for="(item,index) in list" :key="index" :item="item" />
-        </LoadMore>
+        </PlLoadMore>
     </div>
 </template>
 
 <script>
 import { getLibraryList } from '../../../../apis/live-library'
-import LoadMore from '../../../../components/common/Load-More.vue'
 import LiveItem from '../../../../components/my/course-lib/video-course/Live-Item'
 export default {
     name: 'CourseLibrary',
     components: {
-        LoadMore,
         LiveItem
     },
     data () {

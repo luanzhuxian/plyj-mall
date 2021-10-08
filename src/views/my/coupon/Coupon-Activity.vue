@@ -37,12 +37,12 @@
             </div>
         </div>
         <div :class="$style.productList">
-            <LoadMore
+            <PlLoadMore
+                ref="loadMore"
                 :request-methods="getProductList"
                 :form="form"
                 @refresh="refreshHandler"
                 @more="refreshHandler"
-                ref="loadMore"
                 no-content-tip="此优惠券下还没有商品"
                 no-icon
             >
@@ -58,13 +58,12 @@
                         :detail="item"
                     />
                 </template>
-            </LoadMore>
+            </PlLoadMore>
         </div>
     </div>
 </template>
 
 <script>
-import LoadMore from '../../../components/common/Load-More.vue'
 import CouponItem from '../../../components/my/coupon/Coupon-Item.vue'
 import CouponGoodItem from '../../../components/my/coupon/Coupon-Good-Item.vue'
 import { getProductList, getCouponDetail } from '../../../apis/my-coupon'
@@ -72,7 +71,6 @@ import { getProductList, getCouponDetail } from '../../../apis/my-coupon'
 export default {
     name: 'CouponActivity',
     components: {
-        LoadMore,
         CouponItem,
         CouponGoodItem
     },

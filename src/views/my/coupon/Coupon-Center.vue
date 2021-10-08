@@ -9,12 +9,12 @@
                 <span>优惠券</span>
             </div>
             <div :class="$style.couponView">
-                <load-more
+                <PlLoadMore
+                    ref="loadMore"
                     :request-methods="getAvailableCouponList"
                     :form="form"
                     @refresh="refreshHandler"
                     @more="refreshHandler"
-                    ref="loadMore"
                     no-content-tip="暂无优惠券"
                     no-icon
                 >
@@ -40,7 +40,7 @@
                             :can-receive="item.canReceive"
                         />
                     </template>
-                </load-more>
+                </PlLoadMore>
             </div>
         </div>
         <div :class="$style.footer">
@@ -53,14 +53,12 @@
 
 <script>
 import CouponItem from '../../../components/my/coupon/Coupon-Item.vue'
-import LoadMore from '../../../components/common/Load-More.vue'
 import { getAvailableCouponList } from '../../../apis/my-coupon'
 
 export default {
     name: 'CouponCenter',
     components: {
-        CouponItem,
-        LoadMore
+        CouponItem
     },
     data () {
         return {

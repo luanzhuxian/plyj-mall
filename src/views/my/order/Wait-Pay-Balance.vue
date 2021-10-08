@@ -1,7 +1,7 @@
 <template>
     <div :class="$style.waitPayBalance">
         <div :class="$style.list">
-            <load-more
+            <PlLoadMore
                 ref="loadMore"
                 :form="form"
                 :loading.sync="loading"
@@ -39,7 +39,7 @@
                         />
                     </router-link>
                 </template>
-            </load-more>
+            </PlLoadMore>
         </div>
     </div>
 </template>
@@ -47,13 +47,12 @@
 <script>
 import Countdown from '../../../assets/js/Countdown'
 import moment from 'moment'
-import LoadMore from '../../../components/common/Load-More.vue'
 import WaitPayListItem from '../../../components/my/order/Wait-Pay-List-Item'
 import { getAwaitTailPayInfo, getOrderList } from '../../../apis/order-manager'
 import wechatPay from '../../../assets/js/wechat/wechat-pay'
+
 export default {
     components: {
-        LoadMore,
         WaitPayListItem
     },
     name: 'WaitPayBalance',

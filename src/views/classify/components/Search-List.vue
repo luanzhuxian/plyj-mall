@@ -20,7 +20,7 @@
         >
             <PlTabContainerItem id="PRODUCT">
                 <div ref="productListContainer" :class="$style.list">
-                    <LoadMore
+                    <PlLoadMore
                         ref="productList"
                         :form="productForm"
                         :request-methods="searchProduct"
@@ -45,13 +45,13 @@
                                 :original-price="item.productSkuModels.length && item.productSkuModels[0].originalPrice"
                             />
                         </template>
-                    </LoadMore>
+                    </PlLoadMore>
                 </div>
             </PlTabContainerItem>
 
             <PlTabContainerItem id="COURSE">
                 <div ref="courseListContainer" :class="$style.list">
-                    <LoadMore
+                    <PlLoadMore
                         ref="courseList"
                         :form="courseForm"
                         :request-methods="searchCourse"
@@ -80,7 +80,7 @@
                                 </template>
                             </LessonItem>
                         </template>
-                    </LoadMore>
+                    </PlLoadMore>
                 </div>
             </PlTabContainerItem>
         </PlTabContainer>
@@ -90,7 +90,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import LessonItem from '../../../components/item/Lesson-Item.vue'
-import LoadMore from '../../../components/common/Load-More.vue'
 import { searchProduct } from '../../../apis/search'
 import { searchCourse } from '../../../apis/online-classroom'
 import { throttle } from '../../../assets/js/util'
@@ -98,8 +97,7 @@ import { throttle } from '../../../assets/js/util'
 export default {
     name: 'SearchList',
     components: {
-        LessonItem,
-        LoadMore
+        LessonItem
     },
     props: {
         query: {

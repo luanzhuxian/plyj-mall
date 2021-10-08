@@ -78,7 +78,7 @@
                     热门推荐
                 </div>
 
-                <load-more
+                <PlLoadMore
                     ref="loadMore"
                     :form="form"
                     :request-methods="requestMethods"
@@ -106,7 +106,7 @@
                             </template>
                         </div>
                     </template>
-                </load-more>
+                </PlLoadMore>
             </div>
         </main>
     </div>
@@ -116,7 +116,6 @@
 import { mapGetters } from 'vuex'
 import GoodsItem from '../../components/item/Goods-Item.vue'
 import SubClassify from '../../components/item/Sub-Classify.vue'
-import LoadMore from '../../components/common/Load-More.vue'
 import { getCategoryTree, getProduct, getCourseCategoryTree } from '../../apis/classify'
 import { getActivityProduct } from '../../apis/broker'
 import { getCourse, getImageTextList } from '../../apis/online-classroom'
@@ -127,8 +126,7 @@ export default {
     name: 'Classify',
     components: {
         GoodsItem,
-        SubClassify,
-        LoadMore
+        SubClassify
     },
     props: {
         optionId: {

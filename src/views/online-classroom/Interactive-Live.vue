@@ -1,7 +1,7 @@
 <template>
     <div>
         <div :class="$style.interactiveLive">
-            <load-more
+            <PlLoadMore
                 ref="LiveLoadMore"
                 :form="form"
                 :request-methods="requestMethods"
@@ -113,19 +113,15 @@
                         </ul>
                     </div>
                 </template>
-            </load-more>
+            </PlLoadMore>
         </div>
     </div>
 </template>
 <script>
 import { getLiveList } from '../../apis/online-classroom.js'
-import LoadMore from '../../components/common/Load-More.vue'
 import { promise } from '../../assets/js/util'
 export default {
     name: 'InteractiveLive',
-    components: {
-        LoadMore
-    },
     data () {
         return {
             form: {

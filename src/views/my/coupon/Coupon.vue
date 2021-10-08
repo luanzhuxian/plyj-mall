@@ -13,11 +13,11 @@
                 <button @click="isManagementState = !isManagementState">管理</button>
             </div>
             <div :class="$style.couponsView">
-                <LoadMore
+                <PlLoadMore
+                    ref="loadMore"
                     :request-methods="getMyCouponList"
                     :form="form"
                     @refresh="refreshHandler"
-                    ref="loadMore"
                     no-content-tip="暂无优惠券"
                     no-icon
                 >
@@ -49,7 +49,7 @@
                             </PlCheckbox>
                         </PlCheckboxGroup>
                     </template>
-                </LoadMore>
+                </PlLoadMore>
             </div>
         </div>
         <div :class="$style.footer">
@@ -68,14 +68,12 @@
 
 <script>
 import CouponItem from '../../../components/my/coupon/Coupon-Item.vue'
-import LoadMore from '../../../components/common/Load-More.vue'
 import { getMyCouponList, deleteCouponList } from '../../../apis/my-coupon'
 
 export default {
     name: 'MyCoupon',
     components: {
-        CouponItem,
-        LoadMore
+        CouponItem
     },
     data () {
         return {

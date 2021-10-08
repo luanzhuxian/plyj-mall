@@ -1,6 +1,6 @@
 <template>
     <div>
-        <load-more
+        <PlLoadMore
             ref="loadMore"
             :form="form"
             :request-methods="getBurseList"
@@ -11,7 +11,7 @@
         >
             <!-- <img style="width: 400px;" slot="icon" src="https://mallcdn.youpenglai.com/static/admall/f20994d7-316b-43e9-be44-4f78dc6fc295.png" alt=""> -->
             <burse-item @select="select" v-bind="$attrs" :is-edit="isEdit" is-watch :item="item" v-for="(item,index) in burseList" :key="index" />
-        </load-more>
+        </PlLoadMore>
         <div :class="$style.btn">
             <span v-if="isEdit" @click="deletes">删除</span>
             <span v-else @click="$router.push({name:'MyBurse'})">返回我的奖学金</span>
@@ -21,14 +21,12 @@
 
 <script>
 import BurseItem from './Burse-Item.vue'
-import LoadMore from '../../common/Load-More.vue'
 import { getBurseList, deleteBurse } from '../../../apis/my-burse.js'
 export default {
     name: 'BurList',
     inheritAttrs: false,
     components: {
-        BurseItem,
-        LoadMore
+        BurseItem
     },
     props: {
         isEdit: {

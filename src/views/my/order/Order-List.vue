@@ -15,7 +15,7 @@
             />
         </PlTab>
         <div :class="$style.list">
-            <LoadMore
+            <PlLoadMore
                 ref="loadMore"
                 :form="form"
                 :loading.sync="loading"
@@ -42,7 +42,7 @@
                         />
                     </router-link>
                 </template>
-            </LoadMore>
+            </PlLoadMore>
         </div>
         <PlPicker
             :show.sync="isPickerShow"
@@ -54,7 +54,6 @@
 </template>
 
 <script>
-import LoadMore from '../../../components/common/Load-More.vue'
 import {
     getOrderList,
     getWaitCommentOrderList,
@@ -73,7 +72,6 @@ import OrderListItem from '../../../components/my/order/Order-List-Item'
 export default {
     name: 'OrderList',
     components: {
-        LoadMore,
         OrderListItem
     },
     computed: {

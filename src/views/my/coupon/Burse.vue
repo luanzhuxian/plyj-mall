@@ -15,7 +15,7 @@
         </div>
 
         <!--奖学金列表-->
-        <load-more
+        <PlLoadMore
             ref="loadMore"
             :form="form"
             :request-methods="getBurseList"
@@ -26,7 +26,7 @@
         >
             <img style="width: 400px;" slot="icon" src="https://mallcdn.youpenglai.com/static/admall/f20994d7-316b-43e9-be44-4f78dc6fc295.png" alt="">
             <burse-item :item="item" v-for="(item,index) in burseList" :key="index" />
-        </load-more>
+        </PlLoadMore>
 
         <!--无奖学金情况-->
         <div :class="$style.burseNone">
@@ -49,13 +49,13 @@
 
 <script>
 import BurseItem from '../../../components/my/coupon/Burse-Item.vue'
-import LoadMore from '../../../components/common/Load-More.vue'
 import { getBurseMes, getBurseList } from '../../../apis/my-burse.js'
 
 export default {
     name: 'MyBurse',
-    components: { BurseItem, LoadMore },
-    props: {},
+    components: {
+        BurseItem
+    },
     data () {
         return {
             form: {
