@@ -1,15 +1,18 @@
 /* eslint-disable */
-import Compressor from 'compressorjs'
-import { getSTS } from '../../apis/base-api'
-import store from '../../store'
 import moment from 'moment'
+import Compressor from 'compressorjs'
+import store from '../../store'
+import { getSTS } from '../../apis/base-api'
+
 const { VUE_APP_MODEL } = process.env
 const ENV = VUE_APP_MODEL === 'production' ? 'pro' : 'dev'
 const OSS = require('ali-oss')
+
 const REGION = 'oss-accelerate'
 const BUCKET = 'penglai-weimall'
 const DOMAIN = 'https://mallcdn.youpenglai.com'
 const PATH = `img/mall/${ ENV }`
+
 Compressor.setDefaults({
     // 检查方向
     checkOrientation: true,

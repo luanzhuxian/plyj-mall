@@ -1,3 +1,4 @@
+import Qs from 'qs'
 import * as type from './mutation-type.js'
 import {
     getMallInfo,
@@ -26,8 +27,7 @@ import {
 } from '../assets/js/util'
 import { upload } from '../assets/js/upload-image'
 // import Cookie from '../assets/js/storage-cookie'
-import Qs from 'qs'
-import MessageBox from '../components/penglai-ui/message-box'
+import { MessageBox } from 'penglai-ui'
 
 const getWeixinURL = (appSecret, appId, componentAppid, search) => {
     let openIdUrl = ''

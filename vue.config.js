@@ -1,4 +1,7 @@
 // 标记线上环境还是测试环境 development为开发或测试环境打包，production是生产环境打包
+
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+
 const MODEL = process.argv[process.argv.indexOf('--model') + 1]
 const { NODE_ENV } = process.env
 const VERSION = process.env.npm_package_version
@@ -28,14 +31,18 @@ const externals =
           axios: 'axios',
           swiper: 'swiper',
           'vue-awesome-swiper': 'VueAwesomeSwiper',
-          'ali-oss': 'OSS',
+          // 'ali-oss': 'OSS',
           compressorjs: 'Compressor',
           'vue-lazyload': 'VueLazyload',
           qs: 'Qs',
           'vue-clipboard2': 'VueClipboard',
-          'pdfjs-dist': 'pdfjsLib'
+          'pdfjs-dist': 'pdfjsLib',
+          'penglai-ui': 'PenglaiUI'
       }
-      : {}
+      : {
+        // vue: 'Vue',
+        // 'penglai-ui': 'PenglaiUI'
+      }
 
 module.exports = {
     pages: {
@@ -104,7 +111,10 @@ module.exports = {
         }
     },
     configureWebpack: {
-        externals
+        externals,
+        plugins: [
+          new BundleAnalyzerPlugin()
+        ]
     },
     pluginOptions: {
         SourceMapDevToolPlugin: {

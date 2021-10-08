@@ -16,9 +16,7 @@ import VueClipboard from 'vue-clipboard2'
 import GetCode from './components/common/Get-Code.vue'
 import UploadImg from './components/common/Upload-Img.vue'
 import MallQRCodeModal from './components/common/qrcode-modal'
-import MessageBox from './components/penglai-ui/message-box'
-// import PenglaiUI from './components/penglai-ui'
-import PenglaiUI from 'penglai-ui'
+import PenglaiUI, { MessageBox } from 'penglai-ui'
 import '../node_modules/penglai-ui/dist/pl-ui.cjs.css'
 // import { errorlog } from './apis/base-api'
 
@@ -151,5 +149,7 @@ const init = async () => {
         }
     }
 }
+
+MessageBox.alert('123')
 
 init()
