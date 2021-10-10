@@ -72,7 +72,7 @@
                     @blur="agreeIsShow = true"
                 />
                 <template v-slot:suffix>
-                    <pl-get-code
+                    <get-code
                         :disabled="form.auditStatus === 'AWAIT' || !isMobileValid"
                         :smstype="smstype.AGENT_USER_INFO"
                         :mobile="form.mobile"
@@ -180,6 +180,7 @@
 </template>
 
 <script>
+import GetCode from '../../components/common/Get-Code.vue'
 import TopText from '../../components/common/Top-Text.vue'
 import {
     AuditCreate,
@@ -194,6 +195,7 @@ const isCode = code => code.length === 4
 export default {
     name: 'ApplyHelper',
     components: {
+        GetCode,
         TopText
     },
     data () {

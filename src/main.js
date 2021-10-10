@@ -10,13 +10,12 @@ import './assets/css/fonts.css'
 import directive from './directive'
 import filters from './filter'
 import { beforeResolve, onError } from './assets/js/router-guard'
-import VueLazyload from 'vue-lazyload'
-import VueClipboard from 'vue-clipboard2'
-import GetCode from './components/common/Get-Code.vue'
-import UploadImg from './components/common/Upload-Img.vue'
-import MallQRCodeModal from './components/common/qrcode-modal'
 import PenglaiUI, { MessageBox } from 'penglai-ui'
 import '../node_modules/penglai-ui/dist/pl-ui.cjs.css'
+import VueLazyload from 'vue-lazyload'
+import MallQRCodeModal from './components/common/qrcode-modal'
+import UploadImg from './components/common/Upload-Img.vue'
+// import VueClipboard from 'vue-clipboard2'
 // import { errorlog } from './apis/base-api'
 
 // import * as Sentry from '@sentry/browser'
@@ -26,22 +25,16 @@ import Cookie from './assets/js/storage-cookie'
 // import { getTemplate } from './apis/home'
 import { getPerformanceTiming, observeLongTask } from './assets/performance'
 
-window.addEventListener('load', event => {
-    getPerformanceTiming()
-})
-observeLongTask()
-
 // 注册全局组件
+Vue.use(PenglaiUI)
 Vue.use(VueLazyload, {
     error: 'https://penglai-weimall.oss-cn-hangzhou.aliyuncs.com/static/mall/base/img_error.png',
     lazyComponent: true,
     throttleWait: 150
 })
-Vue.use(VueClipboard)
-Vue.use(PenglaiUI)
 Vue.use(MallQRCodeModal)
-Vue.component(GetCode.name, GetCode)
 Vue.component(UploadImg.name, UploadImg)
+// Vue.use(VueClipboard)
 
 for (const k of Object.keys(directive)) {
     Vue.directive(k, directive[k])
@@ -180,3 +173,8 @@ const init = async () => {
 
 MessageBox.alert('123')
 init()
+
+window.addEventListener('load', event => {
+    getPerformanceTiming()
+})
+observeLongTask()

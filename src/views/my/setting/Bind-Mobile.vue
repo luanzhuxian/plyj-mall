@@ -27,7 +27,7 @@
                     placeholder="请输入验证码"
                 />
                 <template v-slot:suffix>
-                    <pl-get-code
+                    <get-code
                         :mobile="bindForm.mobile"
                         :smstype="smstype.PUBLIC_USER_INFO"
                         ref="getCode"
@@ -97,6 +97,7 @@
 </template>
 
 <script>
+import GetCode from '../../../components/common/Get-Code.vue'
 import TopText from '../../../components/common/Top-Text.vue'
 import { checkMobileCode, bindMobile, updateMobile } from '../../../apis/base-api'
 import { mapGetters } from 'vuex'
@@ -107,6 +108,7 @@ import Cookie from '../../../assets/js/storage-cookie'
 export default {
     name: 'BindMobile',
     components: {
+        GetCode,
         TopText
     },
     data () {
