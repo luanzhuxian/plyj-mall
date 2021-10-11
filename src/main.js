@@ -171,7 +171,6 @@ const init = async () => {
 // }
 // getHomeTemplate()
 
-MessageBox.alert('123')
 init()
 
 window.addEventListener('load', event => {

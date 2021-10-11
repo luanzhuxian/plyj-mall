@@ -2,6 +2,10 @@
 
 const webpack = require('webpack')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+// const HappyPack = require('happypack')
+// const os = require('os')
+
+// const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length })
 
 const MODEL = process.argv[process.argv.indexOf('--model') + 1]
 const { NODE_ENV } = process.env
@@ -28,19 +32,88 @@ const externals =
           vue: 'Vue',
           vuex: 'Vuex',
           'vue-router': 'VueRouter',
-          // moment: 'moment',
+          'penglai-ui': 'PenglaiUI',
           axios: 'axios',
           swiper: 'swiper',
           'vue-awesome-swiper': 'VueAwesomeSwiper',
-          // 'ali-oss': 'OSS',
-          compressorjs: 'Compressor',
           'vue-lazyload': 'VueLazyload',
-          qs: 'Qs',
-          'vue-clipboard2': 'VueClipboard',
-          'pdfjs-dist': 'pdfjsLib',
-          'penglai-ui': 'PenglaiUI'
+          moment: 'moment'
+          // qs: 'Qs',
+          // 'ali-oss': 'OSS',
+          // compressorjs: 'Compressor',
+          // 'pdfjs-dist': 'pdfjsLib',
+          // 'vue-clipboard2': 'VueClipboard'
       }
       : {}
+
+const optimization = {
+    splitChunks: {
+        // chunks: 'async',
+        // minSize: 30000,
+        // maxSize: 0,
+        // minChunks: 1,
+        // maxAsyncRequests: 6,
+        // maxInitialRequests: 4,
+        // automaticNameDelimiter: '~',
+        cacheGroups: {
+            vendors: {
+                name: `chunk-vendors`,
+                test: /[\\/]node_modules[\\/]/,
+                priority: -10,
+                chunks: 'all'
+            },
+            common: {
+                name: `chunk-common`,
+                minChunks: 2,
+                priority: -20,
+                chunks: 'initial',
+                reuseExistingChunk: true
+            },
+            apis: {
+                name: 'chunk-apis',
+                test: /[\\/]src[\\/]apis[\\/]/,
+                priority: 0
+                // chunks: 'all'
+            },
+            // moment: {
+            //     name: `chunk-moment`,
+            //     test: /[\\/]node_modules[\\/]moment[\\/]/,
+            //     priority: 0,
+            //     chunks: 'all'
+            // },
+            aliOss: {
+              name: `chunk-ali-oss`,
+              test: /[\\/]node_modules[\\/]ali-oss[\\/]/,
+              priority: 0,
+              chunks: 'all'
+            },
+            // compressorjs: {
+            //   name: `chunk-compressor`,
+            //   test: /[\\/]node_modules[\\/]compressorjs[\\/]/,
+            //   priority: 0,
+            //   chunks: 'all'
+            // },
+            // qrcode: {
+            //   name: `chunk-qrcode`,
+            //   test: /[\\/]node_modules[\\/]qrcode[\\/]/,
+            //   priority: 0,
+            //   chunks: 'all'
+            // },
+            pdfjs: {
+                name: `chunk-pdfjs`,
+                test: /[\\/]node_modules[\\/]pdfjs-dist[\\/]/,
+                priority: 0,
+                chunks: 'all'
+            },
+            photoswipe: {
+                name: `chunk-photoswipe`,
+                test: /[\\/]node_modules[\\/]photoswipe[\\/]/,
+                priority: 0,
+                chunks: 'all'
+            }
+        }
+    }
+}
 
 module.exports = {
     pages: {
@@ -109,14 +182,30 @@ module.exports = {
     },
     configureWebpack: {
         externals,
+        // module: {
+        //     rules: [
+        //         {
+        //             test: /\.js$/,
+        //             loader: 'happypack/loader?id=happyBabel',
+        //             // exclude: /node_modules/
+        //         },
+        //     ]
+        // },
         plugins: [
-          new webpack.IgnorePlugin({
-            resourceRegExp: /^\.\/locale$/,
-            contextRegExp: /moment$/
-          }),
-          // new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-          new BundleAnalyzerPlugin()
-        ]
+            new webpack.IgnorePlugin({
+                resourceRegExp: /^\.\/locale$/,
+                contextRegExp: /moment$/
+            }),
+            new BundleAnalyzerPlugin(),
+            // new HappyPack({
+            //     id: 'happyBabel',
+            //     loaders: ['babel-loader?cacheDirectory=true'],
+            //     threadPool: happyThreadPool,
+            //     verbose: true
+            // })
+        ],
+        optimization
+        // ...((process.env.NODE_ENV === 'production' && !process.env.CYPRESS_ENV) ? { optimization } : null)
     },
     pluginOptions: {
         SourceMapDevToolPlugin: {

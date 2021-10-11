@@ -1,13 +1,16 @@
 /* eslint-disable */
 import moment from 'moment'
 import Compressor from 'compressorjs'
-import uuid from 'uuid'
+import { v1 as uuidv1 } from 'uuid'
 import store from '../../store'
 import { getSTS } from '../../apis/base-api'
 
+// ali-oss 被单独打成 chunk-ali-oss.js，若同步引入，则解析入口文件生成的 index.js 时还没加载 chunk-ali-oss.js，所以会出错，异步动态引入则没问题
+// import OSS from 'ali-oss'
+// const OSS = require('ali-oss')
+
 const { VUE_APP_MODEL } = process.env
 const ENV = VUE_APP_MODEL === 'production' ? 'pro' : 'dev'
-const OSS = require('ali-oss')
 
 const REGION = 'oss-accelerate'
 const BUCKET = 'penglai-weimall'
@@ -69,6 +72,7 @@ export const compress = function (file, size, fileType) {
     })
 }
 const getClient = async function () {
+    const OSS = await import('ali-oss')
     const sts = JSON.parse(localStorage.getItem('sts')) || {}
     let credentials = null
     // 如果离过期时间不到10分钟，就重新获取sts
@@ -136,7 +140,7 @@ export function blobToBase64 (blob) {
 }
 // 生成随机字符串
 function randomString () {
-    return `${ uuid.v1() }-${ Math.random().toString()
+    return `${ uuidv1() }-${ Math.random().toString()
         .replace('.', '') }`
 }
 

@@ -26,11 +26,11 @@
                     <span>上传凭证</span>
                     <span v-if="count > 0">（最多{{ count }}张）</span>
                     <input
-                        @change="change"
-                        :type="type"
-                        accept="image/*"
-                        :multiple="multiple"
                         style="display: none;"
+                        accept="image/*"
+                        :type="type"
+                        :multiple="multiple"
+                        @change="change"
                     >
                 </label>
             </li>
