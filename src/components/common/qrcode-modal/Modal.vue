@@ -13,7 +13,7 @@
 
 <script>
 export default {
-    name: 'MallQRCodeModal',
+    name: 'QRCodeModal',
     data () {
         return {
             show: false,

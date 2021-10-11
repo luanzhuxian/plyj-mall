@@ -18,8 +18,6 @@ if (isIOS()) {
     }
 }
 
-
-// import qs from 'qs'
 const WX = window.wx
 const baseHideMenuItems = [
     'menuItem:editTag',

@@ -1,6 +1,6 @@
 import { router } from '../../router'
 import store from '../../store'
-import qs from 'qs'
+import Qs from 'qs'
 
 export const beforeEach = function (to, from, next) {
     next()
@@ -8,7 +8,7 @@ export const beforeEach = function (to, from, next) {
 export const beforeResolve = async function (to, from, next) {
     if (to.query.code) {
         delete to.query.code
-        const search = qs.stringify(to.query)
+        const search = Qs.stringify(to.query)
         if (search) {
             return next(`${ to.path }?${ search }`)
         }

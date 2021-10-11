@@ -13,14 +13,14 @@ import { beforeResolve, onError } from './assets/js/router-guard'
 import PenglaiUI, { MessageBox } from 'penglai-ui'
 import '../node_modules/penglai-ui/dist/pl-ui.cjs.css'
 import VueLazyload from 'vue-lazyload'
-import MallQRCodeModal from './components/common/qrcode-modal'
+import QRCodeModal from './components/common/qrcode-modal'
 import UploadImg from './components/common/Upload-Img.vue'
 // import VueClipboard from 'vue-clipboard2'
 // import { errorlog } from './apis/base-api'
 
+import Cookie from './assets/js/storage-cookie'
 // import * as Sentry from '@sentry/browser'
 // import * as Integrations from '@sentry/integrations'
-import Cookie from './assets/js/storage-cookie'
 
 // import { getTemplate } from './apis/home'
 import { getPerformanceTiming, observeLongTask } from './assets/performance'
@@ -32,7 +32,7 @@ Vue.use(VueLazyload, {
     lazyComponent: true,
     throttleWait: 150
 })
-Vue.use(MallQRCodeModal)
+Vue.use(QRCodeModal)
 Vue.component(UploadImg.name, UploadImg)
 // Vue.use(VueClipboard)
 

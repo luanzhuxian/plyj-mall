@@ -37,6 +37,7 @@
         </ul>
     </div>
 </template>
+
 <script>
 import { upload, compress } from '../../assets/js/upload-image'
 
