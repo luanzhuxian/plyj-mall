@@ -1,5 +1,7 @@
-// const qrcode = require('../../../static/lib/qrcode/index')
 /* eslint-disable */
+
+import Qrcode from 'qrcodejs'
+// const qrcode = require('../../../static/lib/qrcode/index')
 
 /**
  * 大小数字
@@ -174,9 +176,11 @@ export function isAndroid  () {
  * @returns {Promise<*>}
  */
 export async function generateQrcode ({ size, text, padding = 0, img = null, centerPadding = 0, type = 'url', imageSize = 80, correctLevel = 2 }) {
+    // qrcodejs 比较小，qrcode-modal 组件使用频率较高，所以直接打到 vendors.js 中
+    // const Qrcode = await import('qrcodejs')
     const { devicePixelRatio } = window
     let canvas
-    canvas = new window.Qrcode({
+    canvas = new Qrcode({
         render: 'canvas',
         correctLevel, // 纠错级别
         text, // 内容
@@ -184,9 +188,8 @@ export async function generateQrcode ({ size, text, padding = 0, img = null, cen
         background: '#ffffff',
         foreground: '#000000',
         pdground: '#000000'
-
-    // image: '', 不起作用，注释掉
-    // imageSize: 30
+        // image: '', 不起作用，注释掉
+        // imageSize: 30
     })
     return new Promise(resolve => {
         // 生成中心图片内边距
