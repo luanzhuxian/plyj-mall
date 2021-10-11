@@ -2,6 +2,14 @@
     <div :class="[$style.personalCenter, $style[skinClassNameMap[skinId]]]">
         <div :class="$style.top">
             <img v-imgError :src="avatar" alt="头像">
+            <div :class="$style.images">
+                <pl-upload-img
+                    :count="9"
+                    :size="0.8"
+                    v-model="images"
+                    multiple
+                />
+            </div>
             <div :class="$style.basicInfo">
                 <span :class="$style.main" v-text="userName" />
                 <div :class="$style.sub">
@@ -281,7 +289,8 @@ export default {
             progress: [],
             applyStatus: 'NOT_APPLY',
             isModalShow: false,
-            skinClassNameMap
+            skinClassNameMap,
+            images: []
         }
     },
     computed: {
