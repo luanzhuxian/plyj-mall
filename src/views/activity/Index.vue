@@ -64,13 +64,13 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import Search from '../../components/activity/Search.vue'
-import TemplateFengqiang from './templates/template-double-12-2019/Template-Fengqiang.vue'
-import TemplateBaofa from './templates/template-double-12-2019/Template-Baofa.vue'
-import TemplateFanchang from './templates/template-double-12-2019/Template-Fanchang.vue'
-import TemplateSpring2020 from './templates/Template-Spring-2020.vue'
-import TemplateDragonGate from './templates/Template-Dragon-Gate.vue'
-import TemplateDouble122020 from './templates/Template-Double-12-2020.vue'
-import TemplateSpring2021 from './templates/Template-Spring-2021-Green.vue'
+// import TemplateFengqiang from './templates/template-double-12-2019/Template-Fengqiang.vue'
+// import TemplateBaofa from './templates/template-double-12-2019/Template-Baofa.vue'
+// import TemplateFanchang from './templates/template-double-12-2019/Template-Fanchang.vue'
+// import TemplateSpring2020 from './templates/Template-Spring-2020.vue'
+// import TemplateDragonGate from './templates/Template-Dragon-Gate.vue'
+// import TemplateDouble122020 from './templates/Template-Double-12-2020.vue'
+// import TemplateSpring2021 from './templates/Template-Spring-2021-Green.vue'
 import InviteNewcomersHomeEntry from '../marketing-activity/double-12/invitenewcomers/InviteNewcomersHomeEntry.vue'
 import { GET_ACTIVITY_DATA } from '../../store/mutation-type'
 
@@ -78,13 +78,13 @@ export default {
     name: 'Activity',
     components: {
         Search,
-        TemplateFengqiang,
-        TemplateBaofa,
-        TemplateFanchang,
-        TemplateSpring2020,
-        TemplateDragonGate,
-        TemplateDouble122020,
-        TemplateSpring2021,
+        TemplateFengqiang: () => import('./templates/template-double-12-2019/Template-Fengqiang.vue'),
+        TemplateBaofa: () => import('./templates/template-double-12-2019/Template-Baofa.vue'),
+        TemplateFanchang: () => import('./templates/template-double-12-2019/Template-Fanchang.vue'),
+        TemplateSpring2020: () => import('./templates/Template-Spring-2020.vue'),
+        TemplateDragonGate: () => import('./templates/Template-Dragon-Gate.vue'),
+        TemplateDouble122020: () => import('./templates/Template-Double-12-2020.vue'),
+        TemplateSpring2021: () => import('/templates/Template-Spring-2021-Green.vue'),
         InviteNewcomersHomeEntry
     },
     provide () {
