@@ -76,13 +76,13 @@
 import Grade from '../../components/common/Grade.vue'
 import { getComments } from '../../apis/comment'
 import { resetForm } from '../../assets/js/util'
-// import ImageSwiper from '../../components/product-detail/Image-Swiper.vue'
+import ImageSwiper from '../../components/product-detail/Image-Swiper.vue'
 
 export default {
     name: 'Comments',
     components: {
         Grade,
-        ImageSwiper: () => import('../../components/product-detail/Image-Swiper.vue')
+        ImageSwiper
     },
     data () {
         return {

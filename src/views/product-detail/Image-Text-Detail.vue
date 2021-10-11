@@ -173,7 +173,7 @@ import Tabs from '../../components/product-detail/Tabs.vue'
 import CountDown from '../../components/product-detail/Courses-Count-Down.vue'
 import ImageTextList from '../../components/product-detail/Image-Text-List.vue'
 import Skeleton from '../../components/product-detail/Skeleton.vue'
-// import PdfPreviewer from '../../components/product-detail/Pdf-Previewer.vue'
+import PdfPreviewer from '../../components/product-detail/Pdf-Previewer.vue'
 import { share } from '../../assets/js/wechat/wechat-share'
 import { getImageTextDetail, markImageTextStudy } from '../../apis/product'
 import {
@@ -196,7 +196,7 @@ export default {
         ImageTextList,
         Skeleton,
         Instructions,
-        PdfPreviewer: () => import('../../components/product-detail/Pdf-Previewer.vue')
+        PdfPreviewer
     },
     data () {
         return {
