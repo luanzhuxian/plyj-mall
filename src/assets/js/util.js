@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import Qrcode from 'qrcodejs'
+import Qrcode from 'qrcode'
 // const qrcode = require('../../../static/lib/qrcode/index')
 
 /**
@@ -176,8 +176,8 @@ export function isAndroid  () {
  * @returns {Promise<*>}
  */
 export async function generateQrcode ({ size, text, padding = 0, img = null, centerPadding = 0, type = 'url', imageSize = 80, correctLevel = 2 }) {
-    // qrcodejs 比较小，qrcode-modal 组件使用频率较高，所以直接打到 vendors.js 中
-    // const Qrcode = await import('qrcodejs')
+    // qrcode 比较小，qrcode-modal 组件使用频率较高，所以直接打到 vendors.js 中
+    // const Qrcode = await import('qrcode')
     const { devicePixelRatio } = window
     let canvas
     canvas = new Qrcode({

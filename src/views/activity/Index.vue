@@ -84,7 +84,7 @@ export default {
         TemplateSpring2020: () => import('./templates/Template-Spring-2020.vue'),
         TemplateDragonGate: () => import('./templates/Template-Dragon-Gate.vue'),
         TemplateDouble122020: () => import('./templates/Template-Double-12-2020.vue'),
-        TemplateSpring2021: () => import('/templates/Template-Spring-2021-Green.vue'),
+        TemplateSpring2021: () => import('./templates/Template-Spring-2021-Green.vue'),
         InviteNewcomersHomeEntry
     },
     provide () {

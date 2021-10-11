@@ -1,6 +1,7 @@
 /* eslint-disable */
 import moment from 'moment'
 import Compressor from 'compressorjs'
+import uuid from 'uuid'
 import store from '../../store'
 import { getSTS } from '../../apis/base-api'
 
