@@ -25,6 +25,10 @@
 </template>
 
 <script>
+import PhotoSwipe from 'photoswipe'
+import PhotoSwipeUI_Default from 'photoswipe/dist/photoswipe-ui-default'
+import 'photoswipe/dist/photoswipe.css'
+import 'photoswipe/dist/default-skin/default-skin.css'
 
 export default {
     name: 'PlImagePreview',
@@ -81,7 +85,8 @@ export default {
     methods: {
         init () {
             try {
-                const gallery = new window.PhotoSwipe(this.$refs.pswp, window.PhotoSwipeUI_Default, this.items, this.options)
+                // const gallery = new window.PhotoSwipe(this.$refs.pswp, window.PhotoSwipeUI_Default, this.items, this.options)
+                const gallery = new PhotoSwipe(this.$refs.pswp, PhotoSwipeUI_Default, this.items, this.options)
                 gallery.init()
                 gallery.listen('afterChange', this.afterChange)
                 gallery.listen('close', this.close)
@@ -121,5 +126,5 @@ export default {
 </script>
 
 <style lang="scss">
-  @import "../../assets/scss/photo-swipe/main.scss";
+  // @import "../../assets/scss/photo-swipe/main.scss";
 </style>
