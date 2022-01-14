@@ -1,7 +1,8 @@
 import getPerformanceTiming from './performance'
-import observeLongTask from './long-tasks'
+import { observeLongTask, observeLCP } from './long-tasks'
 
 export {
     getPerformanceTiming,
-    observeLongTask
+    observeLongTask,
+    observeLCP
 }

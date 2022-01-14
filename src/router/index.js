@@ -7,6 +7,7 @@ const context = require.context('./', true, /\/((?!index).)+\.js$/)
 importFiles(context)
 
 const NetError = require('../views/Net-Error.vue')
+
 Vue.use(Router)
 
 /**

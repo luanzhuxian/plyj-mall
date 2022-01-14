@@ -23,7 +23,7 @@ import Cookie from './assets/js/storage-cookie'
 // import * as Integrations from '@sentry/integrations'
 
 // import { getTemplate } from './apis/home'
-import { getPerformanceTiming, observeLongTask } from './assets/performance'
+import { getPerformanceTiming, observeLongTask, observeLCP } from './assets/performance'
 
 // 注册全局组件
 Vue.use(PenglaiUI)
@@ -177,3 +177,4 @@ window.addEventListener('load', event => {
     getPerformanceTiming()
 })
 observeLongTask()
+observeLCP()

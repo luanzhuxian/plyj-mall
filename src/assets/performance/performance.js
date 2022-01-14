@@ -8,6 +8,11 @@ const getPerformanceTiming = () => {
     const paint = performance.getEntriesByType('paint')
     console.log('****** performance paint ******', paint)
 
+    // TODO:
+    // Resource timing，记录的是子资源的请求到加载完成的各阶段耗时，子资源的性能数据可以通过 getEntriesByType 接口来查询，传入的类型为 resource。
+    const resource = performance.getEntriesByType('resource')
+    console.log('****** performance resource ******', resource)
+
     // DNS 缓存时间
     const appcache = t.domainLookupStart - t.fetchStart
     console.log('****** appcache ******', appcache)
@@ -35,22 +40,32 @@ const getPerformanceTiming = () => {
     const ttfb = t.responseStart - t.requestStart
     console.log('****** ttfb ******', ttfb)
 
+    // tt
     const trans = t.responseEnd - t.responseStart
     console.log('****** trans ******', trans)
 
+    // dpt
     const domParse = t.domInteractive - t.responseEnd
     console.log('****** domParse ******', domParse)
 
     // 资源加载耗时，表示页面中的同步加载资源
+    const rlt = t.domComplete - t.domContentLoadedEventEnd
     const resourceDownload = t.loadEventStart - t.domContentLoadedEventEnd
     // const resourceDownload = t.loadEventStart - t.domInteractive
+    console.log('****** rlt ******', rlt)
     console.log('****** resourceDownload ******', resourceDownload)
+
+    const bt = t.responseStart - t.navigationStart
+    console.log('****** bt ******', bt)
 
     // 首包时间
     const fbt = t.responseStart - t.domainLookupStart
     console.log('****** fbt ******', fbt)
 
+    // fp / fcp
     // 首次渲染时间 / 白屏时间，从请求开始到浏览器开始解析第一批 HTML 文档字节的时间差
+    // 从统计起始点到页面出现第一个元素的时间，可以使用 domLoading - fetchStart 或 domLoading - navigationStart。
+    // 如果采用 Navigation Timing Level 2 的标准，则使用 domInteractive - fetchStart 或 domInteractive - navigationStart。
     const fpt = t.responseEnd - t.fetchStart
     console.log('****** fpt ******', fpt)
 
@@ -61,7 +76,12 @@ const getPerformanceTiming = () => {
     const tti = t.domInteractive - t.fetchStart
     console.log('****** tti ******', tti)
 
-    // HTML 加载完成，DOM 生成就位
+    // domContentLoadedEventStart: DOM解析完后，domContentLoaded 事件开始时间
+    const fr = t.domContentLoadedEventStart - t.fetchStart
+    console.log('****** fr ******', fr)
+
+    // 首屏时间：HTML 加载完成，DOM 生成就位
+    // domContentLoadedEventEnd: DOM解析完后，domContentLoaded 事件结束时间
     const domReady = t.domContentLoadedEventEnd - t.fetchStart
     console.log('****** domReady ******', domReady)
 
@@ -83,12 +103,15 @@ const getPerformanceTiming = () => {
         trans,
         domParse,
         // 这里不知道为什么有时候 t.loadEventStart - t.domInteractive 返回一个很大的负数，暂时先简单处理
+        rlt,
         resourceDownload: resourceDownload >= 0 ? resourceDownload : 1070,
+        bt,
         fbt,
         fpt,
         fpt2: paint.length ? paint.filter(({ name }) => name === 'first-paint')[0].startTime : 0,
         ttfb2,
         tti,
+        fr,
         domReady,
         load,
         unload
