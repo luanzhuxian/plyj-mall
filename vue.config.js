@@ -163,7 +163,8 @@ module.exports = {
                 data: `@import "@/assets/scss/config.scss";@import "@/assets/scss/mixin.scss";`,
                 options: {
                     implementation: require('sass')
-                }
+                },
+                // prependData: `@import "@/assets/scss/config.scss";`
             },
             postcss: {
                 plugins: loader => [
