@@ -1,6 +1,7 @@
 // Performance.getEntries() 方法以数组形式对网页中每一个对象（脚本文件、样式表、图片文件等等）发出的请求进行统计记录
 
 const getPerformanceTiming = () => {
+    // console.log(window.performance.timing)
     const t = performance.getEntriesByType('navigation')[0]
     console.log('****** performance timing ******', t)
 
@@ -62,7 +63,24 @@ const getPerformanceTiming = () => {
     const fbt = t.responseStart - t.domainLookupStart
     console.log('****** fbt ******', fbt)
 
-    // fp / fcp
+    // fp
+    // First paint refers to the point at which the first pixel renders on a screen after a user navigates to a web page. This excludes the default background paint, but includes non-default background paint.
+    // 白屏时间是指浏览器从响应用户输入网址地址，到浏览器开始显示内容的时间。
+    // 这个过程包括dns查询、建立tcp连接、发送首个http请求（如果使用https还要介入TLS的验证时间）、返回html文档、html文档head解析完毕。
+    // 白屏时间 = 地址栏输入网址后回车 - 浏览器出现第一个元素
+    // 影响白屏时间的因素：网络，服务端性能，前端页面结构设计。
+
+    // fcp
+    // First contentful paint occurs when a browser first renders any content from the document object model (DOM), including any text, images, non-white canvas, or scalable vector graphics (SVG) onto the page.
+    // 首屏时间是指浏览器从响应用户输入网络地址，到首屏内容渲染完成的时间。
+    // 首屏时间 = 地址栏输入网址后回车 - 浏览器第一屏渲染完成
+    // 影响首屏时间的因素：白屏时间，资源下载、执行时间。
+
+    // If your site loads content in the first moment of rendering, the values for first paint and first contentful paint will be the same.
+    // If your site loads a background before any content (image, text, etc.), the values for first paint and first contentful paint will be different.
+    // If your site dynamically updates content, values for first paint and first contentful paint will not be captured if they occur after the page load event.
+
+    // fp
     // 首次渲染时间 / 白屏时间，从请求开始到浏览器开始解析第一批 HTML 文档字节的时间差
     // 从统计起始点到页面出现第一个元素的时间，可以使用 domLoading - fetchStart 或 domLoading - navigationStart。
     // 如果采用 Navigation Timing Level 2 的标准，则使用 domInteractive - fetchStart 或 domInteractive - navigationStart。

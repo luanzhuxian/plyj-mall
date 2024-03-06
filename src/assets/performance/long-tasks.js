@@ -37,7 +37,7 @@
 // 最后 performance timeline 也定义了两个重要的对象，这两个重要的对象是我们检测性能的一个基础对象。其中 PerformanceEntry 是其他 Entry 的一个基类。我们通过 getEntry 可以看到浏览器返回了一些 Entry 列表，这里所有的 Entry 列表都继承于 PerformanceEntry。
 // 另外一个是 PerformanceObserver，用来监测基于事件的指标，我们可以看一下 API 的一个使用情况。
 
-// Navigaiton Timing，页面导航性能
+// Navigation Timing，页面导航性能
 // 定义的是文档，导航过程中完整的性能度量及文档，从发起请求到完成加载的各阶段号时，其中页面的导航性能可以通过 performance 的 timing 接口来获得。
 // const t = performance.getEntriesByType('navigation')[0]
 
